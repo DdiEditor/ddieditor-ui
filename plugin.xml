@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="org.ddialliance.ddieditor.extensionpoints.addattr" name="AdditionalAttributes" schema="schema/org.ddialliance.ddieditor.extensionpoints.addattr.exsd"/>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.ddialliance.ddieditor.ui.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Perspective"
+            class="org.ddialliance.ddieditor.ui.Perspective"
+            id="org.ddialliance.ddieditor.ui.Perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.ddialliance.ddieditor.ui.view.QuestionItemView"
+            icon="icons/tree.gif"
+            id="org.ddialliance.ddieditor.ui.view.QuestionItemView"
+            name="Questions">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="org.ddialliance.ddieditor.ui.menuContribution1">
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.ddialliance.ddieditor.ui.editor.QuestionItemEditor"
+            default="false"
+            icon="icons/editor_area.gif"
+            id="org.ddialliance.ddieditor.ui.editor.QuestionItemEditor"
+            name="QuestionItemEditor">
+      </editor>
+      <editor
+            class="org.ddialliance.ddieditor.ui.editor.QuestionSchemeEditor"
+            default="false"
+            icon="icons/editor_area.gif"
+            id="org.ddialliance.ddieditor.ui.editor.QuestionSchemeEditor"
+            name="QuestionSchemeEditor">
+      </editor>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="DDIEditor.application"
+            name="DDI Editor">
+         <property
+               name="appName"
+               value="DDI Editor">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="000000">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="7,252,445,20">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="5,275,445,15">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+         <property
+               name="aboutText"
+               value="DDI Editor (Beta Version)&#x0A;&#x0A;DDI Editor UI Version: 1.0.0&#x0A;DDI Manager Version: 1.0.0">
+         </property>
+         <property
+               name="aboutImage"
+               value="icons/alt_about.gif">
+         </property>
+      </product>
+   </extension>
+
+</plugin>

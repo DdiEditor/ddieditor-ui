@@ -1,0 +1,14 @@
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Manifest-Version: 1.0
+Bundle-Activator: org.ddialliance.ddieditor.ui.Activator
+Require-Bundle: org.eclipse.ui,
+ com.windowtester.swt.runtime,
+ com.windowtester.swing.runtime,
+ ddieditorExtJar;bundle-version="1.0.0"
+Bundle-Version: 1.0.0
+Export-Package: org.ddialliance.ddieditor.ui
+Bundle-SymbolicName: DDIEditor;singleton:=true
+Bundle-ActivationPolicy: lazy
+Bundle-Name: DDI Editor UI Plug-in
+Bundle-ClassPath: src/

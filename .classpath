@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ddieditor"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/aspectjrt.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/aspectjweaver.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/db.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/dbxml.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/joda-time.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/jsr173_1.0_api.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/org.ddialliance.ddi_3_0_20080428.xml.xmlbeans.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/org.ddialliance.ddieditor.model.xmlbeans.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/org.ddialliance.ddiftp.util.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/perf4j.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/relaxngDatatype.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/resolver.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/saxon9-dom.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/saxon9-dom4j.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/saxon9-jdom.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/saxon9-s9api.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/saxon9-sql.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/saxon9-xom.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/saxon9-xpath.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/saxon9-xqj.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/saxon9.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/serializer.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/vtd-xml.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/xalan.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/xbean_xpath.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/xbean.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/xml-apis.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/xmlbeans-qname.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/xmlpublic.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/xsltc.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/xsom.jar"/>
+	<classpathentry kind="lib" path="/ddieditorExtJar/xsom14.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

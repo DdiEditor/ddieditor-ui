@@ -1,0 +1,18 @@
+import org.ddialliance.ddieditor.ui.view.Messages;
+				bars.getStatusLineManager().setMessage(Messages.getString("Editor.mess.UseOnlyDigits")); //$NON-NLS-1$
+				bars.getStatusLineManager().setMessage(Messages.getString("Editor.mess.UseOnlyLetters")); //$NON-NLS-1$
+				bars.getStatusLineManager().setMessage(Messages.getString("Editor.mess.UseOnlyLettersDigits")); //$NON-NLS-1$
+		propertiesTabItem.setText(Messages.getString("Editor.label.propertiesTabItem.Properties")); //$NON-NLS-1$
+		propertiesGroup.setText(Messages.getString("Editor.label.propertiesGroup.Properties")); //$NON-NLS-1$
+		idLabel.setText(Messages.getString("Editor.label.idLabel.ID")); //$NON-NLS-1$
+		idText.setText(Messages.getString("Editor.label.idText.UniqueIdentificationOfQuestionItem")); //$NON-NLS-1$
+		action.setText(Messages.getString("Editor.label.action.Action")); //$NON-NLS-1$
+		urnLabel.setText(Messages.getString("Editor.label.urnLabel.URN")); //$NON-NLS-1$
+		versionalButton.setText(Messages.getString("Editor.label.versionalButton.Versional")); //$NON-NLS-1$
+		versionGroup.setText(Messages.getString("Editor.label.versionGroup.Version")); //$NON-NLS-1$
+		versionLabel.setText(Messages.getString("Editor.label.versionLabel.Number")); //$NON-NLS-1$
+		versionDateLabel.setText(Messages.getString("Editor.label.versionDateLabel.Date")); //$NON-NLS-1$
+		responsibelLabel.setText(Messages.getString("Editor.label.responsibelLabel.Responsibel")); //$NON-NLS-1$
+		questionItemEditorLabel.setText(Messages.getString("Editor.label.questionItemEditorLabel.QuestionItemEditor")); //$NON-NLS-1$
+		useTheEditorLabel.setText(Messages.getString("Editor.label.useTheEditorLabel.Description")); //$NON-NLS-1$
+				Messages.getString("ErrorTitle"), Messages.getString("Editor.mess.SaveAsNotSupported")); //$NON-NLS-1$

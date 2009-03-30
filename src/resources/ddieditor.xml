@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dp:DDIEditor xmlns:dp="ddieditor-project" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="ddieditor-project ddieditor-project.xsd" version="0.1">
+    <dp:Project id="test-project" agency="dda">
+        <dp:Storage id="test-storage" manager="org.ddialliance.ddieditor.persistenceaccess.dbxml.DbXmlManager" connection="test.dbxml" usr="" passwd="" propertyfile="">
+            <dp:StorageTypeEnum>DBXML</dp:StorageTypeEnum>
+            <dp:File id="large-doc.xml">
+                <dp:FileTypeEnum>DDI</dp:FileTypeEnum>
+            </dp:File>
+            <!--dp:File id="questionscheme.xml">
+                <dp:FileTypeEnum>DDI</dp:FileTypeEnum>
+            </dp:File>
+            
+            <dp:File id="datacollection.xml">
+                <dp:FileTypeEnum>DDI</dp:FileTypeEnum>
+            </dp:File>
+            
+            <dp:File id="dext.xml">
+                <dp:FileTypeEnum>DDI</dp:FileTypeEnum>
+            </dp:File>
+            
+            <dp:File id="complex-doc.xml">
+                <dp:FileTypeEnum>DDI</dp:FileTypeEnum>
+            </dp:File-->
+        </dp:Storage>
+    </dp:Project>
+    <dp:Project id="2nd-project" agency="test.com"/>
+</dp:DDIEditor>
