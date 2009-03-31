@@ -278,10 +278,10 @@ public class View extends ViewPart {
 				firePropertyChange(IEditorPart.PROP_DIRTY);
 			} catch (PartInitException ex) {
 				MessageDialog.openError(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-						.getString("View.mess.EditorUIDeleteError" + "\n" + ex.getMessage())); //$NON-NLS-1$
+						.getString("View.mess.EditorUIDeleteError") + "\n" + ex.getMessage()); //$NON-NLS-1$
 			} catch (Exception e) {
 				MessageDialog.openError(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-						.getString("View.mess.EditorDeleteError" + "\n" + e.getMessage())); //$NON-NLS-1$
+						.getString("View.mess.EditorDeleteError") + "\n" + e.getMessage()); //$NON-NLS-1$
 			}
 		}
 	}
