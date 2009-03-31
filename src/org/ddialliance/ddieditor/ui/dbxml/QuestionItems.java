@@ -29,23 +29,24 @@ public class QuestionItems {
 	static public List<LightXmlObjectType> getQuestionItemsLight(LightXmlObjectType parentQuestionScheme)
 			throws Exception {
 
-		log.info("QuestionItems.getQuestionItemsLight() - parent: " + parentQuestionScheme.getId() + "/"
+		log.debug("QuestionItems.getQuestionItemsLight() - parent: " + parentQuestionScheme.getId() + "/"
 				+ parentQuestionScheme.getVersion());
 
 		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getQuestionItemsLight("", "",
 				parentQuestionScheme.getId(), parentQuestionScheme.getVersion()).getLightXmlObjectList()
 				.getLightXmlObjectList();
 
-		// Debug only:
-		for (LightXmlObjectType l : lightXmlObjectTypeList) {
-			log.info("Question Item Id: " + l.getId());
-			if (l.getLabelList().size() > 0) {
-				XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
-				xmlCursor.toLastAttribute();
-				xmlCursor.toNextToken();
-				String result = xmlCursor.getChars();
-				xmlCursor.dispose();
-				log.info("Question Item Label: " + result);
+		if (log.isDebugEnabled()) {
+			for (LightXmlObjectType l : lightXmlObjectTypeList) {
+				log.debug("Question Item Id: " + l.getId());
+				if (l.getLabelList().size() > 0) {
+					XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
+					xmlCursor.toLastAttribute();
+					xmlCursor.toNextToken();
+					String result = xmlCursor.getChars();
+					xmlCursor.dispose();
+					log.debug("Question Item Label: " + result);
+				}
 			}
 		}
 		
@@ -64,27 +65,28 @@ public class QuestionItems {
 	static public LightXmlObjectType getQuestionItemsLight(LightXmlObjectType parentQuestionScheme, String id,
 			String version) throws Exception {
 
-		log.info("QuestionItems.getQuestionItemsLight() - parent: " + parentQuestionScheme.getId() + "/"
+		log.debug("QuestionItems.getQuestionItemsLight() - parent: " + parentQuestionScheme.getId() + "/"
 				+ parentQuestionScheme.getVersion());
 
 		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getQuestionItemsLight(id, version,
 				parentQuestionScheme.getId(), parentQuestionScheme.getVersion()).getLightXmlObjectList()
 				.getLightXmlObjectList();
 
-		// Debug only:
-		boolean numbers;
-		if (numbers = lightXmlObjectTypeList.size() != 1) {
-			log.error("Unexpected numbers of Question Items:"+ numbers);
-		}
-		for (LightXmlObjectType l : lightXmlObjectTypeList) {
-			log.info("Question Item Id: " + l.getId());
-			if (l.getLabelList().size() > 0) {
-				XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
-				xmlCursor.toLastAttribute();
-				xmlCursor.toNextToken();
-				String result = xmlCursor.getChars();
-				xmlCursor.dispose();
-				log.info("Question Item Label: " + result);
+		if (log.isDebugEnabled()) {
+			boolean numbers;
+			if (numbers = lightXmlObjectTypeList.size() != 1) {
+				log.error("Unexpected numbers of Question Items:" + numbers);
+			}
+			for (LightXmlObjectType l : lightXmlObjectTypeList) {
+				log.debug("Question Item Id: " + l.getId());
+				if (l.getLabelList().size() > 0) {
+					XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
+					xmlCursor.toLastAttribute();
+					xmlCursor.toNextToken();
+					String result = xmlCursor.getChars();
+					xmlCursor.dispose();
+					log.debug("Question Item Label: " + result);
+				}
 			}
 		}
 		
@@ -103,7 +105,7 @@ public class QuestionItems {
 	 */
 	static public QuestionItem createQuestionItem(String id, String version, String parentId, String parentVersion)
 			throws Exception {
-		log.info("QuestionItems.createQuestionItem()");
+		log.debug("QuestionItems.createQuestionItem()");
 
 		QuestionItemDocument questionItemDocument = QuestionItemDocument.Factory.newInstance();
 
@@ -128,12 +130,19 @@ public class QuestionItems {
 	 */
 	static public QuestionItem getQuestionItem(String id, String version, String parentId, String parentVersion)
 			throws Exception {
-		log.info("QuestionItems.getQuestionItem()");
 		
-		System.out.println("WorkingResource: "+PersistenceManager.getInstance().getWorkingResource());
-		System.out.println("DefaultResourceNs: "+PersistenceManager.getInstance().getDefaultResourceNs());
-		System.out.println("GlobalResourcePath: "+PersistenceManager.getInstance().getGlobalResourcePath());
-		System.out.println("ResourcePath: "+PersistenceManager.getInstance().getResourcePath());
+		if (log.isDebugEnabled()) {
+			log.debug("QuestionItems.getQuestionItem()");
+
+			log.debug("WorkingResource: "
+					+ PersistenceManager.getInstance().getWorkingResource());
+			log.debug("DefaultResourceNs: "
+					+ PersistenceManager.getInstance().getDefaultResourceNs());
+			log.debug("GlobalResourcePath: "
+					+ PersistenceManager.getInstance().getGlobalResourcePath());
+			log.debug("ResourcePath: "
+					+ PersistenceManager.getInstance().getResourcePath());
+		}
 
 		QuestionItemDocument questionItemDocument = DdiManager.getInstance().getQuestionItem(id, version, parentId,
 				parentVersion);
@@ -155,8 +164,7 @@ public class QuestionItems {
 	 * @throws DDIFtpException
 	 */
 	static public void create(QuestionItem questionItem) throws DDIFtpException {
-		log.info("Create DBXML Question Item:\n" + questionItem.getQuestionItemDocument());
-		System.out.println("Parent Id: "+questionItem.getParentId());
+		log.debug("Create DBXML Question Item:\n" + questionItem.getQuestionItemDocument()+" Parent Id: "+questionItem.getParentId());
 		try {
 			DdiManager.getInstance().createElement(questionItem.getQuestionItemDocument(), questionItem.getParentId(),
 					questionItem.getParentVersion(), "QuestionScheme");		
@@ -182,7 +190,7 @@ public class QuestionItems {
 	 */
 	static public void update(QuestionItem questionItem) throws DDIFtpException {
 		// TODO How is version handled?????
-		log.info("Update DBXML Question Item:\n" + questionItem.getQuestionItemDocument());
+		log.debug("Update DBXML Question Item:\n" + questionItem.getQuestionItemDocument());
 		try {
 			DdiManager.getInstance().updateElement(questionItem.getQuestionItemDocument(), questionItem.getId(),
 					questionItem.getVersion());
@@ -208,7 +216,7 @@ public class QuestionItems {
 	 * @throws Exception
 	 */
 	static public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
-		log.info("Delete DBXML Question Item");
+		log.debug("Delete DBXML Question Item");
 		QuestionItem questionItem = getQuestionItem(id, version, parentId, parentVersion);
 		try {
 			DdiManager.getInstance().deleteElement(questionItem.getQuestionItemDocument(), questionItem.getId(),
@@ -219,6 +227,13 @@ public class QuestionItems {
 			throw new DDIFtpException(e.getMessage());
 		}
 		PersistenceManager.getInstance().commitWorkingResource();
+		if (log.isDebugEnabled()) {
+			questionItem = null;
+			questionItem = getQuestionItem(id, version, parentId, parentVersion);
+			if (questionItem != null) {
+				log.error("****************** Question Item not deleted *****************");
+			}
+		}
 		// TODO When is xml-file updated - when object saved?
 		File outFile = new File("resources" + File.separator + "large-doc-out.xml");
         PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
