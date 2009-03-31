@@ -18,9 +18,9 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-
 public class QuestionSchemes {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionSchemes.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			QuestionSchemes.class);
 
 	/**
 	 * Get Light Question Scheme List
@@ -28,106 +28,127 @@ public class QuestionSchemes {
 	 * @return List<LightXmlObjectType>
 	 * @throws Exception
 	 */
-	public static List<LightXmlObjectType> getQuestionSchemesLight() throws Exception {
-		log.info("QuestionScheme.getQuestionSchemesLight()");
+	public static List<LightXmlObjectType> getQuestionSchemesLight()
+			throws Exception {
+		return getQuestionSchemesLight("", "");
+	}
+
+	/**
+	 * 
+	 * Get Light Question Scheme List
+	 * 
+	 * @param id
+	 * @param version
+	 * @return List<LightXmlObjectType>
+	 * @throws Exception
+	 */
+	public static List<LightXmlObjectType> getQuestionSchemesLight(String id,
+			String version) throws Exception {
+		log.debug("QuestionScheme.getQuestionSchemesLight()");
 
 		DdiManager ddiManager = DdiManager.getInstance();
-		
-		LightXmlObjectListDocument listDoc = ddiManager.getQuestionSchemesLight(null, null, null, null);
-		
-		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
-		
-		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
-		
-		for (LightXmlObjectType l : listLightXmlObjectListType) {
-			log.info("Question Scheme Id: " + l.getId());
-			log.info("Question Scheme ParentId: " + l.getParentId());
-			log.info("Question Scheme Lagel list size: "+l.getLabelList().size());
-			log.info("Question Scheme lang(0): "+l.getLabelList().get(0).getLang());
-			log.info("Question Scheme LangXML(0): "+l.getLabelList().get(0).xmlText());
-			
-			XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
-			xmlCursor.toLastAttribute();
-			xmlCursor.toNextToken();
-			String result = xmlCursor.getChars();
-			xmlCursor.dispose();
-			
-			log.info("Question Scheme Label text: "+result);
+
+		LightXmlObjectListDocument listDoc = ddiManager
+				.getQuestionSchemesLight(id, version, null, null);
+
+		LightXmlObjectListType lightXmlObjectListType = listDoc
+				.getLightXmlObjectList();
+
+		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType
+				.getLightXmlObjectList();
+
+		if (log.isDebugEnabled()) {
+			boolean numbers;
+			int nLabels;
+			if (numbers = listLightXmlObjectListType.size() != 1) {
+				log.error("Unexpected numbers of Question Schemes:" + numbers);
+			}
+			for (LightXmlObjectType l : listLightXmlObjectListType) {
+				log.debug("Question Scheme Id: " + l.getId());
+				log.debug("Question Scheme ParentId: " + l.getParentId());
+				nLabels = l.getLabelList().size();
+				log.debug("Question Scheme Lagel list size: " + nLabels);
+				if (nLabels > 0) {
+					log.debug("Question Scheme lang(0): "
+							+ l.getLabelList().get(0).getLang());
+					log.debug("Question Scheme LangXML(0): "
+							+ l.getLabelList().get(0).xmlText());
+					XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
+					xmlCursor.toLastAttribute();
+					xmlCursor.toNextToken();
+					String result = xmlCursor.getChars();
+					xmlCursor.dispose();
+					log.debug("Question Scheme Label text: " + result);
+				}
+			}
 		}
-		
+
 		return listLightXmlObjectListType;
 	}
 
 	/**
-	 * Get Light Question Scheme by Id.
+	 * Get Question Scheme by Id
 	 * 
-	 * @return List<LightXmlObjectType>
+	 * @param id
+	 * @param parentId
+	 * @return QuestionSchemeType
 	 * @throws Exception
 	 */
-	public static List<LightXmlObjectType> getQuestionSchemesLight(String id, String version) throws Exception {
-		log.info("QuestionScheme.getQuestionSchemesLight()");
-
-		DdiManager ddiManager = DdiManager.getInstance();
-		
-		LightXmlObjectListDocument listDoc = ddiManager.getQuestionSchemesLight(id, version, null, null);
-		
-		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
-		
-		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
-		
-		// Debug only:
-		boolean numbers;
-		if (numbers = listLightXmlObjectListType.size() != 1) {
-			log.error("Unexpected numbers of Question Schemes:"+ numbers);
-		}
-		for (LightXmlObjectType l : listLightXmlObjectListType) {
-			log.info("Question Scheme Id: " + l.getId());
-			log.info("Question Scheme ParentId: " + l.getParentId());
-			log.info("Question Scheme Lagel list size: "+l.getLabelList().size());
-			log.info("Question Scheme lang(0): "+l.getLabelList().get(0).getLang());
-			log.info("Question Scheme LangXML(0): "+l.getLabelList().get(0).xmlText());
-			
-			XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
-			xmlCursor.toLastAttribute();
-			xmlCursor.toNextToken();
-			String result = xmlCursor.getChars();
-			xmlCursor.dispose();
-			
-			log.info("Question Scheme Label text: "+result);
-		}
-		
-		return listLightXmlObjectListType;
-	}
-
-	public QuestionSchemeType getQuestionSchemeById(String id, String parentId) throws Exception {
-		log.info("QuestionScheme.getQuestionSchemeById()");
-		return DdiManager.getInstance().getQuestionScheme(id, null,
-				parentId, null).getQuestionScheme();
-	}
-
-	static public QuestionScheme createQuestionScheme(String id, String version, String parentId, String parentVersion)
+	public QuestionSchemeType getQuestionSchemeById(String id, String parentId)
 			throws Exception {
-		log.info("QuestionSchemes.createQuestionScheme()");
+		log.info("QuestionScheme.getQuestionSchemeById()");
+		return DdiManager.getInstance().getQuestionScheme(id, null, parentId,
+				null).getQuestionScheme();
+	}
 
-		QuestionSchemeDocument questionShemeDocument = QuestionSchemeDocument.Factory.newInstance();
+	/**
+	 * Create Question Scheme
+	 * 
+	 * @param id
+	 * @param version
+	 * @param parentId
+	 * @param parentVersion
+	 * @return QuestionScheme
+	 * @throws Exception
+	 */
+	static public QuestionScheme createQuestionScheme(String id,
+			String version, String parentId, String parentVersion)
+			throws Exception {
+		log.debug("QuestionSchemes.createQuestionScheme()");
 
-		QuestionSchemeType questionSchemeType = questionShemeDocument.addNewQuestionScheme();
+		QuestionSchemeDocument questionShemeDocument = QuestionSchemeDocument.Factory
+				.newInstance();
+
+		QuestionSchemeType questionSchemeType = questionShemeDocument
+				.addNewQuestionScheme();
 		questionSchemeType.setId(id);
 		questionSchemeType.setVersion(version);
 
-		QuestionScheme questionScheme = new QuestionScheme(questionShemeDocument, parentId, parentVersion);
+		QuestionScheme questionScheme = new QuestionScheme(
+				questionShemeDocument, parentId, parentVersion);
 
 		return questionScheme;
 	}
 
-	static public QuestionScheme getQuestionScheme(String id, String version, String parentId, String parentVersion)
-			throws Exception {
-		log.info("QuestionSchemes.getQuestionScheme()");
+	/**
+	 * 
+	 * @param id
+	 * @param version
+	 * @param parentId
+	 * @param parentVersion
+	 * @return QuestionScheme
+	 * @throws Exception
+	 */
+	static public QuestionScheme getQuestionScheme(String id, String version,
+			String parentId, String parentVersion) throws Exception {
+		log.debug("QuestionSchemes.getQuestionScheme()");
 
-		QuestionSchemeDocument questionSchemeDocument = DdiManager.getInstance().getQuestionScheme(id, version, parentId,
-				parentVersion);
+		QuestionSchemeDocument questionSchemeDocument = DdiManager
+				.getInstance().getQuestionScheme(id, version, parentId,
+						parentVersion);
 
-		QuestionScheme questionScheme = new QuestionScheme(questionSchemeDocument, parentId, parentVersion);
+		QuestionScheme questionScheme = new QuestionScheme(
+				questionSchemeDocument, parentId, parentVersion);
 
 		return questionScheme;
 	}
@@ -143,24 +164,32 @@ public class QuestionSchemes {
 	 *            Version of Data Collection
 	 * @throws DDIFtpException
 	 */
-	static public void create(QuestionScheme questionScheme) throws DDIFtpException {
-		log.info("Create DBXML Question Scheme:\n" + questionScheme.getQuestionSchemeDocument());
-		System.out.println("Parent Id: "+questionScheme.getParentId());
-		System.out.println(questionScheme.getId());
-		System.out.println(questionScheme.getLabel());
-		System.out.println(questionScheme.getDescr());
+	static public void create(QuestionScheme questionScheme)
+			throws DDIFtpException {
+		if (log.isDebugEnabled()) {
+			log.debug("Create DBXML Question Scheme:\n"
+					+ questionScheme.getQuestionSchemeDocument());
+			log.debug("Parent Id: " + questionScheme.getParentId());
+			log.debug("Id: "+questionScheme.getId());
+			log.debug("Label: "+questionScheme.getLabel());
+			log.debug("Descr: "+questionScheme.getDescr());
+		}
 		try {
-			DdiManager.getInstance().createElement(questionScheme.getQuestionSchemeDocument(), questionScheme.getParentId(),
-					questionScheme.getParentVersion(), "DataCollection");		
+			DdiManager.getInstance().createElement(
+					questionScheme.getQuestionSchemeDocument(),
+					questionScheme.getParentId(),
+					questionScheme.getParentVersion(), "datacollection__DataCollection");
 		} catch (DDIFtpException e) {
-			log.error("Create DBXML Question Scheme error: "+e.getMessage());
+			log.error("Create DBXML Question Scheme error: " + e.getMessage());
 			PersistenceManager.getInstance().rollbackWorkingResource();
 			throw new DDIFtpException(e.getMessage());
 		}
 		PersistenceManager.getInstance().commitWorkingResource();
 		// TODO When is xml-file updated - when object saved?
-		File outFile = new File("resources" + File.separator + "large-doc-out.xml");
-        PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+		File outFile = new File("resources" + File.separator
+				+ "large-doc-out.xml");
+		PersistenceManager.getInstance().exportResoure(
+				DbXml.FULLY_DECLARED_NS_DOC, outFile);
 	}
 
 	/**
@@ -172,47 +201,62 @@ public class QuestionSchemes {
 	 *            question Scheme instance
 	 * @throws DDIFtpException
 	 */
-	static public void update(QuestionScheme questionScheme) throws DDIFtpException {
+	static public void update(QuestionScheme questionScheme)
+			throws DDIFtpException {
 		// TODO How is version handled?????
-		log.info("Update DBXML Question Scheme:\n" + questionScheme.getQuestionSchemeDocument());
+		log.debug("Update DBXML Question Scheme:\n"
+				+ questionScheme.getQuestionSchemeDocument());
 		try {
-			DdiManager.getInstance().updateElement(questionScheme.getQuestionSchemeDocument(), questionScheme.getId(),
-					questionScheme.getVersion());
+			DdiManager.getInstance().updateElement(
+					questionScheme.getQuestionSchemeDocument(),
+					questionScheme.getId(), questionScheme.getVersion());
 		} catch (DDIFtpException e) {
-			log.error("Update DBXML Question Scheme error: "+e.getMessage());
+			log.error("Update DBXML Question Scheme error: " + e.getMessage());
 			PersistenceManager.getInstance().rollbackWorkingResource();
 			throw new DDIFtpException(e.getMessage());
 		}
 		PersistenceManager.getInstance().commitWorkingResource();
 		// TODO When is xml-file updated - when object saved?
-		File outFile = new File("resources" + File.separator + "large-doc-out.xml");
-        PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+		File outFile = new File("resources" + File.separator
+				+ "large-doc-out.xml");
+		PersistenceManager.getInstance().exportResoure(
+				DbXml.FULLY_DECLARED_NS_DOC, outFile);
 	}
-	
+
 	/**
 	 * 
 	 * Delete DBXML Question Scheme
 	 * 
-	 * @param id			Identification
-	 * @param version		Version
-	 * @param parentId		Parent Identification
-	 * @param parentVersion	Parent Version
+	 * @param id
+	 *            Identification
+	 * @param version
+	 *            Version
+	 * @param parentId
+	 *            Parent Identification
+	 * @param parentVersion
+	 *            Parent Version
 	 * @throws Exception
 	 */
-	static public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
-		log.info("Delete DBXML Question Scheme");
-		QuestionScheme questionScheme = getQuestionScheme(id, version, parentId, parentVersion);
+	static public void delete(String id, String version, String parentId,
+			String parentVersion) throws Exception {
+		log.debug("Delete DBXML Question Scheme");
+		QuestionScheme questionScheme = getQuestionScheme(id, version,
+				parentId, parentVersion);
 		try {
-			DdiManager.getInstance().deleteElement(questionScheme.getQuestionSchemeDocument(), questionScheme.getId(),
-					questionScheme.getVersion(), "QuestionScheme");
+			DdiManager.getInstance().deleteElement(
+					questionScheme.getQuestionSchemeDocument(),
+					questionScheme.getId(), questionScheme.getVersion(),
+					"QuestionScheme");
 		} catch (DDIFtpException e) {
-			log.error("Delete DBXML Question Scheme error: "+e.getMessage());
+			log.error("Delete DBXML Question Scheme error: " + e.getMessage());
 			PersistenceManager.getInstance().rollbackWorkingResource();
 			throw new DDIFtpException(e.getMessage());
 		}
 		PersistenceManager.getInstance().commitWorkingResource();
 		// TODO When is xml-file updated - when object saved?
-		File outFile = new File("resources" + File.separator + "large-doc-out.xml");
-        PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+		File outFile = new File("resources" + File.separator
+				+ "large-doc-out.xml");
+		PersistenceManager.getInstance().exportResoure(
+				DbXml.FULLY_DECLARED_NS_DOC, outFile);
 	}
 }
