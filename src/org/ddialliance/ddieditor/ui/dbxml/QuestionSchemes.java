@@ -96,7 +96,7 @@ public class QuestionSchemes {
 	 */
 	public QuestionSchemeType getQuestionSchemeById(String id, String parentId)
 			throws Exception {
-		log.info("QuestionScheme.getQuestionSchemeById()");
+		log.debug("QuestionScheme.getQuestionSchemeById()");
 		return DdiManager.getInstance().getQuestionScheme(id, null, parentId,
 				null).getQuestionScheme();
 	}

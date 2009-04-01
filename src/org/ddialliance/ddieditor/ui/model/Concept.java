@@ -32,7 +32,7 @@ public class Concept {
 	public String getFirstLabel() {
 		
 		String result = Util.getTextOnMixedElement(conceptTypeImpl.getLabelList().get(0));
-		log.info("conceptCombo: " + result);
+		log.debug("conceptCombo: " + result);
 		return result;
 	}
 

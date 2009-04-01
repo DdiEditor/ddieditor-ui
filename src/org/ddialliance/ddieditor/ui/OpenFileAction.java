@@ -38,7 +38,7 @@ public class OpenFileAction extends Action implements IWorkbenchAction {
 		fileChooser.setFilterExtensions(new String[] { "*.xml" });
 		fileChooser.setFilterNames(new String[] { Messages.getString("OpenFileAction.filechooser.filternames") });
 		String fileName = fileChooser.open();
-		log.info("OpenFileAction.run(): " + fileName);
+		log.debug("OpenFileAction.run(): " + fileName);
 		if (fileName != null) {
 			try {
 				DbXml.open(fileName);

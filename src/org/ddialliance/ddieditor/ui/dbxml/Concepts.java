@@ -24,7 +24,7 @@ public class Concepts {
 	 */
 	static public List<LightXmlObjectType> getConceptsLight(LightXmlObjectType parentConceptScheme) throws Exception {
 
-		log.info("Concepts.getConceptsLight()");
+		log.debug("Concepts.getConceptsLight()");
 
 		return Concepts.getConceptsLight("", "", parentConceptScheme.getId(), parentConceptScheme.getVersion());
 	}
@@ -32,27 +32,27 @@ public class Concepts {
 	static public List<LightXmlObjectType> getConceptsLight(String id, String version, String parentId,
 			String parentVersion) throws Exception {
 
-		log.info("Concepts.getConceptsLight()");
+		log.debug("Concepts.getConceptsLight()");
 
 		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getConceptsLight(id, version,
 				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
 
 		// Debug only:
 		for (LightXmlObjectType l : lightXmlObjectTypeList) {
-			log.info("Concept Id: " + l.getId());
+			log.debug("Concept Id: " + l.getId());
 			XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
 			xmlCursor.toLastAttribute();
 			xmlCursor.toNextToken();
 			String result = xmlCursor.getChars();
 			xmlCursor.dispose();
-			log.info("Concept Label: " + result);
+			log.debug("Concept Label: " + result);
 		}
 
 		return lightXmlObjectTypeList;
 	}
 	
 	static public Concept getConcept(String id, String version, String parentId, String parentVesion) throws Exception {
-		log.info("Concepts.getConcept("+id+")");
+		log.debug("Concepts.getConcept("+id+")");
 
 		ConceptTypeImpl conceptTypeImpl = (ConceptTypeImpl) DdiManager.getInstance().getConcept(id, version, parentId,
 				parentVesion).getConcept();
