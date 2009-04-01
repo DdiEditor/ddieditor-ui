@@ -88,7 +88,7 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener {
 		final Text labelText = new Text(questionGroup, SWT.BORDER);
 		labelText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				log.info("Label changed");
+				log.debug("Label changed");
 				questionScheme.setLabel(labelText.getText());
 				editorStatus.setChanged();
 			}
@@ -108,7 +108,7 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener {
 		questionSchemeDescrStyledText = new StyledText(questionGroup, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
 		questionSchemeDescrStyledText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				log.info("Description changed");
+				log.debug("Description changed");
 				questionScheme.setDescr(questionSchemeDescrStyledText.getText());
 				editorStatus.setChanged();
 			}
@@ -147,7 +147,7 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener {
 			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)) {
 				QuestionSchemes.update(questionScheme);
 			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.VIEW)) {
-				log.info("*** Saved ignored! ***");
+				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
 			String errMess = MessageFormat.format(Messages.getString("QuestionSchemeEditor.mess.ErrorDuringSave"), e.getMessage()); //$NON-NLS-1$
@@ -155,7 +155,7 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener {
 			return;
 		}
 		editorStatus.clearChanged();
-		log.info("QuestionSchemeEditor.doSave(1): " + editorStatus.getStatus());
+		log.debug("QuestionSchemeEditor.doSave(1): " + editorStatus.getStatus());
 	}
 	
 	@Override
@@ -164,10 +164,12 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener {
 		super.init(site, input);
 		// Initialise Question Scheme Editor Part:
 		this.editorInput = (EditorInput) input;
-		log.info("QuestionSchemeEditor.init() - Name: " + editorInput.getName());
-		log.info("QuestionSchemeEditor.init() - ID: " + editorInput.getId());
-		log.info("QuestionSchemeEditor.init() - Parent ID: " + editorInput.getParentId());
-		log.info("QuestionSchemeEditor.init() - Editor Mode: " + editorInput.getEditorMode());
+		if (log.isDebugEnabled()) {
+			log.debug("QuestionSchemeEditor.init() - Name: " + editorInput.getName());
+			log.debug("QuestionSchemeEditor.init() - ID: " + editorInput.getId());
+			log.debug("QuestionSchemeEditor.init() - Parent ID: " + editorInput.getParentId());
+			log.debug("QuestionSchemeEditor.init() - Editor Mode: " + editorInput.getEditorMode());
+		}
 
 		if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
 			try {

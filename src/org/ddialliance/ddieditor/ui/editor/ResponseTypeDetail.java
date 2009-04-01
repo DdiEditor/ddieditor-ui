@@ -103,7 +103,7 @@ public class ResponseTypeDetail {
 	 * Dispose Response Type Details
 	 */
 	public void dispose() {
-		log.info("Dispose Response Type Details");
+		log.debug("Dispose Response Type Details");
 
 		Control[] children = parentComposite.getChildren();
 		for (int i = 0; i < children.length; i++) {
@@ -161,7 +161,7 @@ public class ResponseTypeDetail {
 			}
 			numTypeCombo.addModifyListener(new ModifyListener() {
 				public void modifyText(final ModifyEvent e) {
-					log.info(".modifyText(): " + numTypeCombo.getText());
+					log.debug(".modifyText(): " + numTypeCombo.getText());
 					if (numTypeCombo.getText().equals(Messages.getString("ResponseTypeDetail.label.Float"))) {
 						decimalPositionLabel = new Label(parentComposite, SWT.NONE);
 						decimalPositionLabel
@@ -219,7 +219,7 @@ public class ResponseTypeDetail {
 			}
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(final ModifyEvent e) {
-					log.info(".modifyCode(): " + text.getText());
+					log.debug(".modifyCode(): " + text.getText());
 					questionItem.setResponseDomain(getResponseType(questionItem.getResponseDomain()), text.getText());
 					parentComposite.getParent().layout();
 					editorStatus.setChanged();

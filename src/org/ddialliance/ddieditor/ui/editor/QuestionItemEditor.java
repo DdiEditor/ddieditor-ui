@@ -315,7 +315,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		originalLanguageLabel.setText(Messages.getString("QuestionItemEditor.label.originalLanguageLabel.OriginalLanguage")); //$NON-NLS-1$
 		originalQuestionTextStyledText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				log.info("Original QI text changed");
+				log.debug("Original QI text changed");
 				questionItem.setText(originalQuestionTextStyledText.getText(), questionItem.getOriginalLanguageCode());
 				editorStatus.setChanged();
 			}
@@ -574,7 +574,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)) {
 				QuestionItems.update(questionItem);
 			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.VIEW)) {
-				log.info("*** Saved ignored! ***");
+				log.error("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
 			String errMess = MessageFormat.format(Messages.getString("QuestionItemEditor.mess.ErrorDuringSave"), e.getMessage()); //$NON-NLS-1$
@@ -582,7 +582,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 			return;
 		}
 		editorStatus.clearChanged();
-		log.info("QuestionItemEditor.doSave(1): " + editorStatus.getStatus());
+		log.debug("QuestionItemEditor.doSave(1): " + editorStatus.getStatus());
 	}
 	
 	@Override
@@ -591,10 +591,12 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		super.init(site, input);
 		// Initialise Question Item Editor Part:
 		this.editorInput = (EditorInput) input;
-		log.info("QuestionItemEditor.init() - Name: " + editorInput.getName());
-		log.info("QuestionItemEditor.init() - ID: " + editorInput.getId());
-		log.info("QuestionItemEditor.init() - Parent ID: " + editorInput.getParentId());
-		log.info("QuestionItemEditor.init() - Editor Mode: " + editorInput.getEditorMode());
+		if (log.isDebugEnabled()) {
+			log.debug("QuestionItemEditor.init() - Name: " + editorInput.getName());
+			log.debug("QuestionItemEditor.init() - ID: " + editorInput.getId());
+			log.debug("QuestionItemEditor.init() - Parent ID: " + editorInput.getParentId());
+			log.debug("QuestionItemEditor.init() - Editor Mode: " + editorInput.getEditorMode());
+		}
 
 		if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
 			try {

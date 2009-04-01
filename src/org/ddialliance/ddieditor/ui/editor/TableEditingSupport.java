@@ -32,7 +32,7 @@ public class TableEditingSupport extends EditingSupport {
 		super(viewer);
 		
 		log.debug("Column: "+column);
-		log.info("Viewer object: "+viewer);
+		log.debug("Viewer object: "+viewer);
 		
 		this.editorStatus = editorStatus;
 		this.originalLanguageCode = originalLanguageCode;
@@ -64,9 +64,11 @@ public class TableEditingSupport extends EditingSupport {
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-		log.debug("Column: "+this.column);
-		log.info("Editor: "+editor);
-		log.info("Value: "+element.toString());
+		if (log.isDebugEnabled()) {
+			log.debug("Column: " + this.column);
+			log.debug("Editor: " + editor);
+			log.debug("Value: " + element.toString());
+		}
 		ICellEditorListener listener = new CellEditorListener(editor, editorStatus, column);
 		editor.addListener(listener);
 		return editor;
@@ -82,11 +84,11 @@ public class TableEditingSupport extends EditingSupport {
 
 		switch (this.column) {
 		case 0:
-			log.info("Text: "+questionItemLiteralText.getText());
+			log.debug("Text: "+questionItemLiteralText.getText());
 			return questionItemLiteralText.getText();
 		case 1:
 			// Convert Language Code to Combo index e.g. 'no' to '1'
-			log.info("Language Code: "+questionItemLiteralText.getLanguageCode());
+			log.debug("Language Code: "+questionItemLiteralText.getLanguageCode());
 			int i = Arrays.asList(Language.getLanguageCodesExcludingOrginalLanguage(originalLanguageCode)).indexOf(questionItemLiteralText.getLanguageCode());
 			return i == -1 ? 0 : new Integer(i);
 		default:
@@ -105,12 +107,12 @@ public class TableEditingSupport extends EditingSupport {
 
 		switch (this.column) {
 		case 0:
-	   		log.info("Text:"+value);
+	   		log.debug("Text:"+value);
 			questionItemLiteralText.setText(String.valueOf(value));
 			break;
 		case 1:
 			// Convert Combo index to Language Code e.g. '1' to 'no'
-	   		log.info("Language Combo index: "+value);
+	   		log.debug("Language Combo index: "+value);
 			questionItemLiteralText.setLanguageCode(Language.getLanguageCodesExcludingOrginalLanguage(originalLanguageCode)[((Integer) value)]);			
 			break;
 		default:

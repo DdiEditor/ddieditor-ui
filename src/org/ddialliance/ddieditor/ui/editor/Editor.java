@@ -119,10 +119,10 @@ public class Editor extends EditorPart {
 		e.doit = false;
 		// Get the character typed
 		myChar = e.character;
-		log.info("Verify char: '" + myChar + "'");
+		log.debug("Verify char: '" + myChar + "'");
 
 		int i = myChar;
-		log.info("Verify char(hex): " + Integer.toHexString(i));
+		log.debug("Verify char(hex): " + Integer.toHexString(i));
 
 		IActionBars bars = site.getActionBars();
 
@@ -164,7 +164,7 @@ public class Editor extends EditorPart {
 			IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(
 					"org.ddialliance.ddieditor.extensionpoints.addattr");
 			for (IConfigurationElement e : config) {
-				log.info("Debug: " + e.getAttribute("new_attribute"));
+				log.debug("Debug: " + e.getAttribute("new_attribute"));
 				Object o = e.createExecutableExtension("class");
 				if (o instanceof IAddAttr) {
 					site.getShell().setText(e.getAttribute("title"));
@@ -172,7 +172,7 @@ public class Editor extends EditorPart {
 				}
 			}
 		} catch (Exception ex) {
-			log.info(ex.getMessage());
+			log.debug(ex.getMessage());
 			System.exit(0);
 		}
 	}
@@ -353,7 +353,7 @@ public class Editor extends EditorPart {
 		
 		//
 		site.getPage().addSelectionListener(QuestionItemView.ID, (ISelectionListener) this);
-		log.info("Part Properties: " + getPartProperties());
+		log.debug("Part Properties: " + getPartProperties());
 
 		// Clean dirt from initialisation
 		editorStatus.clearChanged();
