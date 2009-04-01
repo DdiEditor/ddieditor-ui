@@ -27,7 +27,7 @@ public class DbXml {
 
 	// Perform setup normally done by the DDI Document Manager
 	public static void open() throws Exception {
-		log.info("DbXml.open()");
+		log.debug("DbXml.open()");
 
 		DdiManager.getInstance();
 
@@ -60,11 +60,11 @@ public class DbXml {
 		} catch (Exception e) {
 			throw e;
 		}
-		log.info("DbXml.open(Done)");
+		log.debug("DbXml.open(Done)");
 	}
 
 	public static void open(String fileName) throws Exception {
-		log.info("DbXml.open(" + fileName + ")");
+		log.debug("DbXml.open(" + fileName + ")");
 
 		DdiManager.getInstance();
 
@@ -98,7 +98,7 @@ public class DbXml {
 		} catch (Exception e) {
 			throw e;
 		}
-		log.info("DbXml.open("+fileName+") - Done");
+		log.debug("DbXml.open("+fileName+") - Done");
 	}
 	
 	public void finalize() throws Exception {
