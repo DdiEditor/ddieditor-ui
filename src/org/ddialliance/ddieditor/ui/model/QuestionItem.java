@@ -426,7 +426,7 @@ public class QuestionItem {
 	 * @throws Exception
 	 */
 	public void validate() throws Exception {
-		log.info("Question Item validation performed");
+		log.debug("Question Item validation performed");
 
 		// Check if a Response Domain has been given
 		if (questionItemTypeImpl.getResponseDomain() == null

@@ -23,7 +23,6 @@ import org.w3.x1999.xhtml.H1Document;
 import org.w3.x1999.xhtml.H1Type;
 import org.w3.x1999.xhtml.impl.H1TypeImpl;
 
-//public class QuestionScheme extends LightXmlObjectTypeImpl implements LightXmlObjectType {
 public class QuestionScheme {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionItem.class);
 
@@ -31,10 +30,6 @@ public class QuestionScheme {
 	private QuestionSchemeTypeImpl questionSchemeTypeImpl;
 	private String parentId;
 	private String parentVersion;
-	
-//	public QuestionScheme(SchemaType arg0) {
-//		super(arg0);
-//	}
 	
 	/**
 	 * Constructor
@@ -140,7 +135,7 @@ public class QuestionScheme {
 				return labelType.getStringValue();
 			}
 		}
-		log.debug("*** Question Scheme Label of given Language <"+language+"> not found ***");
+		log.error("*** Question Scheme Label of given Language <"+language+"> not found ***");
 		return "";
 	}
 
@@ -188,7 +183,7 @@ public class QuestionScheme {
 				return labelType.getStringValue();
 			}
 		}
-		log.debug("*** Question Scheme Label of 'Original' Language not found ***");
+		log.error("*** Question Scheme Label of 'Original' Language not found ***");
 		return "";
 	}
 
@@ -235,7 +230,7 @@ public class QuestionScheme {
 				return questionSchemeTypeImpl.getDescriptionArray(i).toString();
 			}
 		}
-		log.debug("*** Question Scheme Description of given Language <"+language+"> not found ***");
+		log.error("*** Question Scheme Description of given Language <"+language+"> not found ***");
 		return "";
 	}
 
@@ -286,7 +281,7 @@ public class QuestionScheme {
 				return "";
 			}
 		}
-		log.debug("*** Question Scheme Original Description not found ***");
+		log.error("*** Question Scheme Original Description not found ***");
 		return "";
 	}
 
@@ -328,7 +323,7 @@ public class QuestionScheme {
 	 * @throws Exception
 	 */
 	public void validate() throws Exception {
-		log.info("Question Scheme validation performed");
+		log.debug("Question Scheme validation performed");
 
 		// No error found:
 		return;

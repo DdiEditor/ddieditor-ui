@@ -92,14 +92,16 @@ public class View extends ViewPart {
 		/**
 		 * Get root elements.
 		 * 
-		 * @param Input Element
+		 * @param Input
+		 *            Element
 		 * @return Object[]
 		 */
 		public Object[] getElements(Object inputElement) {
 			log.debug("Get Element with Id: " + ((List<LightXmlObjectType>) inputElement).get(0).getId());
-//			return ((List<LightXmlObjectType>) inputElement).toArray();
+			// return ((List<LightXmlObjectType>) inputElement).toArray();
 			try {
-				return QuestionSchemes.getQuestionSchemesLight(((List<LightXmlObjectType>) inputElement).get(0).getId(),
+				return QuestionSchemes.getQuestionSchemesLight(
+						((List<LightXmlObjectType>) inputElement).get(0).getId(),
 						((List<LightXmlObjectType>) inputElement).get(0).getId()).toArray();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -165,14 +167,14 @@ public class View extends ViewPart {
 			// TODO Get Label of default language - not just the first one
 			if (element instanceof LightXmlObjectTypeImpl) {
 				LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) element;
-				log.debug("Get Text of Element with Id: "+lightXmlObjectType.getId());
+				log.debug("Get Text of Element with Id: " + lightXmlObjectType.getId());
 				if (lightXmlObjectType.getLabelList().size() > 0) {
 					XmlCursor xmlCursor = lightXmlObjectType.getLabelList().get(0).newCursor();
 					xmlCursor.toLastAttribute();
 					xmlCursor.toNextToken();
 					String result = xmlCursor.getChars();
 					xmlCursor.dispose();
-					log.debug("Text: "+result);
+					log.debug("Text: " + result);
 					return (result);
 				}
 				return (Messages.getString("View.mess.NoLabelSpecified")); //$NON-NLS-1$
@@ -210,7 +212,7 @@ public class View extends ViewPart {
 
 	private void openEditor(EDITOR_MODE_TYPE mode) {
 		EDITOR_TYPE type = null;
-		
+
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		LightXmlObjectType item = (LightXmlObjectType) obj;
@@ -223,9 +225,10 @@ public class View extends ViewPart {
 			type = EDITOR_TYPE.QUESTION_ITEM;
 		} else {
 			// TODO Error handling
-			System.err.println("Element Type not supported: " + obj) ;
-			System.exit(0);;
-	
+			System.err.println("Element Type not supported: " + obj);
+			System.exit(0);
+			;
+
 		}
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		EditorInput input = new EditorInput(item.getId(), item.getVersion(), item.getParentId(), item
@@ -236,7 +239,7 @@ public class View extends ViewPart {
 				page.openEditor(input, QuestionSchemeEditor.ID);
 				break;
 			case QUESTION_ITEM:
-				page.openEditor(input, QuestionItemEditor.ID);				
+				page.openEditor(input, QuestionItemEditor.ID);
 				break;
 			default:
 				// TODO error handling
@@ -244,7 +247,7 @@ public class View extends ViewPart {
 				System.exit(0);
 				break;
 			}
-			
+
 			// Notify any listeners of the view with the actual data of the view
 			treeViewer.setSelection(treeViewer.getSelection());
 		} catch (PartInitException ex) {
@@ -266,8 +269,7 @@ public class View extends ViewPart {
 							.delete(item.getId(), item.getVersion(), item.getParentId(), item.getParentVersion());
 					break;
 				case QUESTION_ITEM:
-					 QuestionItems.delete(item.getId(), item.getVersion(),
-					 item.getParentId(), item.getParentVersion());
+					QuestionItems.delete(item.getId(), item.getVersion(), item.getParentId(), item.getParentVersion());
 					break;
 				default:
 					// TODO error handling
@@ -351,8 +353,10 @@ public class View extends ViewPart {
 		questionItemText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		questionItemText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				log.info("createPartControl.modifyText(): " + questionItemText.getText());
-				log.info("Debug: " + questionItemText.getText().length());
+				if (log.isDebugEnabled()) {
+					log.debug("createPartControl.modifyText(): " + questionItemText.getText());
+					log.debug("Debug: " + questionItemText.getText().length());
+				}
 				questionItemNameFilter.setPattern(questionItemText.getText());
 			}
 		});
@@ -387,7 +391,8 @@ public class View extends ViewPart {
 							getViewSite().getShell(),
 							Messages.getString("ErrorTitle"), Messages.getString("View.mess.QuestionItemTreeViewerSetInputError") + ":\n" + e1.getMessage()); //$NON-NLS-1$
 		}
-		// TODO addFilter causes the Question Items to be retreived once more (retrieved first time by call of getInitialInput())!
+		// TODO addFilter causes the Question Items to be retreived once more
+		// (retrieved first time by call of getInitialInput())!
 		treeViewer.addFilter(questionItemNameFilter);
 		treeViewer.expandAll();
 
@@ -433,7 +438,7 @@ public class View extends ViewPart {
 
 				ISelection selection = treeViewer.getSelection();
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				LightXmlObjectType item = (LightXmlObjectType) obj;				
+				LightXmlObjectType item = (LightXmlObjectType) obj;
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				if (item.getElement().equals("QuestionItem")) {
 					parentId = item.getParentId();
@@ -464,14 +469,14 @@ public class View extends ViewPart {
 			public void widgetArmed(final ArmEvent e) {
 				ISelection selection = treeViewer.getSelection();
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				LightXmlObjectType item = (LightXmlObjectType) obj;				
+				LightXmlObjectType item = (LightXmlObjectType) obj;
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				if (item.getElement().equals("QuestionItem")) {
 					questionSchemeMenuItem.setEnabled(false);
 				}
 			}
 		});
-		
+
 		newItemMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/new_wiz.gif"));
 
 		// Define DELETE Pop-up Menu Item
@@ -502,7 +507,7 @@ public class View extends ViewPart {
 							Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
 					return;
 				}
-				openEditor(EDITOR_MODE_TYPE.EDIT);			
+				openEditor(EDITOR_MODE_TYPE.EDIT);
 			}
 		});
 
@@ -531,7 +536,7 @@ public class View extends ViewPart {
 		};
 		collapseAllAction.setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.getDefault(),
 				"icons/collapse_all.gif"));
-		
+
 		refreshAction = new Action("Refresh") {
 			public void run() {
 				treeViewer.refresh(false);
@@ -539,7 +544,7 @@ public class View extends ViewPart {
 		};
 
 		refreshAction.setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.getDefault(),
-		"icons/refresh.gif"));
+				"icons/refresh.gif"));
 
 		helpContentsAction = new HelpContentsAction();
 
