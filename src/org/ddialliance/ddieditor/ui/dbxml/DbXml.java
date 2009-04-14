@@ -17,9 +17,6 @@ public class DbXml {
 	
 	public static void open() throws Exception {
 		log.debug("DbXml.open()");
-
-		DdiManager.getInstance();
-
 		try {
 			// Clean up DbXml
 			File[] files = new File(DbXmlManager.ENVIROMENT_HOME).listFiles();
@@ -37,6 +34,9 @@ public class DbXml {
 					files[i].delete();
 				}
 			}
+
+			PersistenceManager.getInstance();
+			DdiManager.getInstance();
 
 			// add resources
 			FilesystemManager.getInstance().addResource(new File("resources" + File.separator + FULLY_DECLARED_NS_DOC));
@@ -53,9 +53,6 @@ public class DbXml {
 
 	public static void open(String fileName) throws Exception {
 		log.debug("DbXml.open(" + fileName + ")");
-
-		DdiManager.getInstance();
-
 		try {
 			// Clean up DbXml
 			File[] files = new File(DbXmlManager.ENVIROMENT_HOME).listFiles();
@@ -73,6 +70,9 @@ public class DbXml {
 					files[i].delete();
 				}
 			}
+			
+			PersistenceManager.getInstance();
+			DdiManager.getInstance();
 
 			// add resources
 			File file = new File(fileName);
