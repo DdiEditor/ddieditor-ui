@@ -15,7 +15,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class Application implements IApplication {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
-
+	public static final String ID = "org.ddialliance.ddieditor.ui.Application";
 	/* (non-Javadoc)
 	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
 	 */
