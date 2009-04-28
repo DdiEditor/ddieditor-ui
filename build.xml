@@ -4,7 +4,7 @@
 	<!-- can't use build.properties due to PDE using same file!
 	workaround rename to other name, not done yet. No reason so far
 	property file="${basedir}/build.properties" /-->
-	
+
 	<!-- properties -->
 	<property file="${basedir}/../lib-java/lib.properties" />
 	<property environment="env" />
@@ -67,17 +67,22 @@
 	</target>
 
 	<target name="resource" description="Setup resources in the build dir">
+		<mkdir dir="${build.classes.dir}/logs" />
 		<mkdir dir="${build.classes.dir}/resources" />
 		<copy todir="${build.classes.dir}/resources" overwrite="yes">
 			<fileset dir="${src.resources.dir}">
 				<include name="**/*.*" />
 			</fileset>
 		</copy>
-		<mkdir dir="${build.classes.dir}/logs" />
+		<copy todir="${build.classes.dir}/resources" overwrite="yes">
+			<fileset dir="../ddieditor/source/resources">
+				<include name="resource-list.xml" />
+				<include name="*.txt" />
+				<include name="ddiftp-app.properties" />
+			</fileset>
+		</copy>
 	</target>
-
 	
-
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<!-- junit test									 -->
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -121,7 +126,7 @@
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<!-- misc										 -->
-	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->	
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<target name="javadoc" description="Compile javadoc">
 		<mkdir dir="${build.dir.jdoc}" />
 		<javadoc sourcepath="${src.dir}" destdir="${build.dir.jdoc}" classpathref="project.classpath" splitindex="true" verbose="true">
