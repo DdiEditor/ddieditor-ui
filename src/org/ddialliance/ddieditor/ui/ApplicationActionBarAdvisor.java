@@ -39,11 +39,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction aboutAction;
     private IWorkbenchAction showViewAction;
     private IWorkbenchAction openFileAction;
+    private IWorkbenchAction prefs;
+    
     
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
     }
-
+    
     protected void makeActions(IWorkbenchWindow window) {
 		{
 			openFileAction = new OpenFileAction(window);
@@ -142,6 +144,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			showViewAction = ActionFactory.SHOW_VIEW_MENU.create(window);
 			register(showViewAction);
 		}
+		{
+			prefs = ActionFactory.PREFERENCES.create(window);
+			register(prefs);
+		}		
     }
 
     protected void fillMenuBar(IMenuManager menuBar) {
@@ -201,11 +207,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     	final MenuManager helpMenuManager = new MenuManager(Messages.getString("ApplicationActionBarAdvisor.menu.Help"));
     	menuBar.add(helpMenuManager);
-
     	helpMenuManager.add(new Separator());
-
+    	helpMenuManager.add(prefs);
     	helpMenuManager.add(aboutAction);
-
     }
     
 	protected void fillCoolBar(ICoolBarManager coolBar) {
@@ -229,6 +233,5 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		toolBarManager.add(deleteAction);
 
 		toolBarManager.add(new Separator());
-	}
-    
+	} 
 }
