@@ -16,10 +16,10 @@ import org.ddialliance.ddieditor.ui.dbxml.QuestionItems;
 import org.ddialliance.ddieditor.ui.dbxml.QuestionSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.Util;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
-import org.ddialliance.ddieditor.ui.editor.QuestionItemEditor;
-import org.ddialliance.ddieditor.ui.editor.QuestionSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_TYPE;
+import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
+import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -38,8 +38,12 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleListener;
 import org.eclipse.swt.events.ArmEvent;
 import org.eclipse.swt.events.ArmListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -69,6 +73,7 @@ import com.swtdesigner.SWTResourceManager;
 
 public class View extends ViewPart {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, View.class);
+	protected View currentView = this;
 	private Action collapseAllAction;
 	private Action expandAllAction;
 	private Action refreshAction;
@@ -77,12 +82,12 @@ public class View extends ViewPart {
 	private HelpContentsAction helpContentsAction;
 
 	/**
-	 * Ligth XML Object - Tree Viewer Content provider
+	 * Light XML Object - Tree Viewer Content provider
 	 */
 	class TreeContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			System.out.println("TreeContentProvider.inputChanged()");
+			log.debug("TreeContentProvider.inputChanged()");
 		}
 
 		public void dispose() {
@@ -90,19 +95,17 @@ public class View extends ViewPart {
 		}
 
 		/**
-		 * Get root elements.
+		 * Get Question Scheme root elements.
 		 * 
 		 * @param Input
 		 *            Element
 		 * @return Object[]
 		 */
 		public Object[] getElements(Object inputElement) {
-			log.debug("Get Element with Id: " + ((List<LightXmlObjectType>) inputElement).get(0).getId());
-			// return ((List<LightXmlObjectType>) inputElement).toArray();
-			try {
-				return QuestionSchemes.getQuestionSchemesLight(
-						((List<LightXmlObjectType>) inputElement).get(0).getId(),
-						((List<LightXmlObjectType>) inputElement).get(0).getId()).toArray();
+			
+            try {
+            	// Return all Light Question Schemes:
+				return QuestionSchemes.getQuestionSchemesLight(null, null).toArray();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -122,11 +125,12 @@ public class View extends ViewPart {
 			if (parentElement instanceof LightXmlObjectType) {
 				LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) parentElement;
 				if (!lightXmlObjectType.getElement().equals("QuestionScheme")) {
+					log.debug("Parent is QUestion Item - no child!");
 					return (new Object[0]);
 				}
 
 				try {
-					log.debug("Read children");
+					log.debug("Read Question Item (children) elements");
 					return QuestionItems.getQuestionItemsLight(lightXmlObjectType).toArray();
 				} catch (Exception e) {
 					MessageDialog.openError(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
@@ -143,22 +147,23 @@ public class View extends ViewPart {
 		 * @return Object Parent Element
 		 */
 		public Object getParent(Object element) {
-			System.out.println("TreeContentProvider.getParent()");
+			log.debug("TreeContentProvider.getParent()");
 			return null;
 		}
 
 		public boolean hasChildren(Object element) {
-			System.out.println("TreeContentProvider.hasChildren()");
+			log.debug("TreeContentProvider.hasChildren()");
+			// TODO Do not read DB again
 			return getChildren(element).length > 0;
 		}
 
 		public void propertyChange(PropertyChangeEvent arg0) {
-			System.out.println("TreeContentProvider.propertyChange()");
+			log.debug("TreeContentProvider.propertyChange()");
 		}
 	}
 
 	/**
-	 * Ligth XML Object - Tree Viewer Label provider
+	 * Light XML Object - Tree Viewer Label provider
 	 */
 	class TreeLabelProvider extends LabelProvider {
 
@@ -209,6 +214,18 @@ public class View extends ViewPart {
 			System.exit(0);
 		}
 	}
+	
+	private void refreshTreeViewer(TreeViewer treeViewer) {
+		treeViewer.getControl().setRedraw(false);
+		treeViewer.refresh();
+		treeViewer.getControl().setRedraw(true);
+		treeViewer.expandAll();
+		treeViewer.getTree().setFocus();
+	}
+	
+	public void refreshView() {
+		refreshTreeViewer(treeViewer);
+	}
 
 	private void openEditor(EDITOR_MODE_TYPE mode) {
 		EDITOR_TYPE type = null;
@@ -218,10 +235,10 @@ public class View extends ViewPart {
 		LightXmlObjectType item = (LightXmlObjectType) obj;
 
 		if (item.getElement().equals("QuestionScheme")) {
-			System.out.println("QuestionScheme");
+			log.debug("QuestionScheme");
 			type = EDITOR_TYPE.QUESTION_SCHEME;
 		} else if (item.getElement().equals("QuestionItem")) {
-			System.out.println("QuestionItem");
+			log.debug("QuestionItem");
 			type = EDITOR_TYPE.QUESTION_ITEM;
 		} else {
 			// TODO Error handling
@@ -232,7 +249,7 @@ public class View extends ViewPart {
 		}
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		EditorInput input = new EditorInput(item.getId(), item.getVersion(), item.getParentId(), item
-				.getParentVersion(), type, mode, properties);
+				.getParentVersion(), type, mode, this, properties);
 		try {
 			switch (type) {
 			case QUESTION_SCHEME:
@@ -289,20 +306,6 @@ public class View extends ViewPart {
 	}
 
 	/**
-	 * Get list of Ligth XML objects.
-	 * 
-	 * @return List<LightXmlObjectType>
-	 * @throws Exception
-	 */
-	public List<LightXmlObjectType> getInitialInput() throws Exception {
-		log.debug("View.getInitialInput()");
-
-		List<LightXmlObjectType> questionScheme = new QuestionSchemes().getQuestionSchemesLight();
-
-		return questionScheme;
-	}
-
-	/**
 	 * Create contents of the view part and initialize it
 	 * 
 	 * @param parent
@@ -351,13 +354,17 @@ public class View extends ViewPart {
 
 		questionItemText = new Text(composite, SWT.BORDER);
 		questionItemText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		questionItemText.addModifyListener(new ModifyListener() {
-			public void modifyText(final ModifyEvent e) {
-				if (log.isDebugEnabled()) {
-					log.debug("createPartControl.modifyText(): " + questionItemText.getText());
-					log.debug("Debug: " + questionItemText.getText().length());
+		questionItemText.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				// on a CR we want to filter
+				if (e.keyCode == SWT.CR) {
+					questionItemNameFilter.setPattern(questionItemText.getText());
+					treeViewer.getControl().setRedraw(false);
+					treeViewer.refresh();
+					treeViewer.getControl().setRedraw(true);
+					treeViewer.expandAll();
+					treeViewer.getTree().setFocus();
 				}
-				questionItemNameFilter.setPattern(questionItemText.getText());
 			}
 		});
 
@@ -383,7 +390,7 @@ public class View extends ViewPart {
 		treeViewer.setLabelProvider(new LabelProvider());
 		treeViewer.setLabelProvider(new TreeLabelProvider());
 		try {
-			treeViewer.setInput(getInitialInput());
+			treeViewer.setInput("Root");
 		} catch (Exception e1) {
 			log.error("treeViewer.setInput failed: " + e1.getMessage());
 			MessageDialog
@@ -391,8 +398,6 @@ public class View extends ViewPart {
 							getViewSite().getShell(),
 							Messages.getString("ErrorTitle"), Messages.getString("View.mess.QuestionItemTreeViewerSetInputError") + ":\n" + e1.getMessage()); //$NON-NLS-1$
 		}
-		// TODO addFilter causes the Question Items to be retreived once more
-		// (retrieved first time by call of getInitialInput())!
 		treeViewer.addFilter(questionItemNameFilter);
 		treeViewer.expandAll();
 
@@ -447,9 +452,9 @@ public class View extends ViewPart {
 					parentId = item.getId();
 					parentVersion = item.getVersion();
 				}
-				// TODO Handling of version not done - currently always 1
-				EditorInput input = new EditorInput(null, "1", parentId, parentVersion, EDITOR_TYPE.QUESTION_ITEM,
-						EDITOR_MODE_TYPE.NEW, properties);
+				// TODO Version Control - not supported
+				EditorInput input = new EditorInput(null, null, parentId, parentVersion, EDITOR_TYPE.QUESTION_ITEM,
+						EDITOR_MODE_TYPE.NEW, currentView, properties);
 				try {
 					// TODO Use this.openEditor()
 					page.openEditor(input, QuestionItemEditor.ID);
@@ -539,7 +544,10 @@ public class View extends ViewPart {
 
 		refreshAction = new Action("Refresh") {
 			public void run() {
-				treeViewer.refresh(false);
+				treeViewer.getControl().setRedraw(false);
+				treeViewer.refresh();
+				treeViewer.getControl().setRedraw(true);
+				treeViewer.expandAll();
 			}
 		};
 
@@ -548,11 +556,10 @@ public class View extends ViewPart {
 
 		helpContentsAction = new HelpContentsAction();
 
-		// Create the actions
 	}
 
 	/**
-	 * Initialise the tool bar
+	 * Initialize the tool bar
 	 */
 	private void initializeToolBar() {
 		IToolBarManager toolbarManager = getViewSite().getActionBars().getToolBarManager();
@@ -573,7 +580,7 @@ public class View extends ViewPart {
 	}
 
 	/**
-	 * Initialise the menu
+	 * Initialize the menu
 	 */
 	private void initializeMenu() {
 		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
