@@ -13,15 +13,15 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, ApplicationWorkbenchAdvisor.class);
 	
-	private static final String PERSPECTIVE_ID = Perspective.ID;
+	private static final String INITIAL_PERSPECTIVE_ID = QuestionsPerspective.ID;
 
     public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         return new ApplicationWorkbenchWindowAdvisor(configurer);
     }
 
 	public String getInitialWindowPerspectiveId() {
-		log.debug("ApplicationWorkbenchAdvisor.getInitialWindowPerspectiveId("+PERSPECTIVE_ID+")");
-		return PERSPECTIVE_ID;
+		log.debug("ApplicationWorkbenchAdvisor.getInitialWindowPerspectiveId("+INITIAL_PERSPECTIVE_ID+")");
+		return INITIAL_PERSPECTIVE_ID;
 //		return null; // No initial perspective
 	}
 	
