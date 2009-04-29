@@ -1,26 +1,9 @@
 package org.ddialliance.ddieditor.ui.editor;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.RepresentationType;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.IAddAttr;
-import org.ddialliance.ddieditor.ui.dbxml.Concepts;
-import org.ddialliance.ddieditor.ui.dbxml.QuestionItems;
-import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
-import org.ddialliance.ddieditor.ui.editor.ResponseTypeDetail.RESPONSE_TYPES;
-import org.ddialliance.ddieditor.ui.model.Concept;
-import org.ddialliance.ddieditor.ui.model.Language;
-import org.ddialliance.ddieditor.ui.model.QuestionItem;
-import org.ddialliance.ddieditor.ui.model.QuestionItemLiteralText;
-import org.ddialliance.ddieditor.ui.reference.ConceptReference;
-import org.ddialliance.ddieditor.ui.reference.ResponseTypeReference;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.QuestionItemView;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -30,23 +13,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -58,7 +27,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
@@ -74,21 +42,21 @@ import com.swtdesigner.SWTResourceManager;
 public class Editor extends EditorPart {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
 
-	protected class EditorStatus {
+	public class EditorStatus {
 		private boolean changed = false;
 
-		protected void setChanged() {
+		public void setChanged() {
 			log.debug("EditorStatus.setChanged()");
 			changed = true; // Set 'changed' before fire the property change!
 			firePropertyChange(IEditorPart.PROP_DIRTY);
 		}
 
-		protected boolean getStatus() {
+		public boolean getStatus() {
 			log.debug("EditorStatus.getStatus()");
 			return changed;
 		}
 
-		protected void clearChanged() {
+		public void clearChanged() {
 			log.debug("EditorStatus.clearChanged()");
 			changed = false; // Set 'changed' before fire the property change!
 			firePropertyChange(IEditorPart.PROP_DIRTY);
@@ -103,17 +71,17 @@ public class Editor extends EditorPart {
 	private Text urnText;
 	private Text idText;
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
-	protected EditorStatus editorStatus = new EditorStatus();
+	public EditorStatus editorStatus = new EditorStatus();
 	private IEditorSite site;
-	private char myChar;
 	protected EditorInput editorInput;
 	
-	private static enum FIELD_TYPE {
+	public static enum FIELD_TYPE {
 		DIGIT, LETTER, LETTER_DIGIT
 	};
 
 	// Verify field data and report eventually errors
-	private void verifyField(FIELD_TYPE ft, VerifyEvent e) {
+	public static void verifyField(FIELD_TYPE ft, VerifyEvent e, IEditorSite currentSite) {
+		char myChar;
 
 		// Assume we don't allow it
 		e.doit = false;
@@ -124,7 +92,7 @@ public class Editor extends EditorPart {
 		int i = myChar;
 		log.debug("Verify char(hex): " + Integer.toHexString(i));
 
-		IActionBars bars = site.getActionBars();
+		IActionBars bars = currentSite.getActionBars();
 
 		switch (ft) {
 		case DIGIT:
@@ -253,7 +221,7 @@ public class Editor extends EditorPart {
 
 		final Text versionText = new Text(versionGroup, SWT.READ_ONLY | SWT.BORDER);
 		versionText.setEditable(false);
-		versionText.setText(editorInput.getVersion());
+		versionText.setText(editorInput.getVersion() == null ? "" : editorInput.getVersion());
 		versionText.setEnabled(false);
 
 		final Label versionDateLabel = new Label(versionGroup, SWT.NONE);
@@ -355,7 +323,7 @@ public class Editor extends EditorPart {
 		site.getPage().addSelectionListener(QuestionItemView.ID, (ISelectionListener) this);
 		log.debug("Part Properties: " + getPartProperties());
 
-		// Clean dirt from initialisation
+		// Clean dirt from initialization
 		editorStatus.clearChanged();
 
 		return listTabItems;

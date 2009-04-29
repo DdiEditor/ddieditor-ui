@@ -3,6 +3,7 @@ package org.ddialliance.ddieditor.ui.editor;
 import java.util.Properties;
 import java.util.Random;
 
+import org.ddialliance.ddieditor.ui.view.View;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -17,6 +18,7 @@ public class EditorInput implements IEditorInput {
 	private final String version;
 	private final String parentId;
 	private final String parentVersion;
+	private View parentView;
 	private Properties properties;
 	public static enum EDITOR_TYPE {QUESTION_SCHEME, QUESTION_ITEM};
 	public static enum EDITOR_MODE_TYPE {NEW, EDIT, VIEW};
@@ -27,7 +29,8 @@ public class EditorInput implements IEditorInput {
 		return prefix+"-"+agency+"-"+ Math.abs(new Random().nextInt()) % 1000000000;
 	}
 
-	public EditorInput(String id, String version, String parentId, String parentVersion,EDITOR_TYPE type, EDITOR_MODE_TYPE mode, Properties properties) {
+	public EditorInput(String id, String version, String parentId, String parentVersion, EDITOR_TYPE type,
+			EDITOR_MODE_TYPE mode, View parentView, Properties properties) {
 		log.debug("");
 		if (mode.equals(EDITOR_MODE_TYPE.NEW)) {
 			// Get agency from property file
@@ -45,6 +48,7 @@ public class EditorInput implements IEditorInput {
 		this.parentId = parentId;
 		this.parentVersion = parentVersion;
 		this.mode = mode;
+		this.parentView = parentView;
 		this.properties = properties;
 	}
 
@@ -118,6 +122,10 @@ public class EditorInput implements IEditorInput {
 		}
 		// TODO Get User identification from XML
 		return "Dummy";
+	}
+	
+	public View getParentView() {
+		return parentView;
 	}
 
 	public Properties getProperties() {
