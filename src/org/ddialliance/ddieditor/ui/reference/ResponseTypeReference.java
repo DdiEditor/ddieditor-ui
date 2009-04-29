@@ -1,7 +1,7 @@
 package org.ddialliance.ddieditor.ui.reference;
 
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.RepresentationType;
-import org.ddialliance.ddieditor.ui.editor.ResponseTypeDetail.RESPONSE_TYPES;
+import org.ddialliance.ddieditor.ui.editor.question.ResponseTypeDetail.RESPONSE_TYPES;
 
 public class ResponseTypeReference {
 
