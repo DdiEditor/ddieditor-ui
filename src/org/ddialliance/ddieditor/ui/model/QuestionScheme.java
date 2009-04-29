@@ -1,27 +1,12 @@
 package org.ddialliance.ddieditor.ui.model;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.xmlbeans.SchemaType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.DynamicTextType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionItemDocument;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionSchemeDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.TextType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.impl.QuestionSchemeTypeImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.impl.StructuredStringTypeImpl;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.model.lightxmlobject.impl.LightXmlObjectTypeImpl;
-import org.ddialliance.ddieditor.ui.dbxml.Util;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.w3.x1999.xhtml.H1Document;
-import org.w3.x1999.xhtml.H1Type;
-import org.w3.x1999.xhtml.impl.H1TypeImpl;
 
 public class QuestionScheme {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionItem.class);
