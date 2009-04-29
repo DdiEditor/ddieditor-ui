@@ -11,7 +11,6 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
-import org.ddialliance.ddieditor.ui.model.QuestionItem;
 import org.ddialliance.ddieditor.ui.model.QuestionScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;

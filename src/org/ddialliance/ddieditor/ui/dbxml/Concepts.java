@@ -7,7 +7,6 @@ import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.impl.ConceptType
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.model.Concept;
-import org.ddialliance.ddieditor.ui.reference.ConceptReference;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
