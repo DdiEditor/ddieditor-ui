@@ -2,6 +2,7 @@ package org.ddialliance.ddieditor.ui.dbxml;
 
 import java.io.File;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.xmlbeans.XmlCursor;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionItemDocument;
@@ -16,7 +17,7 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class QuestionItems {
+public class QuestionItems extends XmlEntities {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionItems.class);
 
 	/**
@@ -111,7 +112,8 @@ public class QuestionItems {
 
 		QuestionItemType questionItemType = questionItemDocument.addNewQuestionItem();
 		questionItemType.setId(id);
-		questionItemType.setVersion(version);
+		// TODO Version Control - not supported
+		//questionItemType.setVersion(version);
 
 		QuestionItem questionItem = new QuestionItem(questionItemDocument, parentId, parentVersion);
 
@@ -175,8 +177,10 @@ public class QuestionItems {
 		}
 		PersistenceManager.getInstance().commitWorkingResource();
 		// TODO When is xml-file updated - when object saved?
-		File outFile = new File("resources" + File.separator + "large-doc-out.xml");
-        PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+		if (xml_export_filename.length() > 0) {
+			File outFile = new File("resources" + File.separator + xml_export_filename);
+			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+		}
 	}
 
 	/**
@@ -189,9 +193,10 @@ public class QuestionItems {
 	 * @throws DDIFtpException
 	 */
 	static public void update(QuestionItem questionItem) throws DDIFtpException {
-		// TODO How is version handled?????
 		log.debug("Update DBXML Question Item:\n" + questionItem.getQuestionItemDocument());
 		try {
+			// TODO Version Control - not supported
+
 			DdiManager.getInstance().updateElement(questionItem.getQuestionItemDocument(), questionItem.getId(),
 					questionItem.getVersion());
 		} catch (DDIFtpException e) {
@@ -201,8 +206,10 @@ public class QuestionItems {
 		}
 		PersistenceManager.getInstance().commitWorkingResource();
 		// TODO When is xml-file updated - when object saved?
-		File outFile = new File("resources" + File.separator + "large-doc-out.xml");
-        PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+		if (xml_export_filename.length() > 0) {
+			File outFile = new File("resources" + File.separator + xml_export_filename);
+			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+		}
 	}
 	
 	/**
@@ -235,7 +242,9 @@ public class QuestionItems {
 			}
 		}
 		// TODO When is xml-file updated - when object saved?
-		File outFile = new File("resources" + File.separator + "large-doc-out.xml");
-        PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+		if (xml_export_filename.length() > 0) {
+			File outFile = new File("resources" + File.separator + xml_export_filename);
+			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+		}
 	}
 }

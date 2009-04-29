@@ -3,6 +3,7 @@ package org.ddialliance.ddieditor.ui.dbxml;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlCursor.TokenType;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 
 public class Util {
 	
@@ -31,6 +32,24 @@ public class Util {
 		}
 		xmlCursor.dispose();
 		return text;
+	}
+	
+	/**
+	 * Get label of Light XML Object. If no label found the Id. is return as label.
+	 * @param lightXmlObject
+	 * @return 
+	 */
+	public static String getLabel(LightXmlObjectType lightXmlObject) {
+		
+		if (lightXmlObject == null) {
+			return null;
+		}
+		
+		if (lightXmlObject.getLabelList().size() != 0) {
+			return Util.getTextOnMixedElement(lightXmlObject.getLabelList().get(0));
+		} else {
+			return lightXmlObject.getId();
+		}
 	}
 
 }

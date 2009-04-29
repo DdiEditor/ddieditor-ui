@@ -13,7 +13,7 @@ import org.ddialliance.ddiftp.util.log.LogType;
 public class DbXml {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, DbXml.class);
 
-	public static final String FULLY_DECLARED_NS_DOC = "big-doc.xml";
+	public static final String FULLY_DECLARED_NS_DOC = "large-doc.xml";
 	
 	
 	public static void open() throws Exception {
@@ -80,7 +80,7 @@ public class DbXml {
 			FilesystemManager.getInstance().addResource(file);
 			PersistenceManager.getInstance().setWorkingResource(file.getName());
 
-			// no commit
+			// commit
 			PersistenceManager.getInstance().exportResourceList(new File(PersistenceManager.RESOURCE_LIST_FILE));
 			PersistenceManager.getInstance().commitWorkingResource();
 		} catch (Exception e) {

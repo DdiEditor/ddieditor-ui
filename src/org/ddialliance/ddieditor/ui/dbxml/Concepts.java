@@ -12,7 +12,7 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class Concepts {
+public class Concepts extends XmlEntities {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Concepts.class);
 
 	/**
@@ -37,15 +37,17 @@ public class Concepts {
 		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getConceptsLight(id, version,
 				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
 
-		// Debug only:
-		for (LightXmlObjectType l : lightXmlObjectTypeList) {
-			log.debug("Concept Id: " + l.getId());
-			XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
-			xmlCursor.toLastAttribute();
-			xmlCursor.toNextToken();
-			String result = xmlCursor.getChars();
-			xmlCursor.dispose();
-			log.debug("Concept Label: " + result);
+		if (log.isDebugEnabled()) {
+			// Debug only:
+			for (LightXmlObjectType l : lightXmlObjectTypeList) {
+				log.debug("Concept Id: " + l.getId());
+				XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
+				xmlCursor.toLastAttribute();
+				xmlCursor.toNextToken();
+				String result = xmlCursor.getChars();
+				xmlCursor.dispose();
+				log.debug("Concept Label: " + result);
+			}
 		}
 
 		return lightXmlObjectTypeList;
