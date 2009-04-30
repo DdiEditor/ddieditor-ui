@@ -6,18 +6,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.xmlbeans.XmlCursor;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
-import org.ddialliance.ddieditor.DdieditorTestCase;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.model.lightxmlobject.impl.LightXmlObjectTypeImpl;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
@@ -26,10 +21,9 @@ import org.ddialliance.ddieditor.ui.dbxml.QuestionItems;
 import org.ddialliance.ddieditor.ui.dbxml.QuestionSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.Util;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
-import org.ddialliance.ddieditor.ui.editor.QuestionItemEditor;
-import org.ddialliance.ddieditor.ui.editor.QuestionSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
-import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_TYPE;
+import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
+import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -74,12 +68,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.internal.actions.HelpContentsAction;
-import org.eclipse.ui.part.ViewPart;
 
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
-public class InfoFileView extends ViewPart {
+public class InfoFileView extends View {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			InfoFileView.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.InfoFileView";
@@ -116,46 +109,49 @@ public class InfoFileView extends ViewPart {
 		}
 	}
 
+	public static enum EDITOR_TYPE {
+		QUESTION_SCHEME, QUESTION_ITEM
+	};
+
 	/**
 	 * Opens editor
 	 * 
 	 * @param mode
 	 */
 	private void openEditor(EDITOR_MODE_TYPE mode) {
-		EDITOR_TYPE type = null;
+		EditorInput input = null;
+		EditorInput.EDITOR_TYPE type = null;
 
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		LightXmlObjectType item = (LightXmlObjectType) obj;
 
-		// cehck type
-		if (item.getElement().equals("QuestionScheme")) {
-			type = EDITOR_TYPE.QUESTION_SCHEME;
-		} else if (item.getElement().equals("QuestionItem")) {
-			type = EDITOR_TYPE.QUESTION_ITEM;
-		} else {
-			// TODO Error handling
-			System.err.println("Element Type not supported: " + obj);
-			System.exit(0);
+		if (obj instanceof ConceptualElement) {
+			LightXmlObjectType item = ((ConceptualElement)obj).getValue();
+			if (item.getElement().equals("QuestionScheme")) {
+				log.debug("QuestionScheme");
+				type = EditorInput.EDITOR_TYPE.QUESTION_SCHEME;
+			} 
+
+			input = new EditorInput(item.getId(), item.getVersion(), item
+					.getParentId(), item.getParentVersion(), type,
+					mode, this, properties);
 		}
 
+		// open editor
 		IWorkbenchPage page = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage();
-		EditorInput input = new EditorInput(item.getId(), item.getVersion(),
-				item.getParentId(), item.getParentVersion(), type, mode,
-				properties);
 		try {
 			switch (type) {
 			case QUESTION_SCHEME:
 				page.openEditor(input, QuestionSchemeEditor.ID);
 				break;
-			case QUESTION_ITEM:
-				page.openEditor(input, QuestionItemEditor.ID);
-				break;
 			default:
-				// TODO error handling
-				System.err.println("Editor Type not supported: " + type);
-				System.exit(0);
+				MessageDialog
+				.openError(
+						getViewSite().getShell(),
+						Messages.getString("ErrorTitle"),
+						Messages
+								.getString("View.mess.EditorOpenError")+" type: "+obj.getClass().getName()+" is not supported");
 				break;
 			}
 
@@ -167,7 +163,7 @@ public class InfoFileView extends ViewPart {
 							getViewSite().getShell(),
 							Messages.getString("ErrorTitle"),
 							Messages
-									.getString("View.mess.EditorOpenError" + "\n" + ex.getMessage())); //$NON-NLS-1$
+									.getString("View.mess.EditorOpenError" + "\n" + ex.getMessage())); 
 		}
 	}
 
@@ -402,21 +398,21 @@ public class InfoFileView extends ViewPart {
 					parentVersion = item.getVersion();
 				}
 				// TODO Handling of version not done - currently always 1
-				EditorInput input = new EditorInput(null, "1", parentId,
-						parentVersion, EDITOR_TYPE.QUESTION_ITEM,
-						EDITOR_MODE_TYPE.NEW, properties);
-				try {
-					// TODO Use this.openEditor()
-					page.openEditor(input, QuestionItemEditor.ID);
-					// notify any listeners of the view with the actual data of
-					// the view
-					treeViewer.setSelection(treeViewer.getSelection());
-				} catch (PartInitException ex) {
-					MessageDialog.openError(getViewSite().getShell(), Messages
-							.getString("ErrorTitle"), Messages
-							.getString("View.mess.EditorOpenError")
-							+ "\n" + ex.getMessage()); //$NON-NLS-1$
-				}
+				// EditorInput input = new EditorInput(null, "1", parentId,
+				// parentVersion, EDITOR_TYPE.QUESTION_ITEM,
+				// EDITOR_MODE_TYPE.NEW, properties);
+				// try {
+				// // TODO Use this.openEditor()
+				// page.openEditor(input, QuestionItemEditor.ID);
+				// // notify any listeners of the view with the actual data of
+				// // the view
+				// treeViewer.setSelection(treeViewer.getSelection());
+				// } catch (PartInitException ex) {
+				// MessageDialog.openError(getViewSite().getShell(), Messages
+				// .getString("ErrorTitle"), Messages
+				// .getString("View.mess.EditorOpenError")
+				//							+ "\n" + ex.getMessage()); //$NON-NLS-1$
+				// }
 			}
 		});
 
@@ -604,19 +600,14 @@ public class InfoFileView extends ViewPart {
 			Object[] guard = new Object[0];
 
 			// list storages
-			if (parentElement instanceof StorageType) {
-				StorageType storage = (StorageType) parentElement;
-				// if
-				// (storage.getId().equals(PersistenceManager.RESOURCE_LIST_CONTAINER))
-				// {
-				// return guard;
-				// }
-				DDIResourceType[] array = new DDIResourceType[storage
-						.getDDIResourceList().size()];
-				return storage.getDDIResourceList().toArray(array);
-			}
+			// if (parentElement instanceof StorageType) {
+			// StorageType storage = (StorageType) parentElement;
+			// DDIResourceType[] array = new DDIResourceType[storage
+			// .getDDIResourceList().size()];
+			// return storage.getDDIResourceList().toArray(array);
+			// }
 			// list conceptual types
-			else if (parentElement instanceof DDIResourceType) {
+			if (parentElement instanceof DDIResourceType) {
 				// TODO add to hashmap resource id ~ conceptual overview
 				// add lookup in chahce list!
 				if (conceptualList == null) {
@@ -653,20 +644,21 @@ public class InfoFileView extends ViewPart {
 						}
 					}
 					ConceptualElement[] array = new ConceptualElement[list
-					                      							.size()];
+							.size()];
 					return list.toArray(array);
 				} catch (Exception e) {
 					// TODO msg view
 					e.printStackTrace();
 				}
 				return guard;
-			} 
+			}
 			// guard
 			else {
 				if (log.isDebugEnabled()) {
 					log.debug("No children for: "
 							+ (parentElement == null ? "null" : parentElement
-									.getClass().getName()) + "\n" + parentElement);
+									.getClass().getName()) + "\n"
+							+ parentElement);
 				}
 				return guard;
 			}
@@ -716,8 +708,8 @@ public class InfoFileView extends ViewPart {
 				// guard
 				if (log.isDebugEnabled()) {
 					log.debug("No label defined for: "
-							+ (element == null ? "null" : element
-									.getClass().getName()) + "\n" + element);
+							+ (element == null ? "null" : element.getClass()
+									.getName()) + "\n" + element);
 				}
 				return "- na -";
 			}
