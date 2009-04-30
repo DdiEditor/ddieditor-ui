@@ -3,7 +3,8 @@ package org.ddialliance.ddieditor.ui.editor.question;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.ddialliance.ddieditor.ui.dbxml.QuestionItems;
+import org.ddialliance.ddieditor.ui.IAutoChangePerspective;
+import org.ddialliance.ddieditor.ui.Perspective;
 import org.ddialliance.ddieditor.ui.dbxml.QuestionSchemes;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
@@ -34,9 +35,9 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
 
-public class QuestionSchemeEditor extends Editor implements ISelectionListener {
+public class QuestionSchemeEditor extends Editor implements ISelectionListener, IAutoChangePerspective {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionSchemeEditor.class);
-	public static final String ID = "org.ddialliance.ddieditor.ui.editor.QuestionSchemeEditor";
+	public static final String ID = "org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor";
 		
 	// Member variables:
 	private QuestionScheme questionScheme;
@@ -46,6 +47,11 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener {
 	private enum TABITEM_INDEX {
 		QUESTION_SCHEME
 	};
+	
+	@Override
+	public String getPreferredPerspectiveId() {
+		return Perspective.ID;
+	}
 	
 	@Override
 	public void createPartControl(Composite parent) {
