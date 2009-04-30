@@ -19,6 +19,11 @@
             class="org.ddialliance.ddieditor.ui.Perspective"
             id="org.ddialliance.ddieditor.ui.Perspective">
       </perspective>
+      <perspective
+            class="org.ddialliance.ddieditor.ui.InfoPerspective"
+            id="org.ddialliance.ddieditor.ui.InfoPerspective"
+            name="InfoPerspective">
+      </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -27,6 +32,12 @@
             icon="icons/tree.gif"
             id="org.ddialliance.ddieditor.ui.view.QuestionItemView"
             name="Questions">
+      </view>
+      <view
+            class="org.ddialliance.ddieditor.ui.view.InfoFileView"
+            icon="icons/tree.gif"
+            id="org.ddialliance.ddieditor.ui.view.InfoFileView"
+            name="InfoFileView">
       </view>
    </extension>
    <extension
@@ -38,17 +49,17 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="org.ddialliance.ddieditor.ui.editor.QuestionItemEditor"
+            class="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
             default="false"
             icon="icons/editor_area.gif"
-            id="org.ddialliance.ddieditor.ui.editor.QuestionItemEditor"
+            id="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
             name="QuestionItemEditor">
       </editor>
       <editor
-            class="org.ddialliance.ddieditor.ui.editor.QuestionSchemeEditor"
+            class="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
             default="false"
             icon="icons/editor_area.gif"
-            id="org.ddialliance.ddieditor.ui.editor.QuestionSchemeEditor"
+            id="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
             name="QuestionSchemeEditor">
       </editor>
    </extension>
@@ -88,5 +99,32 @@
          </property>
       </product>
    </extension>
-
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.ddialliance.ddieditor.ui.preference.page.DdiPreferencePage"
+            id="org.ddialliance.ddieditor.ui.preference.page.DdiPreferencePage"
+            name="DDI">
+      </page>
+      <page
+            class="org.ddialliance.ddieditor.ui.preference.page.DdiEditorBackendPreferencePage"
+            id="org.ddialliance.ddieditor.ui.preference.page.DdiEditorBackendPreferencePage"
+            name="DDIEditor Backend">
+      </page>
+      <page
+            class="org.ddialliance.ddieditor.ui.preference.page.DdiEditorUiPreferencePage"
+            id="org.ddialliance.ddieditor.ui.preference.page.DdiEditorUiPreferencePage"
+            name="DDIEditor UI">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.ddialliance.ddieditor.ui.preference.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+       <startup class="org.ddialliance.ddieditor.ui.AutoChangePerspectiveListener"/>
+   </extension>
 </plugin>
