@@ -8,32 +8,25 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM,
-			ApplicationWorkbenchAdvisor.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM, ApplicationWorkbenchAdvisor.class);
+	
+	private static final String INITIAL_PERSPECTIVE_ID = QuestionsPerspective.ID;
 
-	private static final String INITIAL_PERSPECTIVE_ID = InfoPerspective.ID;
-
-	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
-			IWorkbenchWindowConfigurer configurer) {
-		return new ApplicationWorkbenchWindowAdvisor(configurer);
-	}
+    public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
+        return new ApplicationWorkbenchWindowAdvisor(configurer);
+    }
 
 	public String getInitialWindowPerspectiveId() {
-		if (log.isDebugEnabled()) {
-			log
-					.debug("ApplicationWorkbenchAdvisor.getInitialWindowPerspectiveId("
-							+ INITIAL_PERSPECTIVE_ID + ")");
-		}
+		log.debug("ApplicationWorkbenchAdvisor.getInitialWindowPerspectiveId("+INITIAL_PERSPECTIVE_ID+")");
 		return INITIAL_PERSPECTIVE_ID;
+//		return null; // No initial perspective
 	}
-
+	
 	public void initialize(IWorkbenchConfigurer configurer) {
 		super.initialize(configurer);
-		if (log.isDebugEnabled()) {
-			log.debug("ApplicationWorkbenchAdvisor.initialize()");
-		}
-
+		log.debug("ApplicationWorkbenchAdvisor.initialize()");
 		configurer.setSaveAndRestore(true);
 	}
 }
