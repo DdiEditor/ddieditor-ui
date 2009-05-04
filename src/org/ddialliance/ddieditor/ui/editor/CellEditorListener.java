@@ -2,16 +2,11 @@ package org.ddialliance.ddieditor.ui.editor;
 
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;
 import org.ddialliance.ddieditor.ui.model.Language;
-import org.ddialliance.ddieditor.ui.model.QuestionItem;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.ICellEditorListener;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.swt.SWT;
 
 public class CellEditorListener implements ICellEditorListener {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, CellEditorListener.class);
