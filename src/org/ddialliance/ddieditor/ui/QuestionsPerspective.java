@@ -1,8 +1,6 @@
 package org.ddialliance.ddieditor.ui;
 
-import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.view.QuestionItemView;
-import org.ddialliance.ddieditor.ui.view.View;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
