@@ -11,13 +11,11 @@ import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
-import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 
 public class TableEditingSupport extends EditingSupport {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, TableEditingSupport.class);
