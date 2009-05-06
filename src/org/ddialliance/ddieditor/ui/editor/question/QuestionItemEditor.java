@@ -58,7 +58,7 @@ import org.eclipse.ui.PartInitException;
 
 public class QuestionItemEditor extends Editor implements ISelectionListener {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionItemEditor.class);
-	public static final String ID = "org.ddialliance.ddieditor.ui.editor.QuestionItemEditor";
+	public static final String ID = "org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor";
 	
 	/**
 	 * 
