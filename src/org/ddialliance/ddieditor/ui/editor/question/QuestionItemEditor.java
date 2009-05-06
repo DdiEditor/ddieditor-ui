@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.sf.saxon.Platform;
+
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.Concepts;
@@ -24,6 +26,9 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -155,10 +160,9 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 				log.debug("Language: " + Language.getLanguage(questionItemLiteralText.getLanguageCode()));
 				return Language.getLanguage(questionItemLiteralText.getLanguageCode());
 			default:
-				MessageDialog
-						.openError(
-								site.getShell(),
-								Messages.getString("ErrorTitle"), Messages.getString("QITTableLabelProvider.mess.UnexpectedColumnIndexFound")); //$NON-NLS-1$
+				String errMess = Messages.getString("QITTableLabelProvider.mess.UnexpectedColumnIndexFound");
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, errMess, null));
 				throw new RuntimeException(Messages.getString("QITTableLabelProvider.mess.UnexpectedColumnIndexFound")); //$NON-NLS-1$
 			}
 		}
@@ -238,9 +242,9 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		try {
 			conceptReferenceList = Concepts.getConceptsLight("", "", "", "");
 		} catch (Exception e1) {
-			String errMess = MessageFormat.format(Messages
-					.getString("QuestionItemEditor.mess.ConceptRetrievalError"), e1.getMessage()); //$NON-NLS-1$
-			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+			String errMess = Messages.getString("QuestionItemEditor.mess.ConceptRetrievalError"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, errMess, e1));
 		}
 
 		// - Create Concept selection composite: 
@@ -249,9 +253,10 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 					.getString("QuestionItemEditor.label.conceptLabel.Concept"), conceptReferenceList, questionItem
 					.getConceptRef());
 		} catch (Exception e2) {
-			String errMess = MessageFormat.format(Messages
-					.getString("QuestionItemEditor.mess.CreateFilteredItemsSelectionError"), e2.getMessage()); //$NON-NLS-1$
-			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+			String errMess = Messages
+					.getString("QuestionItemEditor.mess.CreateFilteredItemsSelectionError"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, errMess, e2));
 		}
 		filteredItemsSelection.addSelectionListener(Messages
 				.getString("QuestionItemEditor.label.SelectConseptReference"), conceptReferenceList,
@@ -264,7 +269,8 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 					} catch (Exception e1) {
 						String errMess = MessageFormat.format(Messages
 								.getString("QuestionItemEditor.mess.SetConceptRefError"), e1.getMessage()); //$NON-NLS-1$
-						MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+						ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+								ID, 0, errMess, e1));
 					}
 					editorStatus.setChanged();
 				}
@@ -287,9 +293,9 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 				// matter
 				text = questionItem.getText(false, "");
 			} catch (Exception e1) {
-				String errMess = MessageFormat.format(
-						Messages.getString("QuestionItemEditor.mess.QuestionItemTextRetrievalError"), e1.getMessage()); //$NON-NLS-1$
-				MessageDialog.openInformation(site.getShell(), Messages.getString("InfoTitle"), errMess);
+				String errMess = Messages.getString("QuestionItemEditor.mess.QuestionItemTextRetrievalError"); //$NON-NLS-1$
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, errMess, e1));
 			}
 		}
 		originalQuestionTextStyledText.setText(text);
@@ -315,7 +321,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		langCombo = new Combo(questionGroup, SWT.READ_ONLY);
 		langCombo.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				// TODO
+				// TODO If original language is changed - what happens with translated questions?
 				//questionItem.setLanguage(LANGUAGES_CODE[DEFAULT_LANGUAGE_INDEX
 				// ]);
 				editorStatus.setChanged();
@@ -380,7 +386,8 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 			} catch (Exception e1) {
 				String errMess = MessageFormat.format(Messages
 						.getString("QuestionItemEditor.mess.ResponseDomainReferenceRetrievalError"), e1.getMessage()); //$NON-NLS-1$
-				MessageDialog.openInformation(site.getShell(), Messages.getString("InfoTitle"), errMess);
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, errMess, e1));
 			}
 		}
 
@@ -412,16 +419,13 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 					// ResponseTypeDetail modify listener
 					RepresentationType repType = questionItem.setResponseDomain(rt, "");
 					if (repType == null) {
-						System.out.println(".modifyText(0)");
 						String errMess = MessageFormat.format(Messages
 								.getString("QuestionItemEditor.mess.QuestionItemResponseTypeNotSupported"), ResponseTypeDetail
 								.getResponseTypeLabel(rt)); //$NON-NLS-1$
-						MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
-						System.out.println(".modifyText(1)");
+						ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(
+								IStatus.ERROR, ID, 0, errMess, null), IStatus.ERROR);
 						responseComboViewer.getCombo().select(0);
-						System.out.println(".modifyText(2)");
 						responseTypeDetail.dispose();
-						System.out.println(".modifyText(3)");
 						return;
 					}
 					// Show corresponding Response Type details
@@ -566,8 +570,9 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		try {
 			questionItem.validate();
 		} catch (Exception e1) {
-			String errMess = MessageFormat.format(Messages.getString("QuestionItemEditor.mess.ValidationError"), e1.getMessage()); //$NON-NLS-1$
-			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+			String errMess = Messages.getString("QuestionItemEditor.mess.ValidationError"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, errMess, e1));
 			return;
 		}
 		try {
@@ -582,7 +587,8 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 			editorInput.getParentView().refreshView();
 		} catch (Exception e) {
 			String errMess = MessageFormat.format(Messages.getString("QuestionItemEditor.mess.ErrorDuringSave"), e.getMessage()); //$NON-NLS-1$
-			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, errMess, e));
 			return;
 		}
 		editorStatus.clearChanged();
@@ -610,9 +616,9 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 						editorInput.getParentVersion());
 			} catch (Exception e) {
 				log.error("QuestionItemEditor.init(): " + e.getMessage());
-				String errMess = MessageFormat.format(Messages
-						.getString("QuestionItemEditor.mess.ErrorDuringCreateNewQuestionItem"), e.getMessage()); //$NON-NLS-1$
-				MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+				String errMess = Messages.getString("QuestionItemEditor.mess.ErrorDuringCreateNewQuestionItem"); //$NON-NLS-1$
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, errMess, e));
 				System.exit(0);
 			}
 		} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)
@@ -621,19 +627,15 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 				questionItem = QuestionItems.getQuestionItem(editorInput.getId(), editorInput.getVersion(), editorInput
 						.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
-				System.out.println("Id: "+editorInput.getId());
-				System.out.println("Version: "+editorInput.getVersion());
-				System.out.println("Parent Id: "+editorInput.getParentId());
-				System.out.println("Parent Version: "+editorInput.getParentVersion());
-				String errMess = MessageFormat.format(
-						Messages.getString("QuestionItemEditor.mess.GetQuestionItemByIdError"), e.getMessage()); //$NON-NLS-1$
-				MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
-//				System.exit(0);
+				String errMess = Messages.getString("QuestionItemEditor.mess.GetQuestionItemByIdError"); //$NON-NLS-1$
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, errMess, e));
 			}
 		} else {
 			String errMess = MessageFormat.format(
 					Messages.getString("QuestionItemEditor.mess.UnknownEditorMode"), editorInput.getEditorMode()); //$NON-NLS-1$
-			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, errMess, null));
 			System.exit(0);
 		}
 
