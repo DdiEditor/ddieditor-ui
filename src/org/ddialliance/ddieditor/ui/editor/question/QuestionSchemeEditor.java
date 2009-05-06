@@ -15,6 +15,9 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -152,9 +155,9 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener, 
 		try {
 			questionScheme.validate();
 		} catch (Exception e1) {
-			String errMess = MessageFormat.format(
-					Messages.getString("QuestionSchemeEditor.mess.ValidationError"), e1.getMessage()); //$NON-NLS-1$
-			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+			String errMess = Messages.getString("QuestionSchemeEditor.mess.ValidationError"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, errMess, null));
 			return;
 		}
 		try {
@@ -167,9 +170,9 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener, 
 				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
-			String errMess = MessageFormat.format(
-					Messages.getString("QuestionSchemeEditor.mess.ErrorDuringSave"), e.getMessage()); //$NON-NLS-1$
-			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+			String errMess = Messages.getString("QuestionSchemeEditor.mess.ErrorDuringSave"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, errMess, e));
 			return;
 		}
 		editorInput.getParentView().refreshView();
@@ -198,9 +201,9 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener, 
 						editorInput.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
 				log.error("QuestionSchemeEditor.init(): " + e.getMessage());
-				String errMess = MessageFormat.format(Messages
-						.getString("QuestionSchemeEditor.mess.ErrorDuringCreateNewQuestionScheme"), e.getMessage()); //$NON-NLS-1$
-				MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+				String errMess = Messages.getString("QuestionSchemeEditor.mess.ErrorDuringCreateNewQuestionScheme"); //$NON-NLS-1$
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, errMess, e));
 				System.exit(0);
 			}
 		} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)
@@ -209,9 +212,9 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener, 
 				questionScheme = QuestionSchemes.getQuestionScheme(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
-				String errMess = MessageFormat.format(Messages
-						.getString("QuestionSchemeEditor.mess.GetQuestionSchemeByIdError"), e.getMessage()); //$NON-NLS-1$
-				MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+				String errMess = Messages.getString("QuestionSchemeEditor.mess.GetQuestionSchemeByIdError"); //$NON-NLS-1$
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, errMess, e));
 				System.exit(0);
 			}
 		} else {
