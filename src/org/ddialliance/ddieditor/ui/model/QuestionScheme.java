@@ -4,9 +4,12 @@ import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionSchemeDocumen
 import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.impl.QuestionSchemeTypeImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddieditor.ui.Activator;
+import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 public class QuestionScheme {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionItem.class);
@@ -145,8 +148,9 @@ public class QuestionScheme {
 
 		labelType = questionSchemeTypeImpl.addNewLabel();
 		labelType.setTranslated(false);
-		// TODO Get default language
-		labelType.setLang("da");
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		labelType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
+		
 		labelType.setStringValue(string);
 	}
 	
@@ -193,8 +197,8 @@ public class QuestionScheme {
 		}
 		labelType = questionSchemeTypeImpl.addNewLabel();
 		labelType.setTranslated(false);
-		// TODO Get default language
-		labelType.setLang("da");
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		labelType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
 		labelType.setStringValue(string);
 	}
 	
@@ -241,8 +245,8 @@ public class QuestionScheme {
 		
 		descriptionType = questionSchemeTypeImpl.addNewDescription();
 		descriptionType.setTranslated(false);
-		// TODO Get default language
-		descriptionType.setLang("da");
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		descriptionType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
 		// TODO save text.
 		// descriptionType.setStringValue(string);
 	}
@@ -294,8 +298,8 @@ public class QuestionScheme {
 		}
 		descriptionType = questionSchemeTypeImpl.addNewDescription();
 		descriptionType.setTranslated(false);
-		// TODO Get default language
-		descriptionType.setLang("da");
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		descriptionType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
 		// TODO save text.
 		// descriptionType.setStringValue(string);
 	}
