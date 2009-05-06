@@ -3,10 +3,13 @@ package org.ddialliance.ddieditor.ui.editor;
 import java.util.Properties;
 import java.util.Random;
 
+import org.ddialliance.ddieditor.ui.Activator;
+import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
 import org.ddialliance.ddieditor.ui.view.View;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -41,7 +44,8 @@ public class EditorInput implements IEditorInput {
 			} else {
 				prefix = "qi";
 			}
-			id = genID(prefix, properties.getProperty("agency", "unknown"));
+			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+			id = genID(prefix, store.getString(PreferenceConstants.DDI_AGENCY));
 		}
 		this.id = id;
 		this.version = version;
