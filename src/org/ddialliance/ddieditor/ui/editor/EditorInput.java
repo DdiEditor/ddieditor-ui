@@ -36,8 +36,6 @@ public class EditorInput implements IEditorInput {
 			EDITOR_MODE_TYPE mode, View parentView, Properties properties) {
 		log.debug("");
 		if (mode.equals(EDITOR_MODE_TYPE.NEW)) {
-			// Get agency from property file
-			// TODO - at startup time!!!
 			String prefix;
 			if (type.equals(EDITOR_TYPE.QUESTION_SCHEME)) {
 				prefix = "qs";
