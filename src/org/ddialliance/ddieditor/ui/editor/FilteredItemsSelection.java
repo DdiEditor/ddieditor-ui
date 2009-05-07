@@ -42,6 +42,7 @@ public class FilteredItemsSelection {
 	ComboViewer comboViewer;
 	Button browseButton;
 	LightXmlObjectType result;
+	List<LightXmlObjectType> referenceList;
 	
 	/**
 	 * Create Part Control i.e. create labels, field and browse button
@@ -57,6 +58,7 @@ public class FilteredItemsSelection {
 			final List<LightXmlObjectType> referenceList, String preIdValue) {
 		
 		this.parentCodeComposite = parentCodeComposite;
+		this.referenceList = referenceList;
 		
 		// Create Label Composite:
 		final Composite labelComposite = new Composite(parentLabelComposite, SWT.NONE);
@@ -150,9 +152,19 @@ public class FilteredItemsSelection {
 
 				dialog.setInitialPattern(comboViewer.getCombo().getSelectionIndex() == -1 ? "**" : comboViewer.getCombo().getText());
 				dialog.open();
+				
+				// Sync. Combo Box:
 				result = (LightXmlObjectType) dialog.getFirstResult();
 				if (result != null) {
-					comboViewer.getCombo().setText(result.getId());
+					int index = 0;
+					for (Iterator iterator = referenceList.iterator(); iterator.hasNext();) {
+						LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) iterator.next();
+						if (lightXmlObjectType.getId().equals(result.getId())) {
+							break;
+						}
+						index++;
+					}
+					comboViewer.getCombo().select(index);
 				}
 			}
 		});
