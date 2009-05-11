@@ -15,9 +15,14 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="Perspective"
-            class="org.ddialliance.ddieditor.ui.Perspective"
-            id="org.ddialliance.ddieditor.ui.Perspective">
+            class="org.ddialliance.ddieditor.ui.ConceptsPerspective"
+            id="org.ddialliance.ddieditor.ui.ConceptsPerspective"
+            name="ConceptsPerspective">
+      </perspective>
+      <perspective
+            name="QuestionsPerspective"
+            class="org.ddialliance.ddieditor.ui.QuestionsPerspective"
+            id="org.ddialliance.ddieditor.ui.QuestionsPerspective">
       </perspective>
       <perspective
             class="org.ddialliance.ddieditor.ui.InfoPerspective"
