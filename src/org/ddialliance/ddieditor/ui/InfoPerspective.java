@@ -16,7 +16,7 @@ public class InfoPerspective  implements IPerspectiveFactory {
 	public void createInitialLayout(IPageLayout layout) {
 		log.debug("Perspective.createInitialLayout()");
 		addViewShortcuts(layout);
-		layout.addView(InfoFileView.ID, IPageLayout.LEFT, 0.78f, layout.getEditorArea());
+		layout.addView(InfoFileView.ID, IPageLayout.LEFT, 0.50f, layout.getEditorArea());
 		addFastViews(layout);
 	}
 
