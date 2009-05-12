@@ -36,7 +36,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 			log.debug("ApplicationWorkbenchWindowAdvisor.preWindowOpen()");
 		}
 		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
-		configurer.setInitialSize(new Point(800, 600));
+		configurer.setInitialSize(new Point(1300, 1200));
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(true);
 		configurer.setTitle("DDI Editor");
