@@ -14,7 +14,7 @@ public class QuestionsPerspective implements IPerspectiveFactory {
 	public void createInitialLayout(IPageLayout layout) {
 		log.debug("QuestionsPerspective.createInitialLayout()");
 		addViewShortcuts(layout);
-		layout.addView(QuestionItemView.ID, IPageLayout.LEFT, 0.78f, layout.getEditorArea());
+		layout.addView(QuestionItemView.ID, IPageLayout.LEFT, 0.50f, layout.getEditorArea());
 		addFastViews(layout);
 	}
 
