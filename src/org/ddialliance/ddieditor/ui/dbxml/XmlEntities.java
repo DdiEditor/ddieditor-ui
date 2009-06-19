@@ -10,4 +10,5 @@ public class XmlEntities {
 		
 		xml_export_filename = properties.getProperty("xml_export_filename", "");
 	}
+	
 }
