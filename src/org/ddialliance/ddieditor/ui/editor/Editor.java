@@ -2,7 +2,6 @@ package org.ddialliance.ddieditor.ui.editor;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.ddialliance.ddieditor.ui.IAddAttr;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.QuestionItemView;
@@ -39,9 +38,20 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.swtdesigner.SWTResourceManager;
 
+/**
+* The Editor Class consist of a header with a Tabfolder. The Tabfolder contains a set of TabItems. The number is configurable
+but minimum is one Property TabItem.
+* 
+* @author ddadak
+* 
+*/
 public class Editor extends EditorPart {
+	
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
 
+	/**
+	* The EditorStatus class keeps track of the Editor status.
+	*/
 	public class EditorStatus {
 		private boolean changed = false;
 
@@ -79,7 +89,16 @@ public class Editor extends EditorPart {
 		DIGIT, LETTER, LETTER_DIGIT
 	};
 
-	// Verify field data and report eventually errors
+	/**
+	 * Verify field data and report eventually errors
+	 * 
+	 * @param ft
+	 * 			Field type e.g. DIGIT, LETTER, LETTER_DIGIT
+	 * @param e
+	 * 			Verify event
+	 * @param currentSite
+	 * 			Current Site
+	 */
 	public static void verifyField(FIELD_TYPE ft, VerifyEvent e, IEditorSite currentSite) {
 		char myChar;
 
@@ -147,8 +166,8 @@ public class Editor extends EditorPart {
 	
 	private void createPropertiesTab(TabFolder tabFolder) {
 		
-		// Properties Tab:
-		// ----------------
+		// Properties Tab Item:
+		// --------------------
 		final TabItem propertiesTabItem = new TabItem(tabFolder, SWT.NONE);
 		propertiesTabItem.setText(Messages.getString("Editor.label.propertiesTabItem.Properties")); //$NON-NLS-1$
 
@@ -266,6 +285,10 @@ public class Editor extends EditorPart {
 	 * Create standard contents of the editor part
 	 * 
 	 * @param parent
+	 * @param headerEditorTitle
+	 * @param headerEditorDescr
+	 * @param nbrTabItems
+	 * 			- requested number of Tab Items
 	 * @return List<TabItem> List of Tab Items requested by caller.
 	 */
 	public List<TabItem> createStandardPartControl(Composite parent, String headerEditorTitle,
@@ -320,7 +343,7 @@ public class Editor extends EditorPart {
 		createPropertiesTab(tabFolder);
 		
 		//
-		site.getPage().addSelectionListener(QuestionItemView.ID, (ISelectionListener) this);
+//		site.getPage().addSelectionListener(QuestionItemView.ID, (ISelectionListener) this);
 		log.debug("Part Properties: " + getPartProperties());
 
 		// Clean dirt from initialization
