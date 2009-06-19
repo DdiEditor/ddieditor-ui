@@ -215,7 +215,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		final GridLayout gridLayout_1 = new GridLayout();
 		gridLayout_1.numColumns = 2;
 		questionGroup.setLayout(gridLayout_1);
-		questionGroup.setText("Question");
+		questionGroup.setText("Question Item");
 
 		// Concept:
 		final Composite LabelComposite = new Composite(questionGroup, SWT.NONE);
@@ -630,6 +630,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 				String errMess = Messages.getString("QuestionItemEditor.mess.GetQuestionItemByIdError"); //$NON-NLS-1$
 				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
 						ID, 0, errMess, e));
+				System.exit(0);
 			}
 		} else {
 			String errMess = MessageFormat.format(
@@ -643,7 +644,6 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		setSite(site);
 		setInput(editorInput);
 		setPartName(editorInput.getId());
-		
 	}
 
 }

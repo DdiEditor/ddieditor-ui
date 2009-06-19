@@ -138,7 +138,7 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener, 
 		gd_originalQuestionTextStyledText.widthHint = 308;
 		questionSchemeDescrStyledText.setLayoutData(gd_originalQuestionTextStyledText);
 
-		// Clean dirt from initialisation
+		// Clean dirt from initialization
 		editorStatus.clearChanged();
 	}
 
