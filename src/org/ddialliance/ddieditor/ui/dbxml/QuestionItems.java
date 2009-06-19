@@ -110,9 +110,10 @@ public class QuestionItems extends XmlEntities {
 
 		QuestionItemType questionItemType = questionItemDocument.addNewQuestionItem();
 		questionItemType.setId(id);
-		// TODO Version Control - not supported
-		//questionItemType.setVersion(version);
-
+		if (version != null) {
+			questionItemType.setVersion(version);
+		}
+		
 		QuestionItem questionItem = new QuestionItem(questionItemDocument, parentId, parentVersion);
 
 		return questionItem;
@@ -224,8 +225,8 @@ public class QuestionItems extends XmlEntities {
 		log.debug("Delete DBXML Question Item");
 		QuestionItem questionItem = getQuestionItem(id, version, parentId, parentVersion);
 		try {
-			DdiManager.getInstance().deleteElement(questionItem.getQuestionItemDocument(), questionItem.getId(),
-					questionItem.getVersion(), "QuestionItem");
+			DdiManager.getInstance().deleteElement(questionItem.getQuestionItemDocument(), questionItem.getParentId(),
+					questionItem.getParentVersion(), "QuestionScheme");
 		} catch (DDIFtpException e) {
 			log.error("Delete DBXML Question Item error: "+e.getMessage());
 			PersistenceManager.getInstance().rollbackWorkingResource();
