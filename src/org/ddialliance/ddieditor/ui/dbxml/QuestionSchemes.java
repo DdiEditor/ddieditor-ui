@@ -50,29 +50,30 @@ public class QuestionSchemes extends XmlEntities {
 
 		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
 
-		if (log.isDebugEnabled()) {
-			int numbers;
-			int nLabels;
-			if ((numbers = listLightXmlObjectListType.size()) != 1) {
-				log.error("Unexpected numbers of Question Schemes:" + numbers);
-			}
-			for (LightXmlObjectType l : listLightXmlObjectListType) {
-				log.debug("Question Scheme Id: " + l.getId());
-				log.debug("Question Scheme ParentId: " + l.getParentId());
-				nLabels = l.getLabelList().size();
-				log.debug("Question Scheme Lagel list size: " + nLabels);
-				if (nLabels > 0) {
-					log.debug("Question Scheme lang(0): " + l.getLabelList().get(0).getLang());
-					log.debug("Question Scheme LangXML(0): " + l.getLabelList().get(0).xmlText());
-					XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
-					xmlCursor.toLastAttribute();
-					xmlCursor.toNextToken();
-					String result = xmlCursor.getChars();
-					xmlCursor.dispose();
-					log.debug("Question Scheme Label text: " + result);
-				}
-			}
-		}
+		return listLightXmlObjectListType;
+	}
+	
+	/**
+	 * 
+	 * Get Light Question Item List
+	 * 
+	 * - get children (Question Items) of given Question Scheme
+	 * 
+	 * @param id
+	 * @param version
+	 * @return List<LightXmlObjectType>
+	 * @throws Exception
+	 */
+	public static List<LightXmlObjectType> getQuestionItemsLight(String id, String version) throws Exception {
+		log.debug("ConceptScheme.getQuestionItemsLight(). Id: "+id+" Version: "+version);
+
+		DdiManager ddiManager = DdiManager.getInstance();
+
+		LightXmlObjectListDocument listDoc = ddiManager.getQuestionItemsLight("", "", id, version);
+
+		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
+
+		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
 
 		return listLightXmlObjectListType;
 	}
@@ -108,7 +109,9 @@ public class QuestionSchemes extends XmlEntities {
 
 		QuestionSchemeType questionSchemeType = questionShemeDocument.addNewQuestionScheme();
 		questionSchemeType.setId(id);
-		questionSchemeType.setVersion(version);
+		if (version != null) {
+			questionSchemeType.setVersion(version);			
+		}
 
 		QuestionScheme questionScheme = new QuestionScheme(questionShemeDocument, parentId, parentVersion);
 
@@ -148,13 +151,6 @@ public class QuestionSchemes extends XmlEntities {
 	 * @throws DDIFtpException
 	 */
 	static public void create(QuestionScheme questionScheme) throws DDIFtpException {
-		if (log.isDebugEnabled()) {
-			log.debug("Create DBXML Question Scheme:\n" + questionScheme.getQuestionSchemeDocument());
-			log.debug("Parent Id: " + questionScheme.getParentId());
-			log.debug("Id: " + questionScheme.getId());
-			log.debug("Label: " + questionScheme.getLabel());
-			log.debug("Descr: " + questionScheme.getDescr());
-		}
 		try {
 			DdiManager.getInstance().createElement(questionScheme.getQuestionSchemeDocument(),
 					questionScheme.getParentId(), questionScheme.getParentVersion(), "datacollection__DataCollection");
@@ -217,8 +213,8 @@ public class QuestionSchemes extends XmlEntities {
 		log.debug("Delete DBXML Question Scheme");
 		QuestionScheme questionScheme = getQuestionScheme(id, version, parentId, parentVersion);
 		try {
-			DdiManager.getInstance().deleteElement(questionScheme.getQuestionSchemeDocument(), questionScheme.getId(),
-					questionScheme.getVersion(), "QuestionScheme");
+			DdiManager.getInstance().deleteElement(questionScheme.getQuestionSchemeDocument(), questionScheme.getParentId(),
+					questionScheme.getParentVersion(), "datacollection__DataCollection");
 		} catch (DDIFtpException e) {
 			log.error("Delete DBXML Question Scheme error: " + e.getMessage());
 			PersistenceManager.getInstance().rollbackWorkingResource();
