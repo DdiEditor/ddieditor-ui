@@ -8,8 +8,8 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 public class Util {
 	
 	/**
-	 * Get text on a mixed content element at first position after attributs. 
-	 * 'xmlns' attributes (namespace declarations) are alse skipped.
+	 * Get text on a mixed content element at first position after attributes. 
+	 * 'xmlns' attributes (namespace declarations) are also skipped.
 	 * 
 	 * @param xmlObject
 	 *            to set text on
@@ -19,10 +19,9 @@ public class Util {
 	public static String getTextOnMixedElement(XmlObject xmlObject) {
 
 		XmlCursor xmlCursor = xmlObject.newCursor();
-		xmlCursor.toLastAttribute();
-		System.out.println(xmlObject);
 		// toLastAttribute does not skip namespaces - so continue
 		// until none empty TEXT token
+		xmlCursor.toLastAttribute();
 		TokenType token = xmlCursor.toNextToken();
 		String text = xmlCursor.getTextValue().trim();
 		while (!token.equals(XmlCursor.TokenType.TEXT) || 
@@ -32,6 +31,25 @@ public class Util {
 		}
 		xmlCursor.dispose();
 		return text;
+	}
+
+	/**
+	 * Set text on a mixed content element at first position after attributes. 
+	 * 'xmlns' attributes (namespace declarations) are also skipped.
+	 * 
+	 * @param xmlObject
+	 *            to set text on
+	 * @param string
+	 * 			  text to assign
+	 */
+	public static void setTextOnMixedElement(XmlObject xmlObject, String string) {
+
+		XmlCursor xmlCursor = xmlObject.newCursor();
+		while(!xmlCursor.isStart()) {
+			xmlCursor.toNextToken();
+		}
+		xmlCursor.setTextValue(string);
+		xmlCursor.dispose();
 	}
 	
 	/**
