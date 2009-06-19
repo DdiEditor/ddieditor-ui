@@ -11,13 +11,11 @@ import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.jface.preference.IPreferenceStore;
 
-public class QuestionScheme {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionItem.class);
+public class QuestionScheme  extends Simple {
+	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionScheme.class);
 
 	private QuestionSchemeDocument questionSchemeDocument;
 	private QuestionSchemeTypeImpl questionSchemeTypeImpl;
-	private String parentId;
-	private String parentVersion;
 	
 	/**
 	 * Constructor
@@ -29,6 +27,9 @@ public class QuestionScheme {
 	 */
 	public QuestionScheme(QuestionSchemeDocument questionSchemeDocument, String parentId, String parentVersion)
 			throws Exception {
+		super(questionSchemeDocument.getQuestionScheme().getId(), questionSchemeDocument.getQuestionScheme()
+				.getVersion(), parentId, parentVersion, questionSchemeDocument.getQuestionScheme().getLabelList(),
+				questionSchemeDocument.getQuestionScheme().getDescriptionList());
 		
 		if (questionSchemeDocument == null) {
 			// TODO Create new Question Scheme
@@ -36,8 +37,6 @@ public class QuestionScheme {
 		}
 		this.questionSchemeDocument = questionSchemeDocument;
 		this.questionSchemeTypeImpl = (QuestionSchemeTypeImpl) questionSchemeDocument.getQuestionScheme();
-		this.parentId = parentId;
-		this.parentVersion = parentVersion;
 	}
 	
 	/**
@@ -48,260 +47,67 @@ public class QuestionScheme {
 	public QuestionSchemeDocument getQuestionSchemeDocument() {
 		return questionSchemeDocument;
 	}
-	
-	/**
-	 * Get ID of Question Scheme.
-	 * 
-	 * @return ID string.
-	 */
-	public String getId() {
-		return questionSchemeTypeImpl.getId();
-	}
-
-	/**
-	 * Get version of Question Scheme.
-	 * 
-	 * @return version string
-	 */
-	public String getVersion() {
-		return questionSchemeTypeImpl.getVersion();
-	}
-
-	
-	/**
-	 * Set Parent ID.
-	 * 
-	 * @param String
-	 *            parentId
-	 */
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
-
-	/**
-	 * Get Parent ID.
-	 * 
-	 * @return String
-	 */
-	public String getParentId() {
-		return this.parentId;
-	}
-
-	/**
-	 * Set Parent version
-	 * 
-	 * @param String
-	 *            parentVersion
-	 */
-	public void setParentVersion(String parentVersion) {
-		this.parentVersion = parentVersion;
-	}
-
-	/**
-	 * Get Parent version
-	 * 
-	 * @return String
-	 */
-	public String getParentVersion() {
-		return this.parentVersion;
-	}
-
-	/**
-	 * Get label of Question Scheme.
-	 * 
-	 * @return String
-	 * @throws Exception
-	 */
-	public String getLabel(Language language) throws Exception {
-		LabelType labelType;
-
-		// Get Label corresponding to language
-		int length = questionSchemeTypeImpl.getLabelList().size();
-		for (int i = 0; i < length; i++) {
-			labelType = questionSchemeTypeImpl.getLabelArray(i);
-			if (labelType.getLang().equals(language)) {
-				return labelType.getStringValue();
-			}
-		}
-		log.error("*** Question Scheme Label of given Language <"+language+"> not found ***");
-		return "";
-	}
-
+		
 	/**
 	 * Set label of Question Scheme.
 	 * 
 	 * @param string
-	 * @return Void
+	 * @return LabelType
 	 */
-	public void setLabel(String string, Language language) {
-		LabelType labelType;
+	@Override
+	public LabelType setLabel(String string, Language language) {
 
-		// Remove label corresponding to language
-		int length = questionSchemeTypeImpl.getLabelList().size();
-		for (int i = 0; i < length; i++) {
-			labelType = questionSchemeTypeImpl.getLabelArray(i);
-			if (labelType.getLang().equals(language)) {
-				labelType.setStringValue(string);
-				return;
-			}
+		LabelType labelType = super.setLabel(string, language);
+		if (labelType != null) {
+			questionSchemeTypeImpl.getLabelList().add(labelType);
 		}
-
-		labelType = questionSchemeTypeImpl.addNewLabel();
-		labelType.setTranslated(false);
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		labelType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
-		
-		labelType.setStringValue(string);
+		return null;
 	}
 	
-	/**
-	 * Get Original Label of Question Scheme.
-	 * 'Original' means not translated.
-	 * 
-	 * @return String
-	 * @throws Exception
-	 */
-	public String getLabel() {
-		LabelType labelType;
-
-		// Get Label corresponding to language
-		int length = questionSchemeTypeImpl.getLabelList().size();
-		for (int i = 0; i < length; i++) {
-			labelType = questionSchemeTypeImpl.getLabelArray(i);
-			if (!labelType.getTranslated()) {
-				return labelType.getStringValue();
-			}
-		}
-		log.error("*** Question Scheme Label of 'Original' Language not found ***");
-		return "";
-	}
-
 	/**
 	 * Set Original Label of Question Scheme.
 	 * 'Original' means not translated.
 	 * 
 	 * @param string
-	 * @return Void
+	 * @return LabelType
 	 */
-	public void setLabel(String string) {
-		LabelType labelType;
-
-		// Remove label corresponding to language
-		int length = questionSchemeTypeImpl.getLabelList().size();
-		for (int i = 0; i < length; i++) {
-			labelType = questionSchemeTypeImpl.getLabelArray(i);
-			if (!labelType.getTranslated()) {
-				labelType.setStringValue(string);
-				return;
-			}
+	public LabelType setLabel(String string) {
+		
+		LabelType labelType = super.setLabel(string);
+		if (labelType != null) {
+			questionSchemeTypeImpl.getLabelList().add(labelType);
 		}
-		labelType = questionSchemeTypeImpl.addNewLabel();
-		labelType.setTranslated(false);
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		labelType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
-		labelType.setStringValue(string);
+		return null;
 	}
 	
-	/**
-	 * Get Description of Question Scheme.
-	 * 
-	 * @return String
-	 */
-	public String getDescr(Language language) {
-
-		StructuredStringType descriptionType;
-
-		// Get Description corresponding to language
-		int length = questionSchemeTypeImpl.getDescriptionList().size();
-		for (int i = 0; i < length; i++) {
-			descriptionType = questionSchemeTypeImpl.getDescriptionArray(i);
-			if (descriptionType.getLang().equals(language)) {
-				return questionSchemeTypeImpl.getDescriptionArray(i).toString();
-			}
-		}
-		log.error("*** Question Scheme Description of given Language <"+language+"> not found ***");
-		return "";
-	}
-
 	/**
 	 * Set Description of Question Scheme.
 	 * 
 	 * @param string
-	 * @return Void
+	 * @return StructuredStringType
 	 */
-	public void setDescr(String string, Language language) {
-		StructuredStringType descriptionType;
+	public StructuredStringType setDescr(String string, Language language) {
 		
-		// Remove description corresponding to language
-		int length = questionSchemeTypeImpl.getDescriptionList().size();
-		for (int i = 0; i < length; i++) {
-			descriptionType = questionSchemeTypeImpl.getDescriptionArray(i);
-			if (descriptionType.getLang().equals(language)) {
-				// TODO save text.
-//				descriptionType.setText(string);
-				return;
-			}
+		StructuredStringType descriptionType = super.setDescr(string);
+		if (descriptionType != null) {
+			questionSchemeTypeImpl.getDescriptionList().add(descriptionType);
 		}
-		
-		descriptionType = questionSchemeTypeImpl.addNewDescription();
-		descriptionType.setTranslated(false);
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		descriptionType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
-		// TODO save text.
-		// descriptionType.setStringValue(string);
+		return null;		
 	}
 	
-	/**
-	 * Get Original Description of Question Scheme.
-	 * Original means not translated.
-	 * 
-	 * @return String
-	 */
-	public String getDescr() {
-
-		StructuredStringType descriptionType;
-
-		// Get Description corresponding to language
-		int length = questionSchemeTypeImpl.getDescriptionList().size();
-		for (int i = 0; i < length; i++) {
-			descriptionType = questionSchemeTypeImpl.getDescriptionArray(i);
-			if (!descriptionType.getTranslated()) {
-//				return descriptionType.getText();
-				return "";
-			}
-		}
-		log.error("*** Question Scheme Original Description not found ***");
-		return "";
-	}
-
 	/**
 	 * Set Original Description of Question Scheme.
 	 * Original means not translated.
 	 * 
 	 * @param string
-	 * @return Void
+	 * @return StructuredStringType
 	 */
-	public void setDescr(String string) {
-		StructuredStringType descriptionType;
-		
-		// Remove description corresponding to language
-		int length = questionSchemeTypeImpl.getDescriptionList().size();
-		for (int i = 0; i < length; i++) {
-			descriptionType = questionSchemeTypeImpl.getDescriptionArray(i);
-			if (!descriptionType.getTranslated()) {
-				// TODO Assign text
-//				StructuredStringType stringType = new StructuredStringTypeImpl(null);
-//				stringType.addNewH1().setTitle(string);
-//				descriptionType.setH1Array(0, (H1Type) stringType);
-				return;
-			}
+	public StructuredStringType setDescr(String string) {
+		StructuredStringType descriptionType = super.setDescr(string);
+		if (descriptionType != null) {
+			questionSchemeTypeImpl.getDescriptionList().add(descriptionType);
 		}
-		descriptionType = questionSchemeTypeImpl.addNewDescription();
-		descriptionType.setTranslated(false);
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		descriptionType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
-		// TODO save text.
-		// descriptionType.setStringValue(string);
+		return null;		
 	}
 	
 	/**

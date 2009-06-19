@@ -28,12 +28,10 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class QuestionItem {
+public class QuestionItem extends Model {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionItem.class);
 	private QuestionItemDocument questionItemDocument;
 	private QuestionItemTypeImpl questionItemTypeImpl;
-	private String parentId;
-	private String parentVersion;
 	private List<QuestionItemLiteralText> questionItemLiteralTextList = new ArrayList<QuestionItemLiteralText>();
 	private String originalLanguageCode = null;
 
@@ -47,14 +45,16 @@ public class QuestionItem {
 	 */
 	public QuestionItem(QuestionItemDocument questionItemDocument, String parentId, String parentVersion)
 			throws Exception {
+		
+		super(questionItemDocument.getQuestionItem().getId(), questionItemDocument.getQuestionItem().getVersion(),
+				parentId, parentVersion);
+		
 		if (questionItemDocument == null) {
 			// TODO Create new Question Item
 			this.questionItemDocument = null;
 		}
 		this.questionItemDocument = questionItemDocument;
 		this.questionItemTypeImpl = (QuestionItemTypeImpl) questionItemDocument.getQuestionItem();
-		this.parentId = parentId;
-		this.parentVersion = parentVersion;
 
 		// Generate list of Question Item Literal Texts:
 		// - all QuestionText and LiteralText elements with same language is
@@ -93,45 +93,7 @@ public class QuestionItem {
 	}
 
 	/**
-	 * Set Parent ID.
-	 * 
-	 * @param String
-	 *            parentId
-	 */
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
-
-	/**
-	 * Get Parent ID.
-	 * 
-	 * @return String
-	 */
-	public String getParentId() {
-		return this.parentId;
-	}
-
-	/**
-	 * Set Parent version
-	 * 
-	 * @param String
-	 *            parentVersion
-	 */
-	public void setParentVersion(String parentVersion) {
-		this.parentVersion = parentVersion;
-	}
-
-	/**
-	 * Get Parent version
-	 * 
-	 * @return String
-	 */
-	public String getParentVersion() {
-		return this.parentVersion;
-	}
-
-	/**
-	 * Get Original Langage Code
+	 * Get Original Language Code
 	 * 
 	 * @return String
 	 */
@@ -454,27 +416,27 @@ public class QuestionItem {
 		}
 	}
 
-	/**
-	 * Get ID of Question Item.
-	 * 
-	 * @return ID string.
-	 */
-	public String getId() {
-		return questionItemTypeImpl.getId();
-	}
-	
-	public boolean getIsVersionable() {
-		return questionItemTypeImpl.getIsVersionable();
-	}
-
-	/**
-	 * Get version of Question Item.
-	 * 
-	 * @return version string
-	 */
-	public String getVersion() {
-		return questionItemTypeImpl.getVersion();
-	}
+//	/**
+//	 * Get ID of Question Item.
+//	 * 
+//	 * @return ID string.
+//	 */
+//	public String getId() {
+//		return questionItemTypeImpl.getId();
+//	}
+//
+//	public boolean getIsVersionable() {
+//		return questionItemTypeImpl.getIsVersionable();
+//	}
+//
+//	/**
+//	 * Get version of Question Item.
+//	 * 
+//	 * @return version string
+//	 */
+//	public String getVersion() {
+//		return questionItemTypeImpl.getVersion();
+//	}
 
 	/**
 	 * Get Question Item Document of Question Item.
