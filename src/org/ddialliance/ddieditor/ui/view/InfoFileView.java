@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -77,6 +78,8 @@ public class InfoFileView extends View {
 			InfoFileView.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.InfoFileView";
 	private List<ConceptualElement> conceptualList;
+	public static final List<String> menuLabelList = Arrays.asList("Concept Scheme", "Concept");
+
 
 	private Action collapseAllAction;
 	private Action expandAllAction;
@@ -97,7 +100,9 @@ public class InfoFileView extends View {
 	 * Constructor
 	 */
 	public InfoFileView() {
-		super();
+		// TODO Define Info title and description
+		super(ViewContentType.QuestionContent, "Info", "Info Description", "Info", "Info", "Info structure",
+				menuLabelList);
 
 		// load properties
 		try {
@@ -120,7 +125,7 @@ public class InfoFileView extends View {
 	 */
 	private void openEditor(EDITOR_MODE_TYPE mode) {
 		EditorInput input = null;
-		EditorInput.EDITOR_TYPE type = null;
+		EditorInput.ENTITY_TYPE type = null;
 
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
@@ -129,7 +134,7 @@ public class InfoFileView extends View {
 			LightXmlObjectType item = ((ConceptualElement)obj).getValue();
 			if (item.getElement().equals("QuestionScheme")) {
 				log.debug("QuestionScheme");
-				type = EditorInput.EDITOR_TYPE.QUESTION_SCHEME;
+				type = EditorInput.ENTITY_TYPE.QUESTION_SCHEME;
 			} 
 
 			input = new EditorInput(item.getId(), item.getVersion(), item
@@ -142,6 +147,10 @@ public class InfoFileView extends View {
 				.getActiveWorkbenchWindow().getActivePage();
 		try {
 			switch (type) {
+			case CONCEPT_SCHEME:
+				// TODO Implement Concept Scheme Editor
+				page.openEditor(input, QuestionSchemeEditor.ID);
+				break;
 			case QUESTION_SCHEME:
 				page.openEditor(input, QuestionSchemeEditor.ID);
 				break;
@@ -326,7 +335,9 @@ public class InfoFileView extends View {
 		treeViewer.setLabelProvider(new LabelProvider());
 		treeViewer.setLabelProvider(new TreeLabelProvider());
 		try {
-			treeViewer.setInput(getInitialInput());
+//			treeViewer.setInput(getInitialInput());
+			// TODO zzzzzzzzzzzz
+			treeViewer.setInput("olsen");
 		} catch (Exception e1) {
 			log.error("treeViewer.setInput failed: " + e1.getMessage());
 			MessageDialog
@@ -606,10 +617,11 @@ public class InfoFileView extends View {
 			// .getDDIResourceList().size()];
 			// return storage.getDDIResourceList().toArray(array);
 			// }
+			
 			// list conceptual types
 			if (parentElement instanceof DDIResourceType) {
 				// TODO add to hashmap resource id ~ conceptual overview
-				// add lookup in chahce list!
+				// add lookup in cach list!
 				if (conceptualList == null) {
 					try {
 						PersistenceManager.getInstance().setWorkingResource(

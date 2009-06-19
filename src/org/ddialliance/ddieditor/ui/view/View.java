@@ -1,6 +1,5 @@
 package org.ddialliance.ddieditor.ui.view;
 
-import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,18 +7,21 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.xmlbeans.XmlCursor;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.model.lightxmlobject.impl.LightXmlObjectTypeImpl;
 import org.ddialliance.ddieditor.ui.Activator;
+import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
+import org.ddialliance.ddieditor.ui.dbxml.Concepts;
 import org.ddialliance.ddieditor.ui.dbxml.QuestionItems;
 import org.ddialliance.ddieditor.ui.dbxml.QuestionSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.Util;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
-import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_TYPE;
+import org.ddialliance.ddieditor.ui.editor.EditorInput.ENTITY_TYPE;
+import org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor;
+import org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
+import org.ddialliance.ddieditor.ui.model.ConceptScheme;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -31,35 +33,21 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.accessibility.AccessibleAdapter;
-import org.eclipse.swt.accessibility.AccessibleListener;
-import org.eclipse.swt.events.ArmEvent;
-import org.eclipse.swt.events.ArmListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -72,145 +60,68 @@ import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
 public class View extends ViewPart {
+	/**
+	 * View Member variable
+	 */
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, View.class);
+
+	public enum ViewContentType {
+		StudyContent, UniverseContent, ConceptContent, QuestionContent, InstumentationContent;
+	}
+
+	private ViewContentType viewContentType;
+	private String viewTitle = "viewTitle";
+	private String viewDescr = "viewDescr";
+	private String viewEntityName = "viewEntityName";
+	private String rootElementName;
+	private String viewTreeLabel = "viewTreeLabel";
 	protected View currentView = this;
+	private List<String> menuLabels;
 	private Action collapseAllAction;
 	private Action expandAllAction;
 	private Action refreshAction;
 	private MenuItem editMenuItem;
 	public TreeViewer treeViewer;
 	private HelpContentsAction helpContentsAction;
-
-	/**
-	 * Light XML Object - Tree Viewer Content provider
-	 */
-	class TreeContentProvider implements IStructuredContentProvider, ITreeContentProvider {
-
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			log.debug("TreeContentProvider.inputChanged()");
-		}
-
-		public void dispose() {
-
-		}
-
-		/**
-		 * Get Question Scheme root elements.
-		 * 
-		 * @param Input
-		 *            Element
-		 * @return Object[]
-		 */
-		public Object[] getElements(Object inputElement) {
-			
-            try {
-            	// Return all Light Question Schemes:
-				return QuestionSchemes.getQuestionSchemesLight(null, null).toArray();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		/**
-		 * Get child elements of parent.
-		 * 
-		 * @param Parent
-		 *            Element
-		 * @return Object[]
-		 */
-		public Object[] getChildren(Object parentElement) {
-			log.debug("Get Child of Parent Id: " + ((LightXmlObjectType) parentElement).getId());
-			if (parentElement instanceof LightXmlObjectType) {
-				LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) parentElement;
-				if (!lightXmlObjectType.getElement().equals("QuestionScheme")) {
-					log.debug("Parent is QUestion Item - no child!");
-					return (new Object[0]);
-				}
-
-				try {
-					log.debug("Read Question Item (children) elements");
-					return QuestionItems.getQuestionItemsLight(lightXmlObjectType).toArray();
-				} catch (Exception e) {
-					MessageDialog.openError(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-							.getString("View.mess.GetChildError")
-							+ "\n" + e.getMessage()); //$NON-NLS-1$
-				}
-			}
-			return (new Object[0]);
-		}
-
-		/**
-		 * @param element
-		 *            Element
-		 * @return Object Parent Element
-		 */
-		public Object getParent(Object element) {
-			log.debug("TreeContentProvider.getParent()");
-			return null;
-		}
-
-		public boolean hasChildren(Object element) {
-			log.debug("TreeContentProvider.hasChildren()");
-			// TODO Do not read DB again
-			return getChildren(element).length > 0;
-		}
-
-		public void propertyChange(PropertyChangeEvent arg0) {
-			log.debug("TreeContentProvider.propertyChange()");
-		}
-	}
-
-	/**
-	 * Light XML Object - Tree Viewer Label provider
-	 */
-	class TreeLabelProvider extends LabelProvider {
-
-		public String getText(Object element) {
-
-			// TODO Get Label of default language - not just the first one
-			if (element instanceof LightXmlObjectTypeImpl) {
-				LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) element;
-				log.debug("Get Text of Element with Id: " + lightXmlObjectType.getId());
-				if (lightXmlObjectType.getLabelList().size() > 0) {
-					XmlCursor xmlCursor = lightXmlObjectType.getLabelList().get(0).newCursor();
-					xmlCursor.toLastAttribute();
-					xmlCursor.toNextToken();
-					String result = xmlCursor.getChars();
-					xmlCursor.dispose();
-					log.debug("Text: " + result);
-					return (result);
-				}
-				return (Messages.getString("View.mess.NoLabelSpecified")); //$NON-NLS-1$
-			}
-			return new String();
-		}
-
-		public Image getImage(Object element) {
-			return null;
-		}
-	}
-
-	/**
-	 * View Member variable
-	 */
 	private Tree tree;
-	private Text questionItemText;
+	private Text filterText;
 	private Properties properties = new Properties();
-	final PatternFilter questionItemNameFilter = new PatternFilter();
+	final PatternFilter nameFilter = new PatternFilter();
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.View";
 
 	/**
 	 * Constructor
+	 * 
+	 * @param viewContentType 
+	 * 			-e.g. QuestionContent
+	 * @param viewTitle 
+	 * 			- e.g. Question Item Navigation
+	 * @param viewDescr
+	 * 			- e.g. Select a Question Item and choose a function for ....
+	 * @param viewEntityName
+	 * 			- e.g. Question
+	 * @param rootElementName
+	 * 			- e.g. QuestionScheme
+	 * @param viewTreeLabel
+	 * 			- e.g. Question Structure
+	 * @param menuLabels
+	 * 			List of Menu Labels e.g. "Question Scheme", "Question Item"
 	 */
-	public View() {
-		super();
+	public View(ViewContentType viewContentType, String viewTitle, String viewDescr, String viewEntityName, String rootElementName,
+			String viewTreeLabel, List<String> menuLabels) {
+
+		this.viewContentType = viewContentType;
+		this.viewTitle = viewTitle;
+		this.viewDescr = viewDescr;
+		this.viewEntityName = viewEntityName;
+		this.rootElementName = rootElementName;
+		this.viewTreeLabel = viewTreeLabel;
+		this.menuLabels = menuLabels;
 
 		try {
 			properties.load(new FileInputStream("resources" + File.separator + "ddieditor-ui.properties"));
 		} catch (IOException e) {
-			System.err.println("Warning:" + e.getMessage());
+			System.err.println("Error during property load:" + e.getMessage());
 			System.exit(0);
 		}
 	}
@@ -226,83 +137,13 @@ public class View extends ViewPart {
 	public void refreshView() {
 		refreshTreeViewer(treeViewer);
 	}
-
-	private void openEditor(EDITOR_MODE_TYPE mode) {
-		EDITOR_TYPE type = null;
-
-		ISelection selection = treeViewer.getSelection();
-		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		LightXmlObjectType item = (LightXmlObjectType) obj;
-
-		if (item.getElement().equals("QuestionScheme")) {
-			log.debug("QuestionScheme");
-			type = EDITOR_TYPE.QUESTION_SCHEME;
-		} else if (item.getElement().equals("QuestionItem")) {
-			log.debug("QuestionItem");
-			type = EDITOR_TYPE.QUESTION_ITEM;
-		} else {
-			// TODO Error handling
-			System.err.println("Element Type not supported: " + obj);
-			System.exit(0);
-			;
-
-		}
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		EditorInput input = new EditorInput(item.getId(), item.getVersion(), item.getParentId(), item
-				.getParentVersion(), type, mode, this, properties);
-		try {
-			switch (type) {
-			case QUESTION_SCHEME:
-				page.openEditor(input, QuestionSchemeEditor.ID);
-				break;
-			case QUESTION_ITEM:
-				page.openEditor(input, QuestionItemEditor.ID);
-				break;
-			default:
-				// TODO error handling
-				System.err.println("Editor Type not supported: " + type);
-				System.exit(0);
-				break;
-			}
-
-			// Notify any listeners of the view with the actual data of the view
-			treeViewer.setSelection(treeViewer.getSelection());
-		} catch (PartInitException ex) {
-			MessageDialog.openError(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-					.getString("View.mess.EditorOpenError" + "\n" + ex.getMessage())); //$NON-NLS-1$
-		}
+	
+	public void set(TreeContentProvider contentProvider) {
+		treeViewer.setContentProvider(contentProvider);
 	}
-
-	private void deleteItem(EDITOR_TYPE type, EDITOR_MODE_TYPE mode) {
-		ISelection selection = treeViewer.getSelection();
-		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		LightXmlObjectType item = (LightXmlObjectType) obj;
-		if (MessageDialog.openConfirm(getViewSite().getShell(), Messages.getString("ConfirmTitle"), MessageFormat
-				.format(Messages.getString("View.mess.ConfirmDeletion"), Util.getTextOnMixedElement(item)))) {
-			try {
-				switch (type) {
-				case QUESTION_SCHEME:
-					QuestionSchemes
-							.delete(item.getId(), item.getVersion(), item.getParentId(), item.getParentVersion());
-					break;
-				case QUESTION_ITEM:
-					QuestionItems.delete(item.getId(), item.getVersion(), item.getParentId(), item.getParentVersion());
-					break;
-				default:
-					// TODO error handling
-					System.err.println("Editor Type not supported: " + type);
-					System.exit(0);
-					break;
-				}
-				firePropertyChange(IEditorPart.PROP_DIRTY);
-			} catch (PartInitException ex) {
-				MessageDialog.openError(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-						.getString("View.mess.EditorUIDeleteError") + "\n" + ex.getMessage()); //$NON-NLS-1$
-			} catch (Exception e) {
-				MessageDialog.openError(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-						.getString("View.mess.EditorDeleteError") + "\n" + e.getMessage()); //$NON-NLS-1$
-			}
-		}
+	
+	public void setLabelProvider(LabelProvider labelProvider) {
+		treeViewer.setLabelProvider(labelProvider);
 	}
 
 	/**
@@ -313,7 +154,7 @@ public class View extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 
-		log.debug("createPartControl called");
+		log.debug("Generic createPartControl called");
 
 		final Composite composite_2 = new Composite(parent, SWT.NONE);
 		composite_2.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
@@ -326,19 +167,18 @@ public class View extends ViewPart {
 		composite_1.setLayout(gridLayout_1);
 		composite_1.setBackground(SWTResourceManager.getColor(230, 230, 250));
 
-		final Label questionItemNavigationLabel = new Label(composite_1, SWT.WRAP);
-		questionItemNavigationLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		questionItemNavigationLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
-		questionItemNavigationLabel.setFont(SWTResourceManager.getFont("Sans", 14, SWT.BOLD));
-		questionItemNavigationLabel.setText(Messages
-				.getString("View.label.questionItemNavigationLabel.QuestionItemNavigation")); //$NON-NLS-1$
+		final Label navigationTitle = new Label(composite_1, SWT.WRAP);
+		navigationTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		navigationTitle.setBackground(SWTResourceManager.getColor(230, 230, 250));
+		navigationTitle.setFont(SWTResourceManager.getFont("Sans", 14, SWT.BOLD));
+		navigationTitle.setText(viewTitle);
 
 		final Label selectLabel = new Label(composite_1, SWT.WRAP);
 		final GridData gd_selectLabel = new GridData(SWT.FILL, SWT.CENTER, false, false);
 		gd_selectLabel.widthHint = 468;
 		selectLabel.setLayoutData(gd_selectLabel);
 		selectLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
-		selectLabel.setText(Messages.getString("View.lable.selectLabel.NavigatorDescription")); //$NON-NLS-1$
+		selectLabel.setText(viewDescr);
 
 		// Prepare TreeViewer
 		Composite composite = new Composite(composite_2, SWT.NONE);
@@ -348,17 +188,17 @@ public class View extends ViewPart {
 		layout.numColumns = 2;
 		composite.setLayout(layout);
 
-		final Label questionItemLabel = new Label(composite, SWT.NONE);
-		questionItemLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		questionItemLabel.setText(Messages.getString("View.lable.questionItemLabel.QuestionItem")); //$NON-NLS-1$
+		final Label viewEntityNameLabel = new Label(composite, SWT.NONE);
+		viewEntityNameLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		viewEntityNameLabel.setText(viewEntityName);
 
-		questionItemText = new Text(composite, SWT.BORDER);
-		questionItemText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		questionItemText.addKeyListener(new KeyAdapter() {
+		filterText = new Text(composite, SWT.BORDER);
+		filterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		filterText.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				// on a CR we want to filter
 				if (e.keyCode == SWT.CR) {
-					questionItemNameFilter.setPattern(questionItemText.getText());
+					nameFilter.setPattern(filterText.getText());
 					treeViewer.getControl().setRedraw(false);
 					treeViewer.refresh();
 					treeViewer.getControl().setRedraw(true);
@@ -369,28 +209,23 @@ public class View extends ViewPart {
 		});
 
 		// Define group
-		final Group questionItemsTreeGroup = new Group(composite, SWT.NONE);
-		questionItemsTreeGroup.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		final Group treeGroup = new Group(composite, SWT.NONE);
+		treeGroup.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		final GridLayout gridLayout = new GridLayout();
-		questionItemsTreeGroup.setLayout(gridLayout);
-		final GridData gd_questionItemsTreeGroup = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
-		gd_questionItemsTreeGroup.widthHint = 460;
-		gd_questionItemsTreeGroup.heightHint = 640;
-		questionItemsTreeGroup.setLayoutData(gd_questionItemsTreeGroup);
-		questionItemsTreeGroup.setText(Messages.getString("View.lable.questionItemsTreeGroup.QuestionItemStructure")); //$NON-NLS-1$
+		treeGroup.setLayout(gridLayout);
+		final GridData gd_treeGroup = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+		gd_treeGroup.widthHint = 460;
+		gd_treeGroup.heightHint = 640;
+		treeGroup.setLayoutData(gd_treeGroup);
+		treeGroup.setText(viewTreeLabel);
 
 		// Define TreeViewer
-		treeViewer = new TreeViewer(questionItemsTreeGroup, SWT.SINGLE | SWT.BORDER);
-		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(final DoubleClickEvent event) {
-				openEditor(EDITOR_MODE_TYPE.EDIT);
-			}
-		});
-		treeViewer.setContentProvider(new TreeContentProvider());
+		treeViewer = new TreeViewer(treeGroup, SWT.SINGLE | SWT.BORDER);
+		treeViewer.setContentProvider(new TreeContentProvider(getViewSite()));
 		treeViewer.setLabelProvider(new LabelProvider());
 		treeViewer.setLabelProvider(new TreeLabelProvider());
 		try {
-			treeViewer.setInput("Root");
+			treeViewer.setInput(viewContentType);
 		} catch (Exception e1) {
 			log.error("treeViewer.setInput failed: " + e1.getMessage());
 			MessageDialog
@@ -398,7 +233,7 @@ public class View extends ViewPart {
 							getViewSite().getShell(),
 							Messages.getString("ErrorTitle"), Messages.getString("View.mess.QuestionItemTreeViewerSetInputError") + ":\n" + e1.getMessage()); //$NON-NLS-1$
 		}
-		treeViewer.addFilter(questionItemNameFilter);
+		treeViewer.addFilter(nameFilter);
 		treeViewer.expandAll();
 
 		// Define Tree
@@ -409,112 +244,8 @@ public class View extends ViewPart {
 		tree.setLayoutData(gd_tree);
 
 		// Define Tree Pop-up Menu
-		final Menu menu = new Menu(tree);
-		menu.setDefaultItem(editMenuItem);
-		tree.setMenu(menu);
-
-		// Define NEW Pop-up Menu Item
-		final MenuItem newMenuItem = new MenuItem(menu, SWT.CASCADE);
-		newMenuItem.setSelection(true);
-		newMenuItem.setText(Messages.getString("View.label.newItemMenuItem.New")); //$NON-NLS-1$
-		newMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/new_wiz.gif"));
-		newMenuItem.setData("name", "NEW");
-		Menu submenu = new Menu(newMenuItem);
-		newMenuItem.setMenu(submenu);
-
-		// Define NEW QUESTION -> SCHEME Pop-up Menu Item
-		final MenuItem questionSchemeMenuItem = new MenuItem(submenu, SWT.NONE);
-		questionSchemeMenuItem.setSelection(true);
-		questionSchemeMenuItem.setText(Messages.getString("View.label.questionSchemeMenuItem.QuestionScheme")); //$NON-NLS-1$
-		questionSchemeMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/new_wiz.gif"));
-		questionSchemeMenuItem.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				openEditor(EDITOR_MODE_TYPE.NEW);
-			}
-		});
-
-		// Define NEW QUESTION -> ITEM Pop-up Menu Item
-		final MenuItem newItemMenuItem = new MenuItem(submenu, SWT.NONE);
-		newItemMenuItem.setText(Messages.getString("View.label.newItemMenuItem.QuestionItem")); //$NON-NLS-1$
-		newItemMenuItem.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				String parentId = "";
-				String parentVersion = "";
-
-				ISelection selection = treeViewer.getSelection();
-				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				LightXmlObjectType item = (LightXmlObjectType) obj;
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				if (item.getElement().equals("QuestionItem")) {
-					parentId = item.getParentId();
-					parentVersion = item.getParentVersion();
-				} else {
-					parentId = item.getId();
-					parentVersion = item.getVersion();
-				}
-				// TODO Version Control - not supported
-				EditorInput input = new EditorInput(null, null, parentId, parentVersion, EDITOR_TYPE.QUESTION_ITEM,
-						EDITOR_MODE_TYPE.NEW, currentView, properties);
-				try {
-					// TODO Use this.openEditor()
-					page.openEditor(input, QuestionItemEditor.ID);
-					// notify any listeners of the view with the actual data of
-					// the view
-					treeViewer.setSelection(treeViewer.getSelection());
-				} catch (PartInitException ex) {
-					MessageDialog.openError(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-							.getString("View.mess.EditorOpenError")
-							+ "\n" + ex.getMessage()); //$NON-NLS-1$
-				}
-			}
-		});
-
-		// Disable "New Question -> Scheme" if a Question Item is selected
-		newMenuItem.addArmListener(new ArmListener() {
-			public void widgetArmed(final ArmEvent e) {
-				ISelection selection = treeViewer.getSelection();
-				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				LightXmlObjectType item = (LightXmlObjectType) obj;
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				if (item.getElement().equals("QuestionItem")) {
-					questionSchemeMenuItem.setEnabled(false);
-				}
-			}
-		});
-
-		newItemMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/new_wiz.gif"));
-
-		// Define DELETE Pop-up Menu Item
-		final MenuItem deleteMenuItem = new MenuItem(menu, SWT.NONE);
-		deleteMenuItem.setText(Messages.getString("View.label.deleteMenuItem.Delete")); //$NON-NLS-1$
-		deleteMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/delete_obj.gif"));
-		deleteMenuItem.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				TreeItem[] t = tree.getSelection();
-				for (int i = 0; i < t.length; i++) {
-					log.debug(t[i].getText() + ", ");
-					log.debug(t[i].getData("parentId"));
-				}
-				// TODO Distinguish between Question Schemes and Items
-				deleteItem(EDITOR_TYPE.QUESTION_ITEM, EDITOR_MODE_TYPE.EDIT);
-			}
-		});
-
-		// Define EDIT Pop-up Menu Item
-		editMenuItem = new MenuItem(menu, SWT.NONE);
-		editMenuItem.setText(Messages.getString("View.label.editMenuItem.Edit")); //$NON-NLS-1$
-		editMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/editor_area.gif"));
-		editMenuItem.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				TreeItem[] t = tree.getSelection();
-				if (t.length != 1) {
-					MessageDialog.openInformation(getViewSite().getShell(),
-							Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
-					return;
-				}
-				openEditor(EDITOR_MODE_TYPE.EDIT);
-			}
-		});
+		TreeMenuProvider treeMenuProvider = new TreeMenuProvider(treeViewer, currentView, viewEntityName, rootElementName, menuLabels, properties);
+		treeMenuProvider.setMenu();
 
 		createActions();
 		initializeToolBar();
