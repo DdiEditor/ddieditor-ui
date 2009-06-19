@@ -23,7 +23,7 @@ public class EditorInput implements IEditorInput {
 	private final String parentVersion;
 	private View parentView;
 	private Properties properties;
-	public static enum EDITOR_TYPE {QUESTION_SCHEME, QUESTION_ITEM};
+	public static enum ENTITY_TYPE {CONCEPT_SCHEME, CONCEPT, QUESTION_SCHEME, QUESTION_ITEM};
 	public static enum EDITOR_MODE_TYPE {NEW, EDIT, VIEW};
 	public EDITOR_MODE_TYPE mode;
 	
@@ -32,15 +32,23 @@ public class EditorInput implements IEditorInput {
 		return prefix+"-"+agency+"-"+ Math.abs(new Random().nextInt()) % 1000000000;
 	}
 
-	public EditorInput(String id, String version, String parentId, String parentVersion, EDITOR_TYPE type,
+	public EditorInput(String id, String version, String parentId, String parentVersion, ENTITY_TYPE type,
 			EDITOR_MODE_TYPE mode, View parentView, Properties properties) {
-		log.debug("");
+		
+		// TODO ID generation
 		if (mode.equals(EDITOR_MODE_TYPE.NEW)) {
-			String prefix;
-			if (type.equals(EDITOR_TYPE.QUESTION_SCHEME)) {
+			String prefix = null;
+			if (type.equals(ENTITY_TYPE.CONCEPT_SCHEME)) {
+				prefix = "cs";
+			} else if (type.equals(ENTITY_TYPE.CONCEPT)) {
+				prefix = "c";
+			} else if (type.equals(ENTITY_TYPE.QUESTION_SCHEME)) {
 				prefix = "qs";
-			} else {
+			} else if (type.equals(ENTITY_TYPE.QUESTION_ITEM)){
 				prefix = "qi";
+			} else {
+				log.error("*** Unknown Editor Type: '"+type+"' ***");
+				System.exit(0);
 			}
 			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 			id = genID(prefix, store.getString(PreferenceConstants.DDI_AGENCY));
