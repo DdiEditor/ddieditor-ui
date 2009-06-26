@@ -25,6 +25,8 @@ import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
+import org.ddialliance.ddieditor.ui.util.ResourceManager;
+import org.ddialliance.ddieditor.ui.util.SWTResourceManager;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -69,9 +71,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.internal.actions.HelpContentsAction;
-
-import com.swtdesigner.ResourceManager;
-import com.swtdesigner.SWTResourceManager;
 
 public class InfoFileView extends View {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
