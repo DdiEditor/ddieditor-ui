@@ -2,9 +2,10 @@ package org.ddialliance.ddieditor.ui.editor;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.ddialliance.ddieditor.ui.IAddAttr;
+import org.ddialliance.ddieditor.ui.util.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
-import org.ddialliance.ddieditor.ui.view.QuestionItemView;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -31,12 +32,9 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
-
-import com.swtdesigner.SWTResourceManager;
 
 /**
 * The Editor Class consist of a header with a Tabfolder. The Tabfolder contains a set of TabItems. The number is configurable
@@ -317,6 +315,7 @@ public class Editor extends EditorPart {
 
 		final Label questionItemEditorLabel = new Label(composite_2, SWT.WRAP);
 		questionItemEditorLabel.setFont(SWTResourceManager.getFont("Sans", 14, SWT.BOLD));
+
 		questionItemEditorLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
 		questionItemEditorLabel.setText(headerEditorTitle);
 
