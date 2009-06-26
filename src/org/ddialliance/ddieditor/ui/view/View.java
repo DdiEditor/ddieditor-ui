@@ -22,6 +22,8 @@ import org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
 import org.ddialliance.ddieditor.ui.model.ConceptScheme;
+import org.ddialliance.ddieditor.ui.util.ResourceManager;
+import org.ddialliance.ddieditor.ui.util.SWTResourceManager;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -55,9 +57,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.internal.actions.HelpContentsAction;
 import org.eclipse.ui.part.ViewPart;
-
-import com.swtdesigner.ResourceManager;
-import com.swtdesigner.SWTResourceManager;
 
 public class View extends ViewPart {
 	/**
