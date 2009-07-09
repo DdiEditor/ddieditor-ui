@@ -8,6 +8,7 @@ import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -21,12 +22,15 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 
+	private BundleContext context;
+
 	/**
 	 * The constructor
 	 * 
 	 * @throws Exception
 	 */
 	public Activator() throws Exception {
+		this.context = context;
 		log.debug("Activator.Activator()");
 		try {
 			DbXml.open();
@@ -34,6 +38,7 @@ public class Activator extends AbstractUIPlugin {
 			log.error("Error during DB XML opening: " + e.getMessage());
 			throw new Exception("Error during DB XML opening: " + e.getMessage());
 		}
+
 	}
 
 	/*
