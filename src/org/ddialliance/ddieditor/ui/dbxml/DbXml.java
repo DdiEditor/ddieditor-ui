@@ -45,7 +45,7 @@ public class DbXml {
 
 			// no commit
 			PersistenceManager.getInstance().exportResourceList(new File(PersistenceManager.RESOURCE_LIST_FILE));
-			PersistenceManager.getInstance().commitWorkingResource();
+			
 		} catch (Exception e) {
 			throw e;
 		}
@@ -82,7 +82,7 @@ public class DbXml {
 
 			// commit
 			PersistenceManager.getInstance().exportResourceList(new File(PersistenceManager.RESOURCE_LIST_FILE));
-			PersistenceManager.getInstance().commitWorkingResource();
+			
 		} catch (Exception e) {
 			throw e;
 		}
@@ -92,7 +92,7 @@ public class DbXml {
 	@Override
 	public void finalize() throws Exception {
 		log.debug("Shutdown ...");
-		PersistenceManager.getInstance().rollbackAllResources();
+		
 		PersistenceManager.getInstance().close();
 	}
 }

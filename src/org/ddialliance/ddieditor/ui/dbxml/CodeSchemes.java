@@ -126,10 +126,8 @@ public class CodeSchemes extends XmlEntities {
 					codeScheme.getParentId(), codeScheme.getParentVersion(), "ConceptualComponent");
 		} catch (DDIFtpException e) {
 			log.error("Create DBXML Code Scheme error: " + e.getMessage());
-			PersistenceManager.getInstance().rollbackWorkingResource();
 			throw new DDIFtpException(e.getMessage());
 		}
-		PersistenceManager.getInstance().commitWorkingResource();
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);
@@ -153,10 +151,8 @@ public class CodeSchemes extends XmlEntities {
 					codeScheme.getVersion());
 		} catch (DDIFtpException e) {
 			log.error("Update DBXML Code Scheme error: " + e.getMessage());
-			PersistenceManager.getInstance().rollbackWorkingResource();
 			throw new DDIFtpException(e.getMessage());
 		}
-		PersistenceManager.getInstance().commitWorkingResource();
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);
@@ -186,10 +182,8 @@ public class CodeSchemes extends XmlEntities {
 					codeScheme.getParentVersion(), "CodeSchemeScheme");
 		} catch (DDIFtpException e) {
 			log.error("Delete DBXML Code Scheme Scheme error: " + e.getMessage());
-			PersistenceManager.getInstance().rollbackWorkingResource();
 			throw new DDIFtpException(e.getMessage());
 		}
-		PersistenceManager.getInstance().commitWorkingResource();
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);

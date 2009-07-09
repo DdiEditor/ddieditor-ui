@@ -171,10 +171,10 @@ public class QuestionItems extends XmlEntities {
 					questionItem.getParentVersion(), "QuestionScheme");		
 		} catch (DDIFtpException e) {
 			log.error("Create DBXML Question Item error: "+e.getMessage());
-			PersistenceManager.getInstance().rollbackWorkingResource();
+			
 			throw new DDIFtpException(e.getMessage());
 		}
-		PersistenceManager.getInstance().commitWorkingResource();
+		
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);
@@ -200,10 +200,10 @@ public class QuestionItems extends XmlEntities {
 					questionItem.getVersion());
 		} catch (DDIFtpException e) {
 			log.error("Update DBXML Question Item error: "+e.getMessage());
-			PersistenceManager.getInstance().rollbackWorkingResource();
+			
 			throw new DDIFtpException(e.getMessage());
 		}
-		PersistenceManager.getInstance().commitWorkingResource();
+		
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);
@@ -229,10 +229,10 @@ public class QuestionItems extends XmlEntities {
 					questionItem.getParentVersion(), "QuestionScheme");
 		} catch (DDIFtpException e) {
 			log.error("Delete DBXML Question Item error: "+e.getMessage());
-			PersistenceManager.getInstance().rollbackWorkingResource();
+		
 			throw new DDIFtpException(e.getMessage());
 		}
-		PersistenceManager.getInstance().commitWorkingResource();
+		
 		if (log.isDebugEnabled()) {
 			questionItem = null;
 			questionItem = getQuestionItem(id, version, parentId, parentVersion);

@@ -157,10 +157,10 @@ public class ConceptSchemes extends XmlEntities {
 					conceptScheme.getParentId(), conceptScheme.getParentVersion(), "ConceptualComponent");
 		} catch (DDIFtpException e) {
 			log.error("Create DBXML Concept Scheme error: " + e.getMessage());
-			PersistenceManager.getInstance().rollbackWorkingResource();
+			
 			throw new DDIFtpException(e.getMessage());
 		}
-		PersistenceManager.getInstance().commitWorkingResource();
+		
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);
@@ -185,10 +185,10 @@ public class ConceptSchemes extends XmlEntities {
 					conceptScheme.getVersion());
 		} catch (DDIFtpException e) {
 			log.error("Update DBXML Concept Scheme error: " + e.getMessage());
-			PersistenceManager.getInstance().rollbackWorkingResource();
+			
 			throw new DDIFtpException(e.getMessage());
 		}
-		PersistenceManager.getInstance().commitWorkingResource();
+		
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);
@@ -218,10 +218,10 @@ public class ConceptSchemes extends XmlEntities {
 					conceptScheme.getParentVersion(), "ConceptualComponent");
 		} catch (DDIFtpException e) {
 			log.error("Delete DBXML Concept Scheme error: " + e.getMessage());
-			PersistenceManager.getInstance().rollbackWorkingResource();
+			
 			throw new DDIFtpException(e.getMessage());
 		}
-		PersistenceManager.getInstance().commitWorkingResource();
+		
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);
