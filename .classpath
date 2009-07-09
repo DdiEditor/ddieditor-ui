@@ -1,49 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/ddieditor-xmlbeans/xmllib/org.ddialliance.ddieditor.model.xmlbeans.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/org.ddialliance.ddi_3_0.xml.xmlbeans/xmllib/org.ddialliance.ddi_3_0_20080428.xml.xmlbeans.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/saxon/b9.1.0.5/saxon9-dom4j.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/saxon/b9.1.0.5/saxon9-jdom.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/saxon/b9.1.0.5/saxon9-s9api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/saxon/b9.1.0.5/saxon9-sql.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/saxon/b9.1.0.5/saxon9-xom.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/saxon/b9.1.0.5/saxon9-xpath.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/saxon/b9.1.0.5/saxon9-xqj.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/saxon/b9.1.0.5/saxon9.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/bdbxml/2.4.16/db.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/bdbxml/2.4.16/dbxml.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/commons/jexl/1.1/commons-jexl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/joda-time/1.6/joda-time.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/perf4j/0.9.9/perf4j.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/relaxngDatatype/20020414/relaxngDatatype.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/saxon/b9.1.0.5/saxon9-dom.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/vtd-xml/2.4/vtd-xml.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/xsom/20060901/xsom14.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ddieditor"/>
-	<classpathentry exported="true" kind="lib" path="lib/ddieditor/build/" sourcepath="/home/dak/workspace-ddiftp/ddieditor"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/log4j/1.2.15/log4j-1.2.15.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/util/build/" sourcepath="/home/dak/workspace-ddiftp/util"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/xsom/20060901/xsom.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/xmlbeans/2.4.0/jsr173_1.0_api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/xmlbeans/2.4.0/resolver.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/xmlbeans/2.4.0/xbean_xpath.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/xmlbeans/2.4.0/xbean.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/xmlbeans/2.4.0/xmlbeans-qname.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lib-java/xmlbeans/2.4.0/xmlpublic.jar"/>
+	<classpathentry exported="true" kind="lib" path="bin/"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/ddieditor-xmlbeans/xmllib/org.ddialliance.ddieditor.model.xmlbeans.jar"/>
-	<classpathentry kind="lib" path="/lib-java/ant-contrib/1.0-b3/lib/bcel-5.1.jar"/>
-	<classpathentry kind="lib" path="/lib-java/ant-contrib/1.0-b3/lib/commons-logging-1.0.4.jar"/>
-	<classpathentry kind="lib" path="/lib-java/log4j/1.2.15/log4j-1.2.15.jar" sourcepath="/home/ddajvj/Desktop/log4j"/>
-	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.4.0/jsr173_1.0_api.jar"/>
-	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.4.0/resolver.jar"/>
-	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.4.0/xbean_xpath.jar"/>
-	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.4.0/xbean.jar"/>
-	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.4.0/xmlbeans-qname.jar"/>
-	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.4.0/xmlpublic.jar"/>
+	<classpathentry kind="src" path="testsource"/>
 	<classpathentry kind="lib" path="/org.ddialliance.ddi_3_0.xml.xmlbeans/xmllib/org.ddialliance.ddi_3_0_20080428.xml.xmlbeans.jar"/>
+	<classpathentry kind="lib" path="/ddieditor-xmlbeans/xmllib/org.ddialliance.ddieditor.model.xmlbeans.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ddieditor"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/lib-java"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
