@@ -17,17 +17,17 @@
       <perspective
             class="org.ddialliance.ddieditor.ui.ConceptsPerspective"
             id="org.ddialliance.ddieditor.ui.ConceptsPerspective"
-            name="ConceptsPerspective">
+            name="Concepts">
       </perspective>
       <perspective
-            name="QuestionsPerspective"
+            name="Questions"
             class="org.ddialliance.ddieditor.ui.QuestionsPerspective"
             id="org.ddialliance.ddieditor.ui.QuestionsPerspective">
       </perspective>
       <perspective
             class="org.ddialliance.ddieditor.ui.InfoPerspective"
             id="org.ddialliance.ddieditor.ui.InfoPerspective"
-            name="InfoPerspective">
+            name="Overview">
       </perspective>
    </extension>
    <extension
