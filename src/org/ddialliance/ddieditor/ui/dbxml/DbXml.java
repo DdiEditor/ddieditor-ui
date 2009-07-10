@@ -40,7 +40,11 @@ public class DbXml {
 			DdiManager.getInstance();
 
 			// add resources
-			FilesystemManager.getInstance().addResource(new File("resources" + File.separator + FULLY_DECLARED_NS_DOC));
+			try {
+				FilesystemManager.getInstance().addResource(new File("resources" + File.separator + FULLY_DECLARED_NS_DOC));				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 			PersistenceManager.getInstance().setWorkingResource(FULLY_DECLARED_NS_DOC);
 
 			// no commit
