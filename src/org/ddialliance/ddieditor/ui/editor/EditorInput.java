@@ -23,7 +23,7 @@ public class EditorInput implements IEditorInput {
 	private final String parentVersion;
 	private View parentView;
 	private Properties properties;
-	public static enum ENTITY_TYPE {CONCEPT_SCHEME, CONCEPT, QUESTION_SCHEME, QUESTION_ITEM};
+	public static enum ENTITY_TYPE {FILE, STUDY_UNIT, CONCEPT_SCHEME, CONCEPT, QUESTION_SCHEME, QUESTION_ITEM};
 	public static enum EDITOR_MODE_TYPE {NEW, EDIT, VIEW};
 	public EDITOR_MODE_TYPE mode;
 	

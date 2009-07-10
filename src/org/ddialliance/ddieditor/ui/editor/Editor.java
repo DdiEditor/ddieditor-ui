@@ -314,13 +314,16 @@ public class Editor extends EditorPart {
 		composite_2.setLayout(new GridLayout());
 
 		final Label questionItemEditorLabel = new Label(composite_2, SWT.WRAP);
+		questionItemEditorLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		questionItemEditorLabel.setFont(SWTResourceManager.getFont("Sans", 14, SWT.BOLD));
 
 		questionItemEditorLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
 		questionItemEditorLabel.setText(headerEditorTitle);
 
 		final Label useTheEditorLabel = new Label(composite_2, SWT.WRAP);
-		useTheEditorLabel.setLayoutData(new GridData(471, SWT.DEFAULT));
+		final GridData gd_useTheEditorLabel = new GridData(SWT.LEFT, SWT.CENTER, true, false);
+		gd_useTheEditorLabel.widthHint = 471;
+		useTheEditorLabel.setLayoutData(gd_useTheEditorLabel);
 		useTheEditorLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
 		useTheEditorLabel.setText(headerEditorDescr);
 
