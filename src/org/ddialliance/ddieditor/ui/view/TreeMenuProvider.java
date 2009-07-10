@@ -22,6 +22,7 @@ import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
 import org.ddialliance.ddieditor.ui.util.ResourceManager;
 import org.ddialliance.ddieditor.ui.view.InfoFileView.EDITOR_TYPE;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
+import org.ddialliance.ddieditor.ui.util.MessageUtil;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -211,6 +212,9 @@ public class TreeMenuProvider {
 				MessageFormat.format(Messages.getString("View.mess.ConfirmDeletion"), entityName, item.getId()))) {
 			try {
 				switch (entityType) {
+				case FILE:
+					MessageUtil.currentNotSupported(currentView.getSite().getShell());
+					break;
 				case CONCEPT_SCHEME:
 					ConceptSchemes.init(properties);
 					List<LightXmlObjectType> conceptList = ConceptSchemes.getConceptsLight(item.getId(), item.getVersion());

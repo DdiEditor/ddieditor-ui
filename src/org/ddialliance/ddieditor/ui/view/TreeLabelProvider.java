@@ -1,11 +1,18 @@
 package org.ddialliance.ddieditor.ui.view;
 
+import java.util.List;
+
 import org.apache.xmlbeans.XmlCursor;
+import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
+import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.lightxmlobject.impl.LightXmlObjectTypeImpl;
+import org.ddialliance.ddieditor.model.resource.DDIResourceType;
+import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -30,7 +37,22 @@ class TreeLabelProvider extends LabelProvider {
 				// No label specified - use ID instead:
 				return lightXmlObjectType.getElement()+": "+lightXmlObjectType.getId();
 			}
-		}
+		} else if (element instanceof DDIResourceType) {
+			return ((DDIResourceType) element).getOrgName();
+		} else if (element instanceof StorageType) {
+			return ((StorageType) element).getId();
+		} else if (element instanceof ConceptualType) {
+			return ((ConceptualType) element).name();
+		} else if (element instanceof ConceptualElement) {
+			List<org.ddialliance.ddieditor.model.lightxmlobject.LabelType> labels = ((ConceptualElement) element)
+					.getValue().getLabelList();
+			if (!labels.isEmpty()) {
+				return XmlBeansUtil.getTextOnMixedElement(((ConceptualElement) element).getValue().getLabelList()
+						.get(0));
+			} else {
+				return ((ConceptualElement) element).getValue().getId();
+			}
+		} 
 		return new String();
 	}
 

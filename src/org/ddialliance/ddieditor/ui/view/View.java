@@ -104,7 +104,8 @@ public class View extends ViewPart {
 	 * @param viewTreeLabel
 	 * 			- e.g. Question Structure
 	 * @param menuLabels
-	 * 			List of Menu Labels e.g. "Question Scheme", "Question Item"
+	 * 			List of Pop-up Menu Labels e.g. "Question Scheme", "Question Item"
+	 * 			If null no Pop-up Menu is created.
 	 */
 	public View(ViewContentType viewContentType, String viewTitle, String viewDescr, String viewEntityName, String rootElementName,
 			String viewTreeLabel, List<String> menuLabels) {
@@ -167,13 +168,14 @@ public class View extends ViewPart {
 		composite_1.setBackground(SWTResourceManager.getColor(230, 230, 250));
 
 		final Label navigationTitle = new Label(composite_1, SWT.WRAP);
-		navigationTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		navigationTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		navigationTitle.setBackground(SWTResourceManager.getColor(230, 230, 250));
 		navigationTitle.setFont(SWTResourceManager.getFont("Sans", 14, SWT.BOLD));
 		navigationTitle.setText(viewTitle);
 
 		final Label selectLabel = new Label(composite_1, SWT.WRAP);
-		final GridData gd_selectLabel = new GridData(SWT.FILL, SWT.CENTER, false, false);
+		selectLabel.setRedraw(true);
+		final GridData gd_selectLabel = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gd_selectLabel.widthHint = 468;
 		selectLabel.setLayoutData(gd_selectLabel);
 		selectLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
@@ -243,8 +245,11 @@ public class View extends ViewPart {
 		tree.setLayoutData(gd_tree);
 
 		// Define Tree Pop-up Menu
-		TreeMenuProvider treeMenuProvider = new TreeMenuProvider(treeViewer, currentView, viewEntityName, rootElementName, menuLabels, properties);
-		treeMenuProvider.setMenu();
+		if (menuLabels != null) {
+			TreeMenuProvider treeMenuProvider = new TreeMenuProvider(treeViewer, currentView, viewEntityName,
+					rootElementName, menuLabels, properties);
+			treeMenuProvider.setMenu();
+		}
 
 		createActions();
 		initializeToolBar();

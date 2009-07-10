@@ -1,13 +1,21 @@
 package org.ddialliance.ddieditor.ui.view;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.ddialliance.ddieditor.model.DdiManager;
+import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
+import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.model.resource.DDIResourceType;
+import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.Concepts;
 import org.ddialliance.ddieditor.ui.dbxml.QuestionItems;
 import org.ddialliance.ddieditor.ui.dbxml.QuestionSchemes;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -24,6 +32,7 @@ import org.eclipse.ui.IViewSite;
  */
 class TreeContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, TreeContentProvider.class);
+	private List<ConceptualElement> conceptualList;
 	
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.TreeContentProvider";
 	private IViewSite site;
@@ -45,7 +54,7 @@ class TreeContentProvider implements IStructuredContentProvider, ITreeContentPro
 	 * Get Question Scheme root elements.
 	 * 
 	 * @param Input Element
-		 * 		Root Element e.g. ConceptualScheme, QuestionScheme, etc. 
+		 * 		Root Element e.g. StudyContent, ConceptualScheme, QuestionScheme, etc. 
 	 * @return Object[]
 	 */
 	public Object[] getElements(Object inputElement) {
@@ -53,13 +62,16 @@ class TreeContentProvider implements IStructuredContentProvider, ITreeContentPro
 		ViewContentType contentType = (ViewContentType )inputElement;
 
 		try {
-			if (contentType.equals(ViewContentType.ConceptContent)) {
-				// Return all Light Question Schemes:
+			if (contentType.equals(ViewContentType.StudyContent)) {
+				List<DDIResourceType> list = PersistenceManager.getInstance().getResources();
+				DDIResourceType[] array = new DDIResourceType[list.size()];
+				array = list.toArray(array);
+				return array;
+			} else if (contentType.equals(ViewContentType.ConceptContent)) {
 				return ConceptSchemes.getConceptSchemesLight(null, null).toArray();
 			} else if (contentType.equals(ViewContentType.QuestionContent)) {
-				// Return all Light Question Schemes:
 				return QuestionSchemes.getQuestionSchemesLight(null, null).toArray();
-			} 
+			}
 		} catch (Exception e) {
 			String errMess = Messages.getString("View.mess.GetElementError"); //$NON-NLS-1$
 			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(
@@ -76,8 +88,47 @@ class TreeContentProvider implements IStructuredContentProvider, ITreeContentPro
 	 * @return Object[]
 	 */
 	public Object[] getChildren(Object parentElement) {
-		log.debug("Get Child of Parent Id: " + ((LightXmlObjectType) parentElement).getId());
-		if (parentElement instanceof LightXmlObjectType) {
+		if (parentElement instanceof DDIResourceType) {
+			log.debug("Get Child of Parent Id: " + ((DDIResourceType) parentElement).getOrgName());
+			if (conceptualList == null) {
+				try {
+					PersistenceManager.getInstance().setWorkingResource(((DDIResourceType) parentElement).getOrgName());
+
+					conceptualList = DdiManager.getInstance().getConceptualOverview();
+				} catch (DDIFtpException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+			}
+			List<ConceptualType> list = new ArrayList<ConceptualType>();
+			for (ConceptualElement conceptualElement : conceptualList) {
+				if (!list.contains(conceptualElement.getType())) {
+					list.add(conceptualElement.getType());
+				}
+			}
+			ConceptualType[] result = new ConceptualType[list.size()];
+			return list.toArray(result);
+		} else if (parentElement instanceof ConceptualType) {
+			// list Conceptual Elements e.g STUDY, LOGIC_
+			try {
+				List<ConceptualElement> list = new ArrayList<ConceptualElement>();
+				for (ConceptualElement conceptualElement : conceptualList) {
+					if (conceptualElement.getType().equals(parentElement)) {
+						list.add(conceptualElement);
+					}
+				}
+				ConceptualElement[] array = new ConceptualElement[list.size()];
+				return list.toArray(array);
+			} catch (Exception e) {
+				// TODO msg view
+				e.printStackTrace();
+			}
+			return (new Object[0]);		
+		} else if (parentElement instanceof LightXmlObjectType) {
+			log.debug("Get Child of Parent Id: " + ((LightXmlObjectType) parentElement).getId());
 			LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) parentElement;
 			
 			if (lightXmlObjectType.getElement().equals("Concept")) {
