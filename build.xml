@@ -14,7 +14,7 @@
 	<property name="src.resources.dir" value="${src.dir}/resources" />
 	<property name="testsrc.dir" value="${basedir}/testsource" />
 	<property name="lib.dir" value="${basedir}/../lib-java/" />
-	<property name="build.classes.dir" value="${basedir}/bin" />
+	<property name="build.classes.dir" value="${basedir}/build" />
 	<property name="build.dir.jdoc" value="${build.classes.dir}/javadoc" />
 	<property name="junit.results.dir" value="${build.classes.dir}/junit-reports" />
 
