@@ -15,6 +15,11 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
+            class="org.ddialliance.ddieditor.ui.InfoPerspective"
+            id="org.ddialliance.ddieditor.ui.InfoPerspective"
+            name="Overview">
+      </perspective>
+      <perspective
             class="org.ddialliance.ddieditor.ui.ConceptsPerspective"
             id="org.ddialliance.ddieditor.ui.ConceptsPerspective"
             name="Concepts">
@@ -24,25 +29,26 @@
             class="org.ddialliance.ddieditor.ui.QuestionsPerspective"
             id="org.ddialliance.ddieditor.ui.QuestionsPerspective">
       </perspective>
-      <perspective
-            class="org.ddialliance.ddieditor.ui.InfoPerspective"
-            id="org.ddialliance.ddieditor.ui.InfoPerspective"
-            name="Overview">
-      </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
+      <view
+            class="org.ddialliance.ddieditor.ui.view.InfoView"
+            icon="icons/tree.gif"
+            id="org.ddialliance.ddieditor.ui.view.InfoView"
+            name="OverView">
+      </view>
+      <view
+            class="org.ddialliance.ddieditor.ui.view.ConceptView"
+            icon="icons/tree.gif"
+            id="org.ddialliance.ddieditor.ui.view.ConceptView"
+            name="Concepts">
+      </view>
       <view
             class="org.ddialliance.ddieditor.ui.view.QuestionItemView"
             icon="icons/tree.gif"
             id="org.ddialliance.ddieditor.ui.view.QuestionItemView"
             name="Questions">
-      </view>
-      <view
-            class="org.ddialliance.ddieditor.ui.view.InfoFileView"
-            icon="icons/tree.gif"
-            id="org.ddialliance.ddieditor.ui.view.InfoFileView"
-            name="InfoFileView">
       </view>
    </extension>
    <extension
