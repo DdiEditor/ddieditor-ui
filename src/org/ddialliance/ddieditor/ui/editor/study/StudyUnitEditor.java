@@ -36,9 +36,9 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
 /**
- * Study Unit Editor
+ * Study Unit Editor.
  * 
- * $Revision: $
+ * $Revision$
  * 
  * @author dak
  *
