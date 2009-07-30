@@ -65,7 +65,7 @@ public class View extends ViewPart {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, View.class);
 
 	public enum ViewContentType {
-		StudyContent, UniverseContent, ConceptContent, QuestionContent, InstumentationContent;
+		StudyContent, UniverseContent, ConceptContent, CodeContent, QuestionContent, InstumentationContent;
 	}
 
 	private ViewContentType viewContentType;
@@ -153,12 +153,12 @@ public class View extends ViewPart {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-
+		parent.setLayout(new GridLayout());
 		log.debug("Generic createPartControl called");
 
 		final Composite composite_2 = new Composite(parent, SWT.NONE);
 		composite_2.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		composite_2.setLayout(new GridLayout());
 
 		final Composite composite_1 = new Composite(composite_2, SWT.NONE);
@@ -232,7 +232,7 @@ public class View extends ViewPart {
 			MessageDialog
 					.openInformation(
 							getViewSite().getShell(),
-							Messages.getString("ErrorTitle"), Messages.getString("View.mess.QuestionItemTreeViewerSetInputError") + ":\n" + e1.getMessage()); //$NON-NLS-1$
+							Messages.getString("ErrorTitle"), Messages.getString("View.mess.TreeViewerSetInputError") + ":\n" + e1.getMessage()); //$NON-NLS-1$
 		}
 		treeViewer.addFilter(nameFilter);
 		treeViewer.expandAll();

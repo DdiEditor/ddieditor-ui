@@ -242,6 +242,7 @@ public class InfoFileView extends View {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
+		parent.setLayout(new GridLayout());
 
 		log.debug("createPartControl called");
 

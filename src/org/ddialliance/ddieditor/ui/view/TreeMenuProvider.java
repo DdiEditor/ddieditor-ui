@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.Activator;
+import org.ddialliance.ddieditor.ui.dbxml.CodeSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.Concepts;
 import org.ddialliance.ddieditor.ui.dbxml.QuestionItems;
@@ -15,10 +16,12 @@ import org.ddialliance.ddieditor.ui.dbxml.Util;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.ENTITY_TYPE;
+import org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor;
 import org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
+import org.ddialliance.ddieditor.ui.util.Entity;
 import org.ddialliance.ddieditor.ui.util.ResourceManager;
 import org.ddialliance.ddieditor.ui.view.InfoFileView.EDITOR_TYPE;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
@@ -88,23 +91,26 @@ public class TreeMenuProvider {
 	}
 	
 	/**
-	 * Return entity type of selected item
+	 * Return entity name of selected item
 	 * 
-	 * @return EditorInput.ENTITY_TYPE
+	 * @return String
 	 */
-	private EditorInput.ENTITY_TYPE getEntityType(LightXmlObjectType item) {
+	private String getEntityName(EditorInput.ENTITY_TYPE entityType) {
 
-		if (item.getElement().equals("ConceptScheme")) {
-			return EditorInput.ENTITY_TYPE.CONCEPT_SCHEME;
-		} else if (item.getElement().equals("Concept")) {
-			return EditorInput.ENTITY_TYPE.CONCEPT;
-		} else if (item.getElement().equals("QuestionScheme")) {
-			return EditorInput.ENTITY_TYPE.QUESTION_SCHEME;
-		} else if (item.getElement().equals("QuestionItem")) {
-			return EditorInput.ENTITY_TYPE.QUESTION_ITEM;
-		} else {
-			// TODO Error handling
-			System.err.println("Element Type not supported: " + item);
+		switch (entityType) {
+		case CONCEPT_SCHEME:
+			return Messages.getString("ConceptView.lable.conceptSchemeLabel.ConceptScheme");
+		case CONCEPT:
+			return Messages.getString("ConceptView.lable.conceptLabel.Concept");
+		case CODE_SCHEME:
+			return Messages.getString("codeView.lable.codeShemeLabel.CodeScheme");
+		case QUESTION_SCHEME:
+			return Messages.getString("QuestionItemView.lable.questionSchemeLabel.QuesitionScheme");
+		case QUESTION_ITEM:
+			return Messages.getString("QuestionItemView.lable.questionItemLabel.Question");
+		default:
+			// TODO error handling
+			log.error("Editor Type not supported: " + entityType);
 			System.exit(0);
 		}
 		return null;
@@ -115,7 +121,7 @@ public class TreeMenuProvider {
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		LightXmlObjectType item = (LightXmlObjectType) obj;
-		EditorInput.ENTITY_TYPE entityType = getEntityType(item);
+		EditorInput.ENTITY_TYPE entityType = Entity.getEntityType(item);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		EditorInput input = new EditorInput(item.getId(), item.getVersion(), item.getParentId(), item
 				.getParentVersion(), entityType, mode, currentView, properties);
@@ -126,6 +132,9 @@ public class TreeMenuProvider {
 				break;
 			case CONCEPT:
 				page.openEditor(input, ConceptEditor.ID);
+				break;
+			case CODE_SCHEME:
+				page.openEditor(input, CodeSchemeEditor.ID);
 				break;
 			case QUESTION_SCHEME:
 				page.openEditor(input, QuestionSchemeEditor.ID);
@@ -156,7 +165,7 @@ public class TreeMenuProvider {
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		LightXmlObjectType item = (LightXmlObjectType) obj;
-		selectedEntityType = getEntityType(item);
+		selectedEntityType = Entity.getEntityType(item);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		try {
 			switch (selectedEntityType) {
@@ -172,6 +181,17 @@ public class TreeMenuProvider {
 			case CONCEPT:
 				editorID =ConceptEditor.ID;
 				newEntityType = EditorInput.ENTITY_TYPE.CONCEPT;
+				break;
+			case CODE_SCHEME:
+				if (newType.equals(NEW_TYPE.SCHEME)) {
+					editorID = CodeSchemeEditor.ID;
+					newEntityType = EditorInput.ENTITY_TYPE.CODE_SCHEME;
+				} else {
+					// TODO Implement Code Editor
+					System.out.println("************** Code Editor not supported *******************");
+//					editorID = CodeEditor.ID;
+//					newEntityType = EditorInput.ENTITY_TYPE.CODE;
+				}
 				break;
 			case QUESTION_SCHEME:
 				if (newType.equals(NEW_TYPE.SCHEME)) {
@@ -207,9 +227,9 @@ public class TreeMenuProvider {
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		LightXmlObjectType item = (LightXmlObjectType) obj;
-		EditorInput.ENTITY_TYPE entityType = getEntityType(item);
+		EditorInput.ENTITY_TYPE entityType = Entity.getEntityType(item);
 		if (MessageDialog.openConfirm(currentView.getSite().getShell(), Messages.getString("ConfirmTitle"),
-				MessageFormat.format(Messages.getString("View.mess.ConfirmDeletion"), entityName, item.getId()))) {
+				MessageFormat.format(Messages.getString("View.mess.ConfirmDeletion"), getEntityName(entityType), item.getId()))) {
 			try {
 				switch (entityType) {
 				case FILE:
@@ -231,6 +251,21 @@ public class TreeMenuProvider {
 					Concepts.init(properties);
 					Concepts.delete(item.getId(), item.getVersion(), item.getParentId(), item.getParentVersion());
 					break;
+				case CODE_SCHEME:
+					CodeSchemes.init(properties);
+					List<LightXmlObjectType> codeList = CodeSchemes.getCodesLight(item.getId(), item.getVersion());
+					if (codeList.size() > 0
+							&& !MessageDialog.openConfirm(currentView.getSite().getShell(), Messages
+									.getString("ConfirmTitle"), MessageFormat.format(Messages
+									.getString("View.mess.ConfirmDeleteCodes"), codeList.size()))) {
+						break;
+					}
+					CodeSchemes.delete(item.getId(), item.getVersion(), item.getParentId(), item
+							.getParentVersion());
+					break;
+				case CODE:
+					MessageUtil.currentNotSupported(currentView.getSite().getShell());
+					break;					
 				case QUESTION_SCHEME:
 					QuestionSchemes.init(properties);
 					List<LightXmlObjectType> questionItemList = QuestionSchemes.getQuestionItemsLight(item.getId(),
@@ -362,7 +397,6 @@ public class TreeMenuProvider {
 		});
 
 		// Define EDIT Pop-up Menu Item
-		// MenuItem editMenuItem = new MenuItem(menu, SWT.NONE);
 		editMenuItem = new MenuItem(menu, SWT.NONE);
 		editMenuItem.setText(Messages.getString("View.label.editMenuItem.Edit")); //$NON-NLS-1$
 		editMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/editor_area.gif"));

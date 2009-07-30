@@ -10,6 +10,7 @@ import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
+import org.ddialliance.ddieditor.ui.dbxml.CodeSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.Concepts;
 import org.ddialliance.ddieditor.ui.dbxml.QuestionItems;
@@ -69,6 +70,8 @@ class TreeContentProvider implements IStructuredContentProvider, ITreeContentPro
 				return array;
 			} else if (contentType.equals(ViewContentType.ConceptContent)) {
 				return ConceptSchemes.getConceptSchemesLight(null, null).toArray();
+			} if (contentType.equals(ViewContentType.CodeContent)) {
+				return CodeSchemes.getCodeSchemesLight(null, null).toArray();
 			} else if (contentType.equals(ViewContentType.QuestionContent)) {
 				return QuestionSchemes.getQuestionSchemesLight(null, null).toArray();
 			}

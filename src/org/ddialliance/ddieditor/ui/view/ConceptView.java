@@ -19,7 +19,7 @@ public class ConceptView extends View {
 				Messages.getString("ConceptView.lable.selectLabel.NavigatorDescription"), 
 				Messages.getString("ConceptView.lable.conceptLabel.Concept"), 
 				"ConceptScheme",
-				Messages.getString("ConceptView.lable.conceptsTreeGroup.ConceptStructure"),
+				Messages.getString("ConceptView.lable.conceptTreeGroup.ConceptStructure"),
 				newMenuLabelList);
 	}
 
