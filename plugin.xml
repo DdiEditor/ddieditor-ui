@@ -15,14 +15,19 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.ddialliance.ddieditor.ui.InfoPerspective"
-            id="org.ddialliance.ddieditor.ui.InfoPerspective"
-            name="Overview">
-      </perspective>
-      <perspective
             class="org.ddialliance.ddieditor.ui.ConceptsPerspective"
             id="org.ddialliance.ddieditor.ui.ConceptsPerspective"
             name="Concepts">
+      </perspective>
+      <perspective
+            class="org.ddialliance.ddieditor.ui.CodesPerspective"
+            id="org.ddialliance.ddieditor.ui.CodesPerspective"
+            name="Codes">
+      </perspective>
+      <perspective
+            class="org.ddialliance.ddieditor.ui.InfoPerspective"
+            id="org.ddialliance.ddieditor.ui.InfoPerspective"
+            name="Overview">
       </perspective>
       <perspective
             name="Questions"
@@ -45,6 +50,13 @@
             name="Concepts">
       </view>
       <view
+            class="org.ddialliance.ddieditor.ui.view.CodeView"
+            icon="icons/tree.gif"
+            id="org.ddialliance.ddieditor.ui.view.CodeView"
+            name="Codes"
+            restorable="true">
+      </view>
+      <view
             class="org.ddialliance.ddieditor.ui.view.QuestionItemView"
             icon="icons/tree.gif"
             id="org.ddialliance.ddieditor.ui.view.QuestionItemView"
@@ -60,6 +72,13 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
+            class="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
+            default="false"
+            icon="icons/editor_area.gif"
+            id="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
+            name="QuestionSchemeEditor">
+      </editor>
+      <editor
             class="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
             default="false"
             icon="icons/editor_area.gif"
@@ -67,11 +86,32 @@
             name="QuestionItemEditor">
       </editor>
       <editor
-            class="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
+            class="org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor"
             default="false"
             icon="icons/editor_area.gif"
-            id="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
-            name="QuestionSchemeEditor">
+            id="org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor"
+            name="ConceptEditor">
+      </editor>
+      <editor
+            class="org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor"
+            default="false"
+            icon="icons/editor_area.gif"
+            id="org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor"
+            name="ConceptSchemeEditor">
+      </editor>
+      <editor
+            class="org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor"
+            default="false"
+            icon="icons/editor_area.gif"
+            id="org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor"
+            name="CodeSchemeEditor">
+      </editor>
+      <editor
+            class="org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor"
+            default="false"
+            icon="icons/editor_area.gif"
+            id="org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor"
+            name="StudyUnitEditor">
       </editor>
    </extension>
    <extension
