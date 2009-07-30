@@ -302,7 +302,7 @@ public class ResponseTypeDetail {
 			// - Get available Code Schemes:
 			List<LightXmlObjectType> codeSchemeReferenceList = new ArrayList();
 			try {
-				codeSchemeReferenceList = CodeSchemes.getCodeSchemesLight("", "", "", "");
+				codeSchemeReferenceList = CodeSchemes.getCodeSchemesLight("", "");
 			} catch (Exception e1) {
 				String errMess = MessageFormat.format(Messages
 						.getString("ResponseTypeDetail.mess.CodeSchemeRetrievalError"), e1.getMessage()); //$NON-NLS-1$

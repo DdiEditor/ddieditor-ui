@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.saxon.Platform;
-
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.Concepts;
@@ -21,6 +19,7 @@ import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.model.QuestionItem;
 import org.ddialliance.ddieditor.ui.model.QuestionItemLiteralText;
 import org.ddialliance.ddieditor.ui.reference.ResponseTypeReference;
+import org.ddialliance.ddieditor.ui.util.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -54,6 +53,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IEditorInput;
@@ -64,7 +64,12 @@ import org.eclipse.ui.PartInitException;
 public class QuestionItemEditor extends Editor implements ISelectionListener {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionItemEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor";
-	
+
+	public QuestionItemEditor() {
+		super(Messages.getString("QuestionItemEditor.label.questionItemEditorLabel.QuestionItemEditor"), Messages
+				.getString("QuestionItemEditor.label.useTheEditorLabel.Description"));
+	}
+
 	/**
 	 * 
 	 * Question Item Text - table content provider
@@ -161,14 +166,14 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 				return Language.getLanguage(questionItemLiteralText.getLanguageCode());
 			default:
 				String errMess = Messages.getString("QITTableLabelProvider.mess.UnexpectedColumnIndexFound");
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, errMess, null));
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(
+						IStatus.ERROR, ID, 0, errMess, null));
 				throw new RuntimeException(Messages.getString("QITTableLabelProvider.mess.UnexpectedColumnIndexFound")); //$NON-NLS-1$
 			}
 		}
 
 	}
-	
+
 	// Member variables:
 	private QuestionItem questionItem;
 	private IEditorSite site;
@@ -179,31 +184,29 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 	private Composite translatedButtonComposite = null;
 	private TableViewer tableViewer;
 	private Table table;
-	
-	private enum TABITEM_INDEX {
-		QUESTION, TRANSLATED
-	};
-	
+
 	@Override
 	public void createPartControl(Composite parent) {
+		parent.setLayout(new GridLayout());
 		log.debug("QuestionItemEditor.createPartControl called");
+		super.createPartControl(parent);
 
-		List<TabItem> tabItemList = super.createStandardPartControl(parent, Messages
-				.getString("QuestionItemEditor.label.questionItemEditorLabel.QuestionItemEditor"), Messages
-				.getString("QuestionItemEditor.label.useTheEditorLabel.Description"), TABITEM_INDEX.values().length); //$NON-NLS-1$
-		
-		// Question Tab:
-		// --------------
-		
-		// - Question Root Composit:
-		final Composite questionComposite = new Composite(tabFolder, SWT.NONE);
+		// Question Tab Folder:
+		// ------------------
+		TabFolder questionTabFolder = new TabFolder(getComposite_1(), SWT.BOTTOM);
+		questionTabFolder.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		questionTabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		// - Question Root Composite:
+		final Composite questionComposite = new Composite(questionTabFolder, SWT.NONE);
 		questionComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		final GridLayout gridLayout = new GridLayout();
 		questionComposite.setLayout(gridLayout);
-		TabItem questionTabItem = tabItemList.get(TABITEM_INDEX.QUESTION.ordinal());
+		
+		// - Question Item Tab Item:
+		TabItem questionTabItem = new TabItem(questionTabFolder, SWT.NONE);
 		questionTabItem.setControl(questionComposite);
 		questionTabItem.setText(Messages.getString("QuestionItemEditor.label.questionTabItem.Question")); //$NON-NLS-1$
-
 
 		// - Question Group
 		final Group questionGroup = new Group(questionComposite, SWT.NONE);
@@ -229,13 +232,13 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		final Composite codeComposite = new Composite(questionGroup, SWT.NONE);
 		codeComposite.setRedraw(true);
 		codeComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		codeComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		codeComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		final GridLayout gridLayout_6 = new GridLayout();
 		gridLayout_6.marginHeight = 0;
 		gridLayout_6.marginWidth = 0;
 		codeComposite.setLayout(gridLayout_6);
-		
-		final FilteredItemsSelection filteredItemsSelection = new FilteredItemsSelection(); 
+
+		final FilteredItemsSelection filteredItemsSelection = new FilteredItemsSelection();
 
 		// - Get available Concepts:
 		List<LightXmlObjectType> conceptReferenceList = new ArrayList();
@@ -247,37 +250,36 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 					ID, 0, errMess, e1));
 		}
 
-		// - Create Concept selection composite: 
+		// - Create Concept selection composite:
 		try {
 			filteredItemsSelection.createPartControl(LabelComposite, codeComposite, "", Messages
 					.getString("QuestionItemEditor.label.conceptLabel.Concept"), conceptReferenceList, questionItem
 					.getConceptRef());
 		} catch (Exception e2) {
-			String errMess = Messages
-					.getString("QuestionItemEditor.mess.CreateFilteredItemsSelectionError"); //$NON-NLS-1$
+			String errMess = Messages.getString("QuestionItemEditor.mess.CreateFilteredItemsSelectionError"); //$NON-NLS-1$
 			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, errMess, e2));
 		}
 		filteredItemsSelection.addSelectionListener(Messages
 				.getString("QuestionItemEditor.label.SelectConseptReference"), conceptReferenceList,
 				new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				LightXmlObjectType result = (LightXmlObjectType) filteredItemsSelection.getResult();
-				if (result != null) {
-					try {
-						questionItem.setConceptRef(result.getId());
-					} catch (Exception e1) {
-						String errMess = MessageFormat.format(Messages
-								.getString("QuestionItemEditor.mess.SetConceptRefError"), e1.getMessage()); //$NON-NLS-1$
-						ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-								ID, 0, errMess, e1));
+					public void widgetSelected(SelectionEvent e) {
+						LightXmlObjectType result = (LightXmlObjectType) filteredItemsSelection.getResult();
+						if (result != null) {
+							try {
+								questionItem.setConceptRef(result.getId());
+							} catch (Exception e1) {
+								String errMess = MessageFormat.format(Messages
+										.getString("QuestionItemEditor.mess.SetConceptRefError"), e1.getMessage()); //$NON-NLS-1$
+								ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null,
+										new Status(IStatus.ERROR, ID, 0, errMess, e1));
+							}
+							editorStatus.setChanged();
+						}
 					}
-					editorStatus.setChanged();
-				}
-			}
-		});
+				});
 
-		// Question Text:
+		// Question Item Text:
 		final Label questionTextLabel = new Label(questionGroup, SWT.NONE);
 		final GridData gd_questionTextLabel = new GridData(SWT.RIGHT, SWT.TOP, false, false);
 		gd_questionTextLabel.horizontalIndent = 5;
@@ -289,13 +291,12 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		String text = "";
 		if (!editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
 			try {
-				// Get original text = not translated text - the language don't
-				// matter
+				// Get original text = not translated text - the language don't matter
 				text = questionItem.getText(false, "");
 			} catch (Exception e1) {
 				String errMess = Messages.getString("QuestionItemEditor.mess.QuestionItemTextRetrievalError"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, errMess, e1));
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(
+						IStatus.ERROR, ID, 0, errMess, e1));
 			}
 		}
 		originalQuestionTextStyledText.setText(text);
@@ -309,7 +310,8 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		final GridData gd_originalLanguageLabel = new GridData(SWT.RIGHT, SWT.CENTER, false, false);
 		gd_originalLanguageLabel.horizontalIndent = 5;
 		originalLanguageLabel.setLayoutData(gd_originalLanguageLabel);
-		originalLanguageLabel.setText(Messages.getString("QuestionItemEditor.label.originalLanguageLabel.OriginalLanguage")); //$NON-NLS-1$
+		originalLanguageLabel.setText(Messages
+				.getString("QuestionItemEditor.label.originalLanguageLabel.OriginalLanguage")); //$NON-NLS-1$
 		originalQuestionTextStyledText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				log.debug("Original QI text changed");
@@ -321,9 +323,9 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		langCombo = new Combo(questionGroup, SWT.READ_ONLY);
 		langCombo.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				// TODO If original language is changed - what happens with translated questions?
-				//questionItem.setLanguage(LANGUAGES_CODE[DEFAULT_LANGUAGE_INDEX
-				// ]);
+				// TODO If original language is changed - what happens with
+				// translated questions?
+				// questionItem.setLanguage(LANGUAGES_CODE[DEFAULT_LANGUAGE_INDEX]);
 				editorStatus.setChanged();
 			}
 		});
@@ -386,8 +388,8 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 			} catch (Exception e1) {
 				String errMess = MessageFormat.format(Messages
 						.getString("QuestionItemEditor.mess.ResponseDomainReferenceRetrievalError"), e1.getMessage()); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, errMess, e1));
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(
+						IStatus.ERROR, ID, 0, errMess, e1));
 			}
 		}
 
@@ -415,13 +417,12 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 				if (index >= 0) {
 					RESPONSE_TYPES rt = ((ResponseTypeReference) responseDomainReferenceList.get(index))
 							.getResponseDomain();
-					// Save Responds Type without details - saved by
-					// ResponseTypeDetail modify listener
+					// Save Responds Type without details - saved by ResponseTypeDetail modify listener
 					RepresentationType repType = questionItem.setResponseDomain(rt, "");
 					if (repType == null) {
 						String errMess = MessageFormat.format(Messages
-								.getString("QuestionItemEditor.mess.QuestionItemResponseTypeNotSupported"), ResponseTypeDetail
-								.getResponseTypeLabel(rt)); //$NON-NLS-1$
+								.getString("QuestionItemEditor.mess.QuestionItemResponseTypeNotSupported"),
+								ResponseTypeDetail.getResponseTypeLabel(rt)); //$NON-NLS-1$
 						ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(
 								IStatus.ERROR, ID, 0, errMess, null), IStatus.ERROR);
 						responseComboViewer.getCombo().select(0);
@@ -445,16 +446,17 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		// --------------------------
 
 		// - Question Root Composite:
-		final Composite translatedComposite = new Composite(tabFolder, SWT.NONE);
+		final Composite translatedComposite = new Composite(questionTabFolder, SWT.NONE);
 		translatedComposite.setLayout(new GridLayout());
 		translatedComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		final GridLayout translatedGridLayout = new GridLayout();
 		questionComposite.setLayout(translatedGridLayout);
-		TabItem translatedTabItem = tabItemList.get(TABITEM_INDEX.TRANSLATED.ordinal());
-		translatedTabItem.setControl(translatedComposite);
-		translatedTabItem.setText(Messages
-		.getString("QuestionItemEditor.label.translatedQuestionsTabItem.TranslatedQuestion")); //$NON-NLS-1$
 
+		// - Question Item Tab Item:
+		TabItem simpleTabItem = new TabItem(questionTabFolder, SWT.NONE);
+		simpleTabItem.setControl(translatedComposite);
+		simpleTabItem.setText(Messages
+				.getString("QuestionItemEditor.label.translatedQuestionsTabItem.TranslatedQuestion"));
 
 		// - Translated Question Group
 		final Group translatedQuestionsGroup = new Group(translatedComposite, SWT.NONE);
@@ -489,8 +491,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		translatableButton.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		translatableButton.setText(Messages.getString("QuestionItemEditor.label.translatableButton.Translatable")); //$NON-NLS-1$
 
-		// Define
-		// - Question Item Table Viewer:
+		// Define - Question Item Table Viewer:
 		tableViewer = new TableViewer(translatedQuestionsGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.FULL_SELECTION | SWT.BORDER);
 		table = tableViewer.getTable();
@@ -544,18 +545,20 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 			}
 		});
 
-		// Check or un-check translatable check-box
-		// and enable/disable Add / Remove buttons accordingly
+		// Check or un-check translatable check-box and enable/disable Add / Remove buttons accordingly
 		if (tableViewer.getTable().getItemCount() > 0) {
 			translatableButton.setSelection(true);
 		} else {
 			translatedButtonComposite.setEnabled(false);
 		}
+		
+		// Create Property Tab Item:
+		createPropertiesTab(questionTabFolder);
 
 		// Clean dirt from initialization
-		editorStatus.clearChanged();		
+		editorStatus.clearChanged();
 	}
-	
+
 	public Viewer getViewer() {
 		log.debug("QuestionItemEditor.getViewer()");
 		return this.tableViewer;
@@ -586,7 +589,8 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 			}
 			editorInput.getParentView().refreshView();
 		} catch (Exception e) {
-			String errMess = MessageFormat.format(Messages.getString("QuestionItemEditor.mess.ErrorDuringSave"), e.getMessage()); //$NON-NLS-1$
+			String errMess = MessageFormat.format(
+					Messages.getString("QuestionItemEditor.mess.ErrorDuringSave"), e.getMessage()); //$NON-NLS-1$
 			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, errMess, e));
 			return;
@@ -594,7 +598,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		editorStatus.clearChanged();
 		log.debug("QuestionItemEditor.doSave(1): " + editorStatus.getStatus());
 	}
-	
+
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		// Initialize the Editor Part:
@@ -609,16 +613,16 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		}
 
 		QuestionItems.init(((EditorInput) input).getProperties());
-		
+
 		if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
 			try {
-				questionItem = QuestionItems.createQuestionItem(editorInput.getId(), editorInput.getVersion(), editorInput.getParentId(),
-						editorInput.getParentVersion());
+				questionItem = QuestionItems.createQuestionItem(editorInput.getId(), editorInput.getVersion(),
+						editorInput.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
 				log.error("QuestionItemEditor.init(): " + e.getMessage());
 				String errMess = Messages.getString("QuestionItemEditor.mess.ErrorDuringCreateNewQuestionItem"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, errMess, e));
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(
+						IStatus.ERROR, ID, 0, errMess, e));
 				System.exit(0);
 			}
 		} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)
@@ -628,8 +632,8 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 						.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
 				String errMess = Messages.getString("QuestionItemEditor.mess.GetQuestionItemByIdError"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, errMess, e));
+				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(
+						IStatus.ERROR, ID, 0, errMess, e));
 				System.exit(0);
 			}
 		} else {

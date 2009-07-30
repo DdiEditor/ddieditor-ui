@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -32,6 +33,13 @@ public class ConceptEditor extends SimpleEditor {
 	private Concept concept;
 	private IEditorSite site;
 	
+	public ConceptEditor() {
+		super(Messages
+				.getString("ConceptEditor.label.ConceptEditorLabel.ConceptEditor"), Messages
+				.getString("ConceptEditor.label.useTheEditorLabel.Description"), Messages
+				.getString("ConceptEditor.label.ConceptTabItem"));
+	}
+
 	public String getPreferredPerspectiveId() {
 		return ConceptsPerspective.ID;
 	}
@@ -48,12 +56,9 @@ public class ConceptEditor extends SimpleEditor {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
+		parent.setLayout(new GridLayout());
 		log.debug("ConceptEditor.createPartControl called");
-		// TODO Get descriptions
-		super.createSimplePartControl(parent, Messages
-				.getString("ConceptEditor.label.ConceptEditorLabel.ConceptEditor"), Messages
-				.getString("ConceptEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("ConceptEditor.label.ConceptTabItem"), 1, (Simple) concept);
+		super.createPartControl(parent);
 	}
 	
 	@Override
@@ -90,8 +95,6 @@ public class ConceptEditor extends SimpleEditor {
 	}
 	
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		// Initialize the Simple Editor Part:
-		super.init(site, input);
 		
 		// Initialize Concept Editor Part:
 		this.editorInput = (EditorInput) input;
@@ -132,7 +135,10 @@ public class ConceptEditor extends SimpleEditor {
 			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
 			System.exit(0);
 		}
-		
+
+		// Initialize the Simple Editor Part with Concept:
+		super.init(site, input, (Simple) concept);
+
 		this.site = site;
 		setSite(site);
 		setInput(editorInput);

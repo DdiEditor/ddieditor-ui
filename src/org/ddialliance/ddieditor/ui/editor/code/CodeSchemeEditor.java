@@ -1,12 +1,14 @@
-package org.ddialliance.ddieditor.ui.editor.Code;
+package org.ddialliance.ddieditor.ui.editor.code;
 
 import java.text.MessageFormat;
 
+import org.ddialliance.ddieditor.ui.CodesPerspective;
 import org.ddialliance.ddieditor.ui.ConceptsPerspective;
 import org.ddialliance.ddieditor.ui.dbxml.CodeSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.SimpleEditor;
+import org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
 import org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor;
 import org.ddialliance.ddieditor.ui.model.CodeScheme;
@@ -21,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -28,19 +31,26 @@ import org.eclipse.ui.PartInitException;
 
 public class CodeSchemeEditor extends SimpleEditor{
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeSchemeEditor.class);
-	public static final String ID = "org.ddialliance.ddieditor.ui.editor.concept.CodeSchemeEditor";
+	public static final String ID = "org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor";
 
 	// Member variables:
 	private CodeScheme codeScheme;
 	private IEditorSite site;
 	
+	public CodeSchemeEditor() {
+		super(Messages
+				.getString("CodeSchemeEditor.label.CodeSchemeEditorLabel.CodeSchemeEditor"), Messages
+				.getString("CodeSchemeEditor.label.useTheEditorLabel.Description"), Messages
+				.getString("CodeSchemeEditor.label.CodeSchemeTabItem"));
+	}
+
 	public String getPreferredPerspectiveId() {
-		return ConceptsPerspective.ID;
+		return CodesPerspective.ID;
 	}
 
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(Messages.getString("perspective.switch.dialogtext"), Messages
-				.getString("perspective.concepts"));
+				.getString("perspective.codes"));
 	}
 
 	/**
@@ -50,12 +60,9 @@ public class CodeSchemeEditor extends SimpleEditor{
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
+		parent.setLayout(new GridLayout());
 		log.debug("CodeSchemeEditor.createPartControl called");
-		// TODO Get descriptions
-		super.createSimplePartControl(parent, Messages
-				.getString("CodeSchemeEditor.label.CodeSchemeEditorLabel.CodeSchemeEditor"), Messages
-				.getString("CodeSchemeEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("CodeSchemeEditor.label.CodeSchemeTabItem"), 1, (Simple) codeScheme);
+		super.createPartControl(parent);
 	}
 	
 	@Override
@@ -92,10 +99,8 @@ public class CodeSchemeEditor extends SimpleEditor{
 	}
 	
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		// Initialize the Simple Editor Part:
-		super.init(site, input);
 		
-		// Initialize Concept Scheme Editor Part:
+		// Initialize Code Scheme Editor Part:
 		this.editorInput = (EditorInput) input;
 		if (log.isDebugEnabled()) {
 			log.debug("CodeSchemeEditor.init() - Name: " + editorInput.getName());
@@ -112,7 +117,7 @@ public class CodeSchemeEditor extends SimpleEditor{
 						editorInput.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
 				log.error("CodeSchemeEditor.init(): " + e.getMessage());
-				String errMess = Messages.getString("CodeSchemeEditor.mess.ErrorDuringCreateNewConcept"); //$NON-NLS-1$
+				String errMess = Messages.getString("CodeSchemeEditor.mess.ErrorDuringCreateNewCode"); //$NON-NLS-1$
 				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
 						ID, 0, errMess, e));
 				System.exit(0);
@@ -123,7 +128,7 @@ public class CodeSchemeEditor extends SimpleEditor{
 				codeScheme = CodeSchemes.getCodeScheme(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
-				String errMess = Messages.getString("CodeSchemeEditor.mess.GetConceptByIdError"); //$NON-NLS-1$
+				String errMess = Messages.getString("CodeSchemeEditor.mess.GetCodeByIdError"); //$NON-NLS-1$
 				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
 						ID, 0, errMess, e));
 				System.exit(0);
@@ -134,6 +139,9 @@ public class CodeSchemeEditor extends SimpleEditor{
 			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
 			System.exit(0);
 		}
+		
+		// Initialize the Simple Editor Part with Code Scheme:
+		super.init(site, input, (Simple) codeScheme);
 		
 		this.site = site;
 		setSite(site);

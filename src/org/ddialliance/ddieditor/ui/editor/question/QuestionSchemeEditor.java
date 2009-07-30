@@ -3,13 +3,20 @@ package org.ddialliance.ddieditor.ui.editor.question;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.ddialliance.ddieditor.ui.ConceptsPerspective;
 import org.ddialliance.ddieditor.ui.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.QuestionsPerspective;
+import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.QuestionSchemes;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
+import org.ddialliance.ddieditor.ui.editor.SimpleEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
+import org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor;
+import org.ddialliance.ddieditor.ui.model.ConceptScheme;
 import org.ddialliance.ddieditor.ui.model.QuestionScheme;
+import org.ddialliance.ddieditor.ui.model.Simple;
+import org.ddialliance.ddieditor.ui.util.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -31,6 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -38,115 +46,42 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
 
-public class QuestionSchemeEditor extends Editor implements ISelectionListener, IAutoChangePerspective {
+public class QuestionSchemeEditor extends SimpleEditor {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionSchemeEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor";
 
 	// Member variables:
 	private QuestionScheme questionScheme;
 	private IEditorSite site;
-	private StyledText questionSchemeDescrStyledText;
-	private TableViewer tableViewer;
+	
+	public QuestionSchemeEditor() {
+		super(Messages
+				.getString("QuestionSchemeEditor.label.QuestionSchemeEditorLabel.QuestionSchemeEditor"), Messages
+				.getString("QuestionSchemeEditor.label.useTheEditorLabel.Description"), Messages
+				.getString("QuestionSchemeEditor.label.QuestionSchemeTabItem"));
+	}
 
-	private enum TABITEM_INDEX {
-		QUESTION_SCHEME
-	};
-
-	@Override
 	public String getPreferredPerspectiveId() {
 		return QuestionsPerspective.ID;
 	}
 
-	@Override
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(Messages.getString("perspective.switch.dialogtext"), Messages
 				.getString("perspective.questions"));
 	}
 
+	/**
+	 * Create contents of the editor part
+	 * 
+	 * @param parent
+	 */
 	@Override
 	public void createPartControl(Composite parent) {
+		parent.setLayout(new GridLayout());
 		log.debug("QuestionSchemeEditor.createPartControl called");
-
-		List<TabItem> tabItemList = super.createStandardPartControl(parent, Messages
-				.getString("QuestionSchemeEditor.label.QuestionSchemeEditorLabel.QuestionSchemeEditor"), Messages
-				.getString("QuestionSchemeEditor.label.useTheEditorLabel.Description"), TABITEM_INDEX.values().length); //$NON-NLS-1$
-
-		// Question Scheme Tab:
-		// --------------
-
-		// - Question Scheme Root Composite:
-		final Composite questionSchemeComposite = new Composite(tabFolder, SWT.NONE);
-		questionSchemeComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		final GridLayout gridLayout = new GridLayout();
-		questionSchemeComposite.setLayout(gridLayout);
-		TabItem questionSchemeTabItem = tabItemList.get(TABITEM_INDEX.QUESTION_SCHEME.ordinal());
-		questionSchemeTabItem.setControl(questionSchemeComposite);
-		questionSchemeTabItem.setText(Messages
-				.getString("QuestionSchemeEditor.label.questionSchemeTabItem.QuestionScheme")); //$NON-NLS-1$
-
-		// - Question Scheme Group
-		final Group questionGroup = new Group(questionSchemeComposite, SWT.NONE);
-		final GridData gd_questionGroup = new GridData(SWT.FILL, SWT.CENTER, true, true);
-		gd_questionGroup.heightHint = 632;
-		gd_questionGroup.widthHint = 861;
-		questionGroup.setLayoutData(gd_questionGroup);
-		questionGroup.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		final GridLayout gridLayout_1 = new GridLayout();
-		gridLayout_1.numColumns = 2;
-		questionGroup.setLayout(gridLayout_1);
-		questionGroup.setText("Question Scheme");
-
-		// Question Scheme Label:
-		final Label labelLabel = new Label(questionGroup, SWT.NONE);
-		final GridData gd_conceptLabel = new GridData(SWT.RIGHT, SWT.CENTER, false, false);
-		gd_conceptLabel.horizontalIndent = 5;
-		labelLabel.setLayoutData(gd_conceptLabel);
-		labelLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		labelLabel.setText(Messages.getString("QuestionSchemeEditor.label.Label")); //$NON-NLS-1$
-
-		final Text labelText = new Text(questionGroup, SWT.BORDER);
-		labelText.addModifyListener(new ModifyListener() {
-			public void modifyText(final ModifyEvent e) {
-				log.debug("Label changed");
-				questionScheme.setLabel(labelText.getText());
-				editorStatus.setChanged();
-			}
-		});
-		final GridData gd_labelText = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		labelText.setLayoutData(gd_labelText);
-		labelText.setText(questionScheme.getLabel());
-
-		// Question Scheme Description:
-		final Label questionSchemeDescrLabel = new Label(questionGroup, SWT.NONE);
-		final GridData gd_questionSchemeDescrLabel = new GridData(SWT.RIGHT, SWT.TOP, false, false);
-		gd_questionSchemeDescrLabel.horizontalIndent = 5;
-		questionSchemeDescrLabel.setLayoutData(gd_questionSchemeDescrLabel);
-		questionSchemeDescrLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		questionSchemeDescrLabel.setText(Messages.getString("QuestionSchemeEditor.label.DescriptionText.Label")); //$NON-NLS-1$
-
-		questionSchemeDescrStyledText = new StyledText(questionGroup, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
-		questionSchemeDescrStyledText.addModifyListener(new ModifyListener() {
-			public void modifyText(final ModifyEvent e) {
-				log.debug("Description changed");
-				questionScheme.setDescr(questionSchemeDescrStyledText.getText());
-				editorStatus.setChanged();
-			}
-		});
-		questionSchemeDescrStyledText.setText(questionScheme.getDescr());
-		final GridData gd_originalQuestionTextStyledText = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		gd_originalQuestionTextStyledText.heightHint = 154;
-		gd_originalQuestionTextStyledText.widthHint = 308;
-		questionSchemeDescrStyledText.setLayoutData(gd_originalQuestionTextStyledText);
-
-		// Clean dirt from initialization
-		editorStatus.clearChanged();
+		super.createPartControl(parent);
 	}
-
-	public Viewer getViewer() {
-		log.debug("QuestionSchemeEditor.getViewer()");
-		return this.tableViewer;
-	}
-
+	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		log.debug("QuestionSchemeEditor.doSave()");
@@ -179,11 +114,9 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener, 
 		editorStatus.clearChanged();
 		log.debug("QuestionSchemeEditor.doSave(1): " + editorStatus.getStatus());
 	}
-
-	@Override
+	
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		// Initialize the Stander Editor Part:
-		super.init(site, input);
+		
 		// Initialize Question Scheme Editor Part:
 		this.editorInput = (EditorInput) input;
 		if (log.isDebugEnabled()) {
@@ -223,11 +156,15 @@ public class QuestionSchemeEditor extends Editor implements ISelectionListener, 
 			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
 			System.exit(0);
 		}
+		
+		// Initialize the Simple Editor Part with Question Scheme:
+		super.init(site, input, (Simple) questionScheme);
 
 		this.site = site;
 		setSite(site);
 		setInput(editorInput);
 		setPartName(editorInput.getId());
-	}
 
+	}
+	
 }

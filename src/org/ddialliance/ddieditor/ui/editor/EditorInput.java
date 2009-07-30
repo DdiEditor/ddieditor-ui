@@ -23,7 +23,7 @@ public class EditorInput implements IEditorInput {
 	private final String parentVersion;
 	private View parentView;
 	private Properties properties;
-	public static enum ENTITY_TYPE {FILE, STUDY_UNIT, CONCEPT_SCHEME, CONCEPT, QUESTION_SCHEME, QUESTION_ITEM};
+	public static enum ENTITY_TYPE {FILE, STUDY_UNIT, CONCEPT_SCHEME, CONCEPT, CODE_SCHEME, CODE, QUESTION_SCHEME, QUESTION_ITEM};
 	public static enum EDITOR_MODE_TYPE {NEW, EDIT, VIEW};
 	public EDITOR_MODE_TYPE mode;
 	
@@ -42,6 +42,8 @@ public class EditorInput implements IEditorInput {
 				prefix = "cs";
 			} else if (type.equals(ENTITY_TYPE.CONCEPT)) {
 				prefix = "c";
+			} else if (type.equals(ENTITY_TYPE.CODE_SCHEME)) {
+				prefix = "cods";
 			} else if (type.equals(ENTITY_TYPE.QUESTION_SCHEME)) {
 				prefix = "qs";
 			} else if (type.equals(ENTITY_TYPE.QUESTION_ITEM)){

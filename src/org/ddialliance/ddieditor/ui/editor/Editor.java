@@ -16,6 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -35,6 +36,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.swt.layout.RowLayout;
 
 /**
 * The Editor Class consist of a header with a Tabfolder. The Tabfolder contains a set of TabItems. The number is configurable
@@ -46,6 +48,14 @@ but minimum is one Property TabItem.
 public class Editor extends EditorPart {
 	
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
+	
+	private String headerEditorTitle = "";
+	private String headerEditorDescr = "";
+	
+	public Editor(String headerEditorTitle, String headerEditorDescr) {
+		this.headerEditorTitle = headerEditorTitle;
+		this.headerEditorDescr = headerEditorDescr;
+	}
 
 	/**
 	* The EditorStatus class keeps track of the Editor status.
@@ -75,13 +85,13 @@ public class Editor extends EditorPart {
 	private static final String[] ACTIONS = { "", "Add", "Update", "Delete" };
 
 	// Member variables:
-	protected TabFolder tabFolder;
 	private Text urnText;
 	private Text idText;
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
 	public EditorStatus editorStatus = new EditorStatus();
 	private IEditorSite site;
 	protected EditorInput editorInput;
+	private Composite composite;
 	
 	public static enum FIELD_TYPE {
 		DIGIT, LETTER, LETTER_DIGIT
@@ -162,7 +172,7 @@ public class Editor extends EditorPart {
 		}
 	}
 	
-	private void createPropertiesTab(TabFolder tabFolder) {
+	protected void createPropertiesTab(TabFolder tabFolder) {
 		
 		// Properties Tab Item:
 		// --------------------
@@ -183,9 +193,8 @@ public class Editor extends EditorPart {
 		idLabel.setText(Messages.getString("Editor.label.idLabel.ID")); //$NON-NLS-1$
 
 		idText = new Text(propertiesGroup, SWT.BORDER | SWT.READ_ONLY);
-		idText.setText(Messages.getString("Editor.label.idText.UniqueIdentificationOfQuestionItem")); //$NON-NLS-1$
-		final GridData gd_idText = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		idText.setLayoutData(gd_idText);
+		idText.setText(Messages.getString("Editor.label.idText.UniqueIdentificationOfQuestionItem"));
+		idText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		idText.setText(editorInput.getId());
 		idText.setEnabled(false);
 
@@ -196,8 +205,7 @@ public class Editor extends EditorPart {
 
 		final Combo actionCombo = new Combo(propertiesGroup, SWT.READ_ONLY);
 		actionCombo.setEnabled(false);
-		final GridData gd_actionCombo = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		actionCombo.setLayoutData(gd_actionCombo);
+		actionCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		actionCombo.setItems(ACTIONS);
 		actionCombo.select(0);
 
@@ -207,14 +215,12 @@ public class Editor extends EditorPart {
 		urnLabel.setText(Messages.getString("Editor.label.urnLabel.URN")); //$NON-NLS-1$
 
 		urnText = new Text(propertiesGroup, SWT.READ_ONLY | SWT.BORDER);
-		final GridData gd_urnText = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		urnText.setLayoutData(gd_urnText);
+		urnText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 		final Label label_3 = new Label(propertiesGroup, SWT.NONE);
 		label_3.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 
 		final Button versionalButton = new Button(propertiesGroup, SWT.CHECK);
-		versionalButton.setLayoutData(new GridData());
 		versionalButton.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		versionalButton.setText(Messages.getString("Editor.label.versionalButton.Versional")); //$NON-NLS-1$
 		versionalButton.setSelection(true); // TODO: Get versional state
@@ -248,7 +254,6 @@ public class Editor extends EditorPart {
 
 		final DateTime dateTime = new DateTime(versionGroup, SWT.NONE);
 		dateTime.setEnabled(false);
-		dateTime.setLayoutData(new GridData());
 		dateTime.setDate(2008, 0, 1);
 
 		final Label responsibelLabel = new Label(versionGroup, SWT.NONE);
@@ -275,85 +280,51 @@ public class Editor extends EditorPart {
 	 */
 	public void createPartControl(Composite parent) {
 		log.debug("Editor.createPartControl called");
-	}
-	
-	
-	
-	/**
-	 * Create standard contents of the editor part
-	 * 
-	 * @param parent
-	 * @param headerEditorTitle
-	 * @param headerEditorDescr
-	 * @param nbrTabItems
-	 * 			- requested number of Tab Items
-	 * @return List<TabItem> List of Tab Items requested by caller.
-	 */
-	public List<TabItem> createStandardPartControl(Composite parent, String headerEditorTitle,
-			String headerEditorDescr, int nbrTabItems) {
-
-		log.debug("Editor.createPartControl called");
-
+		parent.setLayout(new GridLayout());
+		
 		// General Editor GUI layout:
 		//---------------------------
-		final Composite composite_1 = new Composite(parent, SWT.BORDER);
-		composite_1.setRedraw(true);
+		composite = new Composite(parent, SWT.BORDER);
+		composite.setLayout(new GridLayout());
+		composite.setRedraw(true);
+
 		final GridData gd_composite_1 = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd_composite_1.widthHint = 539;
 		gd_composite_1.heightHint = 573;
-		composite_1.setLayoutData(gd_composite_1);
-		composite_1.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		composite_1.setLayout(new GridLayout());
+		composite.setLayoutData(gd_composite_1);
+		composite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 
-		final Composite composite_2 = new Composite(composite_1, SWT.NONE);
+		final Composite composite_2 = new Composite(composite, SWT.NONE);
+		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		composite_2.setBackground(SWTResourceManager.getColor(230, 230, 250));
-		final GridData gd_composite_2 = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd_composite_2.heightHint = 21;
-
-		composite_2.setLayoutData(gd_composite_2);
 		composite_2.setLayout(new GridLayout());
 
 		final Label questionItemEditorLabel = new Label(composite_2, SWT.WRAP);
-		questionItemEditorLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		questionItemEditorLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		questionItemEditorLabel.setFont(SWTResourceManager.getFont("Sans", 14, SWT.BOLD));
 
 		questionItemEditorLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
 		questionItemEditorLabel.setText(headerEditorTitle);
 
 		final Label useTheEditorLabel = new Label(composite_2, SWT.WRAP);
-		final GridData gd_useTheEditorLabel = new GridData(SWT.LEFT, SWT.CENTER, true, false);
+		final GridData gd_useTheEditorLabel = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gd_useTheEditorLabel.widthHint = 471;
 		useTheEditorLabel.setLayoutData(gd_useTheEditorLabel);
 		useTheEditorLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
 		useTheEditorLabel.setText(headerEditorDescr);
-
-		tabFolder = new TabFolder(composite_1, SWT.BOTTOM);
-		final GridData gd_tabFolder = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd_tabFolder.heightHint = 610;
-		tabFolder.setLayoutData(gd_tabFolder);
-		tabFolder.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		
-		// Create customized editor tabs:
-		
-		List<TabItem> listTabItems = new ArrayList<TabItem>();
-		for (int i = 0; i < nbrTabItems; i++) {
-			listTabItems.add(new TabItem(tabFolder, SWT.NONE));
-		}
 				
-		// Properties Tab:
+		// Create Properties Tab - test only:
+		// - should normally be commented out!
 		// --------------------------
-		createPropertiesTab(tabFolder);
+        // createPropertiesTab(tabFolder);
 		
-		//
 //		site.getPage().addSelectionListener(QuestionItemView.ID, (ISelectionListener) this);
 		log.debug("Part Properties: " + getPartProperties());
 
 		// Clean dirt from initialization
 		editorStatus.clearChanged();
-
-		return listTabItems;
 	}
-
+	
 	@Override
 	public void setFocus() {
 		log.debug("Editor.setFocus()");
@@ -394,5 +365,8 @@ public class Editor extends EditorPart {
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		log.debug("Editor.selectionChanged()");
 
+	}
+	protected Composite getComposite_1() {
+		return composite;
 	}
 }

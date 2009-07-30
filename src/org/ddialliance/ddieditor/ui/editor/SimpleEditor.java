@@ -35,20 +35,25 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.swt.widgets.TabFolder;
+import com.swtdesigner.SWTResourceManager;
 
 public class SimpleEditor extends Editor {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, ConceptSchemeEditor.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM, SimpleEditor.class);
 
 	// Member variables:
+	private String editorEntityName;
 	private Simple simpleElement;
 	private IEditorSite site;
 	private StyledText simpleDescrStyledText;
 	private TableViewer tableViewer;
 
-	private enum TABITEM_INDEX {
-		SIMPLE
-	};
+	public SimpleEditor(String headerEditorTitle, String headerEditorDescr, String editorEntityName) {
 
+		super(headerEditorTitle, headerEditorDescr);
+		
+		this.editorEntityName = editorEntityName;
+	}
 	
 	/**
 	 * Create contents of the editor part
@@ -57,41 +62,26 @@ public class SimpleEditor extends Editor {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
+		parent.setLayout(new GridLayout());
 		log.debug("Editor.createPartControl called");
-	}
-
-	
-	/**
-	 * Create Simple content of Editor Part i.e. Label and Description.
-	 * 
-	 * @param parent
-	 * @param headerEditorTitle
-	 * @param headerEditorDescr
-	 * @param editorEntiryName
-	 * 			- Entity Name e.g. Question Scheme
-	 * @param nbrTabItems
-	 * 			- requested number of Tab Items
-	 */
-	public void createSimplePartControl(Composite parent, String headerEditorTitle, String headerEditorDescr, String editorEntiryName, 
-			int nbrTabItems, final Simple simpleElement) {
-		log.debug("SimpleEditor.createSimplePartControl called");
+		super.createPartControl(parent);
 		
-		this.simpleElement = simpleElement;
-
-		List<TabItem> tabItemList = super.createStandardPartControl(parent, headerEditorTitle, headerEditorDescr,
-				TABITEM_INDEX.values().length);
-
-		// Simple Tab:
-		// -----------
+		// Simple Tab Folder:
+		// ------------------
+		TabFolder tabFolder = new TabFolder(getComposite_1(), SWT.BOTTOM);
+		tabFolder.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		// - Simple Root Composite:
-		final Composite simpleRootComposite = new Composite(tabFolder, SWT.NONE);
+		Composite simpleRootComposite = new Composite(tabFolder, SWT.NONE);
 		simpleRootComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		final GridLayout gridLayout = new GridLayout();
 		simpleRootComposite.setLayout(gridLayout);
-		TabItem simpleTabItem = tabItemList.get(TABITEM_INDEX.SIMPLE.ordinal());
+		
+		// - Simple Tab Item:
+		TabItem simpleTabItem = new TabItem(tabFolder, SWT.NONE);
 		simpleTabItem.setControl(simpleRootComposite);
-		simpleTabItem.setText(editorEntiryName);
+		simpleTabItem.setText(editorEntityName);
 
 		// - Simple Group
 		final Group simpleGroup = new Group(simpleRootComposite, SWT.NONE);
@@ -103,7 +93,7 @@ public class SimpleEditor extends Editor {
 		final GridLayout gridLayout_1 = new GridLayout();
 		gridLayout_1.numColumns = 2;
 		simpleGroup.setLayout(gridLayout_1);
-		simpleGroup.setText(editorEntiryName);
+		simpleGroup.setText(editorEntityName);
 
 		// Simple Label:
 		final Label labelLabel = new Label(simpleGroup, SWT.NONE);
@@ -146,6 +136,8 @@ public class SimpleEditor extends Editor {
 				editorStatus.setChanged();
 			}
 		});
+		
+		super.createPropertiesTab(tabFolder);
 
 		// Clean dirt from initialization
 		editorStatus.clearChanged();
@@ -157,86 +149,10 @@ public class SimpleEditor extends Editor {
 	}
 
 //	@Override
-//	public void doSave(IProgressMonitor monitor) {
-//		log.debug("ConceptSchemeEditor.doSave()");
-//		super.doSave(monitor);
-//
-//		try {
-//			simpleElement.validate();
-//		} catch (Exception e1) {
-//			String errMess = Messages.getString("ConceptSchemeEditor.mess.ValidationError"); //$NON-NLS-1$
-//			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-//					ID, 0, errMess, null));
-//			return;
-//		}
-//		try {
-//			if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
-//				ConceptSchemes.create(conceptScheme);
-//				editorInput.setEditorMode(EDITOR_MODE_TYPE.EDIT);
-//			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)) {
-//				ConceptSchemes.update(conceptScheme);
-//			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.VIEW)) {
-//				log.debug("*** Saved ignored! ***");
-//			}
-//		} catch (Exception e) {
-//			String errMess = Messages.getString("ConceptSchemeEditor.mess.ErrorDuringSave"); //$NON-NLS-1$
-//			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-//					ID, 0, errMess, e));
-//			return;
-//		}
-//		editorInput.getParentView().refreshView();
-//		editorStatus.clearChanged();
-//		log.debug("ConceptSchemeEditor.doSave(1): " + editorStatus.getStatus());
-//	}
-
-	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input, 	Simple simpleElement) throws PartInitException {
+		this.simpleElement = simpleElement;
 		// Initialize the Stander Editor Part:
 		super.init(site, input);
-//		// Initialize Simple Editor Part:
-//		this.editorInput = (EditorInput) input;
-//		if (log.isDebugEnabled()) {
-//			log.debug("ConceptSchemeEditor.init() - Name: " + editorInput.getName());
-//			log.debug("ConceptSchemeEditor.init() - ID: " + editorInput.getId());
-//			log.debug("ConceptSchemeEditor.init() - Parent ID: " + editorInput.getParentId());
-//			log.debug("ConceptSchemeEditor.init() - Editor Mode: " + editorInput.getEditorMode());
-//		}
-//
-//		ConceptSchemes.init(((EditorInput) input).getProperties());
-//
-//		if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
-//			try {
-//				conceptScheme = ConceptSchemes.createConceptScheme(editorInput.getId(), editorInput.getVersion(),
-//						editorInput.getParentId(), editorInput.getParentVersion());
-//			} catch (Exception e) {
-//				log.error("ConceptSchemeEditor.init(): " + e.getMessage());
-//				String errMess = Messages.getString("ConceptSchemeEditor.mess.ErrorDuringCreateNewConceptScheme"); //$NON-NLS-1$
-//				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-//						ID, 0, errMess, e));
-//				System.exit(0);
-//			}
-//		} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)
-//				|| editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.VIEW)) {
-//			try {
-//				conceptScheme = ConceptSchemes.getConceptScheme(editorInput.getId(), editorInput.getVersion(),
-//						editorInput.getParentId(), editorInput.getParentVersion());
-//			} catch (Exception e) {
-//				String errMess = Messages.getString("ConceptSchemeEditor.mess.GetConceptSchemeByIdError"); //$NON-NLS-1$
-//				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-//						ID, 0, errMess, e));
-//				System.exit(0);
-//			}
-//		} else {
-//			String errMess = MessageFormat.format(
-//					Messages.getString("ConceptSchemeEditor.mess.UnknownEditorMode"), editorInput.getEditorMode()); //$NON-NLS-1$
-//			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
-//			System.exit(0);
-//		}
-//
-//		this.site = site;
-//		setSite(site);
-//		setInput(editorInput);
-//		setPartName(editorInput.getId());
 	}
 
 }

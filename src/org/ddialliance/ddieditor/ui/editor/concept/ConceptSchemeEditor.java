@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -33,6 +34,13 @@ public class ConceptSchemeEditor extends SimpleEditor {
 	private ConceptScheme conceptScheme;
 	private IEditorSite site;
 	
+	public ConceptSchemeEditor() {
+		super(Messages
+				.getString("ConceptSchemeEditor.label.ConceptSchemeEditorLabel.ConceptSchemeEditor"), Messages
+				.getString("ConceptSchemeEditor.label.useTheEditorLabel.Description"), Messages
+				.getString("ConceptSchemeEditor.label.ConceptSchemeTabItem"));
+	}
+
 	public String getPreferredPerspectiveId() {
 		return ConceptsPerspective.ID;
 	}
@@ -49,12 +57,9 @@ public class ConceptSchemeEditor extends SimpleEditor {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
+		parent.setLayout(new GridLayout());
 		log.debug("ConceptSchemeEditor.createPartControl called");
-		// TODO Get descriptions
-		super.createSimplePartControl(parent, Messages
-				.getString("ConceptSchemeEditor.label.ConceptSchemeEditorLabel.ConceptSchemeEditor"), Messages
-				.getString("ConceptSchemeEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("ConceptSchemeEditor.label.ConceptSchemeTabItem"), 1, (Simple) conceptScheme);
+		super.createPartControl(parent);
 	}
 	
 	@Override
@@ -91,8 +96,6 @@ public class ConceptSchemeEditor extends SimpleEditor {
 	}
 	
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		// Initialize the Simple Editor Part:
-		super.init(site, input);
 		
 		// Initialize Concept Scheme Editor Part:
 		this.editorInput = (EditorInput) input;
@@ -134,6 +137,9 @@ public class ConceptSchemeEditor extends SimpleEditor {
 			System.exit(0);
 		}
 		
+		// Initialize the Simple Editor Part with Concept Scheme:
+		super.init(site, input, (Simple) conceptScheme);
+
 		this.site = site;
 		setSite(site);
 		setInput(editorInput);
