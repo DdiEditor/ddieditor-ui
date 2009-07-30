@@ -3,48 +3,50 @@ package org.ddialliance.ddieditor.ui.dbxml;
 import java.io.File;
 import java.util.List;
 
-import org.apache.xmlbeans.XmlCursor;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptSchemeDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptSchemeType;
+import org.ddialliance.ddi_3_0.xml.xmlbeans.studyunit.StudyUnitDocument;
+import org.ddialliance.ddi_3_0.xml.xmlbeans.studyunit.StudyUnitType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
+import org.ddialliance.ddieditor.persistenceaccess.SchemeQueryResult;
 import org.ddialliance.ddieditor.ui.model.ConceptScheme;
+import org.ddialliance.ddieditor.ui.model.StudyUnit;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class ConceptSchemes extends XmlEntities {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, ConceptSchemes.class);
+public class StudyUnits extends XmlEntities {
+	private static Log log = LogFactory.getLog(LogType.SYSTEM, StudyUnits.class);
+	
 
 	/**
-	 * Get Light Concept Scheme List
+	 * Get Light Study Unit List
 	 * 
 	 * @return List<LightXmlObjectType>
 	 * @throws Exception
 	 */
-	public static List<LightXmlObjectType> getConceptSchemesLight() throws Exception {
-		return getConceptSchemesLight("", "");
+	public static List<LightXmlObjectType> getStudyUnitLight() throws Exception {
+		return getStudyUnitLight("", "");
 	}
 
 	/**
 	 * 
-	 * Get Light Concept Scheme List
+	 * Get Light Study Unit List
 	 * 
 	 * @param id
 	 * @param version
 	 * @return List<LightXmlObjectType>
 	 * @throws Exception
 	 */
-	public static List<LightXmlObjectType> getConceptSchemesLight(String id, String version) throws Exception {
-		log.debug("ConceptScheme.getConceptSchemesLight(). Id: "+id+" Version: "+version);
+	public static List<LightXmlObjectType> getStudyUnitLight(String id, String version) throws Exception {
+		log.debug("StudyUnit.getStudyUnitLight(). Id: "+id+" Version: "+version);
 
 		DdiManager ddiManager = DdiManager.getInstance();
 
-		LightXmlObjectListDocument listDoc = ddiManager.getConceptSchemeLight(id, version, null, null);
+		LightXmlObjectListDocument listDoc = ddiManager.getStudyUnitLight(id, version, null, null);
 
 		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
 
@@ -57,7 +59,7 @@ public class ConceptSchemes extends XmlEntities {
 	 * 
 	 * Get Light Concept List
 	 * 
-	 * - get children (Concepts) of given Concept Scheme
+	 * - get children (Concepts) of given Study Unit
 	 * 
 	 * @param id
 	 * @param version
@@ -65,7 +67,7 @@ public class ConceptSchemes extends XmlEntities {
 	 * @throws Exception
 	 */
 	public static List<LightXmlObjectType> getConceptsLight(String id, String version) throws Exception {
-		log.debug("ConceptScheme.getConceptsLight(). Id: "+id+" Version: "+version);
+		log.debug("StudyUnit.getConceptsLight(). Id: "+id+" Version: "+version);
 
 		DdiManager ddiManager = DdiManager.getInstance();
 
@@ -80,83 +82,89 @@ public class ConceptSchemes extends XmlEntities {
 
 
 	/**
-	 * Get Concept Scheme by Id
+	 * Get Study Unit by Id
 	 * 
 	 * @param id
 	 * @param parentId
-	 * @return ConceptSchemeType
+	 * @return StudyUnitType
 	 * @throws Exception
 	 */
-	public ConceptSchemeType getConceptSchemeById(String id, String parentId) throws Exception {
-		log.debug("ConceptScheme.getConceptSchemeById()");
-		return DdiManager.getInstance().getConceptScheme(id, null, parentId, null).getConceptScheme();
+	public StudyUnit getStudyUnitById(String id, String parentId) throws Exception {
+		log.debug("StudyUnit.getStudyUnitById()");
+		SchemeQueryResult schemeQueryResult = DdiManager.getInstance().getStudyLabel(id, null, parentId, null);
+		
+		return null; // TEMP
 	}
 
 	/**
-	 * Create Concept Scheme object
+	 * Create Study Unit object
 	 * 
 	 * @param id
 	 * @param version
 	 * @param parentId
 	 * @param parentVersion
-	 * @return ConceptScheme
+	 * @param schemeQueryResult (or null)
+	 * @return StudyUnit
 	 * @throws Exception
 	 */
-	static public ConceptScheme createConceptScheme(String id, String version, String parentId, String parentVersion)
-			throws Exception {
-		log.debug("ConceptSchemes.createConceptScheme()");
+	static public StudyUnit createStudyUnit(String id, String version, String parentId, String parentVersion,
+			SchemeQueryResult schemeQueryResult)			throws Exception {
+		log.debug("StudyUnit.createStudyUnit()");
 
-		ConceptSchemeDocument conceptShemeDocument = ConceptSchemeDocument.Factory.newInstance();
+		StudyUnitDocument studyUnitDocument = StudyUnitDocument.Factory.newInstance();
 
-		ConceptSchemeType conceptSchemeType = conceptShemeDocument.addNewConceptScheme();
-		conceptSchemeType.setId(id);
+		StudyUnitType studyUnitType = studyUnitDocument.addNewStudyUnit();
+		studyUnitType.setId(id);
 		if (version != null) {
-			conceptSchemeType.setVersion(version);
+			studyUnitType.setVersion(version);
 		}
 
-		ConceptScheme conceptScheme = new ConceptScheme(conceptShemeDocument, parentId, parentVersion);
-
-		return conceptScheme;
+		StudyUnit studyUnit = new StudyUnit(studyUnitDocument, parentId, parentVersion, schemeQueryResult);
+		
+		return studyUnit;
 	}
 
 	/**
+	 * Get Study Unit
 	 * 
 	 * @param id
 	 * @param version
 	 * @param parentId
 	 * @param parentVersion
-	 * @return ConceptScheme
+	 * @return StudyUnit
 	 * @throws Exception
 	 */
-	static public ConceptScheme getConceptScheme(String id, String version, String parentId, String parentVersion)
+	static public StudyUnit getStudyUnit(String id, String version, String parentId, String parentVersion)
 			throws Exception {
-		log.debug("ConceptSchemes.getConceptScheme()");
+		log.debug("StudyUnit.getStudyUnit()");
 
-		ConceptSchemeDocument conceptSchemeDocument = DdiManager.getInstance().getConceptScheme(id, version,
+		SchemeQueryResult schemeQueryResult = DdiManager.getInstance().getStudyLabel(id, version,
 				parentId, parentVersion);
+		
+		StudyUnit studyUnit = createStudyUnit(id, version, parentId, parentVersion, schemeQueryResult);
+		
+		System.out.println("Citation: "+studyUnit.getAttribute("Citation"));
 
-		ConceptScheme conceptScheme = new ConceptScheme(conceptSchemeDocument, parentId, parentVersion);
-
-		return conceptScheme;
+		return studyUnit;
 	}
 
 	/**
-	 * Create new DBXML Concept Scheme
+	 * Create new DBXML Study Unit
 	 * 
-	 * @param conceptScheme
-	 *            concept scheme instance
+	 * @param studyUnit
+	 *            Study Unit instance
 	 * @param parentId
 	 *            Id. of Conceptual Component
 	 * @param parentVersion
 	 *            Version of Conceptual Component
 	 * @throws DDIFtpException
 	 */
-	static public void create(ConceptScheme conceptScheme) throws DDIFtpException {
+	static public void create(StudyUnit studyUnit) throws DDIFtpException {
 		try {
-			DdiManager.getInstance().createElement(conceptScheme.getConceptSchemeDocument(),
-					conceptScheme.getParentId(), conceptScheme.getParentVersion(), "ConceptualComponent");
+			DdiManager.getInstance().createElement(studyUnit.getStudyUnitDocument(),
+					studyUnit.getParentId(), studyUnit.getParentVersion(), "DDIInstance");
 		} catch (DDIFtpException e) {
-			log.error("Create DBXML Concept Scheme error: " + e.getMessage());
+			log.error("Create DBXML Study Unit error: " + e.getMessage());
 			
 			throw new DDIFtpException(e.getMessage());
 		}
@@ -170,21 +178,21 @@ public class ConceptSchemes extends XmlEntities {
 
 	/**
 	 * 
-	 * Update DBXML Concept Scheme corresponding to the given ConceptScheme
+	 * Update DBXML Study Unit corresponding to the given StudyUnit
 	 * instance
 	 * 
-	 * @param conceptScheme
-	 *            concept Scheme instance
+	 * @param studyUnit
+	 *            Study Unit instance
 	 * @throws DDIFtpException
 	 */
-	static public void update(ConceptScheme conceptScheme) throws DDIFtpException {
+	static public void update(StudyUnit studyUnit) throws DDIFtpException {
 		// TODO Version Control - not supported
-		log.debug("Update DBXML Concept Scheme:\n" + conceptScheme.getConceptSchemeDocument());
+		log.debug("Update DBXML Study Unit:\n" + studyUnit.getStudyUnitDocument());
 		try {
-			DdiManager.getInstance().updateElement(conceptScheme.getConceptSchemeDocument(), conceptScheme.getId(),
-					conceptScheme.getVersion());
+			DdiManager.getInstance().updateElement(studyUnit.getStudyUnitDocument(), studyUnit.getId(),
+					studyUnit.getVersion());
 		} catch (DDIFtpException e) {
-			log.error("Update DBXML Concept Scheme error: " + e.getMessage());
+			log.error("Update DBXML Study Unit error: " + e.getMessage());
 			
 			throw new DDIFtpException(e.getMessage());
 		}
@@ -198,7 +206,7 @@ public class ConceptSchemes extends XmlEntities {
 
 	/**
 	 * 
-	 * Delete DBXML Concept Scheme
+	 * Delete DBXML Study Unit
 	 * 
 	 * @param id
 	 *            Identification
@@ -211,13 +219,13 @@ public class ConceptSchemes extends XmlEntities {
 	 * @throws Exception
 	 */
 	static public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
-		log.debug("Delete DBXML Concept Scheme");
-		ConceptScheme conceptScheme = getConceptScheme(id, version, parentId, parentVersion);
+		log.debug("Delete DBXML Study Unit");
+		StudyUnit studyUnit = getStudyUnit(id, version, parentId, parentVersion);
 		try {
-			DdiManager.getInstance().deleteElement(conceptScheme.getConceptSchemeDocument(), conceptScheme.getParentId(),
-					conceptScheme.getParentVersion(), "ConceptualComponent");
+			DdiManager.getInstance().deleteElement(studyUnit.getStudyUnitDocument(), studyUnit.getParentId(),
+					studyUnit.getParentVersion(), "DDIInstance");
 		} catch (DDIFtpException e) {
-			log.error("Delete DBXML Concept Scheme error: " + e.getMessage());
+			log.error("Delete DBXML Study Unit error: " + e.getMessage());
 			
 			throw new DDIFtpException(e.getMessage());
 		}

@@ -59,22 +59,22 @@ public class DbXml {
 	public static void open(String fileName) throws Exception {
 		log.debug("DbXml.open(" + fileName + ")");
 		try {
-			// Clean up DbXml
-			File[] files = new File(DbXmlManager.ENVIROMENT_HOME).listFiles();
-			for (int i = 0; i < files.length; i++) {
-				if (files[i].getName().contains("__")) {
-					log.debug("Deleting: " + files[i].getAbsolutePath());
-					files[i].delete();
-				}
-				if (files[i].getName().contains("log.")) {
-					log.debug("Deleting: " + files[i].getAbsolutePath());
-					files[i].delete();
-				}
-				if (files[i].getName().contains("dbxml")) {
-					log.debug("Deleting: " + files[i].getAbsolutePath());
-					files[i].delete();
-				}
-			}
+//			// Clean up DbXml
+//			File[] files = new File(DbXmlManager.ENVIROMENT_HOME).listFiles();
+//			for (int i = 0; i < files.length; i++) {
+//				if (files[i].getName().contains("__")) {
+//					log.debug("Deleting: " + files[i].getAbsolutePath());
+//					files[i].delete();
+//				}
+//				if (files[i].getName().contains("log.")) {
+//					log.debug("Deleting: " + files[i].getAbsolutePath());
+//					files[i].delete();
+//				}
+//				if (files[i].getName().contains("dbxml")) {
+//					log.debug("Deleting: " + files[i].getAbsolutePath());
+//					files[i].delete();
+//				}
+//			}
 			
 			PersistenceManager.getInstance();
 			DdiManager.getInstance();

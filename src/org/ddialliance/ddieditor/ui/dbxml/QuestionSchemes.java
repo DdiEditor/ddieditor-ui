@@ -92,7 +92,7 @@ public class QuestionSchemes extends XmlEntities {
 	}
 
 	/**
-	 * Create Question Scheme
+	 * Create Question Scheme object
 	 * 
 	 * @param id
 	 * @param version

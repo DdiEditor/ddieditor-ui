@@ -3,17 +3,14 @@ package org.ddialliance.ddieditor.ui.dbxml;
 import java.io.File;
 import java.util.List;
 
-import org.apache.xmlbeans.XmlCursor;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.logicalproduct.CodeSchemeType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.logicalproduct.impl.CodeSchemeTypeImpl;
 import org.ddialliance.ddieditor.model.DdiManager;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.model.CodeScheme;
-import org.ddialliance.ddieditor.ui.model.Concept;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -24,43 +21,80 @@ public class CodeSchemes extends XmlEntities {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeSchemes.class);
 
 	/**
-	 * Get Code Schemes - light version
+	 * Get Light Code Scheme List
 	 * 
-	 * @param parentConceptScheme
 	 * @return List<LightXmlObjectType>
 	 * @throws Exception
 	 */
-	static public List<LightXmlObjectType> getCodeSchemesLight(LightXmlObjectType parentConceptScheme) throws Exception {
-
-		log.debug("CodeSchemes.getCodeSchemesLight()");
-
-		return CodeSchemes.getCodeSchemesLight("", "", parentConceptScheme.getId(), parentConceptScheme.getVersion());
+	public static List<LightXmlObjectType> getCodeSchemesLight() throws Exception {
+		return getCodeSchemesLight("", "");
 	}
 
 	/**
 	 * 
-	 * Get Light version of Code Schemes
+	 * Get Light Code Scheme List
 	 * 
 	 * @param id
 	 * @param version
-	 * @param parentId
-	 * @param parentVersion
 	 * @return List<LightXmlObjectType>
 	 * @throws Exception
 	 */
-	static public List<LightXmlObjectType> getCodeSchemesLight(String id, String version, String parentId,
-			String parentVersion) throws Exception {
+	public static List<LightXmlObjectType> getCodeSchemesLight(String id, String version) throws Exception {
+		log.debug("CodeScheme.getCodeSchemesLight(). Id: "+id+" Version: "+version);
 
-		log.debug("CodeSchemes.getCodeSchemesLight()");
+		DdiManager ddiManager = DdiManager.getInstance();
 
-		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getCodeSchemesLight(id, version,
-				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
+		LightXmlObjectListDocument listDoc = ddiManager.getCodeSchemesLight(id, version, null, null);
 
-		return lightXmlObjectTypeList;
+		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
+
+		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
+
+		return listLightXmlObjectListType;
 	}
-	
+
 	/**
-	 * Create Code Schemes
+	 * 
+	 * Get Light Code List
+	 * 
+	 * - get children (Codes) of given Code Scheme
+	 * 
+	 * @param id
+	 * @param version
+	 * @return List<LightXmlObjectType>
+	 * @throws Exception
+	 */
+	public static List<LightXmlObjectType> getCodesLight(String id, String version) throws Exception {
+		log.debug("CodeScheme.getCodesLight(). Id: "+id+" Version: "+version);
+
+//		DdiManager ddiManager = DdiManager.getInstance();
+//
+//		LightXmlObjectListDocument listDoc = ddiManager.getCodeLight("", "", id, version);
+//
+//		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
+//
+//		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
+//
+//		return listLightXmlObjectListType;
+		return null;
+	}
+
+
+	/**
+	 * Get Code Scheme by Id
+	 * 
+	 * @param id
+	 * @param parentId
+	 * @return CodeSchemeType
+	 * @throws Exception
+	 */
+	public CodeSchemeType getCodeSchemeById(String id, String parentId) throws Exception {
+		log.debug("CodeScheme.getCodeSchemeById()");
+		return DdiManager.getInstance().getCodeScheme(id, null, parentId, null).getCodeScheme();
+	}
+
+	/**
+	 * Create Code Scheme object
 	 * 
 	 * @param id
 	 * @param version
@@ -73,22 +107,20 @@ public class CodeSchemes extends XmlEntities {
 			throws Exception {
 		log.debug("CodeSchemes.createCodeScheme()");
 
-		CodeSchemeDocument codeSchemeDocument = CodeSchemeDocument.Factory.newInstance();
+		CodeSchemeDocument CodeShemeDocument = CodeSchemeDocument.Factory.newInstance();
 
-		CodeSchemeType conceptType = codeSchemeDocument.addNewCodeScheme();
-		conceptType.setId(id);
+		CodeSchemeType CodeSchemeType = CodeShemeDocument.addNewCodeScheme();
+		CodeSchemeType.setId(id);
 		if (version != null) {
-			conceptType.setVersion(version);
+			CodeSchemeType.setVersion(version);
 		}
-		
-		CodeScheme codeScheme = new CodeScheme(codeSchemeDocument, parentId, parentVersion);
 
-		return codeScheme;
+		CodeScheme CodeScheme = new CodeScheme(CodeShemeDocument, parentId, parentVersion);
+
+		return CodeScheme;
 	}
 
 	/**
-	 * 
-	 * Get Code Scheme
 	 * 
 	 * @param id
 	 * @param version
@@ -97,37 +129,39 @@ public class CodeSchemes extends XmlEntities {
 	 * @return CodeScheme
 	 * @throws Exception
 	 */
-	static public CodeScheme getCodeScheme(String id, String version, String parentId, String parentVersion) throws Exception {
-		log.debug("CodeSchemes.getCodeScheme("+id+")");
+	static public CodeScheme getCodeScheme(String id, String version, String parentId, String parentVersion)
+			throws Exception {
+		log.debug("CodeSchemes.getCodeScheme()");
 
-		CodeSchemeDocument codeSchemeDocument = DdiManager.getInstance().getCodeScheme(id, version, parentId, parentVersion);
-		CodeScheme codeScheme = new CodeScheme(codeSchemeDocument, parentId, parentVersion);
-		
-		return codeScheme;
+		CodeSchemeDocument CodeSchemeDocument = DdiManager.getInstance().getCodeScheme(id, version,
+				parentId, parentVersion);
+
+		CodeScheme CodeScheme = new CodeScheme(CodeSchemeDocument, parentId, parentVersion);
+
+		return CodeScheme;
 	}
 
 	/**
 	 * Create new DBXML Code Scheme
 	 * 
-	 * @param codeScheme
-	 *            Code Scheme instance
+	 * @param CodeScheme
+	 *            Code scheme instance
 	 * @param parentId
-	 *            Id. of Code Scheme
+	 *            Id. of Logical Product
 	 * @param parentVersion
-	 *            Version of Code Scheme
+	 *            Version of Logical Product
 	 * @throws DDIFtpException
 	 */
-	static public void create(CodeScheme codeScheme) throws DDIFtpException {
-
+	static public void create(CodeScheme CodeScheme) throws DDIFtpException {
 		try {
-//			DdiManager.getInstance().createElement(codeScheme.getCodeSchemeDocument(),
-//					codeScheme.getParentId(), codeScheme.getParentVersion(), "datacollection__DataCollection");
-			DdiManager.getInstance().createElement(codeScheme.getCodeSchemeDocument(),
-					codeScheme.getParentId(), codeScheme.getParentVersion(), "ConceptualComponent");
+			DdiManager.getInstance().createElement(CodeScheme.getCodeSchemeDocument(),
+					CodeScheme.getParentId(), CodeScheme.getParentVersion(), "logicalproduct__LogicalProduct");
 		} catch (DDIFtpException e) {
 			log.error("Create DBXML Code Scheme error: " + e.getMessage());
+			
 			throw new DDIFtpException(e.getMessage());
 		}
+		
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);
@@ -137,22 +171,25 @@ public class CodeSchemes extends XmlEntities {
 
 	/**
 	 * 
-	 * Update DBXML Code Scheme corresponding to the given Code Scheme instance
+	 * Update DBXML Code Scheme corresponding to the given CodeScheme
+	 * instance
 	 * 
-	 * @param codeScheme
+	 * @param CodeScheme
 	 *            Code Scheme instance
 	 * @throws DDIFtpException
 	 */
-	static public void update(CodeScheme codeScheme) throws DDIFtpException {
+	static public void update(CodeScheme CodeScheme) throws DDIFtpException {
 		// TODO Version Control - not supported
-		log.debug("Update DBXML Code Scheme:\n" + codeScheme.getCodeSchemeDocument());
+		log.debug("Update DBXML Code Scheme:\n" + CodeScheme.getCodeSchemeDocument());
 		try {
-			DdiManager.getInstance().updateElement(codeScheme.getCodeSchemeDocument(), codeScheme.getId(),
-					codeScheme.getVersion());
+			DdiManager.getInstance().updateElement(CodeScheme.getCodeSchemeDocument(), CodeScheme.getId(),
+					CodeScheme.getVersion());
 		} catch (DDIFtpException e) {
 			log.error("Update DBXML Code Scheme error: " + e.getMessage());
+			
 			throw new DDIFtpException(e.getMessage());
 		}
+		
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);
@@ -175,15 +212,17 @@ public class CodeSchemes extends XmlEntities {
 	 * @throws Exception
 	 */
 	static public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
-		log.debug("Delete DBXML CodeScheme Scheme");
-		CodeScheme codeScheme = getCodeScheme(id, version, parentId, parentVersion);
+		log.debug("Delete DBXML Code Scheme");
+		CodeScheme CodeScheme = getCodeScheme(id, version, parentId, parentVersion);
 		try {
-			DdiManager.getInstance().deleteElement(codeScheme.getCodeSchemeDocument(), codeScheme.getParentId(),
-					codeScheme.getParentVersion(), "CodeSchemeScheme");
+			DdiManager.getInstance().deleteElement(CodeScheme.getCodeSchemeDocument(), CodeScheme.getParentId(),
+					CodeScheme.getParentVersion(), "logicalproduct__LogicalProduct");
 		} catch (DDIFtpException e) {
-			log.error("Delete DBXML Code Scheme Scheme error: " + e.getMessage());
+			log.error("Delete DBXML Code Scheme error: " + e.getMessage());
+			
 			throw new DDIFtpException(e.getMessage());
 		}
+		
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);

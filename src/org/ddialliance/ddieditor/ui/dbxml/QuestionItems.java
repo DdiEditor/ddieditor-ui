@@ -93,7 +93,7 @@ public class QuestionItems extends XmlEntities {
 	}
 
 	/**
-	 * Create QuestionItem
+	 * Create QuestionItem object
 	 * 
 	 * @param id			Identification
 	 * @param version		Version

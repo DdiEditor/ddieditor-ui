@@ -56,7 +56,7 @@ public class Concepts extends XmlEntities {
 	}
 	
 	/**
-	 * Create Concept
+	 * Create Concept object
 	 * 
 	 * @param id
 	 * @param version
