@@ -25,5 +25,4 @@ public class ConceptsPerspective implements IPerspectiveFactory {
 	private void addFastViews(IPageLayout layout) {
 		System.currentTimeMillis();
 	}
-
 }
