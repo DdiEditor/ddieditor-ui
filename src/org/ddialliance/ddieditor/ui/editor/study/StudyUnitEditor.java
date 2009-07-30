@@ -38,7 +38,7 @@ import org.eclipse.ui.PartInitException;
 /**
  * Study Unit Editor
  * 
- * $Revision:
+ * $Revision: $
  * 
  * @author dak
  *
