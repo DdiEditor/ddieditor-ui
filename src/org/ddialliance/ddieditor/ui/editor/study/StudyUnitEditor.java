@@ -35,7 +35,14 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
-
+/**
+ * Study Unit Editor
+ * 
+ * $Revision:
+ * 
+ * @author dak
+ *
+ */
 public class StudyUnitEditor extends Editor implements ISelectionListener {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, StudyUnitEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor";
@@ -55,15 +62,28 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 	private Text languageText;
 	private IEditorSite site;
 	
+	/**
+	 * Constructor of Study Unit Editor 
+	 */
 	public StudyUnitEditor() {
 		super(Messages.getString("StudyUnitEditor.label.StudyUnitEditorLabel.StudyUnitEditor"), 
 				Messages.getString("StudyUnitEditor.label.useTheEditorLabel.Description"));
 	}
 
+	/**
+	 * Get corresponding ID of preferred perspective.
+	 * 
+	 * @return String
+	 */
 	public String getPreferredPerspectiveId() {
 		return InfoPerspective.ID;
 	}
 
+	/**
+	 * Get Perspective Switch dialog text.
+	 * 
+	 * @return String
+	 */
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(Messages.getString("perspective.switch.dialogtext"), Messages
 				.getString("perspective.overview"));
@@ -71,6 +91,8 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 
 	/**
 	 * Create contents of the editor part
+	 * 
+	 * Calls the 'Editor' super class.
 	 * 
 	 * @param parent
 	 */
@@ -273,6 +295,9 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 		}
 	}
 	
+	/**
+	 * Study Unit Editor initialization.
+	 */
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		
@@ -322,5 +347,4 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 		setPartName(editorInput.getId());
 
 	}
-
 }
