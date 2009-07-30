@@ -35,13 +35,15 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
+
 /**
  * Study Unit Editor.
  * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
  * $Revision$
- * 
- * @author dak
- *
  */
 public class StudyUnitEditor extends Editor implements ISelectionListener {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, StudyUnitEditor.class);
