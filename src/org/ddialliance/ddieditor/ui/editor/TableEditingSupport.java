@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.editor;
 
+/**
+ * Table Editing Support.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.util.Arrays;
 
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;

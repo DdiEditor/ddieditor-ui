@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.model;
 
+/**
+ * Language utilities.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,14 +42,30 @@ public class Language {
 	
 	private static final int DEFAULT_LANGUAGE_INDEX = 0;
 	
+	/**
+	 * Get default language
+	 * 
+	 * @return String
+	 */
 	public static String getDefaultLanguage() {
 		return LANGUAGES[DEFAULT_LANGUAGE_INDEX];
 	}
 
+	/**
+	 * Get default language code
+	 * 
+	 * @return String
+	 */
 	public static String getDefaultLanguageCode() {
 		return LANGUAGE_CODES[DEFAULT_LANGUAGE_INDEX];
 	}
 
+	/**
+	 * Get default language excluding original language.
+	 * 
+	 * @param orginalLanguageCode
+	 * @return String
+	 */
 	public static String[] getLanguagesExcludingOrginalLanguage(String orginalLanguageCode) {
 		List<String> languages = new ArrayList<String>();
 
@@ -51,6 +77,12 @@ public class Language {
 		return (languages.toArray(new String[0]));
 	}
 
+	/** 
+	 * Get default language code excluding original language code.
+	 * 
+	 * @param orginalLanguageCode
+	 * @return String[]
+	 */
 	public static String[] getLanguageCodesExcludingOrginalLanguage(String orginalLanguageCode) {
 		List<String> languages = new ArrayList<String>();
 
@@ -62,6 +94,12 @@ public class Language {
 		return (languages.toArray(new String[0]));
 	}
 
+	/**
+	 * Get language index
+	 * 
+	 * @param languageCode
+	 * @return
+	 */
 	public static int getLanguageIndex(String languageCode) {
 
 		for (int i = 0; i < LANGUAGE_CODES.length; i++) {
@@ -73,6 +111,12 @@ public class Language {
 		return -1;
 	}
 	
+	/**
+	 * Get language
+	 * 
+	 * @param languageCode
+	 * @return String
+	 */
 	public static String getLanguage(String languageCode) {
 		
 		for (int i = 0; i < LANGUAGE_CODES.length; i++) {
@@ -84,10 +128,20 @@ public class Language {
 		return null;
 	}
 	
+	/**
+	 * Get languages.
+	 * 
+	 * @return String[]
+	 */
 	public static String[] getLanguages() {
 		return LANGUAGES;
 	}
 
+	/**
+	 * Get language codes
+	 * 
+	 * @return String[]
+	 */
 	public static String[] getLanguageCodes() {
 		return LANGUAGE_CODES;
 	}

@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui;
 
+/**
+ * Application Action Bar Advisor.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;

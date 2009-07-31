@@ -1,9 +1,18 @@
 package org.ddialliance.ddieditor.ui.editor.concept;
 
+/**
+ * Concept Editor.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.text.MessageFormat;
 
 import org.ddialliance.ddieditor.ui.ConceptsPerspective;
-import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.Concepts;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.SimpleEditor;

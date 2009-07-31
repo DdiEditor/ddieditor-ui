@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.editor.question;
 
+/**
+ * Response Type Details.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.math.BigInteger;
 import java.text.MessageFormat;
 import java.util.ArrayList;

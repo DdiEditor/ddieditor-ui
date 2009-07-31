@@ -1,6 +1,17 @@
 package org.ddialliance.ddieditor.ui.dbxml;
 
 import java.io.File;
+
+/**
+ * Concept Schemes (DBXML).
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.util.List;
 
 import org.apache.xmlbeans.XmlCursor;

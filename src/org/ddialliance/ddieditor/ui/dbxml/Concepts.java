@@ -16,6 +16,16 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
+/**
+ * Concepts (DBXML).
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 public class Concepts extends XmlEntities {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Concepts.class);
 

@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.editor.study;
 
+/**
+ * Study Unit Editor.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.text.MessageFormat;
 
 import org.ddialliance.ddieditor.ui.InfoPerspective;
@@ -7,7 +17,6 @@ import org.ddialliance.ddieditor.ui.dbxml.StudyUnits;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
-import org.ddialliance.ddieditor.ui.model.Simple;
 import org.ddialliance.ddieditor.ui.model.StudyUnit;
 import org.ddialliance.ddieditor.ui.util.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;

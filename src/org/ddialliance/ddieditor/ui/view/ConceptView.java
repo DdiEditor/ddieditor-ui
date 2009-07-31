@@ -1,5 +1,16 @@
 package org.ddialliance.ddieditor.ui.view;
 
+
+/**
+ * Concept View.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.util.Arrays;
 import java.util.List;
 

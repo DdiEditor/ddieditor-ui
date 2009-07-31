@@ -1,5 +1,17 @@
 package org.ddialliance.ddieditor.ui.model;
 
+/**
+ * Simple model
+ * - provides 'get' and 'set' methods for accessing Labels and Descriptions
+ *  sub-elements.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.util.List;
 
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.DescriptionDocument;
@@ -12,14 +24,7 @@ import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
-
-/**
- *  Simple Element provides 'get' and 'set' methods for accessing Labels and Descriptions
- *  sub-elements.
- *  
- */
 
 public class Simple extends Model {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Simple.class);

@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.editor;
 
+/**
+ * Generic Simple Editor (support for Label and Description).
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.text.MessageFormat;
 import java.util.List;
 

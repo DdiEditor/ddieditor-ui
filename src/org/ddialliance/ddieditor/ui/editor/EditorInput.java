@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.editor;
 
+/**
+ * Generic Editor Input.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.util.Properties;
 import java.util.Random;
 

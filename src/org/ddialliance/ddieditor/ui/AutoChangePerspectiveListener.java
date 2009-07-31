@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui;
 
+/**
+ * Auto Change Perspective Listener.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;

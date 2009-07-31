@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.view;
 
+/**
+ * Question Item View.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.util.Arrays;
 import java.util.List;
 

@@ -1,22 +1,24 @@
 package org.ddialliance.ddieditor.ui.editor.question;
 
-import java.text.MessageFormat;
-import java.util.List;
+/**
+ * Question Scheme Editor.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
 
-import org.ddialliance.ddieditor.ui.ConceptsPerspective;
-import org.ddialliance.ddieditor.ui.IAutoChangePerspective;
+import java.text.MessageFormat;
+
 import org.ddialliance.ddieditor.ui.QuestionsPerspective;
-import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.QuestionSchemes;
-import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.SimpleEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
-import org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor;
-import org.ddialliance.ddieditor.ui.model.ConceptScheme;
 import org.ddialliance.ddieditor.ui.model.QuestionScheme;
 import org.ddialliance.ddieditor.ui.model.Simple;
-import org.ddialliance.ddieditor.ui.util.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -26,24 +28,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
 
 public class QuestionSchemeEditor extends SimpleEditor {

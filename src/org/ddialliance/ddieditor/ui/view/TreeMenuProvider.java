@@ -1,5 +1,16 @@
 package org.ddialliance.ddieditor.ui.view;
 
+
+/**
+ * Tree Menu Provider.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Properties;

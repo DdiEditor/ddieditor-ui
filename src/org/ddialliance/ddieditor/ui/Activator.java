@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui;
 
+/**
+ * Activator
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import org.ddialliance.ddieditor.ui.dbxml.DbXml;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddiftp.util.log.Log;

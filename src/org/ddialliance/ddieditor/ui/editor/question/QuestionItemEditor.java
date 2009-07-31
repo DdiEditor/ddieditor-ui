@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.editor.question;
 
+/**
+ * Question Item Editor.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;

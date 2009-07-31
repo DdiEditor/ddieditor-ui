@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.editor;
 
+/**
+ * Generic Editor.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 

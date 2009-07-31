@@ -1,5 +1,16 @@
 package org.ddialliance.ddieditor.ui.view;
 
+
+/**
+ * Tree Content Provider.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;

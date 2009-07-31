@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.view;
 
+/**
+ * Generic View.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

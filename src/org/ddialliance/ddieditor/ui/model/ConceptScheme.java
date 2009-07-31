@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.model;
 
+/**
+ * Concept Scheme model.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptSchemeDocument;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.impl.ConceptSchemeTypeImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
@@ -18,7 +28,7 @@ public class ConceptScheme  extends Simple {
 	private ConceptSchemeTypeImpl conceptSchemeTypeImpl;
 	
 	/**
-	 * Constructor
+	 * Constructor of Concept Scheme
 	 * 
 	 * @param conceptSchemeDocument
 	 * @param parentId
@@ -114,7 +124,6 @@ public class ConceptScheme  extends Simple {
 	 * Validates the Concept Scheme before it is saved. It e.g. checks if all
 	 * mandatory attributes has been given.
 	 * 
-	 * @return boolean - true if no error
 	 * @throws Exception
 	 */
 	public void validate() throws Exception {

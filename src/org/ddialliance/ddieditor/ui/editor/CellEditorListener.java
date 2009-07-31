@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.editor;
 
+/**
+ * Cell Editor Listener.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddiftp.util.log.Log;

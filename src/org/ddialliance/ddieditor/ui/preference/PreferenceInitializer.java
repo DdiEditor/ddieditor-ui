@@ -1,13 +1,20 @@
 package org.ddialliance.ddieditor.ui.preference;
 
+/**
+ * Class used to initialize default preference values.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import org.ddialliance.ddieditor.ui.Activator;
 
-/**
- * Class used to initialize default preference values.
- */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	/*

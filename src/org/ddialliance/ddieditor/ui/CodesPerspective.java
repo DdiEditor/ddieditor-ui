@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui;
 
+/**
+ * Codes Perspective.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import org.ddialliance.ddieditor.ui.view.ConceptView;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;

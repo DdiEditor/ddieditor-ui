@@ -1,11 +1,16 @@
 package org.ddialliance.ddieditor.ui.model;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionItemDocument;
-
 /**
- *  Model provides 'get' and 'set' methods for accessing Id and Version.
- *  
+ * Model.
+ *  - provides 'get' and 'set' methods for accessing Id and Version.
+ * 
  */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 
 public class Model {
 	

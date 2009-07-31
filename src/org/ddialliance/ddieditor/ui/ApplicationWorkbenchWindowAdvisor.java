@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui;
 
+/**
+ * Application Workbench Window Advisor.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;

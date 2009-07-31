@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.dbxml;
 
+/**
+ * Code Schemes (DBXML).
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.io.File;
 import java.util.List;
 

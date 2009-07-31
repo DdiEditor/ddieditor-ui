@@ -1,5 +1,16 @@
 package org.ddialliance.ddieditor.ui.model;
 
+
+/**
+ * Question Item Literal Text.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 public class QuestionItemLiteralText {
 	private String text;
 	private String languageCode;

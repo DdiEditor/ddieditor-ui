@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.model;
 
+/**
+ * Concept model.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptDocument;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.impl.ConceptTypeImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
@@ -7,15 +17,6 @@ import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-
-/**
- * 
- * Concept is a subclass of ConseptTypeImpl (Interface) - but is only implementing used
- * methods.
- * 
- * @author dak
- *
- */
 
 public class Concept extends Simple {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Concept.class);
@@ -120,7 +121,6 @@ public class Concept extends Simple {
 	 * Validates the Concept before it is saved. It e.g. checks if all
 	 * mandatory attributes has been given.
 	 * 
-	 * @return boolean - true if no error
 	 * @throws Exception
 	 */
 	public void validate() throws Exception {

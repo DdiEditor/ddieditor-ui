@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.dbxml;
 
+/**
+ * Study Units (DBXML).
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.io.File;
 import java.util.List;
 

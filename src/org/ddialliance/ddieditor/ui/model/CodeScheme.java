@@ -1,16 +1,22 @@
 package org.ddialliance.ddieditor.ui.model;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.impl.ConceptTypeImpl;
+/**
+ * Code Scheme model.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import org.ddialliance.ddi_3_0.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.logicalproduct.impl.CodeSchemeTypeImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
-import org.ddialliance.ddieditor.ui.dbxml.Util;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-
 
 public class CodeScheme extends Simple {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeScheme.class);
@@ -19,7 +25,7 @@ public class CodeScheme extends Simple {
 	private CodeSchemeTypeImpl codeSchemeTypeImpl;
 	
 	/**
-	 * Constructor
+	 * Constructor of Code Scheme
 	 * 
 	 * @param codeSchemeDocument
 	 * @param parentId
@@ -115,7 +121,6 @@ public class CodeScheme extends Simple {
 	 * Validates the Code Scheme before it is saved. It e.g. checks if all
 	 * mandatory attributes has been given.
 	 * 
-	 * @return boolean - true if no error
 	 * @throws Exception
 	 */
 	public void validate() throws Exception {

@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.model;
 
+/**
+ * Question Item model.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;

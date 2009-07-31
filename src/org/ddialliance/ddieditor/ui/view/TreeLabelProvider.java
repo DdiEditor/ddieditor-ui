@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.view;
 
+/**
+ * Tree Label Provider.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.util.List;
 
 import org.apache.xmlbeans.XmlCursor;

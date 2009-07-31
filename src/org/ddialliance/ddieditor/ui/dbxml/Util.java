@@ -1,5 +1,15 @@
 package org.ddialliance.ddieditor.ui.dbxml;
 
+/**
+ * Utility (DBXML).
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlCursor.TokenType;

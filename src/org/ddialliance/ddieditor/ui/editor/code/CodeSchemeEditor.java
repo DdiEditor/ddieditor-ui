@@ -1,18 +1,23 @@
 package org.ddialliance.ddieditor.ui.editor.code;
 
+/**
+ * Code Scheme Editor.
+ * 
+ */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 import java.text.MessageFormat;
 
 import org.ddialliance.ddieditor.ui.CodesPerspective;
-import org.ddialliance.ddieditor.ui.ConceptsPerspective;
 import org.ddialliance.ddieditor.ui.dbxml.CodeSchemes;
-import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.SimpleEditor;
-import org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
-import org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor;
 import org.ddialliance.ddieditor.ui.model.CodeScheme;
-import org.ddialliance.ddieditor.ui.model.ConceptScheme;
 import org.ddialliance.ddieditor.ui.model.Simple;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;

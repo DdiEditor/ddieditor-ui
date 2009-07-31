@@ -1,8 +1,15 @@
 package org.ddialliance.ddieditor.ui.preference;
 
 /**
- * Constant definitions for plug-in preferences
+ * Constant definitions for plug-in preferences.
+ * 
  */
+/*
+ * $Author$ 
+ * $Date$ 
+ * $Revision$
+ */
+
 public class PreferenceConstants {
 	// ddi
 	public static final String DDI_AGENCY = "ddi.agency";
