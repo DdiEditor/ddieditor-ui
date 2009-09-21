@@ -11,6 +11,7 @@ package org.ddialliance.ddieditor.ui.dbxml;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.ddialliance.ddi_3_0.xml.xmlbeans.studyunit.StudyUnitDocument;
@@ -20,7 +21,8 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
-import org.ddialliance.ddieditor.persistenceaccess.SchemeQueryResult;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelUpdateElement;
 import org.ddialliance.ddieditor.ui.model.ConceptScheme;
 import org.ddialliance.ddieditor.ui.model.StudyUnit;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -101,7 +103,7 @@ public class StudyUnits extends XmlEntities {
 	 */
 	public StudyUnit getStudyUnitById(String id, String parentId) throws Exception {
 		log.debug("StudyUnit.getStudyUnitById()");
-		SchemeQueryResult schemeQueryResult = DdiManager.getInstance().getStudyLabel(id, null, parentId, null);
+		MaintainableLabelQueryResult studyUnitResult = DdiManager.getInstance().getStudyLabel(id, null, parentId, null);
 		
 		return null; // TEMP
 	}
@@ -118,18 +120,21 @@ public class StudyUnits extends XmlEntities {
 	 * @throws Exception
 	 */
 	static public StudyUnit createStudyUnit(String id, String version, String parentId, String parentVersion,
-			SchemeQueryResult schemeQueryResult)			throws Exception {
+			MaintainableLabelQueryResult maintainableLabelQueryResult)			throws Exception {
+		
 		log.debug("StudyUnit.createStudyUnit()");
 
-		StudyUnitDocument studyUnitDocument = StudyUnitDocument.Factory.newInstance();
-
-		StudyUnitType studyUnitType = studyUnitDocument.addNewStudyUnit();
-		studyUnitType.setId(id);
-		if (version != null) {
-			studyUnitType.setVersion(version);
-		}
-
-		StudyUnit studyUnit = new StudyUnit(studyUnitDocument, parentId, parentVersion, schemeQueryResult);
+//		StudyUnitDocument studyUnitDocument = StudyUnitDocument.Factory.newInstance();
+//
+//		StudyUnitType studyUnitType = studyUnitDocument.addNewStudyUnit();
+//		studyUnitType.setId(id);
+//		if (version != null) {
+//			studyUnitType.setVersion(version);
+//		}
+		
+//		StudyUnit studyUnit = new StudyUnit(studyUnitDocument, parentId, parentVersion, maintainableLabelQueryResult);
+		
+		StudyUnit studyUnit = new StudyUnit(id, version, parentId, parentVersion, maintainableLabelQueryResult);
 		
 		return studyUnit;
 	}
@@ -148,13 +153,11 @@ public class StudyUnits extends XmlEntities {
 			throws Exception {
 		log.debug("StudyUnit.getStudyUnit()");
 
-		SchemeQueryResult schemeQueryResult = DdiManager.getInstance().getStudyLabel(id, version,
+		MaintainableLabelQueryResult maintainableLabelQueryResult = DdiManager.getInstance().getStudyLabel(id, version,
 				parentId, parentVersion);
 		
-		StudyUnit studyUnit = createStudyUnit(id, version, parentId, parentVersion, schemeQueryResult);
+		StudyUnit studyUnit = createStudyUnit(id, version, parentId, parentVersion, maintainableLabelQueryResult);
 		
-		System.out.println("Citation: "+studyUnit.getAttribute("Citation"));
-
 		return studyUnit;
 	}
 
@@ -170,21 +173,39 @@ public class StudyUnits extends XmlEntities {
 	 * @throws DDIFtpException
 	 */
 	static public void create(StudyUnit studyUnit) throws DDIFtpException {
-		try {
-			DdiManager.getInstance().createElement(studyUnit.getStudyUnitDocument(),
-					studyUnit.getParentId(), studyUnit.getParentVersion(), "DDIInstance");
-		} catch (DDIFtpException e) {
-			log.error("Create DBXML Study Unit error: " + e.getMessage());
-			
-			throw new DDIFtpException(e.getMessage());
-		}
+//		try {
+//			DdiManager.getInstance().createElement(studyUnit.getStudyUnitDocument(),
+//					studyUnit.getParentId(), studyUnit.getParentVersion(), "DDIInstance");
+//		} catch (DDIFtpException e) {
+//			log.error("Create DBXML Study Unit error: " + e.getMessage());
+//			
+//			throw new DDIFtpException(e.getMessage());
+//		}
+//		
+//		// TODO When is xml-file updated - when object saved?
+//		if (xml_export_filename.length() > 0) {
+//			File outFile = new File("resources" + File.separator + xml_export_filename);
+//			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+//		}
 		
+		List<MaintainableLabelUpdateElement> elements = new ArrayList<MaintainableLabelUpdateElement>();
+		MaintainableLabelUpdateElement update = new MaintainableLabelUpdateElement();
+		MaintainableLabelQueryResult result = new MaintainableLabelQueryResult();
+
+		elements.clear();
+		update.setCrudValue(0);
+//		update.setValue();
+		elements.add(update);
+		DdiManager.getInstance().updateMaintainableLabel(result, elements);
+		studyUnit.setStudyUnitQueryResult(result);
+
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);
 			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
 		}
-	}
+		studyUnit.clearChanged();
+}
 
 	/**
 	 * 
@@ -196,22 +217,18 @@ public class StudyUnits extends XmlEntities {
 	 * @throws DDIFtpException
 	 */
 	static public void update(StudyUnit studyUnit) throws DDIFtpException {
-		// TODO Version Control - not supported
-		log.debug("Update DBXML Study Unit:\n" + studyUnit.getStudyUnitDocument());
-		try {
-			DdiManager.getInstance().updateElement(studyUnit.getStudyUnitDocument(), studyUnit.getId(),
-					studyUnit.getVersion());
-		} catch (DDIFtpException e) {
-			log.error("Update DBXML Study Unit error: " + e.getMessage());
-			
-			throw new DDIFtpException(e.getMessage());
-		}
+
+		// TODO Version Control - not supported	
+		MaintainableLabelQueryResult studyUnitQueryResult = studyUnit.getStudyUnitQueryResult();
+//		studyUnitQueryResult.cleanElements();
+		DdiManager.getInstance().updateMaintainableLabel(studyUnitQueryResult, studyUnit.getUpdateElements());
 		
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
 			File outFile = new File("resources" + File.separator + xml_export_filename);
 			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
 		}
+		studyUnit.clearChanged();
 	}
 
 	/**
@@ -231,14 +248,14 @@ public class StudyUnits extends XmlEntities {
 	static public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
 		log.debug("Delete DBXML Study Unit");
 		StudyUnit studyUnit = getStudyUnit(id, version, parentId, parentVersion);
-		try {
-			DdiManager.getInstance().deleteElement(studyUnit.getStudyUnitDocument(), studyUnit.getParentId(),
-					studyUnit.getParentVersion(), "DDIInstance");
-		} catch (DDIFtpException e) {
-			log.error("Delete DBXML Study Unit error: " + e.getMessage());
-			
-			throw new DDIFtpException(e.getMessage());
-		}
+//		try {
+//			DdiManager.getInstance().deleteElement(studyUnit.getStudyUnitDocument(), studyUnit.getParentId(),
+//					studyUnit.getParentVersion(), "DDIInstance");
+//		} catch (DDIFtpException e) {
+//			log.error("Delete DBXML Study Unit error: " + e.getMessage());
+//			
+//			throw new DDIFtpException(e.getMessage());
+//		}
 		
 		// TODO When is xml-file updated - when object saved?
 		if (xml_export_filename.length() > 0) {
