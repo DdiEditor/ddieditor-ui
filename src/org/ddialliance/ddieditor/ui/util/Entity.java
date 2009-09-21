@@ -26,7 +26,7 @@ public class Entity {
 			return EditorInput.ENTITY_TYPE.QUESTION_ITEM;
 		} else {
 			// TODO Error handling
-			System.err.println("Element Type not supported: " + item);
+			System.err.println("Element Type not supported: " + item.getElement());
 			System.exit(0);
 		}
 		return null;

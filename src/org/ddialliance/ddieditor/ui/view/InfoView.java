@@ -16,18 +16,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.impl.DDIResourceTypeImpl;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.ConceptsPerspective;
 import org.ddialliance.ddieditor.ui.QuestionsPerspective;
-import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
-import org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor;
-import org.ddialliance.ddieditor.ui.util.Entity;
 import org.ddialliance.ddieditor.ui.util.ResourceManager;
+import org.ddialliance.ddieditor.ui.view.TreeMenu.NEW_TYPE;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -45,20 +45,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 public class InfoView extends View {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, InfoView.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.InfoView";
 	final Properties properties = new Properties();
+	MenuItem openMenuItem = null;
+	MenuItem newMenuItem = null;
+	MenuItem deleteMenuItem = null;
+	MenuItem editMenuItem = null;
 
 	public InfoView() {
 		super(ViewContentType.StudyContent, Messages.getString("InfoView.label.titleLabel.DDIOverview"), Messages
 				.getString("InfoView.lable.selectLabel.Description"),
-				Messages.getString("InfoView.lable.maskLabel.Id"), "", Messages.getString("View.lable.questionItemsTreeGroup.QuestionItemStructure"), null);
+				Messages.getString("InfoView.lable.maskLabel.Id"), "", 
+				Messages.getString("InfoView.lable.treeGroup.DDIStructure"), null);
 
 		try {
 			properties.load(new FileInputStream("resources" + File.separator + "ddieditor-ui.properties"));
@@ -114,43 +117,34 @@ public class InfoView extends View {
 		}
 	}
 	
-	private void openEditor(EDITOR_MODE_TYPE mode) {
-		LightXmlObjectType item = null;
-
+	private void enableMenu() {
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		if (obj instanceof ConceptualElement) {
-			ConceptualElement conceptElement = (ConceptualElement) obj;
-			item =conceptElement.getValue();
-		} else {
-			log.error("Unexpected object type: "+obj.toString());
-			MessageDialog.openInformation(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-					.getString("View.mess.EditorOpenError"));
-			return;			
-		}
-		EditorInput.ENTITY_TYPE entityType = Entity.getEntityType(item);
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		EditorInput input = new EditorInput(item.getId(), item.getVersion(), item.getParentId(), item
-				.getParentVersion(), entityType, mode, currentView, properties);
-		try {
-			switch (entityType) {
-			case STUDY_UNIT:
-				page.openEditor(input, StudyUnitEditor.ID);
-				break;
-			default:
-				// TODO error handling
-				log.error("Editor Type not supported: " + entityType);
-				MessageDialog.openInformation(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-						.getString("View.mess.NotSupported"));
-				System.exit(0);
-				break;
+		if (obj instanceof DDIResourceTypeImpl) {
+			openMenuItem.setEnabled(false);
+			newMenuItem.setEnabled(false);
+			deleteMenuItem.setEnabled(false);
+			editMenuItem.setEnabled(false);
+		} else if (obj instanceof ConceptualType) {
+			String name = ((ConceptualType) obj).name();
+			if (name.equals("STUDY")) {
+				openMenuItem.setEnabled(false);
+			} else {
+				openMenuItem.setEnabled(true);
 			}
-
-			// Notify any listeners of the view with the actual data of the view
-			treeViewer.setSelection(treeViewer.getSelection());
-		} catch (PartInitException ex) {
-			MessageDialog.openError(currentView.getSite().getShell(), Messages.getString("ErrorTitle"), Messages
-					.getString("View.mess.EditorOpenError") + "\n" + ex.getMessage()); //$NON-NLS-1$
+			newMenuItem.setEnabled(true);
+			deleteMenuItem.setEnabled(false);
+			editMenuItem.setEnabled(false);
+		} else if (obj instanceof ConceptualElement) {
+			LightXmlObjectType item = (LightXmlObjectType) ((ConceptualElement) obj).getValue();
+			if (item.getElement().equals("StudyUnit")) {
+				openMenuItem.setEnabled(false);
+			} else {
+				openMenuItem.setEnabled(true);
+			}
+			newMenuItem.setEnabled(true);
+			deleteMenuItem.setEnabled(true);
+			editMenuItem.setEnabled(true);
 		}
 	}
 
@@ -170,8 +164,8 @@ public class InfoView extends View {
 		// Define Tree Pop-up Menu
 		treeViewer.getTree().setMenu(menu);
 
-		// Define OPEN Pop-up Menu Item
-		final MenuItem openMenuItem = new MenuItem(menu, SWT.NONE);
+		// Define OPEN (VIEW) Pop-up Menu Item
+		openMenuItem = new MenuItem(menu, SWT.NONE);
 		openMenuItem.setSelection(true);
 		openMenuItem.setText(Messages.getString("View.label.openMenuItem.Open"));
 		openMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/new_persp.gif"));
@@ -182,29 +176,55 @@ public class InfoView extends View {
 		});
 		menu.addMenuListener(new MenuAdapter() {
 			public void menuShown(MenuEvent e) {
-				ISelection selection = treeViewer.getSelection();
-				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				if (obj instanceof DDIResourceTypeImpl) {
-					openMenuItem.setEnabled(false);
-				} else if (obj instanceof ConceptualType) {
-					String name = ((ConceptualType) obj).name();
-					if (name.equals("STUDY") || name.equals("LOGIC_universe") || name.equals("LOGIC_instumentation")) {
-						openMenuItem.setEnabled(false);
-					} else {
-						openMenuItem.setEnabled(true);
-					}
-				} else if (obj instanceof ConceptualElement) {
-					LightXmlObjectType item = (LightXmlObjectType) ((ConceptualElement) obj).getValue();
-					if (item.getElement().equals("studyunit__StudyUnit")) {
-						openMenuItem.setEnabled(false);
-					} else {
-						openMenuItem.setEnabled(true);
-					}
-				}
+				enableMenu();
 			}
 		});
 		
-		final MenuItem editMenuItem = new MenuItem(menu, SWT.NONE);
+		// Define NEW Pop-up Menu Item
+		newMenuItem = new MenuItem(menu, SWT.NONE);
+		newMenuItem.setSelection(true);
+		newMenuItem.setText(Messages.getString("View.label.newItemMenuItem.New"));
+		newMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/new_wiz.gif"));
+		newMenuItem.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				LightXmlObjectType item = null;
+
+				ISelection selection = treeViewer.getSelection();
+				Object obj = ((IStructuredSelection) selection).getFirstElement();
+				if (obj instanceof ConceptualType) {
+					// TODO How to get parent id and version ??????????????????
+					ConceptualType conceptualType = (ConceptualType) obj;
+//					try {
+//						LightXmlObjectListDocument lightXmlObjectListDocument = DdiManager.getInstance().getDdiInstanceLight(null, null, null, null);
+//						System.out.println("************: "+lightXmlObjectListDocument.xmlText());
+//					} catch (Exception e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+				} else if (obj instanceof ConceptualElement) {
+					ConceptualElement conceptualElement = (ConceptualElement) obj;
+					item = conceptualElement.getValue();
+				} else if (obj instanceof LightXmlObjectType){
+					item = (LightXmlObjectType) obj;
+				}
+				TreeMenu.newItem(treeViewer, currentView, properties, NEW_TYPE.SCHEME, item.getParentId(), item
+						.getParentVersion());
+			}
+		});
+
+		// Define DELETE Pop-up Menu Item
+		deleteMenuItem = new MenuItem(menu, SWT.NONE);
+		deleteMenuItem.setSelection(true);
+		deleteMenuItem.setText(Messages.getString("View.label.deleteMenuItem.Delete"));
+		deleteMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/delete_obj.gif"));
+		deleteMenuItem.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				switchPerspective();
+			}
+		});
+
+		// Define EDIT Pop-up Menu Item
+		editMenuItem = new MenuItem(menu, SWT.NONE);
 		editMenuItem.setText(Messages.getString("View.label.editMenuItem.Edit")); //$NON-NLS-1$
 		editMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/editor_area.gif"));
 		editMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -215,28 +235,9 @@ public class InfoView extends View {
 							Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
 					return;
 				}
-				openEditor(EDITOR_MODE_TYPE.EDIT);
+				TreeMenu.openEditor(treeViewer, currentView, properties, EDITOR_MODE_TYPE.EDIT);
 			}
 		});
-		menu.addMenuListener(new MenuAdapter() {
-			public void menuShown(MenuEvent e) {
-				ISelection selection = treeViewer.getSelection();
-				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				if (obj instanceof DDIResourceTypeImpl) {
-					editMenuItem.setEnabled(false);
-				} else if (obj instanceof ConceptualType) {
-					editMenuItem.setEnabled(false);
-				} else if (obj instanceof ConceptualElement) {
-					LightXmlObjectType item = (LightXmlObjectType) ((ConceptualElement) obj).getValue();
-					if (item.getElement().equals("studyunit__StudyUnit")) {
-						editMenuItem.setEnabled(true);
-					} else {
-						editMenuItem.setEnabled(false);
-					}
-				}
-			}
-		});
-
 
 		menu.setDefaultItem(openMenuItem);
 	}

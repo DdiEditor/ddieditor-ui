@@ -145,4 +145,20 @@ public class Language {
 	public static String[] getLanguageCodes() {
 		return LANGUAGE_CODES;
 	}
+	
+	/**
+	 * Get language code
+	 * 
+	 * @return String[]
+	 */
+	public static String getLanguageCode(String language) {
+		for (int i = 0; i < LANGUAGES.length; i++) {
+			if (LANGUAGES[i].equals(language)) {
+				return LANGUAGE_CODES[i];
+			}
+		}
+		log.error("Language Code of Language '"+language+"' not found");
+		return null;
+	}
+
 }

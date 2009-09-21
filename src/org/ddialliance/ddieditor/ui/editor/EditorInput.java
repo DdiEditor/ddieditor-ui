@@ -48,7 +48,9 @@ public class EditorInput implements IEditorInput {
 		// TODO ID generation
 		if (mode.equals(EDITOR_MODE_TYPE.NEW)) {
 			String prefix = null;
-			if (type.equals(ENTITY_TYPE.CONCEPT_SCHEME)) {
+			if (type.equals(ENTITY_TYPE.STUDY_UNIT)) {
+				prefix = "dda";
+			} else if (type.equals(ENTITY_TYPE.CONCEPT_SCHEME)) {
 				prefix = "cs";
 			} else if (type.equals(ENTITY_TYPE.CONCEPT)) {
 				prefix = "c";

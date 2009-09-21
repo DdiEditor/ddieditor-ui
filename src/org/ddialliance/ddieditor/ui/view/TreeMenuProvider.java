@@ -60,7 +60,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-public class TreeMenuProvider {
+public class TreeMenuProvider extends TreeMenu {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, TreeMenuProvider.class);
 
 	final TreeViewer treeViewer;
@@ -73,7 +73,7 @@ public class TreeMenuProvider {
 	MenuItem editMenuItem = null;
 	private List<String> newMenuLabelList;
 	
-	private static enum NEW_TYPE {SCHEME, ITEM};
+//	private static enum NEW_TYPE {SCHEME, ITEM};
 
 
 	/**
@@ -91,7 +91,7 @@ public class TreeMenuProvider {
 	 */
 	public TreeMenuProvider(TreeViewer treeViewer, View currentView, String entityName, String rootElementName, List<String> newMenuLabelList,
 			Properties properties) {
-
+		
 		this.treeViewer = treeViewer;
 		this.currentView = currentView;
 		this.entityName = entityName;
@@ -127,112 +127,71 @@ public class TreeMenuProvider {
 		return null;
 	}
 
-	private void openEditor(EDITOR_MODE_TYPE mode) {
-
-		ISelection selection = treeViewer.getSelection();
-		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		LightXmlObjectType item = (LightXmlObjectType) obj;
-		EditorInput.ENTITY_TYPE entityType = Entity.getEntityType(item);
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		EditorInput input = new EditorInput(item.getId(), item.getVersion(), item.getParentId(), item
-				.getParentVersion(), entityType, mode, currentView, properties);
-		try {
-			switch (entityType) {
-			case CONCEPT_SCHEME:
-				page.openEditor(input, ConceptSchemeEditor.ID);
-				break;
-			case CONCEPT:
-				page.openEditor(input, ConceptEditor.ID);
-				break;
-			case CODE_SCHEME:
-				page.openEditor(input, CodeSchemeEditor.ID);
-				break;
-			case QUESTION_SCHEME:
-				page.openEditor(input, QuestionSchemeEditor.ID);
-				break;
-			case QUESTION_ITEM:
-				page.openEditor(input, QuestionItemEditor.ID);
-				break;
-			default:
-				// TODO error handling
-				log.error("Editor Type not supported: " + entityType);
-				System.exit(0);
-				break;
-			}
-
-			// Notify any listeners of the view with the actual data of the view
-			treeViewer.setSelection(treeViewer.getSelection());
-		} catch (PartInitException ex) {
-			MessageDialog.openError(currentView.getSite().getShell(), Messages.getString("ErrorTitle"), Messages
-					.getString("View.mess.EditorOpenError") + "\n" + ex.getMessage()); //$NON-NLS-1$
-		}
-	}
-
-	private void newItem(NEW_TYPE newType, String parentId, String parentVersion) {
-		String editorID = null;
-		EditorInput.ENTITY_TYPE selectedEntityType = null;
-		EditorInput.ENTITY_TYPE newEntityType = null;
-
-		ISelection selection = treeViewer.getSelection();
-		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		LightXmlObjectType item = (LightXmlObjectType) obj;
-		selectedEntityType = Entity.getEntityType(item);
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		try {
-			switch (selectedEntityType) {
-			case CONCEPT_SCHEME:
-				if (newType.equals(NEW_TYPE.SCHEME)) {
-					editorID = ConceptSchemeEditor.ID;
-					newEntityType = EditorInput.ENTITY_TYPE.CONCEPT_SCHEME;
-				} else {
-					editorID = ConceptEditor.ID;
-					newEntityType = EditorInput.ENTITY_TYPE.CONCEPT;
-				}
-				break;
-			case CONCEPT:
-				editorID =ConceptEditor.ID;
-				newEntityType = EditorInput.ENTITY_TYPE.CONCEPT;
-				break;
-			case CODE_SCHEME:
-				if (newType.equals(NEW_TYPE.SCHEME)) {
-					editorID = CodeSchemeEditor.ID;
-					newEntityType = EditorInput.ENTITY_TYPE.CODE_SCHEME;
-				} else {
-					// TODO Implement Code Editor
-					System.out.println("************** Code Editor not supported *******************");
-//					editorID = CodeEditor.ID;
-//					newEntityType = EditorInput.ENTITY_TYPE.CODE;
-				}
-				break;
-			case QUESTION_SCHEME:
-				if (newType.equals(NEW_TYPE.SCHEME)) {
-					editorID = QuestionSchemeEditor.ID;
-					newEntityType = EditorInput.ENTITY_TYPE.QUESTION_SCHEME;
-				} else {
-					editorID = QuestionItemEditor.ID;
-					newEntityType = EditorInput.ENTITY_TYPE.QUESTION_ITEM;
-				}
-				break;
-			case QUESTION_ITEM:
-				editorID = QuestionItemEditor.ID;
-				newEntityType = EditorInput.ENTITY_TYPE.QUESTION_ITEM;
-				break;
-			default:
-				System.err.println("Entity Type not supported: " + selectedEntityType);
-				System.exit(0);
-				break;
-			}
-			EditorInput input = new EditorInput(null, null, parentId, parentVersion, newEntityType, EDITOR_MODE_TYPE.NEW,
-					currentView, properties);
-			page.openEditor(input, editorID);
-
-			// Notify any listeners of the view with the actual data of the view
-			treeViewer.setSelection(treeViewer.getSelection());
-		} catch (PartInitException ex) {
-			MessageDialog.openError(currentView.getSite().getShell(), Messages.getString("ErrorTitle"), Messages
-					.getString("View.mess.EditorOpenError") + "\n" + ex.getMessage()); //$NON-NLS-1$
-		}
-	}
+//	private void newItem(NEW_TYPE newType, String parentId, String parentVersion) {
+//		String editorID = null;
+//		EditorInput.ENTITY_TYPE selectedEntityType = null;
+//		EditorInput.ENTITY_TYPE newEntityType = null;
+//
+//		ISelection selection = treeViewer.getSelection();
+//		Object obj = ((IStructuredSelection) selection).getFirstElement();
+//		LightXmlObjectType item = (LightXmlObjectType) obj;
+//		selectedEntityType = Entity.getEntityType(item);
+//		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+//		try {
+//			switch (selectedEntityType) {
+//			case CONCEPT_SCHEME:
+//				if (newType.equals(NEW_TYPE.SCHEME)) {
+//					editorID = ConceptSchemeEditor.ID;
+//					newEntityType = EditorInput.ENTITY_TYPE.CONCEPT_SCHEME;
+//				} else {
+//					editorID = ConceptEditor.ID;
+//					newEntityType = EditorInput.ENTITY_TYPE.CONCEPT;
+//				}
+//				break;
+//			case CONCEPT:
+//				editorID =ConceptEditor.ID;
+//				newEntityType = EditorInput.ENTITY_TYPE.CONCEPT;
+//				break;
+//			case CODE_SCHEME:
+//				if (newType.equals(NEW_TYPE.SCHEME)) {
+//					editorID = CodeSchemeEditor.ID;
+//					newEntityType = EditorInput.ENTITY_TYPE.CODE_SCHEME;
+//				} else {
+//					// TODO Implement Code Editor
+//					System.out.println("************** Code Editor not supported *******************");
+////					editorID = CodeEditor.ID;
+////					newEntityType = EditorInput.ENTITY_TYPE.CODE;
+//				}
+//				break;
+//			case QUESTION_SCHEME:
+//				if (newType.equals(NEW_TYPE.SCHEME)) {
+//					editorID = QuestionSchemeEditor.ID;
+//					newEntityType = EditorInput.ENTITY_TYPE.QUESTION_SCHEME;
+//				} else {
+//					editorID = QuestionItemEditor.ID;
+//					newEntityType = EditorInput.ENTITY_TYPE.QUESTION_ITEM;
+//				}
+//				break;
+//			case QUESTION_ITEM:
+//				editorID = QuestionItemEditor.ID;
+//				newEntityType = EditorInput.ENTITY_TYPE.QUESTION_ITEM;
+//				break;
+//			default:
+//				System.err.println("Entity Type not supported: " + selectedEntityType);
+//				System.exit(0);
+//				break;
+//			}
+//			EditorInput input = new EditorInput(null, null, parentId, parentVersion, newEntityType, EDITOR_MODE_TYPE.NEW,
+//					currentView, properties);
+//			page.openEditor(input, editorID);
+//
+//			// Notify any listeners of the view with the actual data of the view
+//			treeViewer.setSelection(treeViewer.getSelection());
+//		} catch (PartInitException ex) {
+//			MessageDialog.openError(currentView.getSite().getShell(), Messages.getString("ErrorTitle"), Messages
+//					.getString("View.mess.EditorOpenError") + "\n" + ex.getMessage()); //$NON-NLS-1$
+//		}
+//	}
 
 	private void deleteItem(EDITOR_MODE_TYPE mode) {
 		ISelection selection = treeViewer.getSelection();
@@ -320,7 +279,7 @@ public class TreeMenuProvider {
 		// Assign double click to edit function
 		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(final DoubleClickEvent event) {
-				openEditor(EDITOR_MODE_TYPE.EDIT);
+				openEditor(treeViewer, currentView, properties, EDITOR_MODE_TYPE.EDIT);
 			}
 		});
 
@@ -347,7 +306,7 @@ public class TreeMenuProvider {
 				ISelection selection = treeViewer.getSelection();
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
 				LightXmlObjectType item = (LightXmlObjectType) obj;
-				newItem(NEW_TYPE.SCHEME, item.getParentId(), item.getParentVersion());
+				newItem(treeViewer, currentView, properties, NEW_TYPE.SCHEME, item.getParentId(), item.getParentVersion());
 			}
 		});
 
@@ -370,7 +329,7 @@ public class TreeMenuProvider {
 					parentId = item.getParentId();
 					parentVersion = item.getParentVersion();
 				}
-				newItem(NEW_TYPE.ITEM, parentId, parentVersion);
+				newItem(treeViewer, currentView, properties, NEW_TYPE.ITEM, parentId, parentVersion);
 			}
 		});
 
@@ -419,7 +378,7 @@ public class TreeMenuProvider {
 							Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
 					return;
 				}
-				openEditor(EDITOR_MODE_TYPE.EDIT);
+				openEditor(treeViewer, currentView, properties, EDITOR_MODE_TYPE.EDIT);
 			}
 		});
 

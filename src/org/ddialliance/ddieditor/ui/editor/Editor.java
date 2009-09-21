@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ddialliance.ddieditor.ui.IAddAttr;
+import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
 import org.ddialliance.ddieditor.ui.util.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -39,6 +40,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -376,7 +378,14 @@ public class Editor extends EditorPart {
 		log.debug("Editor.selectionChanged()");
 
 	}
+	
 	protected Composite getComposite_1() {
 		return composite;
+	}
+	
+	public void setControl(Control widget) {
+		if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.VIEW)) {
+			widget.setEnabled(false);
+		}
 	}
 }
