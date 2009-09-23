@@ -122,7 +122,7 @@ public class StudyUnit extends Model {
 			xcitations = new SubElements(studyUnitQueryResult.getSubElement("Citation"));
 			xabstracts = new SubElements(studyUnitQueryResult.getSubElement("Abstract"));
 //			universerefs = getUniverseReferences(studyUnitQueryResult.getSubElement("UniverseReference"));
-			xfundings = new SubElements(studyUnitQueryResult.getSubElement("Funding"));
+			xfundings = new SubElements(studyUnitQueryResult.getSubElement("FundingInformation"));
 			xpurposes = new SubElements(studyUnitQueryResult.getSubElement("Purpose"));
 //			purposes = getPurposes(studyUnitQueryResult.getSubElement("Purpose"));
 		} catch (DDIFtpException e) {
