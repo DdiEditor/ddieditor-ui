@@ -60,6 +60,10 @@ public class StudyUnit extends Model {
 			this.xmlObjects = xmlObjects;
 		}
 		
+		protected void addXmlObject(XmlObject xmlObject) {
+			// TODO Add XML object
+		}
+		
 		protected XmlObject[] getXmlObjects() {
 			return xmlObjects;
 		}
@@ -753,71 +757,97 @@ public class StudyUnit extends Model {
 		return "";
 	}
 	
+	private ReferenceType getFundingAgencyOrganizationReference() {
+
+		log.debug("StudyUnit.getFundingAgencyOrganizationReference()");
+		XmlObject[] fundings = xfundings.getXmlObjects();
+		if (fundings.length == 0) {
+			log.error("No Funding element found");
+			// TODO Create new FundingInformation object and return it
+			return null;
+		}
+		if (fundings.length > 1) {
+			log.error("Only one Funding element currently supported");
+			return null;
+		}
+		List<ReferenceType> agencyRef = ((FundingInformationDocumentImpl) fundings[0]).getFundingInformation()
+				.getAgencyOrganizationReferenceList();
+		if (agencyRef.size() != 1) {
+			log.error("Only one Agency Organization Reference currently supported");
+			return null;
+		}
+		ReferenceType agencyReferenceType = agencyRef.get(0);
+		return agencyReferenceType;
+	}
+
 	/**
-	 * Set Funding Agency of a Organisation
+	 * Set Funding Agency ID
+	 * 
+	 * Note: Only one-to-on relation between FundingInformation,
+	 * AgencyOrganisationReference and ID/IdentifyingAgency is supported.
+	 * 
+	 * @param ID - identifies the agency inside the organisation
+	 */
+	public void setFundingAgencyID(String agencyID) {
+
+		log.debug("StudyUnit.setFundingAgencyID()");
+		ReferenceType referenceType = getFundingAgencyOrganizationReference();
+		if (referenceType == null) {
+			referenceType = ReferenceType.Factory.newInstance();
+		} else {
+			referenceType.removeID(0);
+		}
+		referenceType.addNewID().setStringValue(agencyID);
+		xfundings.changed(true);
+		xfundings.setCrudValue(0 + 1); // update - starts by '1'
+	}
+	
+	/**
+	 * Set Funding Identifying Agency
 	 * 
 	 * Note: Only one-to-on relation between FundingInformation,
 	 * AgencyOrganisationReference and ID/IdentifyingAgency is supported.
 	 * 
 	 * @param agencyOrganisation -defines the organisation
-	 * @param ID - identifies the agency inside the organisation
 	 */
-	public void setFundingAgencyOrganizationReference(String ID, String agencyOrganisation) {
+	public void setFundingIdentifyingAgency(String agencyOrganisation) {
 
-		log.debug("setFundingAgencyOrganizationReference()");
-//		XmlObject[] fundings = xfundings.getXmlObjects();
-//		for (int i = 0; i < fundings.length; i++) {
-//			List<ReferenceType> agencyOrganisationRef = ((FundingInformationDocumentImpl) fundings[i]).getFundingInformation()
-//					.getAgencyOrganizationReferenceList();
-//			if (agencyOrganisationRef.size() > 1) {
-//				log.error("Only one Agency Organization Reference currently supported");
-//				return;
-//			}
-//			if (agencyOrganisationRef.get(0).getIDArray().length > 1) {
-//				log.error("Only one Funding Agency ID currently supported");
-//				return;
-//			}
-//			agencyOrganisationRef.get(0).removeID(0);
-//			ReferenceType referenceType = ReferenceTypeImpl.
-//			agencyOrganisationRef.add(new ReferenceType());
-//			if (referenceType.getIDArray().length > 1) {
-//				log.error("Only one Identifying Agency is currently supported");
-//				return;				
-//			}
-//			referenceType.removeID(0);
-//			referenceType.addNewID().setStringValue(agencyID);
-//		}
+		log.debug("StudyUnit.setFundingIdentifyingAgency()");
+		ReferenceType referenceType = getFundingAgencyOrganizationReference();
+		referenceType.removeIdentifyingAgency(0);
+		referenceType.addIdentifyingAgency(agencyOrganisation);
+		xfundings.changed(true);
+		xfundings.setCrudValue(0 + 1); // update - starts by '1'
 	}
 	
 	/**
-	 * Get Funding Agency of a Organisation
+	 * Get Funding Agency ID
 	 * 
 	 * Note: Only one-to-on relation between FundingInformation,
 	 * AgencyOrganisationReference and ID/IdentifyingAgency is supported.
-
 	 * 
-	 * @param languageCode
-	 * @return ReferenceType
 	 */
-	public ReferenceType getFundingAgencyOrganizationReference() {
+	public String getFundingAgencyID() {
 
-		log.debug("StudyUnit.getFundingAgencyOrganizationReference()");
-		return null;
-//		XmlObject[] fundings = xfundings.getXmlObjects();
-//		if (fundings.length > 1) {
-//			log.error("Only one Funding element currently supported");
-//			return "";
-//		}
-//		List<ReferenceType> agencyRef = ((FundingInformationDocumentImpl) fundings[0]).getFundingInformation()
-//				.getAgencyOrganizationReferenceList();
-//		if (agencyRef.size() != 1) {
-//			log.error("Only one Agency Organization Reference currently supported");
-//			return "";
-//		}
-//		ReferenceType referenceType = agencyRef.get(0);
-//		return referenceType.getIDArray(0).getStringValue();
+		log.debug("StudyUnit.getFundingAgencyID()");
+		ReferenceType referenceType = getFundingAgencyOrganizationReference();
+		return referenceType == null ? "" : referenceType.getIDArray(0).getStringValue();
 	}
-	
+
+	/**
+	 * Get Funding Identifying Agency
+	 * 
+	 * Note: Only one-to-on relation between FundingInformation,
+	 * AgencyOrganisationReference and ID/IdentifyingAgency is supported.
+	 * 
+	 */
+	public String getFundingIdentifyingAgency() {
+
+		log.debug("StudyUnit.getFundingIdentifyingAgency()");
+		ReferenceType referenceType = getFundingAgencyOrganizationReference();
+		return referenceType == null ? "" : referenceType.getIdentifyingAgencyArray(0);
+	}
+
 	/**
 	 * Set Study Unit Purpose Content for the given language
 	 * 
@@ -910,6 +940,20 @@ public class StudyUnit extends Model {
 		return null;
 	}
 	
+	private MaintainableLabelUpdateElement getFundingInformationUpdateElement() {
+		
+		log.debug("StudyUnit.getFundingInformationUpdateElement()");
+		if (xfundings.changed) {
+			MaintainableLabelUpdateElement updFunding = new MaintainableLabelUpdateElement();
+
+			updFunding.setLocalName("FundingInformation");
+			updFunding.setCrudValue(xfundings.getCrudValue()); // Update
+			updFunding.setValue(xfundings.getModifiedXmlObject().xmlText());
+			return updFunding;
+		}
+		return null;
+	}
+	
 	private MaintainableLabelUpdateElement getPurposeUpdateElementUpdateElement() {
 
 		log.debug("getPurposeUpdateElementUpdateElement()");
@@ -966,6 +1010,10 @@ public class StudyUnit extends Model {
 			elements.add(element);
 		}
 		element = getUniverseReferenceUpdateElement();
+		if (element != null) {
+			elements.add(element);
+		}
+		element = getFundingInformationUpdateElement();
 		if (element != null) {
 			elements.add(element);
 		}
