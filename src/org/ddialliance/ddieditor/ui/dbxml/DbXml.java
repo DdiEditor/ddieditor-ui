@@ -53,7 +53,7 @@ public class DbXml {
 			try {
 				FilesystemManager.getInstance().addResource(new File("resources" + File.separator + FULLY_DECLARED_NS_DOC));				
 			} catch (Exception e) {
-				// TODO: handle exception
+				throw e;
 			}
 			PersistenceManager.getInstance().setWorkingResource(FULLY_DECLARED_NS_DOC);
 
