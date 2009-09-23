@@ -410,11 +410,12 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 
 		agencyText = new Text(grpFunding, SWT.BORDER);
 		agencyText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		agencyText.setText(studyUnit.getAgencyOrganizationReference().getIDArray(0).getStringValue());
+		agencyText.setText(studyUnit.getFundingAgencyID());
 		agencyText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				log.debug("Agency changed");
-//				studyUnit.setAgencyOrganizationReference(agencyText.getText());
+				studyUnit.setFundingAgencyID(agencyText.getText());
+				studyUnit.setFundingIdentifyingAgency(identifyingAgencyText.getText());
 				editorStatus.setChanged();
 			}
 		});
@@ -427,11 +428,12 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 
 		identifyingAgencyText = new Text(grpFunding, SWT.BORDER);
 		identifyingAgencyText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		identifyingAgencyText.setText(""); // TODO Get Identifying Agency
+		identifyingAgencyText.setText(studyUnit.getFundingIdentifyingAgency());
 		identifyingAgencyText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				log.debug("Identifying Agency changed");
-//				studyUnit.setAgencyOrganizationReference(identifyingAgencyText.getText());
+				studyUnit.setFundingAgencyID(agencyText.getText());
+				studyUnit.setFundingIdentifyingAgency(identifyingAgencyText.getText());
 				editorStatus.setChanged();
 			}
 		});
