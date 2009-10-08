@@ -1,6 +1,5 @@
 package org.ddialliance.ddieditor.ui.view;
 
-
 /**
  * Info (Overview) View.
  * 
@@ -16,17 +15,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.impl.DDIResourceTypeImpl;
 import org.ddialliance.ddieditor.ui.Activator;
-import org.ddialliance.ddieditor.ui.ConceptsPerspective;
-import org.ddialliance.ddieditor.ui.QuestionsPerspective;
-import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
-import org.ddialliance.ddieditor.ui.util.ResourceManager;
+import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
+import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
+import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
+import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
+import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
 import org.ddialliance.ddieditor.ui.view.TreeMenu.NEW_TYPE;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -58,22 +56,132 @@ public class InfoView extends View {
 	MenuItem editMenuItem = null;
 
 	public InfoView() {
-		super(ViewContentType.StudyContent, Messages.getString("InfoView.label.titleLabel.DDIOverview"), Messages
-				.getString("InfoView.lable.selectLabel.Description"),
-				Messages.getString("InfoView.lable.maskLabel.Id"), "", 
-				Messages.getString("InfoView.lable.treeGroup.DDIStructure"), null);
+		super(ViewContentType.StudyContent, Messages
+				.getString("InfoView.label.titleLabel.DDIOverview"), Messages
+				.getString("InfoView.lable.selectLabel.Description"), Messages
+				.getString("InfoView.lable.maskLabel.Id"), "", Messages
+				.getString("InfoView.lable.treeGroup.DDIStructure"), null);
 
 		try {
-			properties.load(new FileInputStream("resources" + File.separator + "ddieditor-ui.properties"));
+			properties.load(new FileInputStream("resources" + File.separator
+					+ "ddieditor-ui.properties"));
 		} catch (IOException e) {
 			System.err.println("Error during property load:" + e.getMessage());
 			System.exit(0);
 		}
 	}
+
+	public void createPartControl(Composite parent) {	
+		super.createPartControl(parent);
 	
+		// Create Pop-up Menu:
+		Menu menu = new Menu(treeViewer.getTree());
+		// Assign double click to edit function
+		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(final DoubleClickEvent event) {
+				switchPerspective();
+			}
+		});
+	
+		// Define Tree Pop-up Menu
+		treeViewer.getTree().setMenu(menu);
+	
+		// Define OPEN (VIEW) Pop-up Menu Item
+		openMenuItem = new MenuItem(menu, SWT.NONE);
+		openMenuItem.setSelection(true);
+		openMenuItem
+				.setText(Messages.getString("View.label.openMenuItem.Open"));
+		openMenuItem.setImage(ResourceManager.getPluginImage(Activator
+				.getDefault(), "icons/new_persp.gif"));
+		openMenuItem.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				switchPerspective();
+			}
+		});
+		menu.addMenuListener(new MenuAdapter() {
+			public void menuShown(MenuEvent e) {
+				enableMenu();
+			}
+		});
+	
+		// Define NEW Pop-up Menu Item
+		newMenuItem = new MenuItem(menu, SWT.NONE);
+		newMenuItem.setSelection(true);
+		newMenuItem.setText(Messages
+				.getString("View.label.newItemMenuItem.New"));
+		newMenuItem.setImage(ResourceManager.getPluginImage(Activator
+				.getDefault(), "icons/new_wiz.gif"));
+		newMenuItem.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				LightXmlObjectType item = null;
+	
+				ISelection selection = treeViewer.getSelection();
+				Object obj = ((IStructuredSelection) selection)
+						.getFirstElement();
+				if (obj instanceof ConceptualType) {
+					// TODO How to get parent id and version ??????????????????
+					ConceptualType conceptualType = (ConceptualType) obj;
+					// try {
+					// LightXmlObjectListDocument lightXmlObjectListDocument =
+					// DdiManager.getInstance().getDdiInstanceLight(null, null,
+					// null, null);
+					// System.out.println("************: "+lightXmlObjectListDocument.xmlText());
+					// } catch (Exception e1) {
+					// // TODO Auto-generated catch block
+					// e1.printStackTrace();
+					// }
+				} else if (obj instanceof ConceptualElement) {
+					ConceptualElement conceptualElement = (ConceptualElement) obj;
+					item = conceptualElement.getValue();
+				} else if (obj instanceof LightXmlObjectType) {
+					item = (LightXmlObjectType) obj;
+				}
+				TreeMenu.newItem(treeViewer, currentView, properties,
+						NEW_TYPE.SCHEME, item.getParentId(), item
+								.getParentVersion());
+			}
+		});
+	
+		// Define DELETE Pop-up Menu Item
+		deleteMenuItem = new MenuItem(menu, SWT.NONE);
+		deleteMenuItem.setSelection(true);
+		deleteMenuItem.setText(Messages
+				.getString("View.label.deleteMenuItem.Delete"));
+		deleteMenuItem.setImage(ResourceManager.getPluginImage(Activator
+				.getDefault(), "icons/delete_obj.gif"));
+		deleteMenuItem.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				switchPerspective();
+			}
+		});
+	
+		// Define EDIT Pop-up Menu Item
+		editMenuItem = new MenuItem(menu, SWT.NONE);
+		editMenuItem
+				.setText(Messages.getString("View.label.editMenuItem.Edit")); //$NON-NLS-1$
+		editMenuItem.setImage(ResourceManager.getPluginImage(Activator
+				.getDefault(), "icons/editor_area.gif"));
+		editMenuItem.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				TreeItem[] t = treeViewer.getTree().getSelection();
+				if (t.length != 1) {
+					MessageDialog
+							.openInformation(
+									currentView.getSite().getShell(),
+									Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
+					return;
+				}
+				TreeMenu.openEditor(treeViewer, currentView, properties,
+						EditorModeType.EDIT);
+			}
+		});
+	
+		menu.setDefaultItem(openMenuItem);
+	}
+
 	private void switchPerspective() {
 		String perspectiveId = "";
-		
+
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		if (obj instanceof DDIResourceTypeImpl) {
@@ -84,39 +192,59 @@ public class InfoView extends View {
 				perspectiveId = ConceptsPerspective.ID;
 			} else if (name.equals("LOGIC_questions")) {
 				perspectiveId = QuestionsPerspective.ID;
+			} else if (((ConceptualType) obj)
+					.equals(ConceptualType.LOGIC_instumentation)) {
+				perspectiveId = InstrumentPerspective.ID;
 			} else {
-				log.error("Switch Perspective failed: Conceptual name '" + ((ConceptualType) obj).name()
+				log.error("Switch Perspective failed: Conceptual name '"
+						+ ((ConceptualType) obj).name()
 						+ "' currently not supported.");
-				MessageDialog.openInformation(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-						.getString("View.mess.ConceptualNameCurrentlyNotSupported") + ((ConceptualType) obj).name() + "'"); //$NON-NLS-1$
+				MessageDialog
+						.openInformation(
+								getViewSite().getShell(),
+								Messages.getString("ErrorTitle"),
+								Messages
+										.getString("View.mess.ConceptualNameCurrentlyNotSupported") + ((ConceptualType) obj).name() + "'"); //$NON-NLS-1$
 				return;
 			}
 		} else if (obj instanceof ConceptualElement) {
-			LightXmlObjectType item = (LightXmlObjectType) ((ConceptualElement) obj).getValue();
+			LightXmlObjectType item = (LightXmlObjectType) ((ConceptualElement) obj)
+					.getValue();
 			if (item.getElement().equals("ConceptScheme")) {
 				perspectiveId = ConceptsPerspective.ID;
 			} else if (item.getElement().equals("QuestionScheme")) {
 				perspectiveId = QuestionsPerspective.ID;
 			} else {
-				log.error("Switch Perspective failed: Element type '" + item.getElement() + "' not supported.");
-				MessageDialog.openInformation(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-						.getString("View.mess.ElementTypeCurrentlyNotSupported") + item.getElement() + "'"); //$NON-NLS-1$
+				log.error("Switch Perspective failed: Element type '"
+						+ item.getElement() + "' not supported.");
+				MessageDialog
+						.openInformation(
+								getViewSite().getShell(),
+								Messages.getString("ErrorTitle"),
+								Messages
+										.getString("View.mess.ElementTypeCurrentlyNotSupported") + item.getElement() + "'"); //$NON-NLS-1$
 				return;
 			}
 		}
 
 		try {
-			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage()
 					.getWorkbenchWindow();
-			workbenchWindow.getWorkbench().showPerspective(perspectiveId, workbenchWindow);
+			workbenchWindow.getWorkbench().showPerspective(perspectiveId,
+					workbenchWindow);
 		} catch (Exception e) {
 			log.error("Switch Perspective failed: " + e.getMessage());
-			MessageDialog.openInformation(getViewSite().getShell(), Messages.getString("ErrorTitle"), Messages
-					.getString("View.mess.SwitchPerspectiveFailed") + e.getMessage()); //$NON-NLS-1$
+			MessageDialog
+					.openInformation(
+							getViewSite().getShell(),
+							Messages.getString("ErrorTitle"),
+							Messages
+									.getString("View.mess.SwitchPerspectiveFailed") + e.getMessage()); //$NON-NLS-1$
 			return;
 		}
 	}
-	
+
 	private void enableMenu() {
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
@@ -136,7 +264,8 @@ public class InfoView extends View {
 			deleteMenuItem.setEnabled(false);
 			editMenuItem.setEnabled(false);
 		} else if (obj instanceof ConceptualElement) {
-			LightXmlObjectType item = (LightXmlObjectType) ((ConceptualElement) obj).getValue();
+			LightXmlObjectType item = (LightXmlObjectType) ((ConceptualElement) obj)
+					.getValue();
 			if (item.getElement().equals("StudyUnit")) {
 				openMenuItem.setEnabled(false);
 			} else {
@@ -146,99 +275,5 @@ public class InfoView extends View {
 			deleteMenuItem.setEnabled(true);
 			editMenuItem.setEnabled(true);
 		}
-	}
-
-	public void createPartControl(Composite parent) {
-
-		super.createPartControl(parent);
-		
-		// Create Pop-up Menu:
-		Menu menu = new Menu(treeViewer.getTree());
-		// Assign double click to edit function
-		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(final DoubleClickEvent event) {
-				switchPerspective();
-			}
-		});
-
-		// Define Tree Pop-up Menu
-		treeViewer.getTree().setMenu(menu);
-
-		// Define OPEN (VIEW) Pop-up Menu Item
-		openMenuItem = new MenuItem(menu, SWT.NONE);
-		openMenuItem.setSelection(true);
-		openMenuItem.setText(Messages.getString("View.label.openMenuItem.Open"));
-		openMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/new_persp.gif"));
-		openMenuItem.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				switchPerspective();
-			}
-		});
-		menu.addMenuListener(new MenuAdapter() {
-			public void menuShown(MenuEvent e) {
-				enableMenu();
-			}
-		});
-		
-		// Define NEW Pop-up Menu Item
-		newMenuItem = new MenuItem(menu, SWT.NONE);
-		newMenuItem.setSelection(true);
-		newMenuItem.setText(Messages.getString("View.label.newItemMenuItem.New"));
-		newMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/new_wiz.gif"));
-		newMenuItem.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				LightXmlObjectType item = null;
-
-				ISelection selection = treeViewer.getSelection();
-				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				if (obj instanceof ConceptualType) {
-					// TODO How to get parent id and version ??????????????????
-					ConceptualType conceptualType = (ConceptualType) obj;
-//					try {
-//						LightXmlObjectListDocument lightXmlObjectListDocument = DdiManager.getInstance().getDdiInstanceLight(null, null, null, null);
-//						System.out.println("************: "+lightXmlObjectListDocument.xmlText());
-//					} catch (Exception e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
-				} else if (obj instanceof ConceptualElement) {
-					ConceptualElement conceptualElement = (ConceptualElement) obj;
-					item = conceptualElement.getValue();
-				} else if (obj instanceof LightXmlObjectType){
-					item = (LightXmlObjectType) obj;
-				}
-				TreeMenu.newItem(treeViewer, currentView, properties, NEW_TYPE.SCHEME, item.getParentId(), item
-						.getParentVersion());
-			}
-		});
-
-		// Define DELETE Pop-up Menu Item
-		deleteMenuItem = new MenuItem(menu, SWT.NONE);
-		deleteMenuItem.setSelection(true);
-		deleteMenuItem.setText(Messages.getString("View.label.deleteMenuItem.Delete"));
-		deleteMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/delete_obj.gif"));
-		deleteMenuItem.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				switchPerspective();
-			}
-		});
-
-		// Define EDIT Pop-up Menu Item
-		editMenuItem = new MenuItem(menu, SWT.NONE);
-		editMenuItem.setText(Messages.getString("View.label.editMenuItem.Edit")); //$NON-NLS-1$
-		editMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/editor_area.gif"));
-		editMenuItem.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				TreeItem[] t = treeViewer.getTree().getSelection();
-				if (t.length != 1) {
-					MessageDialog.openInformation(currentView.getSite().getShell(),
-							Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
-					return;
-				}
-				TreeMenu.openEditor(treeViewer, currentView, properties, EDITOR_MODE_TYPE.EDIT);
-			}
-		});
-
-		menu.setDefaultItem(openMenuItem);
 	}
 }
