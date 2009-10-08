@@ -10,6 +10,7 @@ package org.ddialliance.ddieditor.ui;
  * $Revision$
  */
 
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -23,17 +24,24 @@ import org.eclipse.ui.PlatformUI;
  * This class controls all aspects of the application's execution
  */
 public class Application implements IApplication {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, Application.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			Application.class);
 
 	public static final String ID = "org.ddialliance.ddieditor.ui.Application";
-	/* (non-Javadoc)
-	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.
+	 * IApplicationContext)
 	 */
 	public Object start(IApplicationContext context) throws Exception {
-		log.debug("Application.start()");
 		Display display = PlatformUI.createDisplay();
 		try {
-			int returnCode = PlatformUI.createAndRunWorkbench(display, new org.ddialliance.ddieditor.ui.ApplicationWorkbenchAdvisor());
+			int returnCode = PlatformUI
+					.createAndRunWorkbench(
+							display,
+							new org.ddialliance.ddieditor.ui.ApplicationWorkbenchAdvisor());
 			if (returnCode == PlatformUI.RETURN_RESTART)
 				return IApplication.EXIT_RESTART;
 			else
@@ -41,10 +49,11 @@ public class Application implements IApplication {
 		} finally {
 			display.dispose();
 		}
-		
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.equinox.app.IApplication#stop()
 	 */
 	public void stop() {

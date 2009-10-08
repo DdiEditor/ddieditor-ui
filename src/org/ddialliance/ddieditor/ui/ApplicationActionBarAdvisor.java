@@ -10,6 +10,7 @@ package org.ddialliance.ddieditor.ui;
  * $Revision$
  */
 
+import org.ddialliance.ddieditor.ui.util.OpenFileAction;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;

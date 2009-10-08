@@ -10,6 +10,7 @@ package org.ddialliance.ddieditor.ui;
  * $Revision$
  */
 
+import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -24,26 +25,26 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
 	private static final String INITIAL_PERSPECTIVE_ID = InfoPerspective.ID;
 
+	@Override
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
 			IWorkbenchWindowConfigurer configurer) {
 		return new ApplicationWorkbenchWindowAdvisor(configurer);
 	}
 
+	@Override
 	public String getInitialWindowPerspectiveId() {
 		if (log.isDebugEnabled()) {
-			log
-					.debug("ApplicationWorkbenchAdvisor.getInitialWindowPerspectiveId("
-							+ INITIAL_PERSPECTIVE_ID + ")");
+			log.debug(INITIAL_PERSPECTIVE_ID);
 		}
 		return INITIAL_PERSPECTIVE_ID;
 	}
 
+	@Override
 	public void initialize(IWorkbenchConfigurer configurer) {
 		super.initialize(configurer);
 		if (log.isDebugEnabled()) {
-			log.debug("ApplicationWorkbenchAdvisor.initialize()");
+			log.debug("Initialize: "+configurer.toString());
 		}
-
 		configurer.setSaveAndRestore(true);
 	}
 }
