@@ -25,7 +25,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 public class EditorInput implements IEditorInput {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, EditorInput.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			EditorInput.class);
 
 	private final String id;
 	private final String version;
@@ -33,39 +34,41 @@ public class EditorInput implements IEditorInput {
 	private final String parentVersion;
 	private View parentView;
 	private Properties properties;
-	public static enum ENTITY_TYPE {FILE, STUDY_UNIT, CONCEPT_SCHEME, CONCEPT, CODE_SCHEME, CODE, QUESTION_SCHEME, QUESTION_ITEM};
-	public static enum EDITOR_MODE_TYPE {NEW, EDIT, VIEW};
-	public EDITOR_MODE_TYPE mode;
-	
+
+	public static enum EditorModeType {
+		NEW, EDIT, VIEW
+	};
+
+	public EditorModeType mode;
+
 	private String genID(String prefix, String agency) {
 		// TODO Generate ID according to standard
-		return prefix+"-"+agency+"-"+ Math.abs(new Random().nextInt()) % 1000000000;
+		return prefix + "-" + agency + "-" + Math.abs(new Random().nextInt())
+				% 1000000000;
 	}
 
-	public EditorInput(String id, String version, String parentId, String parentVersion, ENTITY_TYPE type,
-			EDITOR_MODE_TYPE mode, View parentView, Properties properties) {
-		
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param version
+	 * @param parentId
+	 * @param parentVersion
+	 * @param type
+	 * @param mode
+	 * @param parentView
+	 * @param properties
+	 */
+	public EditorInput(String id, String version, String parentId,
+			String parentVersion, ElementType type, EditorModeType mode,
+			View parentView, Properties properties) {
+
 		// TODO ID generation
-		if (mode.equals(EDITOR_MODE_TYPE.NEW)) {
-			String prefix = null;
-			if (type.equals(ENTITY_TYPE.STUDY_UNIT)) {
-				prefix = "dda";
-			} else if (type.equals(ENTITY_TYPE.CONCEPT_SCHEME)) {
-				prefix = "cs";
-			} else if (type.equals(ENTITY_TYPE.CONCEPT)) {
-				prefix = "c";
-			} else if (type.equals(ENTITY_TYPE.CODE_SCHEME)) {
-				prefix = "cods";
-			} else if (type.equals(ENTITY_TYPE.QUESTION_SCHEME)) {
-				prefix = "qs";
-			} else if (type.equals(ENTITY_TYPE.QUESTION_ITEM)){
-				prefix = "qi";
-			} else {
-				log.error("*** Unknown Editor Type: '"+type+"' ***");
-				System.exit(0);
-			}
-			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-			id = genID(prefix, store.getString(PreferenceConstants.DDI_AGENCY));
+		if (mode.equals(EditorModeType.NEW)) {
+			IPreferenceStore store = Activator.getDefault()
+					.getPreferenceStore();
+			id = genID(type.getIdPrefix(), store
+					.getString(PreferenceConstants.DDI_AGENCY));
 		}
 		this.id = id;
 		this.version = version;
@@ -74,14 +77,6 @@ public class EditorInput implements IEditorInput {
 		this.mode = mode;
 		this.parentView = parentView;
 		this.properties = properties;
-	}
-
-	public boolean exists() {
-		return false;
-	}
-
-	public ImageDescriptor getImageDescriptor() {
-		return null;
 	}
 
 	final public String getId() {
@@ -100,22 +95,51 @@ public class EditorInput implements IEditorInput {
 		return parentVersion;
 	}
 
-	final public void setEditorMode(EDITOR_MODE_TYPE mode) {
+	final public void setEditorMode(EditorModeType mode) {
 		this.mode = mode;
 	}
 
-	final public EDITOR_MODE_TYPE getEditorMode() {
+	final public EditorModeType getEditorMode() {
 		return mode;
 	}
 
+	public String getUser() {
+		if (mode.equals(EditorModeType.NEW)) {
+			return System.getProperty("user.name");
+		}
+		// TODO Get User identification from XML
+		return "Dummy";
+	}
+
+	public Properties getProperties() {
+		return properties;
+	}
+
+	public View getParentView() {
+		return parentView;
+	}
+
+	@Override
+	public boolean exists() {
+		return false;
+	}
+
+	@Override
+	public ImageDescriptor getImageDescriptor() {
+		return null;
+	}
+
+	@Override
 	public IPersistableElement getPersistable() {
 		return null;
 	}
 
+	@Override
 	public String getToolTipText() {
 		return "DDI Editor";
 	}
 
+	@Override
 	public Object getAdapter(Class adapter) {
 		return null;
 	}
@@ -136,23 +160,8 @@ public class EditorInput implements IEditorInput {
 		return id.hashCode();
 	}
 
+	@Override
 	public String getName() {
 		return "DDI Editor";
-	}
-	
-	public String getUser() {
-		if (mode.equals(EDITOR_MODE_TYPE.NEW)) {
-			return System.getProperty("user.name");			
-		}
-		// TODO Get User identification from XML
-		return "Dummy";
-	}
-	
-	public View getParentView() {
-		return parentView;
-	}
-
-	public Properties getProperties() {
-		return properties;
 	}
 }
