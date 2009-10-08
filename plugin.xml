@@ -1,181 +1,173 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="org.ddialliance.ddieditor.extensionpoints.addattr" name="AdditionalAttributes" schema="schema/org.ddialliance.ddieditor.extensionpoints.addattr.exsd"/>
+      <extension-point id="org.ddialliance.ddieditor.extensionpoints.addattr"
+            name="AdditionalAttributes"
+            schema="schema/org.ddialliance.ddieditor.extensionpoints.addattr.exsd"/>
 
-   <extension
-         id="application"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="org.ddialliance.ddieditor.ui.Application">
-         </run>
-      </application>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.ddialliance.ddieditor.ui.ConceptsPerspective"
-            id="org.ddialliance.ddieditor.ui.ConceptsPerspective"
-            name="Concepts">
-      </perspective>
-      <perspective
-            class="org.ddialliance.ddieditor.ui.CodesPerspective"
-            id="org.ddialliance.ddieditor.ui.CodesPerspective"
-            name="Codes">
-      </perspective>
-      <perspective
-            class="org.ddialliance.ddieditor.ui.InfoPerspective"
-            id="org.ddialliance.ddieditor.ui.InfoPerspective"
-            name="Overview">
-      </perspective>
-      <perspective
-            name="Questions"
-            class="org.ddialliance.ddieditor.ui.QuestionsPerspective"
-            id="org.ddialliance.ddieditor.ui.QuestionsPerspective">
-      </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            class="org.ddialliance.ddieditor.ui.view.InfoView"
-            icon="icons/tree.gif"
-            id="org.ddialliance.ddieditor.ui.view.InfoView"
-            name="OverView">
-      </view>
-      <view
-            class="org.ddialliance.ddieditor.ui.view.ConceptView"
-            icon="icons/tree.gif"
-            id="org.ddialliance.ddieditor.ui.view.ConceptView"
-            name="Concepts">
-      </view>
-      <view
-            class="org.ddialliance.ddieditor.ui.view.CodeView"
-            icon="icons/tree.gif"
-            id="org.ddialliance.ddieditor.ui.view.CodeView"
-            name="Codes"
-            restorable="true">
-      </view>
-      <view
-            class="org.ddialliance.ddieditor.ui.view.QuestionItemView"
-            icon="icons/tree.gif"
-            id="org.ddialliance.ddieditor.ui.view.QuestionItemView"
-            name="Questions">
-      </view>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="org.ddialliance.ddieditor.ui.menuContribution1">
-      </menuContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
-            default="false"
-            icon="icons/editor_area.gif"
-            id="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
-            name="QuestionSchemeEditor">
-      </editor>
-      <editor
-            class="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
-            default="false"
-            icon="icons/editor_area.gif"
-            id="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
-            name="QuestionItemEditor">
-      </editor>
-      <editor
-            class="org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor"
-            default="false"
-            icon="icons/editor_area.gif"
-            id="org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor"
-            name="ConceptEditor">
-      </editor>
-      <editor
-            class="org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor"
-            default="false"
-            icon="icons/editor_area.gif"
-            id="org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor"
-            name="ConceptSchemeEditor">
-      </editor>
-      <editor
-            class="org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor"
-            default="false"
-            icon="icons/editor_area.gif"
-            id="org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor"
-            name="CodeSchemeEditor">
-      </editor>
-      <editor
-            class="org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor"
-            default="false"
-            icon="icons/editor_area.gif"
-            id="org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor"
-            name="StudyUnitEditor">
-      </editor>
-   </extension>
-   <extension
-         id="product"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="DDIEditor.application"
-            name="DDI Editor">
-         <property
-               name="appName"
-               value="DDI Editor">
-         </property>
-         <property
-               name="startupForegroundColor"
-               value="000000">
-         </property>
-         <property
-               name="startupMessageRect"
-               value="7,252,445,20">
-         </property>
-         <property
-               name="startupProgressRect"
-               value="5,275,445,15">
-         </property>
-         <property
-               name="preferenceCustomization"
-               value="plugin_customization.ini">
-         </property>
-         <property
-               name="aboutText"
-               value="DDI Editor (Beta Version)&#x0A;&#x0A;DDI Editor UI Version: 1.0.0&#x0A;DDI Manager Version: 1.0.0">
-         </property>
-         <property
-               name="aboutImage"
-               value="icons/alt_about.gif">
-         </property>
-      </product>
-   </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            class="org.ddialliance.ddieditor.ui.preference.page.DdiPreferencePage"
-            id="org.ddialliance.ddieditor.ui.preference.page.DdiPreferencePage"
-            name="DDI">
-      </page>
-      <page
-            class="org.ddialliance.ddieditor.ui.preference.page.DdiEditorBackendPreferencePage"
-            id="org.ddialliance.ddieditor.ui.preference.page.DdiEditorBackendPreferencePage"
-            name="DDIEditor Backend">
-      </page>
-      <page
-            class="org.ddialliance.ddieditor.ui.preference.page.DdiEditorUiPreferencePage"
-            id="org.ddialliance.ddieditor.ui.preference.page.DdiEditorUiPreferencePage"
-            name="DDIEditor UI">
-      </page>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="org.ddialliance.ddieditor.ui.preference.PreferenceInitializer">
-      </initializer>
-   </extension>
-   <extension
-         point="org.eclipse.ui.startup">
-       <startup class="org.ddialliance.ddieditor.ui.AutoChangePerspectiveListener"/>
-   </extension>
+      <extension id="application" point="org.eclipse.core.runtime.applications">
+            <application>
+                  <run class="org.ddialliance.ddieditor.ui.Application"> </run>
+            </application>
+      </extension>
+      <extension point="org.eclipse.ui.perspectives">
+            <perspective class="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective"
+                  id="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective" name="Concepts"> </perspective>
+            <perspective class="org.ddialliance.ddieditor.ui.perspective.CodesPerspective"
+                  id="org.ddialliance.ddieditor.ui.perspective.CodesPerspective" name="Codes"> </perspective>
+            <perspective class="org.ddialliance.ddieditor.ui.perspective.InfoPerspective"
+                  id="org.ddialliance.ddieditor.ui.perspective.InfoPerspective" name="Overview"> </perspective>
+            <perspective name="Questions"
+                  class="org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective"
+                  id="org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective"> </perspective>
+            <perspective name="Instrument"
+                  class="org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective"
+                  id="org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective"
+            > </perspective>
+      </extension>
+      <extension point="org.eclipse.ui.views">
+            <view class="org.ddialliance.ddieditor.ui.view.InfoView" icon="icons/tree.gif"
+                  id="org.ddialliance.ddieditor.ui.view.InfoView" name="OverView"> </view>
+            <view class="org.ddialliance.ddieditor.ui.view.ConceptView" icon="icons/tree.gif"
+                  id="org.ddialliance.ddieditor.ui.view.ConceptView" name="Concepts"> </view>
+            <view class="org.ddialliance.ddieditor.ui.view.CodeView" icon="icons/tree.gif"
+                  id="org.ddialliance.ddieditor.ui.view.CodeView" name="Codes" restorable="true"> </view>
+            <view class="org.ddialliance.ddieditor.ui.view.QuestionItemView" icon="icons/tree.gif"
+                  id="org.ddialliance.ddieditor.ui.view.QuestionItemView" name="Questions"> </view>
+            <view class="org.ddialliance.ddieditor.ui.view.InstrumentView" icon="icons/tree.gif"
+                  id="org.ddialliance.ddieditor.ui.view.InstrumentView" name="Instrument"
+                  restorable="true"> </view>
+      </extension>
+      <extension point="org.eclipse.ui.menus">
+            <menuContribution locationURI="org.ddialliance.ddieditor.ui.menuContribution1"
+            > </menuContribution>
+      </extension>
+      <extension point="org.eclipse.ui.editors">
+            <editor class="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
+                  default="false" icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
+                  name="QuestionSchemeEditor"> </editor>
+            <editor class="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
+                  default="false" icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
+                  name="QuestionItemEditor"> </editor>
+            <editor class="org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor"
+                  default="false" icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor"
+                  name="ConceptEditor"> </editor>
+            <editor class="org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor"
+                  default="false" icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor"
+                  name="ConceptSchemeEditor"> </editor>
+            <editor class="org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor"
+                  default="false" icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor"
+                  name="CodeSchemeEditor"> </editor>
+            <editor class="org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor"
+                  default="false" icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor"
+                  name="StudyUnitEditor"> </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.instrument.InstrumentEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.instrument.InstrumentEditor"
+                  name="InstrumentEditor">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor"
+                  name="StatementItemEditor">
+            </editor>
+      </extension>
+      <!--extension point="org.eclipse.ui.activities">
+            <activity description="Disable unwanted eclipse UI" id="com.test.ui.disable"
+                  name="Disable"> </activity>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.new\.project"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.new\.file"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.new\.folder"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.ui\.editors/org\.eclipse\.ui\.editors\.wizards\.UntitledTextFileWizard"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.wst\.xml\.ui/org\.eclipse\.wst\.xml\.ui\.XMLExampleProjectCreationWizard"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.wst\.xml\.ui/org\.eclipse\.wst\.xml\.ui\.internal\.wizards\.NewXMLWizard"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.wst\.dtd\.ui/org\.eclipse\.wst\.dtd\.ui\.internal\.wizard\.NewDTDWizard"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.import\.ZipFile"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.import\.ExternalProject"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.import\.FileSystem"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.import\.Preferences"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.debug\.ui/org\.eclipse\.debug\.internal\.ui\.importexport\.breakpoints\.WizardImportBreakpoints"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.debug\.ui/org\.eclipse\.debug\.ui\.import\.launchconfigurations"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.team\.ui/org\.eclipse\.team\.ui\.ProjectSetImportWizard"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.wst\.xml\.ui/org\.eclipse\.wst\.xml\.ui\.internal\.wizards\.ImportXMLCatalogWizard"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.export\.ZipFile"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.export\.FileSystem"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.ui\.ide/org\.eclipse\.ui\.wizards\.export\.Preferences"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.debug\.ui/org\.eclipse\.debug\.internal\.ui\.importexport\.breakpoints\.WizardExportBreakpoints"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.debug\.ui/org\.eclipse\.debug\.ui\.export\.launchconfigurations"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.team\.ui/org\.eclipse\.team\.ui\.ProjectSetExportWizard"> </activityPatternBinding>
+            <activityPatternBinding activityId="com.test.ui.disable"
+                  pattern="org\.eclipse\.wst\.xml\.ui/org\.eclipse\.wst\.xml\.ui\.internal\.wizards\.ExportXMLCatalogWizard"
+            > </activityPatternBinding>
+      </extension-->
+      <extension id="org.eclipse.ui.idexportwizard" name="Export Wizard Extension Point"
+            point="org.eclipse.ui.exportWizards">
+            <wizard name="ExportDDIXml" icon="icons/properties.gif"
+                  class="org.ddialliance.ddieditor.ui.wizard.export.ExportDdiXmlWizard"
+                  id="org.ddialliance.ddieditor.ui.wizard.exportddi.ExportDdiXmlWizard">
+                  <description> %Export DDI </description>
+            </wizard>
+      </extension>
+      <extension id="product" point="org.eclipse.core.runtime.products">
+            <product application="DDIEditor.application" name="DDI Editor">
+                  <property name="appName" value="DDI Editor"> </property>
+                  <property name="startupForegroundColor" value="000000"> </property>
+                  <property name="startupMessageRect" value="7,252,445,20"> </property>
+                  <property name="startupProgressRect" value="5,275,445,15"> </property>
+                  <property name="preferenceCustomization" value="plugin_customization.ini"> </property>
+                  <property name="aboutText"
+                        value="DDI Editor (Beta Version)&#x0A;&#x0A;DDI Editor UI Version: 1.0.0&#x0A;DDI Manager Version: 1.0.0"> </property>
+                  <property name="aboutImage" value="icons/alt_about.gif"> </property>
+            </product>
+      </extension>
+      <extension point="org.eclipse.ui.preferencePages">
+            <page class="org.ddialliance.ddieditor.ui.preference.page.DdiPreferencePage"
+                  id="org.ddialliance.ddieditor.ui.preference.page.DdiPreferencePage" name="DDI"> </page>
+            <page
+                  class="org.ddialliance.ddieditor.ui.preference.page.DdiEditorBackendPreferencePage"
+                  id="org.ddialliance.ddieditor.ui.preference.page.DdiEditorBackendPreferencePage"
+                  name="DDIEditor Backend"> </page>
+            <page class="org.ddialliance.ddieditor.ui.preference.page.DdiEditorUiPreferencePage"
+                  id="org.ddialliance.ddieditor.ui.preference.page.DdiEditorUiPreferencePage"
+                  name="DDIEditor UI"> </page>
+      </extension>
+      <extension point="org.eclipse.core.runtime.preferences">
+            <initializer class="org.ddialliance.ddieditor.ui.preference.PreferenceInitializer"
+            > </initializer>
+      </extension>
+      <extension point="org.eclipse.ui.startup">
+            <startup class="org.ddialliance.ddieditor.ui.perspective.AutoChangePerspectiveListener"
+            />
+      </extension>
 </plugin>
