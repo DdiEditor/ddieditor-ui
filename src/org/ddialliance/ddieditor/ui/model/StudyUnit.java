@@ -11,28 +11,21 @@ package org.ddialliance.ddieditor.ui.model;
  */
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.UniverseReferenceDocument;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.impl.UniverseReferenceDocumentImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.CitationType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.IDType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.IdentifiedStructuredStringType;
+import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.InternationalStringType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.impl.AlternateTitleDocumentImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.impl.CitationDocumentImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.impl.FundingInformationDocumentImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.impl.NameDocumentImpl;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.impl.ReferenceTypeImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.studyunit.impl.AbstractDocumentImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.studyunit.impl.PurposeDocumentImpl;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelUpdateElement;
 import org.ddialliance.ddieditor.ui.dbxml.Util;
@@ -842,10 +835,9 @@ public class StudyUnit extends Model {
 	 * 
 	 */
 	public String getFundingIdentifyingAgency() {
-
 		log.debug("StudyUnit.getFundingIdentifyingAgency()");
 		ReferenceType referenceType = getFundingAgencyOrganizationReference();
-		return referenceType == null ? "" : referenceType.getIdentifyingAgencyArray(0);
+		return referenceType == null ? "" : referenceType.getIDList().get(0).getStringValue();
 	}
 
 	/**
