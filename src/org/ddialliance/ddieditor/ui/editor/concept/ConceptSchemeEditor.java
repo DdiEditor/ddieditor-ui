@@ -12,13 +12,13 @@ package org.ddialliance.ddieditor.ui.editor.concept;
 
 import java.text.MessageFormat;
 
-import org.ddialliance.ddieditor.ui.ConceptsPerspective;
 import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
-import org.ddialliance.ddieditor.ui.editor.SimpleEditor;
-import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
-import org.ddialliance.ddieditor.ui.model.ConceptScheme;
-import org.ddialliance.ddieditor.ui.model.Simple;
+import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
+import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
+import org.ddialliance.ddieditor.ui.model.LabelDescription;
+import org.ddialliance.ddieditor.ui.model.concept.ConceptScheme;
+import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -34,7 +34,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
-public class ConceptSchemeEditor extends SimpleEditor {
+public class ConceptSchemeEditor extends LabelDescriptionEditor {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, ConceptSchemeEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor";
 
@@ -84,12 +84,12 @@ public class ConceptSchemeEditor extends SimpleEditor {
 			return;
 		}
 		try {
-			if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
+			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 				ConceptSchemes.create(conceptScheme);
-				editorInput.setEditorMode(EDITOR_MODE_TYPE.EDIT);
-			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)) {
+				editorInput.setEditorMode(EditorModeType.EDIT);
+			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
 				ConceptSchemes.update(conceptScheme);
-			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.VIEW)) {
+			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
@@ -116,7 +116,7 @@ public class ConceptSchemeEditor extends SimpleEditor {
 
 		ConceptSchemes.init(((EditorInput) input).getProperties());
 
-		if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
+		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
 				conceptScheme = ConceptSchemes.createConceptScheme(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
@@ -127,8 +127,8 @@ public class ConceptSchemeEditor extends SimpleEditor {
 						ID, 0, errMess, e));
 				System.exit(0);
 			}
-		} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)
-				|| editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.VIEW)) {
+		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
+				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
 				conceptScheme = ConceptSchemes.getConceptScheme(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
@@ -146,7 +146,7 @@ public class ConceptSchemeEditor extends SimpleEditor {
 		}
 		
 		// Initialize the Simple Editor Part with Concept Scheme:
-		super.init(site, input, (Simple) conceptScheme);
+		super.init(site, input, (LabelDescription) conceptScheme);
 
 		this.site = site;
 		setSite(site);

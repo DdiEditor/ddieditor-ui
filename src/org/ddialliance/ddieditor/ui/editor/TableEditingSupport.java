@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;
 import org.ddialliance.ddieditor.ui.model.Language;
-import org.ddialliance.ddieditor.ui.model.QuestionItemLiteralText;
+import org.ddialliance.ddieditor.ui.model.question.QuestionItemLiteralText;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;

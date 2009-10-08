@@ -12,13 +12,13 @@ package org.ddialliance.ddieditor.ui.editor.code;
 
 import java.text.MessageFormat;
 
-import org.ddialliance.ddieditor.ui.CodesPerspective;
 import org.ddialliance.ddieditor.ui.dbxml.CodeSchemes;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
-import org.ddialliance.ddieditor.ui.editor.SimpleEditor;
-import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
-import org.ddialliance.ddieditor.ui.model.CodeScheme;
-import org.ddialliance.ddieditor.ui.model.Simple;
+import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
+import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
+import org.ddialliance.ddieditor.ui.model.LabelDescription;
+import org.ddialliance.ddieditor.ui.model.code.CodeScheme;
+import org.ddialliance.ddieditor.ui.perspective.CodesPerspective;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -34,7 +34,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
-public class CodeSchemeEditor extends SimpleEditor{
+public class CodeSchemeEditor extends LabelDescriptionEditor{
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeSchemeEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor";
 
@@ -84,12 +84,12 @@ public class CodeSchemeEditor extends SimpleEditor{
 			return;
 		}
 		try {
-			if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
+			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 				CodeSchemes.create(codeScheme);
-				editorInput.setEditorMode(EDITOR_MODE_TYPE.EDIT);
-			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)) {
+				editorInput.setEditorMode(EditorModeType.EDIT);
+			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
 				CodeSchemes.update(codeScheme);
-			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.VIEW)) {
+			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
@@ -116,7 +116,7 @@ public class CodeSchemeEditor extends SimpleEditor{
 
 		CodeSchemes.init(((EditorInput) input).getProperties());
 
-		if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
+		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
 				codeScheme = CodeSchemes.createCodeScheme(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
@@ -127,8 +127,8 @@ public class CodeSchemeEditor extends SimpleEditor{
 						ID, 0, errMess, e));
 				System.exit(0);
 			}
-		} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)
-				|| editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.VIEW)) {
+		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
+				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
 				codeScheme = CodeSchemes.getCodeScheme(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
@@ -146,7 +146,7 @@ public class CodeSchemeEditor extends SimpleEditor{
 		}
 		
 		// Initialize the Simple Editor Part with Code Scheme:
-		super.init(site, input, (Simple) codeScheme);
+		super.init(site, input, (LabelDescription) codeScheme);
 		
 		this.site = site;
 		setSite(site);

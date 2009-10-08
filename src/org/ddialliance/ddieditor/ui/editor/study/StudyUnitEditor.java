@@ -11,24 +11,18 @@ package org.ddialliance.ddieditor.ui.editor.study;
  */
 
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.xmlbeans.XmlObject;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.DateType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.impl.StructuredStringTypeImpl;
-import org.ddialliance.ddieditor.ui.InfoPerspective;
 import org.ddialliance.ddieditor.ui.dbxml.StudyUnits;
 import org.ddialliance.ddieditor.ui.editor.DateTimeWidget;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
-import org.ddialliance.ddieditor.ui.editor.TableEditingSupport;
-import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
+import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.model.StudyUnit;
-import org.ddialliance.ddieditor.ui.util.SWTResourceManager;
+import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
+import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
@@ -40,23 +34,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.nebula.widgets.cdatetime.CDT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -64,7 +52,6 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
@@ -79,7 +66,8 @@ import org.eclipse.ui.PartInitException;
  * $Revision$
  */
 public class StudyUnitEditor extends Editor implements ISelectionListener {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, StudyUnitEditor.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			StudyUnitEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor";
 
 	// Member variables:
@@ -105,8 +93,11 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 	 * Constructor of Study Unit Editor
 	 */
 	public StudyUnitEditor() {
-		super(Messages.getString("StudyUnitEditor.label.StudyUnitEditorLabel.StudyUnitEditor"), Messages
-				.getString("StudyUnitEditor.label.useTheEditorLabel.Description"));
+		super(
+				Messages
+						.getString("StudyUnitEditor.label.StudyUnitEditorLabel.StudyUnitEditor"),
+				Messages
+						.getString("StudyUnitEditor.label.useTheEditorLabel.Description"));
 	}
 
 	/**
@@ -124,7 +115,8 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 	 * @return String
 	 */
 	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages.getString("perspective.switch.dialogtext"), Messages
+		return MessageFormat.format(Messages
+				.getString("perspective.switch.dialogtext"), Messages
 				.getString("perspective.overview"));
 	}
 
@@ -146,14 +138,16 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 		// ------------------
 		TabFolder tabFolder = new TabFolder(getComposite_1(), SWT.BOTTOM);
 		tabFolder.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
 
 		TabItem tbtmCitation = new TabItem(tabFolder, SWT.NONE);
 		tbtmCitation.setText("Citation");
 
 		Group grpStudyCitation = new Group(tabFolder, SWT.NONE);
 		grpStudyCitation.setText("Study Citation");
-		grpStudyCitation.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		grpStudyCitation.setBackground(SWTResourceManager
+				.getColor(SWT.COLOR_WHITE));
 		GridLayout gridLayout_2 = new GridLayout();
 		gridLayout_2.numColumns = 2;
 		grpStudyCitation.setLayout(gridLayout_2);
@@ -181,11 +175,13 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 
 		Label lblTitle = new Label(grpStudyCitation, SWT.NONE);
 		lblTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblTitle.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblTitle.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblTitle.setText("Title:");
 
 		titleText = new Text(grpStudyCitation, SWT.BORDER);
-		titleText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		titleText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+				1, 1));
 		titleText.setText(studyUnit.getCitationTitle("da"));
 		titleText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
@@ -199,11 +195,13 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 
 		Label lblSubtitle = new Label(grpStudyCitation, SWT.NONE);
 		lblSubtitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblSubtitle.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblSubtitle.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblSubtitle.setText("Subtitle:");
 
 		subTitleText = new Text(grpStudyCitation, SWT.BORDER);
-		subTitleText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		subTitleText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		subTitleText.setText(studyUnit.getCitationSubTitle("da"));
 		subTitleText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
@@ -217,11 +215,13 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 
 		Label lblAltTitle = new Label(grpStudyCitation, SWT.NONE);
 		lblAltTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblAltTitle.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblAltTitle.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblAltTitle.setText("Alternate Title:");
 
 		altTitleText = new Text(grpStudyCitation, SWT.BORDER);
-		altTitleText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		altTitleText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		altTitleText.setText(studyUnit.getCitationAltTitle("da"));
 		altTitleText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
@@ -235,11 +235,13 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 
 		Label lblCreator = new Label(grpStudyCitation, SWT.NONE);
 		lblCreator.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblCreator.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblCreator.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblCreator.setText("Creator:");
 
 		creatorText = new Text(grpStudyCitation, SWT.BORDER);
-		creatorText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		creatorText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		creatorText.setText(studyUnit.getCitationCreator("da"));
 		creatorText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
@@ -251,13 +253,17 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 		});
 		super.setControl(creatorText);
 
+		// publisher
 		Label lblPublisher = new Label(grpStudyCitation, SWT.NONE);
-		lblPublisher.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblPublisher.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblPublisher
+				.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblPublisher.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblPublisher.setText("Publisher:");
 
 		publisherText = new Text(grpStudyCitation, SWT.BORDER);
-		publisherText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		publisherText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		publisherText.setText(studyUnit.getCitationPublisher("da"));
 		publisherText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
@@ -270,26 +276,32 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 		super.setControl(publisherText);
 
 		Label lblContributor = new Label(grpStudyCitation, SWT.NONE);
-		lblContributor.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblContributor.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblContributor.setBackground(SWTResourceManager
+				.getColor(SWT.COLOR_WHITE));
+		lblContributor.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblContributor.setText("Contributor:");
 
 		contributorText = new Text(grpStudyCitation, SWT.BORDER);
-		contributorText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		contributorText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		contributorText.setText(studyUnit.getCitationContributor("da"));
 		contributorText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				log.debug("Contributor changed");
 				// TODO Handle LanguageCode
-				studyUnit.setCitationContributor(contributorText.getText(), "da");
+				studyUnit.setCitationContributor(contributorText.getText(),
+						"da");
 				editorStatus.setChanged();
 			}
 		});
 		super.setControl(contributorText);
 
 		Label lblPublicationdate = new Label(grpStudyCitation, SWT.NONE);
-		lblPublicationdate.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblPublicationdate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblPublicationdate.setBackground(SWTResourceManager
+				.getColor(SWT.COLOR_WHITE));
+		lblPublicationdate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
+				false, false, 1, 1));
 		lblPublicationdate.setText("PublicationDate:");
 
 		publicationDateTime = new DateTimeWidget(grpStudyCitation);
@@ -298,32 +310,26 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 		try {
 			time = (String) studyUnit.getCitationPublicationDate();
 		} catch (Exception e2) {
-			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+			ErrorDialog.openError(site.getShell(), Messages
+					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, e2.getMessage(), e2));
 		}
 		if (!time.equals("")) {
 			try {
 				// TODO Improve Date handling
 				Calendar calendar = Translator.formatIso8601DateTime(time);
-				// Calendar to Date Conversion
-				int year = calendar.get(Calendar.YEAR) - 1900;
-				int month = calendar.get(Calendar.MONTH);
-				int day = calendar.get(Calendar.DATE);
-				int hour = calendar.get(Calendar.HOUR_OF_DAY);
-				int min = calendar.get(Calendar.MINUTE);
-				int sec = calendar.get(Calendar.SECOND);
-				Date date = new Date(year, month, day, hour, min, sec);
-
-				publicationDateTime.setSelection(date);
+				publicationDateTime.setSelection(calendar.getTime());
 			} catch (DDIFtpException e1) {
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, e1.getMessage(), e1));
+				ErrorDialog.openError(site.getShell(), Messages
+						.getString("ErrorTitle"), null, new Status(
+						IStatus.ERROR, ID, 0, e1.getMessage(), e1));
 			}
 		}
 		publicationDateTime.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				Date date = publicationDateTime.getSelection();
-				String dateTime = Translator.formatIso8601DateTime(date.getTime());
+				String dateTime = Translator.formatIso8601DateTime(date
+						.getTime());
 				studyUnit.setCitationPublicationDate(dateTime);
 				editorStatus.setChanged();
 			}
@@ -332,22 +338,27 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 
 		Label lblLanguage = new Label(grpStudyCitation, SWT.NONE);
 		lblLanguage.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblLanguage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblLanguage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblLanguage.setText("Language:");
 
 		langCombo = new Combo(grpStudyCitation, SWT.READ_ONLY);
 		langCombo.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				studyUnit.setCitationLanguage(Language.getLanguageCode(langCombo.getText()));
+				studyUnit.setCitationLanguage(Language
+						.getLanguageCode(langCombo.getText()));
 				editorStatus.setChanged();
 			}
 		});
-		langCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		langCombo
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		langCombo.setItems(Language.getLanguages());
 		try {
-			langCombo.select(Language.getLanguageIndex(studyUnit.getCitationLanguage()));
+			langCombo.select(Language.getLanguageIndex(studyUnit
+					.getCitationLanguage()));
 		} catch (Exception e1) {
-			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+			ErrorDialog.openError(site.getShell(), Messages
+					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, e1.getMessage(), e1));
 		}
 		super.setControl(langCombo);
@@ -367,22 +378,27 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 		// Abstract:
 		final Label abstractLabel = new Label(grpAbstract, SWT.NONE);
 		abstractLabel.setAlignment(SWT.RIGHT);
-		final GridData gd_citationLabel = new GridData(SWT.RIGHT, SWT.TOP, false, false);
+		final GridData gd_citationLabel = new GridData(SWT.RIGHT, SWT.TOP,
+				false, false);
 		gd_citationLabel.horizontalIndent = 5;
 		abstractLabel.setLayoutData(gd_citationLabel);
-		abstractLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		abstractLabel.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
 		abstractLabel.setText("Abstract:"); //$NON-NLS-1$
 
-		abstractStyledText = new StyledText(grpAbstract, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
+		abstractStyledText = new StyledText(grpAbstract, SWT.WRAP
+				| SWT.V_SCROLL | SWT.BORDER);
 		abstractStyledText.setText(studyUnit.getAbstractContent("da"));
-		final GridData gd_originalStudyUnitTextStyledText = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		final GridData gd_originalStudyUnitTextStyledText = new GridData(
+				SWT.FILL, SWT.CENTER, true, false);
 		gd_originalStudyUnitTextStyledText.heightHint = 154;
 		gd_originalStudyUnitTextStyledText.widthHint = 308;
 		abstractStyledText.setLayoutData(gd_originalStudyUnitTextStyledText);
 		abstractStyledText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				log.debug("Abstract Content changed");
-				studyUnit.setAbstractContent(abstractStyledText.getText(), "da");
+				studyUnit
+						.setAbstractContent(abstractStyledText.getText(), "da");
 				editorStatus.setChanged();
 			}
 		});
@@ -400,40 +416,47 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 		GridLayout gridLayout_4 = new GridLayout();
 		gridLayout_4.numColumns = 2;
 		grpFunding.setLayout(gridLayout_4);
-		
+
 		// Funding Information
 		// TODO Change Funding Information from discrete fields to table
 		Label lblAgency = new Label(grpFunding, SWT.NONE);
-		lblAgency.setBackground(com.swtdesigner.SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblAgency.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblAgency.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblAgency.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblAgency.setText("Agency:");
 
 		agencyText = new Text(grpFunding, SWT.BORDER);
-		agencyText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		agencyText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		agencyText.setText(studyUnit.getFundingAgencyID());
 		agencyText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				log.debug("Agency changed");
 				studyUnit.setFundingAgencyID(agencyText.getText());
-				studyUnit.setFundingIdentifyingAgency(identifyingAgencyText.getText());
+				studyUnit.setFundingIdentifyingAgency(identifyingAgencyText
+						.getText());
 				editorStatus.setChanged();
 			}
 		});
 		super.setControl(agencyText);
 
 		Label lblIdentifyingAgency = new Label(grpFunding, SWT.NONE);
-		lblIdentifyingAgency.setBackground(com.swtdesigner.SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblIdentifyingAgency.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblIdentifyingAgency.setBackground(SWTResourceManager
+				.getColor(SWT.COLOR_WHITE));
+		lblIdentifyingAgency.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
+				false, false, 1, 1));
 		lblIdentifyingAgency.setText("Identifying Agency:");
 
 		identifyingAgencyText = new Text(grpFunding, SWT.BORDER);
-		identifyingAgencyText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		identifyingAgencyText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+				true, false, 1, 1));
 		identifyingAgencyText.setText(studyUnit.getFundingIdentifyingAgency());
 		identifyingAgencyText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				log.debug("Identifying Agency changed");
 				studyUnit.setFundingAgencyID(agencyText.getText());
-				studyUnit.setFundingIdentifyingAgency(identifyingAgencyText.getText());
+				studyUnit.setFundingIdentifyingAgency(identifyingAgencyText
+						.getText());
 				editorStatus.setChanged();
 			}
 		});
@@ -446,7 +469,7 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 
 		Group grpPurpose = new Group(tabFolder, SWT.NONE);
 		grpPurpose.setText("Study Purpose");
-		grpPurpose.setBackground(com.swtdesigner.SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		grpPurpose.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		tbtmPurpose.setControl(grpPurpose);
 		GridLayout gridLayout_5 = new GridLayout();
 		gridLayout_5.numColumns = 2;
@@ -455,15 +478,19 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 		// Purpose:
 		final Label purposeLabel = new Label(grpPurpose, SWT.NONE);
 		purposeLabel.setAlignment(SWT.RIGHT);
-		final GridData gd_purposeLabel = new GridData(SWT.RIGHT, SWT.TOP, false, false);
+		final GridData gd_purposeLabel = new GridData(SWT.RIGHT, SWT.TOP,
+				false, false);
 		gd_purposeLabel.horizontalIndent = 5;
 		purposeLabel.setLayoutData(gd_purposeLabel);
-		purposeLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		purposeLabel.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
 		purposeLabel.setText("Purpose:"); //$NON-NLS-1$
 
-		purposeStyledText = new StyledText(grpPurpose, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
+		purposeStyledText = new StyledText(grpPurpose, SWT.WRAP | SWT.V_SCROLL
+				| SWT.BORDER);
 		purposeStyledText.setText(studyUnit.getPurposeContent("da"));
-		final GridData gd_purposeStudyUnitTextStyledText = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		final GridData gd_purposeStudyUnitTextStyledText = new GridData(
+				SWT.FILL, SWT.CENTER, true, false);
 		gd_purposeStudyUnitTextStyledText.heightHint = 154;
 		gd_purposeStudyUnitTextStyledText.widthHint = 308;
 		purposeStyledText.setLayoutData(gd_purposeStudyUnitTextStyledText);
@@ -492,23 +519,29 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 		try {
 			studyUnit.validate();
 		} catch (Exception e1) {
-			String errMess = Messages.getString("StudyUnitEditor.mess.ValidationError"); //$NON-NLS-1$
-			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+			String errMess = Messages
+					.getString("StudyUnitEditor.mess.ValidationError"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Messages
+					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, errMess, null));
 			return;
 		}
 		try {
-			if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
+			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 				StudyUnits.create(studyUnit);
-				editorInput.setEditorMode(EDITOR_MODE_TYPE.EDIT);
-			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)) {
+				editorInput.setEditorMode(EditorModeType.EDIT);
+			} else if (editorInput.getEditorMode()
+					.equals(EditorModeType.EDIT)) {
 				StudyUnits.update(studyUnit);
-			} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.VIEW)) {
+			} else if (editorInput.getEditorMode()
+					.equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
-			String errMess = Messages.getString("StudyUnitEditor.mess.ErrorDuringSave"); //$NON-NLS-1$
-			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+			String errMess = Messages
+					.getString("StudyUnitEditor.mess.ErrorDuringSave"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Messages
+					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, errMess, e));
 			return;
 		}
@@ -521,45 +554,59 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 	 * Study Unit Editor initialization.
 	 */
 	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
 
 		// Initialize Study Unit Editor Part:
 		this.editorInput = (EditorInput) input;
 		if (log.isDebugEnabled()) {
-			log.debug("StudyUnitEditor.init() - Name: " + editorInput.getName());
+			log
+					.debug("StudyUnitEditor.init() - Name: "
+							+ editorInput.getName());
 			log.debug("StudyUnitEditor.init() - ID: " + editorInput.getId());
-			log.debug("StudyUnitEditor.init() - Parent ID: " + editorInput.getParentId());
-			log.debug("StudyUnitEditor.init() - Editor Mode: " + editorInput.getEditorMode());
+			log.debug("StudyUnitEditor.init() - Parent ID: "
+					+ editorInput.getParentId());
+			log.debug("StudyUnitEditor.init() - Editor Mode: "
+					+ editorInput.getEditorMode());
 		}
 
 		StudyUnits.init(((EditorInput) input).getProperties());
 
-		if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.NEW)) {
+		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
-				studyUnit = StudyUnits.createStudyUnit(editorInput.getId(), editorInput.getVersion(), editorInput
-						.getParentId(), editorInput.getParentVersion(), null);
+				studyUnit = StudyUnits.createStudyUnit(editorInput.getId(),
+						editorInput.getVersion(), editorInput.getParentId(),
+						editorInput.getParentVersion(), null);
 			} catch (Exception e) {
 				log.error("StudyUnitEditor.init(): " + e.getMessage());
-				String errMess = Messages.getString("StudyUnitEditor.mess.ErrorDuringCreateNewStudyUnit"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(
+				String errMess = Messages
+						.getString("StudyUnitEditor.mess.ErrorDuringCreateNewStudyUnit"); //$NON-NLS-1$
+				ErrorDialog.openError(site.getShell(), Messages
+						.getString("ErrorTitle"), null, new Status(
 						IStatus.ERROR, ID, 0, errMess, e));
 				System.exit(0);
 			}
-		} else if (editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.EDIT)
-				|| editorInput.getEditorMode().equals(EDITOR_MODE_TYPE.VIEW)) {
+		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
+				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
-				studyUnit = StudyUnits.getStudyUnit(editorInput.getId(), editorInput.getVersion(), editorInput
-						.getParentId(), editorInput.getParentVersion());
+				studyUnit = StudyUnits.getStudyUnit(editorInput.getId(),
+						editorInput.getVersion(), editorInput.getParentId(),
+						editorInput.getParentVersion());
 			} catch (Exception e) {
-				String errMess = Messages.getString("StudyUnitEditor.mess.GetStudyUnitByIdError"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(
+				String errMess = Messages
+						.getString("StudyUnitEditor.mess.GetStudyUnitByIdError"); //$NON-NLS-1$
+				ErrorDialog.openError(site.getShell(), Messages
+						.getString("ErrorTitle"), null, new Status(
 						IStatus.ERROR, ID, 0, errMess, e));
 				System.exit(0);
 			}
 		} else {
-			String errMess = MessageFormat.format(
-					Messages.getString("StudyUnitEditor.mess.UnknownEditorMode"), editorInput.getEditorMode()); //$NON-NLS-1$
-			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
+			String errMess = MessageFormat
+					.format(
+							Messages
+									.getString("StudyUnitEditor.mess.UnknownEditorMode"), editorInput.getEditorMode()); //$NON-NLS-1$
+			MessageDialog.openError(site.getShell(), Messages
+					.getString("ErrorTitle"), errMess);
 			System.exit(0);
 		}
 
