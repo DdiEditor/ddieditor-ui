@@ -13,27 +13,12 @@ package org.ddialliance.ddieditor.ui.view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Properties;
 
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.Activator;
-import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
-import org.ddialliance.ddieditor.ui.dbxml.Concepts;
-import org.ddialliance.ddieditor.ui.dbxml.QuestionItems;
-import org.ddialliance.ddieditor.ui.dbxml.QuestionSchemes;
-import org.ddialliance.ddieditor.ui.dbxml.Util;
-import org.ddialliance.ddieditor.ui.editor.EditorInput;
-import org.ddialliance.ddieditor.ui.editor.EditorInput.EDITOR_MODE_TYPE;
-import org.ddialliance.ddieditor.ui.editor.EditorInput.ENTITY_TYPE;
-import org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor;
-import org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor;
-import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
-import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
-import org.ddialliance.ddieditor.ui.model.ConceptScheme;
-import org.ddialliance.ddieditor.ui.util.ResourceManager;
-import org.ddialliance.ddieditor.ui.util.SWTResourceManager;
+import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
+import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -42,10 +27,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -60,10 +41,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.internal.actions.HelpContentsAction;
 import org.eclipse.ui.part.ViewPart;
@@ -75,7 +52,7 @@ public class View extends ViewPart {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, View.class);
 
 	public enum ViewContentType {
-		StudyContent, UniverseContent, ConceptContent, CodeContent, QuestionContent, InstumentationContent;
+		StudyContent, UniverseContent, ConceptContent, CodeContent, QuestionContent, InstrumentationContent;
 	}
 
 	private ViewContentType viewContentType;
@@ -233,7 +210,6 @@ public class View extends ViewPart {
 		// Define TreeViewer
 		treeViewer = new TreeViewer(treeGroup, SWT.SINGLE | SWT.BORDER);
 		treeViewer.setContentProvider(new TreeContentProvider(getViewSite()));
-		treeViewer.setLabelProvider(new LabelProvider());
 		treeViewer.setLabelProvider(new TreeLabelProvider());
 		try {
 			treeViewer.setInput(viewContentType);
