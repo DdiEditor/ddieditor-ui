@@ -20,13 +20,12 @@ import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
-import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
-import org.ddialliance.ddieditor.ui.dbxml.CodeSchemes;
-import org.ddialliance.ddieditor.ui.dbxml.ConceptSchemes;
-import org.ddialliance.ddieditor.ui.dbxml.Concepts;
-import org.ddialliance.ddieditor.ui.dbxml.QuestionItems;
-import org.ddialliance.ddieditor.ui.dbxml.QuestionSchemes;
+import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
+import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemes;
+import org.ddialliance.ddieditor.ui.dbxml.concept.Concepts;
+import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
+import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -87,7 +86,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			} else if (contentType.equals(ViewContentType.CodeContent)) {
 				return CodeSchemes.getCodeSchemesLight(null, null).toArray();
 			} else if (contentType.equals(ViewContentType.QuestionContent)) {
-				return QuestionSchemes.getQuestionSchemesLight(null, null)
+				return new QuestionSchemeDao().getLightXmlObject(null, null)
 						.toArray();
 			} else if (contentType
 					.equals(ViewContentType.InstrumentationContent)) {
@@ -175,7 +174,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 					return Concepts.getConceptsLight(lightXmlObjectType)
 							.toArray();
 				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
-					return QuestionItems.getQuestionItemsLight(
+					return new QuestionItemDao().getLightXmlObject(
 							lightXmlObjectType).toArray();
 				} else if (lightXmlTypeLocalname
 						.equals("ControlConstructScheme")) {

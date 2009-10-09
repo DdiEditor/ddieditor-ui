@@ -21,11 +21,13 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.impl.DDIResourceTypeImpl;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
 import org.ddialliance.ddieditor.ui.view.TreeMenu.NEW_TYPE;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -71,9 +73,9 @@ public class InfoView extends View {
 		}
 	}
 
-	public void createPartControl(Composite parent) {	
+	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-	
+
 		// Create Pop-up Menu:
 		Menu menu = new Menu(treeViewer.getTree());
 		// Assign double click to edit function
@@ -82,10 +84,10 @@ public class InfoView extends View {
 				switchPerspective();
 			}
 		});
-	
+
 		// Define Tree Pop-up Menu
 		treeViewer.getTree().setMenu(menu);
-	
+
 		// Define OPEN (VIEW) Pop-up Menu Item
 		openMenuItem = new MenuItem(menu, SWT.NONE);
 		openMenuItem.setSelection(true);
@@ -103,7 +105,7 @@ public class InfoView extends View {
 				enableMenu();
 			}
 		});
-	
+
 		// Define NEW Pop-up Menu Item
 		newMenuItem = new MenuItem(menu, SWT.NONE);
 		newMenuItem.setSelection(true);
@@ -114,7 +116,7 @@ public class InfoView extends View {
 		newMenuItem.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				LightXmlObjectType item = null;
-	
+
 				ISelection selection = treeViewer.getSelection();
 				Object obj = ((IStructuredSelection) selection)
 						.getFirstElement();
@@ -141,7 +143,7 @@ public class InfoView extends View {
 								.getParentVersion());
 			}
 		});
-	
+
 		// Define DELETE Pop-up Menu Item
 		deleteMenuItem = new MenuItem(menu, SWT.NONE);
 		deleteMenuItem.setSelection(true);
@@ -154,7 +156,7 @@ public class InfoView extends View {
 				switchPerspective();
 			}
 		});
-	
+
 		// Define EDIT Pop-up Menu Item
 		editMenuItem = new MenuItem(menu, SWT.NONE);
 		editMenuItem
@@ -175,54 +177,25 @@ public class InfoView extends View {
 						EditorModeType.EDIT);
 			}
 		});
-	
+
 		menu.setDefaultItem(openMenuItem);
 	}
 
 	private void switchPerspective() {
 		String perspectiveId = "";
-
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
+		
 		if (obj instanceof DDIResourceTypeImpl) {
-			return;
-		} else if (obj instanceof ConceptualType) {
-			String name = ((ConceptualType) obj).name();
-			if (name.equals("LOGIC_concepts")) {
-				perspectiveId = ConceptsPerspective.ID;
-			} else if (name.equals("LOGIC_questions")) {
-				perspectiveId = QuestionsPerspective.ID;
-			} else if (((ConceptualType) obj)
-					.equals(ConceptualType.LOGIC_instumentation)) {
-				perspectiveId = InstrumentPerspective.ID;
-			} else {
-				log.error("Switch Perspective failed: Conceptual name '"
-						+ ((ConceptualType) obj).name()
-						+ "' currently not supported.");
-				MessageDialog
-						.openInformation(
-								getViewSite().getShell(),
-								Messages.getString("ErrorTitle"),
-								Messages
-										.getString("View.mess.ConceptualNameCurrentlyNotSupported") + ((ConceptualType) obj).name() + "'"); //$NON-NLS-1$
-				return;
-			}
+			return;		
 		} else if (obj instanceof ConceptualElement) {
-			LightXmlObjectType item = (LightXmlObjectType) ((ConceptualElement) obj)
-					.getValue();
-			if (item.getElement().equals("ConceptScheme")) {
-				perspectiveId = ConceptsPerspective.ID;
-			} else if (item.getElement().equals("QuestionScheme")) {
-				perspectiveId = QuestionsPerspective.ID;
-			} else {
-				log.error("Switch Perspective failed: Element type '"
-						+ item.getElement() + "' not supported.");
-				MessageDialog
-						.openInformation(
-								getViewSite().getShell(),
-								Messages.getString("ErrorTitle"),
-								Messages
-										.getString("View.mess.ElementTypeCurrentlyNotSupported") + item.getElement() + "'"); //$NON-NLS-1$
+			String item = ((LightXmlObjectType) ((ConceptualElement) obj)
+					.getValue()).getElement();
+			try {
+				perspectiveId = ElementType.getPerspectiveId(item);
+			} catch (DDIFtpException e) {
+				MessageDialog.openInformation(getViewSite().getShell(),
+						Messages.getString("ErrorTitle"), e.getMessage());
 				return;
 			}
 		}
