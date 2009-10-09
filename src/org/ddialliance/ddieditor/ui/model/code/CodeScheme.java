@@ -10,12 +10,14 @@ package org.ddialliance.ddieditor.ui.model.code;
  * $Revision$
  */
 
+import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.logicalproduct.impl.CodeSchemeTypeImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddieditor.ui.model.Language;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -132,4 +134,8 @@ public class CodeScheme extends LabelDescription {
 		return;
 	}
 
+	@Override
+	public XmlObject getDocument() throws DDIFtpException {
+		return codeSchemeDocument;
+	}
 }

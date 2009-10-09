@@ -1,32 +1,28 @@
 package org.ddialliance.ddieditor.ui.model.question;
 
-
 /**
  * Question Scheme model.
  * 
  */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
+import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionSchemeDocument;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.impl.QuestionSchemeTypeImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddieditor.ui.model.Language;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class QuestionScheme  extends LabelDescription {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionScheme.class);
+public class QuestionScheme extends LabelDescription {
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			QuestionScheme.class);
 
 	private QuestionSchemeDocument questionSchemeDocument;
 	private QuestionSchemeTypeImpl questionSchemeTypeImpl;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -35,29 +31,23 @@ public class QuestionScheme  extends LabelDescription {
 	 * @param parentVersion
 	 * @throws Exception
 	 */
-	public QuestionScheme(QuestionSchemeDocument questionSchemeDocument, String parentId, String parentVersion)
-			throws Exception {
-		super(questionSchemeDocument.getQuestionScheme().getId(), questionSchemeDocument.getQuestionScheme()
-				.getVersion(), parentId, parentVersion, questionSchemeDocument.getQuestionScheme().getLabelList(),
+	public QuestionScheme(QuestionSchemeDocument questionSchemeDocument,
+			String parentId, String parentVersion) throws Exception {
+		super(questionSchemeDocument.getQuestionScheme().getId(),
+				questionSchemeDocument.getQuestionScheme().getVersion(),
+				parentId, parentVersion, questionSchemeDocument
+						.getQuestionScheme().getLabelList(),
 				questionSchemeDocument.getQuestionScheme().getDescriptionList());
-		
+
 		if (questionSchemeDocument == null) {
 			// TODO Create new Question Scheme
 			this.questionSchemeDocument = null;
 		}
 		this.questionSchemeDocument = questionSchemeDocument;
-		this.questionSchemeTypeImpl = (QuestionSchemeTypeImpl) questionSchemeDocument.getQuestionScheme();
+		this.questionSchemeTypeImpl = (QuestionSchemeTypeImpl) questionSchemeDocument
+				.getQuestionScheme();
 	}
-	
-	/**
-	 * Get Question Scheme Document of Question Scheme.
-	 * 
-	 * @return QuestionSchemeDocument
-	 */
-	public QuestionSchemeDocument getQuestionSchemeDocument() {
-		return questionSchemeDocument;
-	}
-		
+
 	/**
 	 * Set label of Question Scheme.
 	 * 
@@ -73,23 +63,22 @@ public class QuestionScheme  extends LabelDescription {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Set Original Label of Question Scheme.
-	 * 'Original' means not translated.
+	 * Set Original Label of Question Scheme. 'Original' means not translated.
 	 * 
 	 * @param string
 	 * @return LabelType
 	 */
 	public LabelType setLabel(String string) {
-		
+
 		LabelType labelType = super.setLabel(string);
 		if (labelType != null) {
 			questionSchemeTypeImpl.getLabelList().add(labelType);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Set Description of Question Scheme.
 	 * 
@@ -97,17 +86,17 @@ public class QuestionScheme  extends LabelDescription {
 	 * @return StructuredStringType
 	 */
 	public StructuredStringType setDescr(String string, Language language) {
-		
+
 		StructuredStringType descriptionType = super.setDescr(string);
 		if (descriptionType != null) {
 			questionSchemeTypeImpl.getDescriptionList().add(descriptionType);
 		}
-		return null;		
+		return null;
 	}
-	
+
 	/**
-	 * Set Original Description of Question Scheme.
-	 * Original means not translated.
+	 * Set Original Description of Question Scheme. Original means not
+	 * translated.
 	 * 
 	 * @param string
 	 * @return StructuredStringType
@@ -117,9 +106,9 @@ public class QuestionScheme  extends LabelDescription {
 		if (descriptionType != null) {
 			questionSchemeTypeImpl.getDescriptionList().add(descriptionType);
 		}
-		return null;		
+		return null;
 	}
-	
+
 	/**
 	 * Validates the Question Scheme before it is saved. It e.g. checks if all
 	 * mandatory attributes has been given.
@@ -132,6 +121,11 @@ public class QuestionScheme  extends LabelDescription {
 
 		// No error found:
 		return;
+	}
+
+	@Override
+	public XmlObject getDocument() throws DDIFtpException {
+		return questionSchemeDocument;
 	}
 
 }

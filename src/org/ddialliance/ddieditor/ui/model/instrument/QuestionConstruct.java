@@ -23,7 +23,7 @@ public class QuestionConstruct extends LabelDescription {
 		this.type = doc.getQuestionConstruct();
 	}
 
-	public XmlObject getDoc() {
+	public XmlObject getDocument() {
 		return doc;
 	}
 }

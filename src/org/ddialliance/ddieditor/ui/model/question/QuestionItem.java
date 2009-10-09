@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.CodeDomainDocument;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.CodeDomainType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.DynamicTextType;
@@ -31,14 +32,15 @@ import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.NumericTypeCodeType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.TextDomainType;
-import org.ddialliance.ddieditor.ui.dbxml.Util;
 import org.ddialliance.ddieditor.ui.editor.question.ResponseTypeDetail.RESPONSE_TYPES;
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 
 public class QuestionItem extends Model {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionItem.class);
@@ -94,7 +96,7 @@ public class QuestionItem extends Model {
 						} else {
 							firstElement = false;
 						}
-						str.append(Util.getTextOnMixedElement(textType));
+						str.append(XmlBeansUtil.getTextOnMixedElement(textType));
 					}
 					questionItemLiteralTextList.add(new QuestionItemLiteralText(str.toString(), languageCode,
 							dynamicTextType.getTranslated(), dynamicTextType.getTranslatable()));
@@ -136,7 +138,7 @@ public class QuestionItem extends Model {
 		String conceptRef = "";
 		List<ReferenceType> conceptReferenceList = questionItemTypeImpl.getConceptReferenceList();
 		if (conceptReferenceList.size() == 1) {
-			conceptRef = Util.getTextOnMixedElement(conceptReferenceList.get(0));
+			conceptRef = XmlBeansUtil.getTextOnMixedElement(conceptReferenceList.get(0));
 			log.debug("ConceptRef: " + conceptRef);
 		} else if (conceptReferenceList.size() > 1) {
 			throw new Exception(Messages.getString("QuestionItem.mess.MultipleConceptReferencesNotSupported")); //$NON-NLS-1$
@@ -455,7 +457,8 @@ public class QuestionItem extends Model {
 	 * 
 	 * @return QuestionItemDocument
 	 */
-	public QuestionItemDocument getQuestionItemDocument() {
+	@Override
+	public QuestionItemDocument getDocument() {
 		return questionItemDocument;
 	}
 
@@ -483,5 +486,10 @@ public class QuestionItem extends Model {
 
 		return; // No error found:
 	}
+
+//	@Override
+//	public XmlObject getDocument() throws DDIFtpException {
+//		return questionItemDocument;
+//	}
 
 }

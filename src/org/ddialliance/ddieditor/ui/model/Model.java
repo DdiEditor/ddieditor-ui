@@ -1,5 +1,6 @@
 package org.ddialliance.ddieditor.ui.model;
 
+
 /**
  * Model.
  *  - provides 'get' and 'set' methods for accessing Id and Version.
@@ -12,7 +13,7 @@ package org.ddialliance.ddieditor.ui.model;
  */
 
 
-public class Model {
+public abstract class Model implements IModel {
 	
 	private String id;
 	private String version;
@@ -35,64 +36,50 @@ public class Model {
 		this.parentVersion = parentVersion;
 	}
 	
-	/**
-	 * Get ID element.
-	 * 
-	 * @return String
-	 * 			ID string.
+	/* (non-Javadoc)
+	 * @see org.ddialliance.ddieditor.ui.model.IModel#getId()
 	 */
 	public String getId() {
 		return id;
 	}
 
-	/**
-	 * Get version of element.
-	 * 
-	 * @return String
-	 * 			Version string
+	/* (non-Javadoc)
+	 * @see org.ddialliance.ddieditor.ui.model.IModel#getVersion()
 	 */
 	public String getVersion() {
 		return version;
 	}
 
-	/**
-	 * Set Parent ID.
-	 * 
-	 * @param String
-	 *            Parent ID string
+	/* (non-Javadoc)
+	 * @see org.ddialliance.ddieditor.ui.model.IModel#setParentId(java.lang.String)
 	 */
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
 
-	/**
-	 * Get Parent ID.
-	 * 
-	 * @return String
-	 * 			Parent ID string
+	/* (non-Javadoc)
+	 * @see org.ddialliance.ddieditor.ui.model.IModel#getParentId()
 	 */
 	public String getParentId() {
 		return this.parentId;
 	}
 
-	/**
-	 * Set Parent version
-	 * 
-	 * @param String
-	 *            Parent Version string
+	/* (non-Javadoc)
+	 * @see org.ddialliance.ddieditor.ui.model.IModel#setParentVersion(java.lang.String)
 	 */
 	public void setParentVersion(String parentVersion) {
 		this.parentVersion = parentVersion;
 	}
 
-	/**
-	 * Get Parent version
-	 * 
-	 * @return String
-	 * 			Parent Version string
+	/* (non-Javadoc)
+	 * @see org.ddialliance.ddieditor.ui.model.IModel#getParentVersion()
 	 */
 	public String getParentVersion() {
 		return this.parentVersion;
 	}
-
+	
+	public void validate() throws Exception {
+		// No error found:
+		return;
+	}
 }

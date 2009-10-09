@@ -22,7 +22,7 @@ public class StatementItem extends Model {
 		this.type = doc.getStatementItem();
 	}
 
-	public StatementItemDocument getDoc() {
+	public StatementItemDocument getDocument() {
 		return doc;
 	}
 }

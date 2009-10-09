@@ -10,12 +10,14 @@ package org.ddialliance.ddieditor.ui.model.concept;
  * $Revision$
  */
 
+import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptSchemeDocument;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.impl.ConceptSchemeTypeImpl;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddieditor.ui.model.Language;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -130,6 +132,11 @@ public class ConceptScheme  extends LabelDescription {
 
 		// No error found:
 		return;
+	}
+
+	@Override
+	public XmlObject getDocument() throws DDIFtpException {
+		return conceptSchemeDocument;
 	}
 
 }
