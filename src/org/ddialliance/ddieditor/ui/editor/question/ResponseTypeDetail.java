@@ -21,7 +21,7 @@ import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.NumericTypeCodeType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.TextDomainType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.ui.dbxml.CodeSchemes;
+import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.FilteredItemsSelection;
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;

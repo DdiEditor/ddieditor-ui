@@ -8,7 +8,7 @@ package org.ddialliance.ddieditor.ui.editor.instrument;
 import java.text.MessageFormat;
 
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.SoftwareType;
-import org.ddialliance.ddieditor.ui.dbxml.Instruments;
+import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
 import org.ddialliance.ddieditor.ui.editor.DateTimeWidget;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
@@ -45,6 +45,7 @@ public class InstrumentEditor extends Editor {
 			InstrumentEditor.class);
 	private Instrument instrument;
 	private IEditorSite site;
+	private InstrumentDao instruments;
 
 	public InstrumentEditor() {
 		super(
@@ -54,14 +55,16 @@ public class InstrumentEditor extends Editor {
 						.getString("InstrumentEditor.label.useTheEditorLabel.Description"));
 	}
 
+	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		// TODO formalize boiler plate code ...
 		this.editorInput = (EditorInput) input;
-		Instruments.init(((EditorInput) input).getProperties());
+		instruments = new InstrumentDao();
+		instruments.init(((EditorInput) input).getProperties());
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
-				instrument = Instruments.createInstrument(editorInput.getId(),
+				instrument = instruments.create(editorInput.getId(),
 						editorInput.getVersion(), editorInput.getParentId(),
 						editorInput.getParentVersion());
 			} catch (Exception e) {
@@ -76,7 +79,7 @@ public class InstrumentEditor extends Editor {
 		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
-				instrument = Instruments.getModel(editorInput.getId(),
+				instrument = instruments.getModel(editorInput.getId(),
 						editorInput.getVersion(), editorInput.getParentId(),
 						editorInput.getParentVersion());
 			} catch (Exception e) {
@@ -119,7 +122,7 @@ public class InstrumentEditor extends Editor {
 				.getString("InstrumentEditor.label.InstrumentTabItem"),
 				(LabelDescription) instrument);
 
-		for (SoftwareType software : instrument.getDoc().getInstrument()
+		for (SoftwareType software : instrument.getDocument().getInstrument()
 				.getSoftwareList()) {
 			createSoftwareTab(software);
 		}
@@ -202,11 +205,11 @@ public class InstrumentEditor extends Editor {
 
 		try {
 			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				Instruments.create(instrument);
+				instruments.create(instrument);
 				editorInput.setEditorMode(EditorModeType.EDIT);
 			} else if (editorInput.getEditorMode()
 					.equals(EditorModeType.EDIT)) {
-				Instruments.update(instrument);
+				instruments.update(instrument);
 			} else if (editorInput.getEditorMode()
 					.equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");

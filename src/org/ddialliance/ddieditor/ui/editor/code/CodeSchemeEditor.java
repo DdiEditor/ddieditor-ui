@@ -12,7 +12,7 @@ package org.ddialliance.ddieditor.ui.editor.code;
 
 import java.text.MessageFormat;
 
-import org.ddialliance.ddieditor.ui.dbxml.CodeSchemes;
+import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;

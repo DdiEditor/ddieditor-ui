@@ -14,6 +14,7 @@ import java.util.Properties;
 import java.util.Random;
 
 import org.ddialliance.ddieditor.ui.Activator;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
 import org.ddialliance.ddieditor.ui.view.View;
 import org.ddialliance.ddiftp.util.log.Log;

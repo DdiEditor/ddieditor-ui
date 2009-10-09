@@ -12,7 +12,7 @@ package org.ddialliance.ddieditor.ui.editor.question;
 
 import java.text.MessageFormat;
 
-import org.ddialliance.ddieditor.ui.dbxml.QuestionSchemes;
+import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
@@ -41,12 +41,13 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 	// Member variables:
 	private QuestionScheme questionScheme;
 	private IEditorSite site;
-	
+	private QuestionSchemeDao dao;
 	public QuestionSchemeEditor() {
 		super(Messages
 				.getString("QuestionSchemeEditor.label.QuestionSchemeEditorLabel.QuestionSchemeEditor"), Messages
 				.getString("QuestionSchemeEditor.label.useTheEditorLabel.Description"), Messages
 				.getString("QuestionSchemeEditor.label.QuestionSchemeTabItem"));
+		dao = new QuestionSchemeDao();
 	}
 
 	public String getPreferredPerspectiveId() {
@@ -85,10 +86,10 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 		}
 		try {
 			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				QuestionSchemes.create(questionScheme);
+				dao.create(questionScheme);
 				editorInput.setEditorMode(EditorModeType.EDIT);
 			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
-				QuestionSchemes.update(questionScheme);
+				dao.update(questionScheme);
 			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
@@ -114,11 +115,9 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 			log.debug("QuestionSchemeEditor.init() - Editor Mode: " + editorInput.getEditorMode());
 		}
 
-		QuestionSchemes.init(((EditorInput) input).getProperties());
-
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
-				questionScheme = QuestionSchemes.createQuestionScheme(editorInput.getId(), editorInput.getVersion(),
+				questionScheme = dao.create(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
 				log.error("QuestionSchemeEditor.init(): " + e.getMessage());
@@ -130,7 +129,7 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
-				questionScheme = QuestionSchemes.getQuestionScheme(editorInput.getId(), editorInput.getVersion(),
+				questionScheme = dao.getModel(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
 				String errMess = Messages.getString("QuestionSchemeEditor.mess.GetQuestionSchemeByIdError"); //$NON-NLS-1$

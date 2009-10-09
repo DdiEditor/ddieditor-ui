@@ -14,13 +14,13 @@ import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.ddialliance.ddieditor.ui.dbxml.StudyUnits;
+import org.ddialliance.ddieditor.ui.dbxml.studyunit.StudyUnits;
 import org.ddialliance.ddieditor.ui.editor.DateTimeWidget;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.Language;
-import org.ddialliance.ddieditor.ui.model.StudyUnit;
+import org.ddialliance.ddieditor.ui.model.studyunit.StudyUnit;
 import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;

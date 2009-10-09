@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.ui.dbxml.Concepts;
-import org.ddialliance.ddieditor.ui.dbxml.QuestionItems;
+import org.ddialliance.ddieditor.ui.dbxml.concept.Concepts;
+import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.FilteredItemsSelection;
@@ -76,12 +76,14 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 			QuestionItemEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor";
 
+	private QuestionItemDao questionItems;
 	public QuestionItemEditor() {
 		super(
 				Messages
 						.getString("QuestionItemEditor.label.questionItemEditorLabel.QuestionItemEditor"),
 				Messages
 						.getString("QuestionItemEditor.label.useTheEditorLabel.Description"));
+		questionItems = new QuestionItemDao(); 
 	}
 
 	/**
@@ -708,11 +710,11 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		}
 		try {
 			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				QuestionItems.create(questionItem);
+				questionItems.create(questionItem);
 				editorInput.setEditorMode(EditorModeType.EDIT);
 			} else if (editorInput.getEditorMode()
 					.equals(EditorModeType.EDIT)) {
-				QuestionItems.update(questionItem);
+				questionItems.update(questionItem);
 			} else if (editorInput.getEditorMode()
 					.equals(EditorModeType.VIEW)) {
 				log.error("*** Saved ignored! ***");
@@ -749,11 +751,10 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 					+ editorInput.getEditorMode());
 		}
 
-		QuestionItems.init(((EditorInput) input).getProperties());
-
+		QuestionItemDao questionItems = new QuestionItemDao();
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
-				questionItem = QuestionItems.createQuestionItem(editorInput
+				questionItem = questionItems.create(editorInput
 						.getId(), editorInput.getVersion(), editorInput
 						.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
@@ -768,7 +769,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
-				questionItem = QuestionItems.getQuestionItem(editorInput
+				questionItem = questionItems.getModel(editorInput
 						.getId(), editorInput.getVersion(), editorInput
 						.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {

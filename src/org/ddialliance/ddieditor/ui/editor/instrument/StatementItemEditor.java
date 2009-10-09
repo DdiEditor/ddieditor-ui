@@ -3,13 +3,15 @@ package org.ddialliance.ddieditor.ui.editor.instrument;
 import java.text.MessageFormat;
 
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.SoftwareType;
-import org.ddialliance.ddieditor.ui.dbxml.Instruments;
+import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
+import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.editor.DateTimeWidget;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddieditor.ui.model.instrument.Instrument;
+import org.ddialliance.ddieditor.ui.model.instrument.StatementItem;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -38,7 +40,8 @@ public class StatementItemEditor extends Editor {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor";
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			StatementItemEditor.class);
-	private Instrument instrument;
+	private StatementItem model;
+	private StatementItemDao dao;
 	private IEditorSite site;
 
 	public StatementItemEditor() {
@@ -53,10 +56,10 @@ public class StatementItemEditor extends Editor {
 			throws PartInitException {
 		// TODO formalize boiler plate code ...
 		this.editorInput = (EditorInput) input;
-		Instruments.init(((EditorInput) input).getProperties());
+		InstrumentDao.init(((EditorInput) input).getProperties());
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
-				instrument = Instruments.createInstrument(editorInput.getId(),
+				model = dao.create(editorInput.getId(),
 						editorInput.getVersion(), editorInput.getParentId(),
 						editorInput.getParentVersion());
 			} catch (Exception e) {
@@ -71,7 +74,7 @@ public class StatementItemEditor extends Editor {
 		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
-				instrument = Instruments.getModel(editorInput.getId(),
+				model = dao.getModel(editorInput.getId(),
 						editorInput.getVersion(), editorInput.getParentId(),
 						editorInput.getParentVersion());
 			} catch (Exception e) {
@@ -110,75 +113,8 @@ public class StatementItemEditor extends Editor {
 		super.createPartControl(parent);
 
 		createTabFolder(getComposite_1());
-		createLabelDescriptionTab(getTabFolder(), Messages
-				.getString("StatementItemEditor.label.InstrumentTabItem"),
-				(LabelDescription) instrument);
-
-		for (SoftwareType software : instrument.getDoc().getInstrument()
-				.getSoftwareList()) {
-			createSoftwareTab(software);
-		}
 		createPropertiesTab(getTabFolder());
 		editorStatus.clearChanged();
-	}
-
-	private void createSoftwareTab(final SoftwareType software) {
-		TabItem tabItem = createTabItem(Messages
-				.getString("StatementItemEditor.software"));
-		Group softwareGroup = createGroup(tabItem, Messages
-				.getString("StatementItemEditor.software"));
-
-		// name
-		final Text name = null;
-		createTextInput(softwareGroup, Messages
-				.getString("StatementItemEditor.software.namelabel"), software
-				.getNameList().get(0).getStringValue(), name,
-				new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						editorStatus.setChanged();
-						software.getNameList().get(0).setStringValue(
-								name.getText());
-					}
-				});
-
-		// version
-		final Text version = null;
-		createTextInput(softwareGroup, Messages
-				.getString("StatementItemEditor.software.versionlabel"),
-				software.getVersion(), version, new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						editorStatus.setChanged();
-						software.setVersion(version.getText());
-					}
-				});
-
-		// description
-		final Text description = null;
-		createTextAreaInput(softwareGroup, Messages
-				.getString("StatementItemEditor.software.descriptionlabel"),
-				XmlBeansUtil.getTextOnMixedElement(software
-						.getDescriptionList().get(0)), description,
-				new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						editorStatus.setChanged();
-						XmlBeansUtil.setTextOnMixedElement(software
-								.getDescriptionList().get(0), description
-								.getText());
-					}
-				});
-
-		// date
-		final DateTimeWidget dateTimeWidget = null;
-		createDateInput(softwareGroup, Messages
-				.getString("StatementItemEditor.software.datelabel"), software
-				.getDate().getSimpleDate().toString(), dateTimeWidget,
-				new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent e) {
-						editorStatus.setChanged();
-						software
-								.setDate(getDate(dateTimeWidget.getSelection()));
-					}
-				});
 	}
 
 	public String getPreferredPerspectiveId() {
@@ -197,10 +133,10 @@ public class StatementItemEditor extends Editor {
 
 		try {
 			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				Instruments.create(instrument);
+				dao.create(model);
 				editorInput.setEditorMode(EditorModeType.EDIT);
 			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
-				Instruments.update(instrument);
+				dao.update(model);
 			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
