@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
@@ -249,9 +250,9 @@ public class Editor extends EditorPart {
 		group.setLayout(gridLayout);
 		return group;
 	}
-
-	public TranslationDialog createTranslation(Group group, String buttonText,
-			final List items) {
+	
+	public void createTranslation(Group group, String buttonText,
+			final List items) {		
 		final TranslationDialog dialog = new TranslationDialog(getEditorSite().getShell(), editorStatus, items); 
 		Label label = new Label(group, SWT.NONE);
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -272,10 +273,8 @@ public class Editor extends EditorPart {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub
-
 			}
 		});
-		return dialog;
 	}
 
 	public void createTextInput(Group group, String labelText, String initText,

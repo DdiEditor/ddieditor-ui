@@ -137,7 +137,6 @@ public class TranslationDialog extends Dialog {
 			newItem.setTranslatable(true);
 			newItem.setTranslated(true);
 			newItem.setStringValue("");
-			items.add(newItem);
 			return newItem;
 		} else if (items.get(0) instanceof StructuredStringType) {
 			StructuredStringType newItem = StructuredStringType.Factory
@@ -145,11 +144,14 @@ public class TranslationDialog extends Dialog {
 			newItem.setTranslatable(true);
 			newItem.setTranslated(true);
 			XmlBeansUtil.setTextOnMixedElement(newItem, "");
-			items.add(newItem);
 			return newItem;
 		} else {
 			throw createTypeException(items.get(0), new Throwable());
 		}
+	}
+	
+	public List<Object> getItems() {
+		return items;
 	}
 
 	public final List<Object> getTranslateables(String orgLang)
@@ -306,6 +308,7 @@ public class TranslationDialog extends Dialog {
 				table.setTopIndex(table.getItemCount());
 				table.select(table.getItemCount() - 1);
 				tableViewer.editElement(newItem, 0);
+				items.add(newItem);
 			}
 		});
 
@@ -325,9 +328,8 @@ public class TranslationDialog extends Dialog {
 							.iterator();
 					while (iterator.hasNext()) {
 						Object obj = iterator.next();
-						// questionItem.removeText((QuestionItemLiteralText)
-						// obj);
 						tableViewer.remove(obj);
+						items.remove(obj);
 					}
 				}
 			}
@@ -481,11 +483,6 @@ public class TranslationDialog extends Dialog {
 
 		@Override
 		protected CellEditor getCellEditor(Object element) {
-			if (log.isDebugEnabled()) {
-				log.debug("Column: " + this.column);
-				log.debug("Editor: " + editor);
-				log.debug("Value: " + element.toString());
-			}
 			ICellEditorListener listener = new CellEditorListener(editor,
 					editorStatus, column);
 			editor.addListener(listener);
@@ -498,8 +495,6 @@ public class TranslationDialog extends Dialog {
 		 */
 		@Override
 		protected Object getValue(Object element) {
-			log.debug("Get Column: " + this.column);
-
 			switch (this.column) {
 			case 0:
 				try {
@@ -518,7 +513,7 @@ public class TranslationDialog extends Dialog {
 							.indexOf(getXmlLang(element));
 				} catch (DDIFtpException e) {
 					showError(e);
-				} 
+				}
 				return i == -1 ? 0 : new Integer(i);
 			default:
 				break;
@@ -534,7 +529,6 @@ public class TranslationDialog extends Dialog {
 		protected void setValue(Object element, Object value) {
 			switch (this.column) {
 			case 0:
-				log.debug("Text:" + value);
 				try {
 					setXmlText(element, value.toString());
 				} catch (DDIFtpException e) {
@@ -543,7 +537,6 @@ public class TranslationDialog extends Dialog {
 				break;
 			case 1:
 				// Convert Combo index to Language Code e.g. '1' to 'no'
-				log.debug("Language Combo index: " + value);
 				try {
 					setXmlLang(
 							element,
@@ -551,12 +544,12 @@ public class TranslationDialog extends Dialog {
 									.getLanguageCodesExcludingOrginalLanguage(originalLanguageCode)[((Integer) value)]);
 				} catch (DDIFtpException e) {
 					showError(e);
-				} 
+				}
 				break;
 			default:
 				break;
 			}
-			getViewer().update(element, null);
+			getViewer().refresh();
 		}
 	}
 }

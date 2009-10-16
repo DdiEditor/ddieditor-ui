@@ -1,6 +1,7 @@
 package org.ddialliance.ddieditor.ui.editor.instrument;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 import org.apache.xmlbeans.XmlOptions;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
@@ -113,7 +114,7 @@ public class StatementItemEditor extends Editor {
 		createTranslation(group, "Translate", model.getDocument()
 				.getStatementItem().getNameList());
 
-		editorStatus.clearChanged();
+		editorStatus.clearChanged();		
 	}
 
 	@Override
