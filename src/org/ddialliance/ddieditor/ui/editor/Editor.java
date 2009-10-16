@@ -10,10 +10,14 @@ package org.ddialliance.ddieditor.ui.editor;
  * $Revision$
  */
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.DateType;
+import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.InternationalStringType;
 import org.ddialliance.ddieditor.ui.IAddAttr;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
@@ -37,6 +41,8 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -219,11 +225,12 @@ public class Editor extends EditorPart {
 		}
 	}
 
-	public void createTabFolder(Composite parent) {
+	public TabFolder createTabFolder(Composite parent) {
 		tabFolder = new TabFolder(parent, SWT.BOTTOM);
 		tabFolder.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
+		return tabFolder;
 	}
 
 	public TabItem createTabItem(String tabText) {
@@ -243,15 +250,42 @@ public class Editor extends EditorPart {
 		return group;
 	}
 
+	public TranslationDialog createTranslation(Group group, String buttonText,
+			final List items) {
+		final TranslationDialog dialog = new TranslationDialog(getEditorSite().getShell(), editorStatus, items); 
+		Label label = new Label(group, SWT.NONE);
+		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				1, 1));
+		label.setText(Messages.getString("translate.dialog.translate"));
+
+		Button button = new Button(group, 0);
+		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1,
+				1));
+		button.setText(Messages.getString(buttonText));
+		button.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+					dialog.open();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		return dialog;
+	}
+
 	public void createTextInput(Group group, String labelText, String initText,
 			Text text, ModifyListener modifyListener) {
 		// label
-		Label softwareLabel = new Label(group, SWT.NONE);
-		softwareLabel.setBackground(SWTResourceManager
-				.getColor(SWT.COLOR_WHITE));
-		softwareLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
-				false, 1, 1));
-		softwareLabel.setText(labelText);
+		Label label = new Label(group, SWT.NONE);
+		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				1, 1));
+		label.setText(labelText);
 
 		// input
 		text = new Text(group, SWT.BORDER);
@@ -262,40 +296,36 @@ public class Editor extends EditorPart {
 		text.addModifyListener(modifyListener);
 		setControl(text);
 	}
-	
-	public void createTextAreaInput(Group group, String labelText, String initText,
-			Text text, ModifyListener modifyListener) {
-		final Label label = new Label(group,
-				SWT.NONE);
-		final GridData gd_Label = new GridData(SWT.RIGHT, SWT.TOP,
-				false, false);
-		//gd_simpleDescrLabel.horizontalIndent = 5;
+
+	public void createTextAreaInput(Group group, String labelText,
+			String initText, Text text, ModifyListener modifyListener) {
+		final Label label = new Label(group, SWT.NONE);
+		final GridData gd_Label = new GridData(SWT.RIGHT, SWT.TOP, false, false);
+		// gd_simpleDescrLabel.horizontalIndent = 5;
 		label.setLayoutData(gd_Label);
-		label.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
+		label.setBackground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_WHITE));
 		label.setText(labelText);
 
-		final StyledText styledText = new StyledText(
-				group, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
+		final StyledText styledText = new StyledText(group, SWT.WRAP
+				| SWT.V_SCROLL | SWT.BORDER);
 		styledText.setText(initText);
-		final GridData gd_Text = new GridData(
-				SWT.FILL, SWT.CENTER, true, false);
+		final GridData gd_Text = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gd_Text.heightHint = 154;
 		gd_Text.widthHint = 308;
 		styledText.setLayoutData(gd_Text);
-		styledText.addModifyListener(modifyListener); 
+		styledText.addModifyListener(modifyListener);
 		setControl(text);
 	}
-	
+
 	public void createDateInput(Group group, String labelText, String initDate,
 			DateTimeWidget dateTimeWidget, SelectionAdapter selectionAdapter) {
 		Label label = new Label(group, SWT.NONE);
-		label.setBackground(SWTResourceManager
-				.getColor(SWT.COLOR_WHITE));
-		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
-				false, false, 1, 1));
+		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				1, 1));
 		label.setText(labelText);
-		
+
 		dateTimeWidget = new DateTimeWidget(group);
 		if (!initDate.equals("")) {
 			try {
@@ -311,10 +341,9 @@ public class Editor extends EditorPart {
 		dateTimeWidget.addSelectionListener(selectionAdapter);
 		setControl(dateTimeWidget);
 	}
-	
+
 	public DateType getDate(Date date) {
-		String dateTime = Translator.formatIso8601DateTime(date
-				.getTime());
+		String dateTime = Translator.formatIso8601DateTime(date.getTime());
 		DateType dateType = DateType.Factory.newInstance();
 		dateType.setSimpleDate(dateTime);
 		return dateType;
