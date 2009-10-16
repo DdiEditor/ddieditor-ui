@@ -26,14 +26,15 @@ public class CellEditorListener implements ICellEditorListener {
 	private int column;
 	
 	public CellEditorListener(CellEditor editor, EditorStatus editorStatus, int column) {
-		System.out.println("CellEditorListener.CellEditorListener("+column+")");
 		this.editor = editor;
 		this.editorStatus = editorStatus;
 		this.column = column;
 	}
 
 	public void applyEditorValue() {
-		log.debug("Editing applied: "+editor.getValue()+" - "+column);
+		if (log.isDebugEnabled()) {
+			log.debug("Editing applied: "+editor.getValue()+" - "+column);
+		}
 		// TODO Update Model
 		switch (column) {
 		case 0:
@@ -51,10 +52,14 @@ public class CellEditorListener implements ICellEditorListener {
 	}
 
 	public void cancelEditor() {
-		log.debug("Editing canceled");
+		if (log.isDebugEnabled()) {
+			log.debug("Editing canceled");
+		}
 	}
 
 	public void editorValueChanged(boolean oldValidState, boolean newValidState) {
-		log.debug("Editing value changed: Old Valid State: "+oldValidState+" New Valid State: "+newValidState);
+		if (log.isDebugEnabled()) {
+			log.debug("Editing value changed: Old Valid State: "+oldValidState+" New Valid State: "+newValidState);
+		}
 	}
 }
