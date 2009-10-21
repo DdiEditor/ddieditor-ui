@@ -13,7 +13,6 @@ package org.ddialliance.ddieditor.ui.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
