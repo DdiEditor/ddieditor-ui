@@ -49,24 +49,50 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
+/**
+ * Generic translation dialog
+ * <p>
+ * Supports: InternationalStringType, StructuredStringType <br>
+ * For other support enhance methods: getXmlLang, setLang, getXmlText,
+ * setXmlText,
+ * </p>
+ */
 public class TranslationDialog extends Dialog {
 	private static final Log log = LogFactory.getLog(LogType.SYSTEM,
 			TranslationDialog.class);
-	private EditorStatus editorStatus;
-	private Composite translatedButtonComposite = null;
+
+	private final EditorStatus editorStatus;
+	private List items;
+	private String parentLabel;
+	private Object base = null;
+	private XmlOptions xmlOptions = new XmlOptions();
+
+	private Composite addRemoveComposite = null;
 	private TableViewer tableViewer;
 	private Table table;
 
-	private List items;
-	private Object base = null;
-	XmlOptions xmlOptions = new XmlOptions();
-	String[] queries = { "translated=\"", "translatable=\"", "lang=\"" };
+	private List<String> langUsed = new ArrayList<String>();
+	private String[] queries = { "translated=\"", "translatable=\"", "lang=\"" };
 
+	/**
+	 * Constructor creating dialog and defining the original language as the
+	 * item in the items list with the attribute translated set to false.
+	 * 
+	 * @param parentShell
+	 *            parent SWT shell
+	 * @param editorStatus
+	 *            editor status to be updated upon change in items
+	 * @param items
+	 *            to edit
+	 * @param parentLabel
+	 *            label to identify parent, eg. type and id
+	 */
 	public TranslationDialog(Shell parentShell, EditorStatus editorStatus,
-			List<?> items) {
+			List<?> items, String parentLabel) {
 		super(parentShell);
 		this.items = items;
 		this.editorStatus = editorStatus;
+		this.parentLabel = parentLabel;
 		xmlOptions.setSavePrettyPrint();
 
 		try {
@@ -78,8 +104,8 @@ public class TranslationDialog extends Dialog {
 
 	private void setBase() throws DDIFtpException {
 		for (Object xmlObject : items) {
-			if (!Boolean.parseBoolean(getAttribute(((XmlObject) xmlObject)
-					.xmlText(xmlOptions), queries[0]))) {
+			if (!Boolean.parseBoolean(XmlBeansUtil.getXmlAttributeValue(
+					((XmlObject) xmlObject).xmlText(xmlOptions), queries[0]))) {
 				base = xmlObject;
 			}
 		}
@@ -89,7 +115,7 @@ public class TranslationDialog extends Dialog {
 		}
 	}
 
-	public final String getXmlLang(Object obj) throws DDIFtpException {
+	private final String getXmlLang(Object obj) throws DDIFtpException {
 		if (obj instanceof InternationalStringType) {
 			return ((InternationalStringType) obj).getLang();
 		} else if (obj instanceof StructuredStringType) {
@@ -98,7 +124,7 @@ public class TranslationDialog extends Dialog {
 		throw createTypeException(obj, new Throwable());
 	}
 
-	public final String getXmlText(Object obj) throws DDIFtpException {
+	private final String getXmlText(Object obj) throws DDIFtpException {
 		if (obj instanceof InternationalStringType) {
 			return ((InternationalStringType) obj).getStringValue();
 		} else if (obj instanceof StructuredStringType) {
@@ -107,7 +133,7 @@ public class TranslationDialog extends Dialog {
 		throw createTypeException(obj, new Throwable());
 	}
 
-	public final void setXmlLang(Object obj, String lang)
+	private final void setXmlLang(Object obj, String lang)
 			throws DDIFtpException {
 		if (obj instanceof InternationalStringType) {
 			((InternationalStringType) obj).setLang(lang);
@@ -118,7 +144,7 @@ public class TranslationDialog extends Dialog {
 		}
 	}
 
-	public final void setXmlText(Object obj, String text)
+	private final void setXmlText(Object obj, String text)
 			throws DDIFtpException {
 		if (obj instanceof InternationalStringType) {
 			((InternationalStringType) obj).setStringValue(text);
@@ -130,7 +156,18 @@ public class TranslationDialog extends Dialog {
 		}
 	}
 
-	public final Object addItem() throws DDIFtpException {
+	private final void setBaseTranslateable(Object obj, boolean translateable)
+			throws DDIFtpException {
+		if (obj instanceof InternationalStringType) {
+			((InternationalStringType) obj).setTranslatable(translateable);
+		} else if (obj instanceof StructuredStringType) {
+			((StructuredStringType) obj).setTranslatable(translateable);
+		} else {
+			throw createTypeException(obj, new Throwable());
+		}
+	}
+
+	private final Object addItem() throws DDIFtpException {
 		if (items.get(0) instanceof InternationalStringType) {
 			InternationalStringType newItem = InternationalStringType.Factory
 					.newInstance();
@@ -149,7 +186,7 @@ public class TranslationDialog extends Dialog {
 			throw createTypeException(items.get(0), new Throwable());
 		}
 	}
-	
+
 	public List<Object> getItems() {
 		return items;
 	}
@@ -161,22 +198,22 @@ public class TranslationDialog extends Dialog {
 		boolean translatable = false;
 		String lang = null;
 
-		XmlOptions xmlOptions = new XmlOptions();
-		xmlOptions.setSavePrettyPrint();
+		langUsed.clear();
 		for (Object xmlObject : items) {
 			String xml = ((XmlObject) xmlObject).xmlText(xmlOptions);
 			for (int i = 0; i < queries.length; i++) {
 				switch (i) {
 				case 0:
-					translated = Boolean.parseBoolean(getAttribute(xml,
-							queries[i]));
+					translated = Boolean.parseBoolean(XmlBeansUtil
+							.getXmlAttributeValue(xml, queries[i]));
 					break;
 				case 1:
-					translatable = Boolean.parseBoolean(getAttribute(xml,
-							queries[i]));
+					translatable = Boolean.parseBoolean(XmlBeansUtil
+							.getXmlAttributeValue(xml, queries[i]));
 					break;
 				case 2:
-					lang = getAttribute(xml, queries[i]);
+					lang = XmlBeansUtil.getXmlAttributeValue(xml, queries[i]);
+					langUsed.add(lang);
 					break;
 				default:
 					break;
@@ -193,20 +230,6 @@ public class TranslationDialog extends Dialog {
 		return result;
 	}
 
-	private String getAttribute(String xml, String attrQuery) {
-		// Hack, prop with xmlbeans to handle qNames on <xml-fragment ....>
-		// xml objects. Fixed with simple string parsing.
-		int index, start, end;
-		index = xml.indexOf(attrQuery);
-		// guard
-		if (index == -1) {
-			return "";
-		}
-		start = index + attrQuery.length();
-		end = xml.indexOf("\"", start);
-		return xml.substring(start, end);
-	}
-
 	private DDIFtpException createTypeException(Object obj, Throwable t) {
 		return new DDIFtpException("Element of class: "
 				+ obj.getClass().getName() + " is not supported!", t);
@@ -220,58 +243,71 @@ public class TranslationDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		// - Root Composite:
+		this.getShell().setText(Messages.getString("translationdialog.tittle")+parentLabel);
+		
+		// root components
 		final Composite topComposite = new Composite(parent, SWT.NONE);
 		topComposite.setLayout(new GridLayout());
 		topComposite.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
 
-		final GridLayout translatedGridLayout = new GridLayout();
-		topComposite.setLayout(translatedGridLayout);
-
-		// - Translated Group
-		final Group translatedGroup = new Group(topComposite, SWT.NONE);
-		translatedGroup.setLayoutData(new GridData(756, 647));
-		translatedGroup.setLayout(new GridLayout());
-		translatedGroup.setBackground(Display.getCurrent().getSystemColor(
+		final GridLayout topGridLayout = new GridLayout();
+		topComposite.setLayout(topGridLayout);
+		final Group topGroup = new Group(topComposite, SWT.NONE);
+		topGroup.setLayoutData(new GridData(756, 647));
+		topGroup.setLayout(new GridLayout());
+		topGroup.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		translatedGroup
-				.setText(Messages
-						.getString("QuestionItemEditor.label.translatedQuestionsGroup.TranslatedQuestions")); //$NON-NLS-1$
+		topGroup.setText(Messages.getString("translationdialog.topgroup")); //$NON-NLS-1$
 
-		final Button translatableButton = new Button(translatedGroup, SWT.CHECK);
-		translatableButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				boolean translatable = translatableButton.getSelection();
-				if (translatable) {
-					translatedButtonComposite.setEnabled(true);
+		// translated check box
+		final Button translatableCheck = new Button(topGroup, SWT.CHECK);
+		final boolean translatable = Boolean.parseBoolean(XmlBeansUtil
+				.getXmlAttributeValue(((XmlObject) base).xmlText(xmlOptions),
+						queries[1]));
+		translatableCheck.setSelection(translatable);
+		translatableCheck.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+		translatableCheck.setText(Messages
+				.getString("translationdialog.button.translatable")); //$NON-NLS-1$
+		translatableCheck.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				if (translatableCheck.getSelection()) {
+					addRemoveComposite.setEnabled(true);
+					addRemoveComposite.setVisible(true);
+					try {
+						setBaseTranslateable(base, true);
+					} catch (DDIFtpException e) {
+						showError(e);
+					}
 					editorStatus.setChanged();
 				} else {
-					if (tableViewer.getTable().getItemCount() > 0
-							&& MessageDialog
-									.openConfirm(
-											getShell(),
-											Messages.getString("ConfirmTitle"),
-											Messages
-													.getString("QuestionItemEditor.mess.ConfirmCleanTranslatedQuestionItemList"))) {
-						tableViewer.getTable().removeAll();
-						translatedButtonComposite.setEnabled(false);
-						editorStatus.setChanged();
-					} else {
-						// Restore status
-						translatableButton.setSelection(true);
+					if (tableViewer.getTable().getItemCount() > 0) {
+						boolean confirm = MessageDialog
+								.openConfirm(
+										getShell(),
+										Messages.getString("ConfirmTitle"),
+										Messages
+												.getString("translationdialog.checkboxtranslateable.warnmsg"));
+						if (confirm) {
+							tableViewer.getTable().removeAll();
+							addRemoveComposite.setEnabled(false);
+							addRemoveComposite.setVisible(false);
+							try {
+								setBaseTranslateable(base, false);
+							} catch (DDIFtpException e) {
+								showError(e);
+							}
+							editorStatus.setChanged();
+						}
 					}
 				}
 			}
 		});
-		translatableButton.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		translatableButton
-				.setText(Messages
-						.getString("QuestionItemEditor.label.translatableButton.Translatable")); //$NON-NLS-1$
 
-		// Define - Question Item Table Viewer:
-		tableViewer = new TableViewer(translatedGroup, SWT.MULTI | SWT.H_SCROLL
+		// table viewer, table, table label provider, table content label
+		// provider
+		tableViewer = new TableViewer(topGroup, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		table = tableViewer.getTable();
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -281,19 +317,26 @@ public class TranslationDialog extends Dialog {
 		tableViewer.setLabelProvider(tableLabelProvider);
 		tableViewer.setInput(items);
 
-		translatedButtonComposite = new Composite(translatedGroup, SWT.NONE);
-		translatedButtonComposite.setBackground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_WHITE));
+		// add remove composite
+		addRemoveComposite = new Composite(topGroup, SWT.NONE);
+		addRemoveComposite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
 		final GridLayout gridLayout_2 = new GridLayout();
 		gridLayout_2.numColumns = 2;
-		translatedButtonComposite.setLayout(gridLayout_2);
+		addRemoveComposite.setLayout(gridLayout_2);
+		if (translatable) {
+			addRemoveComposite.setEnabled(true);
+			addRemoveComposite.setVisible(true);
+		} else {
+			addRemoveComposite.setEnabled(false);
+			addRemoveComposite.setVisible(false);
+		}
 
-		// - "Add" button:
-		final Button addButton = new Button(translatedButtonComposite, SWT.NONE);
+		// add
+		final Button addButton = new Button(addRemoveComposite, SWT.NONE);
 		addButton.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		addButton.setText(Messages
-				.getString("QuestionItemEditor.label.addButton.Add")); //$NON-NLS-1$
+		addButton.setText(Messages.getString("translationdialog.button.add")); //$NON-NLS-1$
 		addButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				Object newItem = null;
@@ -303,23 +346,23 @@ public class TranslationDialog extends Dialog {
 					showError(e1);
 					return;
 				}
-
-				tableViewer.add(newItem);
-				table.setTopIndex(table.getItemCount());
-				table.select(table.getItemCount() - 1);
-				tableViewer.editElement(newItem, 0);
 				items.add(newItem);
+				tableViewer.insert(newItem, -1);
+				tableViewer.refresh(false);
+				table.select(table.getItemCount() - 1);
+
+				// to be improved, does not set the focus in gui!
+				table.forceFocus();
+				tableViewer.editElement(newItem, 0);
 			}
 		});
 
-		// - "Remove" button:
-		final Button removeButton = new Button(translatedButtonComposite,
-				SWT.NONE);
+		// remove
+		final Button removeButton = new Button(addRemoveComposite, SWT.NONE);
 		removeButton.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		removeButton.setText("Remove");
 		removeButton.setText(Messages
-				.getString("QuestionItemEditor.label.removeButton.Remove")); //$NON-NLS-1$
+				.getString("translationdialog.button.remove")); //$NON-NLS-1$
 		removeButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				ISelection selection = tableViewer.getSelection();
@@ -330,45 +373,48 @@ public class TranslationDialog extends Dialog {
 						Object obj = iterator.next();
 						tableViewer.remove(obj);
 						items.remove(obj);
+						tableViewer.refresh();
 					}
 				}
 			}
 		});
-
-		// Check or un-check translatable check-box and enable/disable Add /
-		// Remove buttons accordingly
-		if (tableViewer.getTable().getItemCount() > 0) {
-			translatableButton.setSelection(true);
-		} else {
-			translatedButtonComposite.setEnabled(false);
-		}
 		return topComposite;
 	}
 
-	// Question Item Text - table label provider
+	/**
+	 * Label provider
+	 */
 	public class TransLabelProvider extends LabelProvider implements
 			ITableLabelProvider {
-
+		/**
+		 * Creates table columns
+		 * 
+		 * @param viewer
+		 *            to be created on
+		 */
 		public void createColumns(TableViewer viewer) {
 			Table table = viewer.getTable();
 			String[] titles = {
 					Messages
-							.getString("QITTableLabelProvider.label.TranslatedQuestionText"),
-					Messages.getString("QITTableLabelProvider.label.Language") };
+							.getString("translationdialog.tablecolumn.translate"),
+					Messages
+							.getString("translationdialog.tablecolumn.language") };
 			int[] bounds = { 500, 60, };
-
+			String orgLang = null;
+			try {
+				orgLang = getXmlLang(base);
+			} catch (DDIFtpException e) {
+				showError(e);
+			}
 			for (int i = 0; i < titles.length; i++) {
 				TableViewerColumn column = new TableViewerColumn(viewer,
 						SWT.NONE);
 				column.getColumn().setText(titles[i]);
 				column.getColumn().setWidth(bounds[i]);
 				column.getColumn().setResizable(true);
-				try {
-					column.setEditingSupport(new TableEditingSupport(viewer, i,
-							Language.getLanguageCode(getXmlLang(base))));
-				} catch (DDIFtpException e) {
-					showError(e);
-				}
+				column.setEditingSupport(new TableEditingSupport(viewer, i,
+						orgLang));
+
 				table.setHeaderVisible(true);
 				table.setLinesVisible(true);
 			}
@@ -379,9 +425,6 @@ public class TranslationDialog extends Dialog {
 			return null;
 		}
 
-		/**
-		 * Returns the label text of a given column for the element
-		 */
 		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			switch (columnIndex) {
@@ -401,25 +444,16 @@ public class TranslationDialog extends Dialog {
 				showError(new DDIFtpException("Error", new Throwable()));
 				throw new RuntimeException(
 						Messages
-								.getString("QITTableLabelProvider.mess.UnexpectedColumnIndexFound")); //$NON-NLS-1$
+								.getString("translationdialog.error.columnindexnotfound")); //$NON-NLS-1$
 			}
 		}
 	}
 
+	/**
+	 * Content provider
+	 */
 	public class TransTableContentProvider implements
 			IStructuredContentProvider {
-
-		/*
-		 * Get Translated Question Item Texts
-		 * 
-		 * - i.e. Question Text with "true" translated attribute.
-		 * 
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
-		 * java.lang.Object)
-		 */
 		@Override
 		public Object[] getElements(Object parent) {
 			try {
@@ -443,12 +477,21 @@ public class TranslationDialog extends Dialog {
 		}
 	}
 
+	/**
+	 * Column editing
+	 */
 	public class TableEditingSupport extends EditingSupport {
 		private CellEditor editor;
 		private int column;
 		private String originalLanguageCode; // Code = da Label = Danish
 
-		// Constructor:
+		/**
+		 * Constructor
+		 * 
+		 * @param viewer
+		 * @param column
+		 * @param originalLanguageCode
+		 */
 		public TableEditingSupport(ColumnViewer viewer, int column,
 				String originalLanguageCode) {
 			super(viewer);
@@ -461,10 +504,9 @@ public class TranslationDialog extends Dialog {
 						SWT.MULTI | SWT.V_SCROLL);
 				break;
 			case 1:
-				editor = new ComboBoxCellEditor(
-						((TableViewer) viewer).getTable(),
-						Language
-								.getLanguagesExcludingOrginalLanguage(originalLanguageCode));
+				editor = new ComboBoxCellEditor(((TableViewer) viewer)
+						.getTable(), Language
+						.getLanguageCodesExcludingLanguagesUsed(langUsed));
 				break;
 			default:
 				editor = new TextCellEditor(((TableViewer) viewer).getTable());
@@ -489,10 +531,6 @@ public class TranslationDialog extends Dialog {
 			return editor;
 		}
 
-		/**
-		 * Get the value (text or language) from the questionItemLiteralText to
-		 * the Editor
-		 */
 		@Override
 		protected Object getValue(Object element) {
 			switch (this.column) {
@@ -521,10 +559,6 @@ public class TranslationDialog extends Dialog {
 			return null;
 		}
 
-		/**
-		 * Restore the value (text or language) from the editor in the
-		 * QuestionItemLiteralText instance
-		 */
 		@Override
 		protected void setValue(Object element, Object value) {
 			switch (this.column) {
@@ -549,7 +583,7 @@ public class TranslationDialog extends Dialog {
 			default:
 				break;
 			}
-			getViewer().refresh();
+			getViewer().update(element, null);
 		}
 	}
 }
