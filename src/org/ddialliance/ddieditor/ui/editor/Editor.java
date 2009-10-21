@@ -111,18 +111,18 @@ public class Editor extends EditorPart {
 		private boolean changed = false;
 
 		public void setChanged() {
-			log.debug("EditorStatus.setChanged()");
+			// log.debug("EditorStatus.setChanged()");
 			changed = true; // Set 'changed' before fire the property change!
 			firePropertyChange(IEditorPart.PROP_DIRTY);
 		}
 
 		public boolean getStatus() {
-			log.debug("EditorStatus.getStatus()");
+			// log.debug("EditorStatus.getStatus()");
 			return changed;
 		}
 
 		public void clearChanged() {
-			log.debug("EditorStatus.clearChanged()");
+			// log.debug("EditorStatus.clearChanged()");
 			changed = false; // Set 'changed' before fire the property change!
 			firePropertyChange(IEditorPart.PROP_DIRTY);
 		}
@@ -250,24 +250,25 @@ public class Editor extends EditorPart {
 		group.setLayout(gridLayout);
 		return group;
 	}
-	
+
 	public void createTranslation(Group group, String buttonText,
-			final List items) {		
-		final TranslationDialog dialog = new TranslationDialog(getEditorSite().getShell(), editorStatus, items); 
+			final List items, String parentLabel) {
+		final TranslationDialog dialog = new TranslationDialog(getEditorSite()
+				.getShell(), editorStatus, items, parentLabel);
 		Label label = new Label(group, SWT.NONE);
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
 				1, 1));
-		label.setText(Messages.getString("translate.dialog.translate"));
+		label.setText(Messages.getString("editor.button.translate"));
 
 		Button button = new Button(group, 0);
-		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1,
-				1));
+		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false,
+				1, 1));
 		button.setText(Messages.getString(buttonText));
 		button.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-					dialog.open();
+				dialog.open();
 			}
 
 			@Override
@@ -622,18 +623,18 @@ public class Editor extends EditorPart {
 
 	@Override
 	public void setFocus() {
-		log.debug("Editor.setFocus()");
+		// log.debug("Editor.setFocus()");
 		// Set the focus
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		log.debug("Editor.doSave()");
+		// log.debug("Editor.doSave()");
 	}
 
 	@Override
 	public void doSaveAs() {
-		log.error("Editor.doSaveAs()");
+		// log.error("Editor.doSaveAs()");
 		MessageDialog
 				.openError(
 						site.getShell(),
@@ -648,20 +649,19 @@ public class Editor extends EditorPart {
 
 	@Override
 	public boolean isDirty() {
-		log.debug("Editor.isDirty(): " + editorStatus.getStatus());
+		// log.debug("Editor.isDirty(): " + editorStatus.getStatus());
 		return editorStatus.getStatus();
 	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
-		log.debug("Editor.isSaveAsAllowed(): False");
+		// log.debug("Editor.isSaveAsAllowed(): False");
 		// Save as not supported
 		return false;
 	}
 
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		log.debug("Editor.selectionChanged()");
-
+		// log.debug("Editor.selectionChanged()");
 	}
 
 	protected Composite getComposite_1() {
