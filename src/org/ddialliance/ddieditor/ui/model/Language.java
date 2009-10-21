@@ -22,26 +22,25 @@ import org.ddialliance.ddiftp.util.log.LogType;
 public class Language {
 
 	/**
-	 * Note: Language is e.g. 'Danish'
-	 *       Language Code is e.g. 'da'
+	 * Note: Language is e.g. 'Danish' Language Code is e.g. 'da'
 	 */
-	
+
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Language.class);
 
-	private static final String[] LANGUAGES = { 
-		Messages.getString("Language.label.Danish"),
-		Messages.getString("Language.label.English"), 
-		Messages.getString("Language.label.Norwegian"),
-		Messages.getString("Language.label.Swedish") };
+	private static final String[] LANGUAGES = {
+			Messages.getString("Language.label.Danish"),
+			Messages.getString("Language.label.English"),
+			Messages.getString("Language.label.Norwegian"),
+			Messages.getString("Language.label.Swedish") };
 
 	public static final String[] LANGUAGE_CODES = { "da", "en", "no", "se" };
 
 	private enum LANGUAGE_INDEX {
 		DA, EN, NO, SE
 	};
-	
+
 	private static final int DEFAULT_LANGUAGE_INDEX = 0;
-	
+
 	/**
 	 * Get default language
 	 * 
@@ -66,7 +65,8 @@ public class Language {
 	 * @param orginalLanguageCode
 	 * @return String
 	 */
-	public static String[] getLanguagesExcludingOrginalLanguage(String orginalLanguageCode) {
+	public static String[] getLanguagesExcludingOrginalLanguage(
+			String orginalLanguageCode) {
 		List<String> languages = new ArrayList<String>();
 
 		for (int i = 0; i < LANGUAGE_CODES.length; i++) {
@@ -77,18 +77,41 @@ public class Language {
 		return (languages.toArray(new String[0]));
 	}
 
-	/** 
+	/**
 	 * Get default language code excluding original language code.
 	 * 
 	 * @param orginalLanguageCode
 	 * @return String[]
 	 */
-	public static String[] getLanguageCodesExcludingOrginalLanguage(String orginalLanguageCode) {
+	public static String[] getLanguageCodesExcludingOrginalLanguage(
+			String orginalLanguageCode) {
 		List<String> languages = new ArrayList<String>();
 
 		for (int i = 0; i < LANGUAGE_CODES.length; i++) {
 			if (!LANGUAGE_CODES[i].equals(orginalLanguageCode)) {
 				languages.add(LANGUAGE_CODES[i]);
+			}
+		}
+		return (languages.toArray(new String[0]));
+	}
+
+	/**
+	 * Get the remaining languages codes not defined in param language used list
+	 * 
+	 * @param languageUsed
+	 * @return list of languages codes
+	 */
+	public static String[] getLanguageCodesExcludingLanguagesUsed(
+			List<String> languageUsed) {
+		// can be optimized
+		List<String> languages = new ArrayList<String>();
+		for (String langUsed : languageUsed) {
+			for (int i = 0; i < LANGUAGE_CODES.length; i++) {
+				if (!langUsed.equals("") && !LANGUAGE_CODES[i].equals(langUsed)) {
+					if (!languages.contains(LANGUAGE_CODES[i])) {
+						languages.add(LANGUAGE_CODES[i]);
+					}
+				}
 			}
 		}
 		return (languages.toArray(new String[0]));
@@ -107,10 +130,11 @@ public class Language {
 				return i;
 			}
 		}
-		log.error("Language Index of Language Code '"+languageCode+"' not found");
+		log.error("Language Index of Language Code '" + languageCode
+				+ "' not found");
 		return -1;
 	}
-	
+
 	/**
 	 * Get language
 	 * 
@@ -118,16 +142,16 @@ public class Language {
 	 * @return String
 	 */
 	public static String getLanguage(String languageCode) {
-		
+
 		for (int i = 0; i < LANGUAGE_CODES.length; i++) {
 			if (LANGUAGE_CODES[i].equals(languageCode)) {
 				return LANGUAGES[i];
 			}
 		}
-		log.error("Language of Language Code '"+languageCode+"' not found");
+		log.error("Language of Language Code '" + languageCode + "' not found");
 		return null;
 	}
-	
+
 	/**
 	 * Get languages.
 	 * 
@@ -145,7 +169,7 @@ public class Language {
 	public static String[] getLanguageCodes() {
 		return LANGUAGE_CODES;
 	}
-	
+
 	/**
 	 * Get language code
 	 * 
@@ -157,7 +181,7 @@ public class Language {
 				return LANGUAGE_CODES[i];
 			}
 		}
-		log.error("Language Code of Language '"+language+"' not found");
+		log.error("Language Code of Language '" + language + "' not found");
 		return null;
 	}
 
