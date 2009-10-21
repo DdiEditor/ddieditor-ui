@@ -112,7 +112,7 @@ public class StatementItemEditor extends Editor {
 		TabItem tabItem = createTabItem("Translation");
 		Group group = createGroup(tabItem, "groupText");
 		createTranslation(group, "Translate", model.getDocument()
-				.getStatementItem().getNameList());
+				.getStatementItem().getNameList(), model.getId());
 
 		editorStatus.clearChanged();		
 	}
@@ -122,7 +122,6 @@ public class StatementItemEditor extends Editor {
 		super.doSave(monitor);
 		XmlOptions ops = new XmlOptions();
 		ops.setSavePrettyPrint();
-System.out.println(model.getDocument().xmlText(ops));
 		try {
 			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 				dao.create(model);
