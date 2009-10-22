@@ -16,8 +16,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.DateType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.InternationalStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
 import org.ddialliance.ddieditor.ui.IAddAttr;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;

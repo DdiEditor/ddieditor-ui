@@ -7,7 +7,7 @@ package org.ddialliance.ddieditor.ui.editor.instrument;
 
 import java.text.MessageFormat;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.SoftwareType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.SoftwareType;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
 import org.ddialliance.ddieditor.ui.editor.DateTimeWidget;
 import org.ddialliance.ddieditor.ui.editor.Editor;

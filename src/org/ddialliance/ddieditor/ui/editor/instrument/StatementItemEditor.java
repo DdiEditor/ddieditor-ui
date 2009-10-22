@@ -1,15 +1,14 @@
 package org.ddialliance.ddieditor.ui.editor.instrument;
 
 import java.text.MessageFormat;
-import java.util.List;
 
 import org.apache.xmlbeans.XmlOptions;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
-import org.ddialliance.ddieditor.ui.editor.TranslationDialog;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.instrument.StatementItem;
+import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -20,15 +19,18 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
-public class StatementItemEditor extends Editor {
+public class StatementItemEditor extends Editor implements IAutoChangePerspective {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor";
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			StatementItemEditor.class);
@@ -106,14 +108,39 @@ public class StatementItemEditor extends Editor {
 		super.createPartControl(parent);
 
 		createTabFolder(getComposite_1());
-		createPropertiesTab(getTabFolder());
+		
+		// display text
+		// get org language display text
+//		for (iterable_type iterable_element : model.getDocument().getStatementItem().getDisplayText()) {
+//			
+//		}
+		
+//		TabItem tabItem = createTabItem(Messages.getString("StatementItem.editor.tabdisplaytext"));
+//		Group group = createGroup(tabItem, Messages.getString("StatementItem.editor.groupdisplaytext"));
+//		
+//		
+//		final Text displayText=null;
+//		createTextInput(group, Messages.getString("StatementItem.editor.labeldisplaytext"), "", displayText, 
+//				new ModifyListener() {
+//					public void modifyText(ModifyEvent e) {
+//						editorStatus.setChanged();
+//						model.getDocument().getStatementItem().getDisplayText().getTextList().get(0).setsetStringValue(
+//								name.getText());
+//					}
+//				});
+//		
+//		
+//		
+//		
 
 		// translation
 		TabItem tabItem = createTabItem("Translation");
 		Group group = createGroup(tabItem, "groupText");
 		createTranslation(group, "Translate", model.getDocument()
-				.getStatementItem().getNameList(), model.getId());
+				.getStatementItem().getConstructNameList(), model.getId());
 
+		// id
+		createPropertiesTab(getTabFolder());
 		editorStatus.clearChanged();		
 	}
 
@@ -143,10 +170,12 @@ public class StatementItemEditor extends Editor {
 		editorStatus.clearChanged();
 	}
 
+	@Override
 	public String getPreferredPerspectiveId() {
 		return InstrumentPerspective.ID;
 	}
 
+	@Override
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(Messages
 				.getString("perspective.switch.dialogtext"), Messages

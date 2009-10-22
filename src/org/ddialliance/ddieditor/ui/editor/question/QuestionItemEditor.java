@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.RepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.concept.Concepts;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;

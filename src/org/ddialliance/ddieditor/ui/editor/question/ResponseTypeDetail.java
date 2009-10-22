@@ -15,11 +15,11 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.CodeDomainType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.NumericDomainType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.NumericTypeCodeType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.RepresentationType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.TextDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.NumericDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericTypeCodeType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextDomainType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
 import org.ddialliance.ddieditor.ui.editor.Editor;
@@ -53,7 +53,8 @@ import org.eclipse.ui.IEditorSite;
 
 public class ResponseTypeDetail {
 
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, ResponseTypeDetail.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			ResponseTypeDetail.class);
 
 	// Member variables:
 	private QuestionItem questionItem;
@@ -68,7 +69,8 @@ public class ResponseTypeDetail {
 	private ComboViewer codeSchemeComboViewer;
 	// private RepresentationType m_representationType;
 
-	public static String[] RESPONSE_TYPE_LABELS = { "", Messages.getString("ResponseTypeDetail.label.Code"),
+	public static String[] RESPONSE_TYPE_LABELS = { "",
+			Messages.getString("ResponseTypeDetail.label.Code"),
 			Messages.getString("ResponseTypeDetail.label.Text"),
 			Messages.getString("ResponseTypeDetail.label.Numeric"),
 			Messages.getString("ResponseTypeDetail.label.Date"),
@@ -80,14 +82,16 @@ public class ResponseTypeDetail {
 		UNDEFINED, CODE, TEXT, NUMERIC, DATE, CATEGORY, GEOGRAPHIC
 	};
 
-	static private final String[] NUMERIC_TYPES = { Messages.getString("ResponseTypeDetail.label.Integer"),
+	static private final String[] NUMERIC_TYPES = {
+			Messages.getString("ResponseTypeDetail.label.Integer"),
 			Messages.getString("ResponseTypeDetail.label.Float") };
 
 	static private enum NUMERIC_TYPE_INDEX {
 		INTEGER, FLOAT
 	};
 
-	public ResponseTypeDetail(QuestionItem questionItem, Composite parentLabelComposite, Composite parentCodeComposite,
+	public ResponseTypeDetail(QuestionItem questionItem,
+			Composite parentLabelComposite, Composite parentCodeComposite,
 			EditorStatus editorStatus, IEditorSite site) {
 		this.parentLabelComposite = parentLabelComposite;
 		this.parentCodeComposite = parentCodeComposite;
@@ -112,20 +116,27 @@ public class ResponseTypeDetail {
 	static public List<ResponseTypeReference> getResponseDomainReferenceList() {
 		List<ResponseTypeReference> responseDomainReferenceList = new ArrayList<ResponseTypeReference>();
 
-		responseDomainReferenceList.add(new ResponseTypeReference(RESPONSE_TYPE_LABELS[RESPONSE_TYPES.UNDEFINED
-				.ordinal()], RESPONSE_TYPES.UNDEFINED));
-		responseDomainReferenceList.add(new ResponseTypeReference(RESPONSE_TYPE_LABELS[RESPONSE_TYPES.CODE.ordinal()],
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.UNDEFINED.ordinal()],
+				RESPONSE_TYPES.UNDEFINED));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.CODE.ordinal()],
 				RESPONSE_TYPES.CODE));
-		responseDomainReferenceList.add(new ResponseTypeReference(RESPONSE_TYPE_LABELS[RESPONSE_TYPES.TEXT.ordinal()],
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.TEXT.ordinal()],
 				RESPONSE_TYPES.TEXT));
 		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.NUMERIC.ordinal()], RESPONSE_TYPES.NUMERIC));
-		responseDomainReferenceList.add(new ResponseTypeReference(RESPONSE_TYPE_LABELS[RESPONSE_TYPES.DATE.ordinal()],
+				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.NUMERIC.ordinal()],
+				RESPONSE_TYPES.NUMERIC));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.DATE.ordinal()],
 				RESPONSE_TYPES.DATE));
-		responseDomainReferenceList.add(new ResponseTypeReference(RESPONSE_TYPE_LABELS[RESPONSE_TYPES.CATEGORY
-				.ordinal()], RESPONSE_TYPES.CATEGORY));
-		responseDomainReferenceList.add(new ResponseTypeReference(RESPONSE_TYPE_LABELS[RESPONSE_TYPES.GEOGRAPHIC
-				.ordinal()], RESPONSE_TYPES.GEOGRAPHIC));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.CATEGORY.ordinal()],
+				RESPONSE_TYPES.CATEGORY));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.GEOGRAPHIC.ordinal()],
+				RESPONSE_TYPES.GEOGRAPHIC));
 
 		return responseDomainReferenceList;
 	}
@@ -156,33 +167,40 @@ public class ResponseTypeDetail {
 	 * 
 	 */
 	public void setDetails(RepresentationType representationType) {
-//	public void setDetails(RESPONSE_TYPES responseType) {
+		// public void setDetails(RESPONSE_TYPES responseType) {
 
 		// m_representationType = representationType;
 
-		RESPONSE_TYPES responseType = ResponseTypeDetail.getResponseType(representationType);
+		RESPONSE_TYPES responseType = ResponseTypeDetail
+				.getResponseType(representationType);
 
 		this.dispose();
 
 		if (responseType == RESPONSE_TYPES.UNDEFINED) {
 			return;
 		} else if (responseType == RESPONSE_TYPES.TEXT) {
-			
+
 			final Label textLabel = new Label(parentLabelComposite, SWT.NONE);
 			textLabel.setLayoutData(new GridData());
-			textLabel.setText(Messages.getString("ResponseTypeDetail.label.Text") + ":"); //$NON-NLS-1$
-			textLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+			textLabel.setText(Messages
+					.getString("ResponseTypeDetail.label.Text") + ":"); //$NON-NLS-1$
+			textLabel.setBackground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_WHITE));
 
 			final Label dummyLabel = new Label(parentCodeComposite, SWT.NONE);
 
 			final Label LengthLabel = new Label(parentLabelComposite, SWT.NONE);
-			LengthLabel.setText(Messages.getString("ResponseTypeDetail.label.MaxLength") + ":"); //$NON-NLS-1$
-			LengthLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+			LengthLabel.setText(Messages
+					.getString("ResponseTypeDetail.label.MaxLength") + ":"); //$NON-NLS-1$
+			LengthLabel.setBackground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_WHITE));
 
 			lengthText = new Text(parentCodeComposite, SWT.BORDER);
-			lengthText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			lengthText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+					false));
 			if (representationType != null) {
-				BigInteger maxLength = ((TextDomainType) representationType).getMaxLength();
+				BigInteger maxLength = ((TextDomainType) representationType)
+						.getMaxLength();
 				if (maxLength != null) {
 					lengthText.setText(maxLength.toString());
 				}
@@ -190,77 +208,106 @@ public class ResponseTypeDetail {
 			lengthText.addVerifyListener(new VerifyListener() {
 				public void verifyText(final VerifyEvent e) {
 					Editor.verifyField(FIELD_TYPE.DIGIT, e, site);
-					System.out.println("lengthText: "+lengthText.getText());
+					System.out.println("lengthText: " + lengthText.getText());
 				}
 			});
 			lengthText.addModifyListener(new ModifyListener() {
 				public void modifyText(final ModifyEvent e) {
 					log.debug(".modifyText(): " + lengthText.getText());
-					questionItem.setTextResponseDomain(new BigInteger(lengthText.getText()));
+					questionItem.setTextResponseDomain(new BigInteger(
+							lengthText.getText()));
 					editorStatus.setChanged();
 				}
 			});
 			parentLabelComposite.getParent().layout();
 			return;
 		} else if (responseType == RESPONSE_TYPES.NUMERIC) {
-			
+
 			// ***** NUMERIC *****
-			//--------------------
+			// --------------------
 			String numericType = "";
 			final Label numericLabel = new Label(parentLabelComposite, SWT.NONE);
 			numericLabel.setLayoutData(new GridData());
-			numericLabel.setText(Messages.getString("ResponseTypeDetail.label.Numeric") + ":"); //$NON-NLS-1$
-			numericLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+			numericLabel.setText(Messages
+					.getString("ResponseTypeDetail.label.Numeric") + ":"); //$NON-NLS-1$
+			numericLabel.setBackground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_WHITE));
 
 			final Label dummyLabel = new Label(parentCodeComposite, SWT.NONE);
 
 			final Label integerLabel = new Label(parentLabelComposite, SWT.NONE);
-			integerLabel.setText(Messages.getString("ResponseTypeDetail.label.Type") + ":"); //$NON-NLS-1$
-			integerLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+			integerLabel.setText(Messages
+					.getString("ResponseTypeDetail.label.Type") + ":"); //$NON-NLS-1$
+			integerLabel.setBackground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_WHITE));
 
 			numTypeCombo = new Combo(parentCodeComposite, SWT.READ_ONLY);
-			final GridData gd_langCombo = new GridData(SWT.FILL, SWT.CENTER, true, false);
+			final GridData gd_langCombo = new GridData(SWT.FILL, SWT.CENTER,
+					true, false);
 			numTypeCombo.setLayoutData(gd_langCombo);
 			numTypeCombo.setItems(NUMERIC_TYPES);
 			if (representationType != null) {
-				NumericTypeCodeType.Enum codeType = ((NumericDomainType) representationType).getType();
+				NumericTypeCodeType.Enum codeType = ((NumericDomainType) representationType)
+						.getType();
 				if (codeType != null) {
 					if (codeType.equals(NumericTypeCodeType.INTEGER)) {
-						numTypeCombo.setText(NUMERIC_TYPES[NUMERIC_TYPE_INDEX.INTEGER.ordinal()]);
+						numTypeCombo
+								.setText(NUMERIC_TYPES[NUMERIC_TYPE_INDEX.INTEGER
+										.ordinal()]);
 					} else {
-						numTypeCombo.setText(NUMERIC_TYPES[NUMERIC_TYPE_INDEX.FLOAT.ordinal()]);
+						numTypeCombo
+								.setText(NUMERIC_TYPES[NUMERIC_TYPE_INDEX.FLOAT
+										.ordinal()]);
 					}
 				} else {
 					// Default:
-					((NumericDomainType) representationType).setType(NumericTypeCodeType.INTEGER);
-					numTypeCombo.setText(NUMERIC_TYPES[NUMERIC_TYPE_INDEX.INTEGER.ordinal()]);
+					((NumericDomainType) representationType)
+							.setType(NumericTypeCodeType.INTEGER);
+					numTypeCombo
+							.setText(NUMERIC_TYPES[NUMERIC_TYPE_INDEX.INTEGER
+									.ordinal()]);
 				}
 			}
 			numTypeCombo.addModifyListener(new ModifyListener() {
 				public void modifyText(final ModifyEvent e) {
 					log.debug(".modifyText(): " + numTypeCombo.getText());
-					log.debug("Layout Data: "+parentLabelComposite.getLayoutData());
-					if (numTypeCombo.getText().equals(Messages.getString("ResponseTypeDetail.label.Float"))) {
-						decimalPositionLabel = new Label(parentLabelComposite, SWT.NONE);
-						decimalPositionLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+					log.debug("Layout Data: "
+							+ parentLabelComposite.getLayoutData());
+					if (numTypeCombo
+							.getText()
+							.equals(
+									Messages
+											.getString("ResponseTypeDetail.label.Float"))) {
+						decimalPositionLabel = new Label(parentLabelComposite,
+								SWT.NONE);
+						decimalPositionLabel.setLayoutData(new GridData(
+								SWT.RIGHT, SWT.CENTER, true, false));
 						decimalPositionLabel
-								.setText(Messages.getString("ResponseTypeDetail.label.DecimalPosition") + ":"); //$NON-NLS-1$
-						decimalPositionLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+								.setText(Messages
+										.getString("ResponseTypeDetail.label.DecimalPosition") + ":"); //$NON-NLS-1$
+						decimalPositionLabel.setBackground(Display.getCurrent()
+								.getSystemColor(SWT.COLOR_WHITE));
 
-						decimalPosition = new Text(parentCodeComposite, SWT.BORDER);
-						decimalPosition.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+						decimalPosition = new Text(parentCodeComposite,
+								SWT.BORDER);
+						decimalPosition.setLayoutData(new GridData(SWT.FILL,
+								SWT.CENTER, true, false));
 						decimalPosition.setText("");
 						decimalPosition.addVerifyListener(new VerifyListener() {
 							public void verifyText(final VerifyEvent e) {
 								Editor.verifyField(FIELD_TYPE.DIGIT, e, site);
-								System.out.println("decimalPosition: "+decimalPosition.getText());
+								System.out.println("decimalPosition: "
+										+ decimalPosition.getText());
 							}
 						});
 						decimalPosition.addModifyListener(new ModifyListener() {
 							public void modifyText(final ModifyEvent e) {
-								log.debug(".modifyText(): " + decimalPosition.getText());
-								questionItem.setNumericResponseDomain(NumericTypeCodeType.FLOAT, new BigInteger(
-										decimalPosition.getText()));
+								log.debug(".modifyText(): "
+										+ decimalPosition.getText());
+								questionItem.setNumericResponseDomain(
+										NumericTypeCodeType.FLOAT,
+										new BigInteger(decimalPosition
+												.getText()));
 								editorStatus.setChanged();
 							}
 						});
@@ -271,7 +318,8 @@ public class ResponseTypeDetail {
 						if (decimalPosition != null) {
 							decimalPosition.dispose();
 						}
-						questionItem.setNumericResponseDomain(NumericTypeCodeType.INTEGER, null);
+						questionItem.setNumericResponseDomain(
+								NumericTypeCodeType.INTEGER, null);
 						editorStatus.setChanged();
 					}
 					parentLabelComposite.getParent().layout();
@@ -279,72 +327,103 @@ public class ResponseTypeDetail {
 			});
 			if (numericType.equals("Float")) {
 				decimalPositionLabel = new Label(parentLabelComposite, SWT.NONE);
-				decimalPositionLabel.setText(Messages.getString("ResponseTypeDetail.label.DecimalPosition") + ":"); //$NON-NLS-1$
-				decimalPositionLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+				decimalPositionLabel
+						.setText(Messages
+								.getString("ResponseTypeDetail.label.DecimalPosition") + ":"); //$NON-NLS-1$
+				decimalPositionLabel.setBackground(Display.getCurrent()
+						.getSystemColor(SWT.COLOR_WHITE));
 
 				decimalPosition = new Text(parentCodeComposite, SWT.BORDER);
-				decimalPosition.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+				decimalPosition.setLayoutData(new GridData(SWT.FILL,
+						SWT.CENTER, true, false));
 				if (representationType != null) {
-					decimalPosition.setText(((NumericDomainType) representationType).getDecimalPositions().toString());
+					decimalPosition
+							.setText(((NumericDomainType) representationType)
+									.getDecimalPositions().toString());
 				}
 			}
 			parentLabelComposite.getParent().layout();
 			return;
 		} else if (responseType == RESPONSE_TYPES.CODE) {
-			
-			// ***** CODE *****
-			//-----------------
-			final FilteredItemsSelection filteredItemsSelection = new FilteredItemsSelection(); 
 
-			final Composite labelComposite = new Composite(parentLabelComposite, SWT.NONE);
-			labelComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
-			labelComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+			// ***** CODE *****
+			// -----------------
+			final FilteredItemsSelection filteredItemsSelection = new FilteredItemsSelection();
+
+			final Composite labelComposite = new Composite(
+					parentLabelComposite, SWT.NONE);
+			labelComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP,
+					false, false));
+			labelComposite.setBackground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_WHITE));
 			final GridLayout gridLayout_3 = new GridLayout();
 			gridLayout_3.marginWidth = 0;
 			gridLayout_3.marginHeight = 0;
 			labelComposite.setLayout(gridLayout_3);
 
-			final Composite codeComposite = new Composite(parentCodeComposite, SWT.NONE);
-			codeComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-			codeComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+			final Composite codeComposite = new Composite(parentCodeComposite,
+					SWT.NONE);
+			codeComposite.setBackground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_WHITE));
+			codeComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+					false, false));
 			codeComposite.setLayout(new GridLayout());
 
 			// - Get available Code Schemes:
 			List<LightXmlObjectType> codeSchemeReferenceList = new ArrayList();
 			try {
-				codeSchemeReferenceList = CodeSchemes.getCodeSchemesLight("", "");
+				codeSchemeReferenceList = CodeSchemes.getCodeSchemesLight("",
+						"");
 			} catch (Exception e1) {
-				String errMess = MessageFormat.format(Messages
-						.getString("ResponseTypeDetail.mess.CodeSchemeRetrievalError"), e1.getMessage()); //$NON-NLS-1$
-				MessageDialog.openError(parentCodeComposite.getShell(), Messages.getString("ErrorTitle"), errMess);
+				String errMess = MessageFormat
+						.format(
+								Messages
+										.getString("ResponseTypeDetail.mess.CodeSchemeRetrievalError"), e1.getMessage()); //$NON-NLS-1$
+				MessageDialog.openError(parentCodeComposite.getShell(),
+						Messages.getString("ErrorTitle"), errMess);
 			}
 
-			// - Create Code Scheme selection composite: 
-			filteredItemsSelection.createPartControl(labelComposite, codeComposite, 
-					Messages.getString("ResponseTypeDetail.label.Code"), 
-					Messages.getString("ResponseTypeDetail.label.CodeScheme"),
-					codeSchemeReferenceList,
-					representationType != null ? ((CodeDomainType) representationType).getCodeSchemeReferenceArray(0)
-							.getIDArray(0).getStringValue() : "");
-			filteredItemsSelection.addSelectionListener(Messages.getString("ResponseTypeDetail.label.SelectCodeShemeReference"), codeSchemeReferenceList,
-					new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					LightXmlObjectType result = (LightXmlObjectType) filteredItemsSelection.getResult();
-					if (result != null) {
-						questionItem.setCodeResponseDomain(result.getId());
-						editorStatus.setChanged();
-					}
-				}
-			});
+			// - Create Code Scheme selection composite:
+			filteredItemsSelection
+					.createPartControl(
+							labelComposite,
+							codeComposite,
+							Messages.getString("ResponseTypeDetail.label.Code"),
+							Messages
+									.getString("ResponseTypeDetail.label.CodeScheme"),
+							codeSchemeReferenceList,
+							representationType != null ? ((CodeDomainType) representationType)
+									.getCodeSchemeReference().getIDList()
+									.get(0).getStringValue()
+									: "");
+			filteredItemsSelection
+					.addSelectionListener(
+							Messages
+									.getString("ResponseTypeDetail.label.SelectCodeShemeReference"),
+							codeSchemeReferenceList, new SelectionAdapter() {
+								public void widgetSelected(SelectionEvent e) {
+									LightXmlObjectType result = (LightXmlObjectType) filteredItemsSelection
+											.getResult();
+									if (result != null) {
+										questionItem
+												.setCodeResponseDomain(result
+														.getId());
+										editorStatus.setChanged();
+									}
+								}
+							});
 
 			parentLabelComposite.getParent().layout();
 			return;
 		} else {
 			// ***** OTHER *****
-			//------------------
-			String errMess = MessageFormat.format(Messages
-					.getString("ResponseTypeDetail.mess.QuestionItemResponseTypeNotSupported"), responseType); //$NON-NLS-1$
-			MessageDialog.openError(parentLabelComposite.getShell(), Messages.getString("ErrorTitle"), errMess);
+			// ------------------
+			String errMess = MessageFormat
+					.format(
+							Messages
+									.getString("ResponseTypeDetail.mess.QuestionItemResponseTypeNotSupported"), responseType); //$NON-NLS-1$
+			MessageDialog.openError(parentLabelComposite.getShell(), Messages
+					.getString("ErrorTitle"), errMess);
 		}
 	}
 
@@ -354,7 +433,8 @@ public class ResponseTypeDetail {
 	 * @param representationType
 	 * @return
 	 */
-	static public RESPONSE_TYPES getResponseType(RepresentationType representationType) {
+	static public RESPONSE_TYPES getResponseType(
+			RepresentationType representationType) {
 
 		String responseType = representationType.getClass().getSimpleName();
 		RESPONSE_TYPES responseTypeEnum = null;
