@@ -3,10 +3,10 @@ package org.ddialliance.ddieditor.ui.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.DescriptionDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DescriptionDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 
 /**
@@ -16,7 +16,7 @@ public class FixedIn31 {
 	static final String text = "Label will be fixed in ddi-3.1";
 	public static List<LabelType> getLabelList() {
 		LabelType label = LabelDocument.Factory.newInstance().addNewLabel();
-		label.setStringValue(text);
+		XmlBeansUtil.setTextOnMixedElement(label, text);
 
 		List<LabelType> list = new ArrayList<LabelType>();
 		list.add(label);
