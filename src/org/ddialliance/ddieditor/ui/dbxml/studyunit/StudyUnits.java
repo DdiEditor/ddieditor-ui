@@ -14,8 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.studyunit.StudyUnitDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.studyunit.StudyUnitType;
+import org.ddialliance.ddi3.xml.xmlbeans.studyunit.StudyUnitDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.studyunit.StudyUnitType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;

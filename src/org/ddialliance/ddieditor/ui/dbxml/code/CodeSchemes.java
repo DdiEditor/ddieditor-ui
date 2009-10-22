@@ -13,8 +13,8 @@ package org.ddialliance.ddieditor.ui.dbxml.code;
 import java.io.File;
 import java.util.List;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.logicalproduct.CodeSchemeType;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;

@@ -12,8 +12,8 @@ package org.ddialliance.ddieditor.ui.dbxml.question;
 
 import java.util.List;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionSchemeDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionSchemeType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionSchemeDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionSchemeType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;

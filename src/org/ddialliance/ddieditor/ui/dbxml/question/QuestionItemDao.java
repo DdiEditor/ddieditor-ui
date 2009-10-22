@@ -13,8 +13,8 @@ package org.ddialliance.ddieditor.ui.dbxml.question;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlCursor;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionItemDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionItemType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionItemDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionItemType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;

@@ -15,8 +15,8 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlCursor;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptSchemeDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptSchemeType;
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;

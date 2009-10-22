@@ -3,8 +3,8 @@ package org.ddialliance.ddieditor.ui.dbxml.concept;
 import java.io.File;
 import java.util.List;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.ConceptType;
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
