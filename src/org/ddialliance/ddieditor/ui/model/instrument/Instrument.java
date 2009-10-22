@@ -1,7 +1,7 @@
 package org.ddialliance.ddieditor.ui.model.instrument;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.InstrumentDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.InstrumentType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.InstrumentDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.InstrumentType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddieditor.ui.util.FixedIn31;

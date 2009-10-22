@@ -5,10 +5,10 @@ package org.ddialliance.ddieditor.ui.model.question;
  * 
  */
 import org.apache.xmlbeans.XmlObject;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionSchemeDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.impl.QuestionSchemeTypeImpl;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionSchemeDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.QuestionSchemeTypeImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddiftp.util.DDIFtpException;

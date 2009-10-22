@@ -1,8 +1,8 @@
 package org.ddialliance.ddieditor.ui.model.instrument;
 
 import org.apache.xmlbeans.XmlObject;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionConstructDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionConstructType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionConstructDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionConstructType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddieditor.ui.util.FixedIn31;
 

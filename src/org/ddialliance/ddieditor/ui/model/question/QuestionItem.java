@@ -17,21 +17,21 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.xmlbeans.XmlObject;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.CodeDomainDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.CodeDomainType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.DynamicTextType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.LiteralTextDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.LiteralTextType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.NumericDomainDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.NumericDomainType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.QuestionItemDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.TextDomainDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.TextType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.impl.QuestionItemTypeImpl;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.NumericTypeCodeType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.ReferenceType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.RepresentationType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.TextDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.LiteralTextDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.LiteralTextType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.NumericDomainDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.NumericDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionItemDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextDomainDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.QuestionItemTypeImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericTypeCodeType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextDomainType;
 import org.ddialliance.ddieditor.ui.editor.question.ResponseTypeDetail.RESPONSE_TYPES;
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.model.Model;
@@ -276,7 +276,8 @@ public class QuestionItem extends Model {
 				TextType textType = questionText.addNewText();
 				LiteralTextType literalText = (LiteralTextType) textType.substitute(LiteralTextDocument.type
 						.getDocumentElementName(), LiteralTextType.type);
-				literalText.setText(substr);
+				// TODO 3.1 upgrade
+				//literalText.setText(substr);
 			}
 		}
 		return;

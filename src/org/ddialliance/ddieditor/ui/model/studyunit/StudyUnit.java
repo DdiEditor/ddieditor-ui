@@ -15,17 +15,17 @@ import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.conceptualcomponent.impl.UniverseReferenceDocumentImpl;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.CitationType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.DateType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.InternationalStringType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.ReferenceType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.impl.CitationDocumentImpl;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.impl.FundingInformationDocumentImpl;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.impl.NameDocumentImpl;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.studyunit.impl.AbstractDocumentImpl;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.studyunit.impl.PurposeDocumentImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.CitationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.CitationDocumentImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.FundingInformationDocumentImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.NameDocumentImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.UniverseReferenceDocumentImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.studyunit.impl.AbstractDocumentImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.studyunit.impl.PurposeDocumentImpl;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelUpdateElement;
 import org.ddialliance.ddieditor.ui.model.Model;
@@ -81,7 +81,7 @@ public class StudyUnit extends Model {
 		protected XmlObject getModifiedXmlObject() {
 			if (changed) {
 				return xmlObjects[crudValue - 1]; // Updates start by '1' -
-													// index by '0'
+				// index by '0'
 			}
 			return null;
 		}

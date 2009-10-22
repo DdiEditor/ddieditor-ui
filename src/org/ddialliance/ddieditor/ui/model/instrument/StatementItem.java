@@ -1,7 +1,7 @@
 package org.ddialliance.ddieditor.ui.model.instrument;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.StatementItemDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.datacollection.StatementItemType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.StatementItemDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.StatementItemType;
 import org.ddialliance.ddieditor.ui.model.Model;
 
 public class StatementItem extends Model {

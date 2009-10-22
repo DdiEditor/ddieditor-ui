@@ -8,10 +8,10 @@ package org.ddialliance.ddieditor.ui.model;
  */
 import java.util.List;
 
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.DescriptionDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelDocument;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelType;
-import org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DescriptionDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -67,7 +67,7 @@ public abstract class LabelDescription extends Model implements IModel {
 		for (int i = 0; i < length; i++) {
 			labelType = labels.get(i);
 			if (labelType.getLang().equals(language)) {
-				return labelType.getStringValue();
+				return XmlBeansUtil.getTextOnMixedElement(labelType);
 			}
 		}
 		log.error("*** Simple Element Label of given Language <" + language
@@ -92,17 +92,17 @@ public abstract class LabelDescription extends Model implements IModel {
 		for (int i = 0; i < length; i++) {
 			labelType = labels.get(i);
 			if (labelType.getLang().equals(language)) {
-				labelType.setStringValue(string);
+				XmlBeansUtil.setTextOnMixedElement(labelType, string);
 				return null;
 			}
 		}
-		labelType = org.ddialliance.ddi_3_0.xml.xmlbeans.reusable.LabelDocument.Factory
+		labelType = org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelDocument.Factory
 				.newInstance().addNewLabel();
 		labelType.setTranslated(false);
 		labelType.setTranslatable(true);
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		labelType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
-		labelType.setStringValue(string);
+		XmlBeansUtil.setTextOnMixedElement(labelType, string);
 		return labelType;
 	}
 
@@ -120,7 +120,7 @@ public abstract class LabelDescription extends Model implements IModel {
 		for (int i = 0; i < length; i++) {
 			labelType = labels.get(i);
 			if (!labelType.getTranslated()) {
-				return labelType.getStringValue();
+				return XmlBeansUtil.getTextOnMixedElement(labelType);
 			}
 		}
 		log
@@ -143,7 +143,7 @@ public abstract class LabelDescription extends Model implements IModel {
 		for (int i = 0; i < length; i++) {
 			labelType = labels.get(i);
 			if (!labelType.getTranslated()) {
-				labelType.setStringValue(string);
+				XmlBeansUtil.setTextOnMixedElement(labelType, string);
 				return null;
 			}
 		}
@@ -153,7 +153,7 @@ public abstract class LabelDescription extends Model implements IModel {
 		labelType.setTranslatable(true);
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		labelType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
-		labelType.setStringValue(string);
+		XmlBeansUtil.setTextOnMixedElement(labelType, string);
 		return labelType;
 	}
 
