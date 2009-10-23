@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;
 import org.ddialliance.ddieditor.ui.model.Language;
@@ -168,7 +169,14 @@ public class TranslationDialog extends Dialog {
 	}
 
 	private final Object addItem() throws DDIFtpException {
-		if (items.get(0) instanceof InternationalStringType) {
+		// instance of in hierarchy of sub types type first
+		if (items.get(0) instanceof NameType) {
+			NameType newItem = NameType.Factory.newInstance();
+			newItem.setTranslatable(true);
+			newItem.setTranslated(true);
+			newItem.setStringValue("");
+			return newItem;
+		} else if (items.get(0) instanceof InternationalStringType) {
 			InternationalStringType newItem = InternationalStringType.Factory
 					.newInstance();
 			newItem.setTranslatable(true);
@@ -220,6 +228,7 @@ public class TranslationDialog extends Dialog {
 				}
 			}
 			if (log.isDebugEnabled()) {
+				log.debug(xml);
 				log.debug("translatable: " + translatable + ", translated: "
 						+ translated + ", lang: " + lang);
 			}
@@ -243,8 +252,9 @@ public class TranslationDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		this.getShell().setText(Messages.getString("translationdialog.tittle")+parentLabel);
-		
+		this.getShell().setText(
+				Messages.getString("translationdialog.tittle") + parentLabel);
+
 		// root components
 		final Composite topComposite = new Composite(parent, SWT.NONE);
 		topComposite.setLayout(new GridLayout());
@@ -338,15 +348,20 @@ public class TranslationDialog extends Dialog {
 				SWT.COLOR_WHITE));
 		addButton.setText(Messages.getString("translationdialog.button.add")); //$NON-NLS-1$
 		addButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent event) {
 				Object newItem = null;
 				try {
 					newItem = addItem();
-				} catch (DDIFtpException e1) {
-					showError(e1);
+				} catch (DDIFtpException e) {
+					showError(e);
 					return;
 				}
-				items.add(newItem);
+				try {
+					items.add(newItem);
+				} catch (Exception e) {
+					showError(new DDIFtpException(e));
+					return;
+				}
 				tableViewer.insert(newItem, -1);
 				tableViewer.refresh(false);
 				table.select(table.getItemCount() - 1);
