@@ -71,7 +71,6 @@ public class TranslationDialog extends Dialog {
 	private Composite addRemoveComposite = null;
 	private TableViewer tableViewer;
 	private Table table;
-
 	private List<String> langUsed = new ArrayList<String>();
 	private String[] queries = { "translated=\"", "translatable=\"", "lang=\"" };
 
@@ -152,6 +151,48 @@ public class TranslationDialog extends Dialog {
 		} else if (obj instanceof StructuredStringType) {
 			XmlBeansUtil.setTextOnMixedElement(((StructuredStringType) obj),
 					text);
+		} else {
+			throw createTypeException(obj, new Throwable());
+		}
+	}
+
+	public Boolean getTranslated(Object obj) throws DDIFtpException {
+		if (obj instanceof InternationalStringType) {
+			return ((InternationalStringType) obj).getTranslated();
+		} else if (obj instanceof StructuredStringType) {
+			return ((StructuredStringType) obj).getTranslated();
+		} else {
+			throw createTypeException(obj, new Throwable());
+		}
+	}
+
+	public void setTranslated(Object obj, boolean translated)
+			throws DDIFtpException {
+		if (obj instanceof InternationalStringType) {
+			((InternationalStringType) obj).setTranslated(translated);
+		} else if (obj instanceof StructuredStringType) {
+			((StructuredStringType) obj).setTranslated(translated);
+		} else {
+			throw createTypeException(obj, new Throwable());
+		}
+	}
+
+	public Boolean getTranslateable(Object obj) throws DDIFtpException {
+		if (obj instanceof InternationalStringType) {
+			return ((InternationalStringType) obj).getTranslatable();
+		} else if (obj instanceof StructuredStringType) {
+			return ((StructuredStringType) obj).getTranslatable();
+		} else {
+			throw createTypeException(obj, new Throwable());
+		}
+	}
+
+	public void setTranslateable(Object obj, boolean translateable)
+			throws DDIFtpException {
+		if (obj instanceof InternationalStringType) {
+			((InternationalStringType) obj).setTranslatable(translateable);
+		} else if (obj instanceof StructuredStringType) {
+			((StructuredStringType) obj).setTranslatable(translateable);
 		} else {
 			throw createTypeException(obj, new Throwable());
 		}
@@ -407,14 +448,19 @@ public class TranslationDialog extends Dialog {
 		 * @param viewer
 		 *            to be created on
 		 */
-		public void createColumns(TableViewer viewer) {
+		public void createColumns(final TableViewer viewer) {
 			Table table = viewer.getTable();
 			String[] titles = {
 					Messages
 							.getString("translationdialog.tablecolumn.translate"),
 					Messages
-							.getString("translationdialog.tablecolumn.language") };
-			int[] bounds = { 500, 60, };
+							.getString("translationdialog.tablecolumn.language"),
+					Messages
+							.getString("translationdialog.tablecolumn.translated"),
+					Messages
+							.getString("translationdialog.tablecolumn.translatable") };
+			// translationdialog.tablecolumn.preferred=Preferred
+			int[] widths = { 350, 100, 120, 50 };
 			String orgLang = null;
 			try {
 				orgLang = getXmlLang(base);
@@ -422,17 +468,17 @@ public class TranslationDialog extends Dialog {
 				showError(e);
 			}
 			for (int i = 0; i < titles.length; i++) {
-				TableViewerColumn column = new TableViewerColumn(viewer,
-						SWT.NONE);
+				TableViewerColumn column = new TableViewerColumn(viewer, SWT.UP);
 				column.getColumn().setText(titles[i]);
-				column.getColumn().setWidth(bounds[i]);
+				column.getColumn().setWidth(widths[i]);
 				column.getColumn().setResizable(true);
+
 				column.setEditingSupport(new TableEditingSupport(viewer, i,
 						orgLang));
-
-				table.setHeaderVisible(true);
-				table.setLinesVisible(true);
 			}
+			table.setHeaderVisible(true);
+			table.setLinesVisible(true);
+			table.pack();
 		}
 
 		@Override
@@ -452,6 +498,20 @@ public class TranslationDialog extends Dialog {
 			case 1:
 				try {
 					return Language.getLanguage(getXmlLang(element));
+				} catch (DDIFtpException e) {
+					showError(e);
+				}
+			case 2:
+				// translated
+				try {
+					return getTranslated(element) ? "true" : "false";
+				} catch (DDIFtpException e) {
+					showError(e);
+				}
+			case 3:
+				// translatable
+				try {
+					return getTranslateable(element) ? "true" : "false";
 				} catch (DDIFtpException e) {
 					showError(e);
 				}
@@ -523,6 +583,17 @@ public class TranslationDialog extends Dialog {
 						.getTable(), Language
 						.getLanguageCodesExcludingLanguagesUsed(langUsed));
 				break;
+			case 2:
+				// translated
+				editor = new BooleanCellEditor(((TableViewer) viewer)
+						.getTable(), SWT.CHECK);
+				editor.setValue(new Boolean(true));
+				break;
+			case 3:
+				// translatable
+				editor = new BooleanCellEditor(((TableViewer) viewer)
+						.getTable());
+				break;
 			default:
 				editor = new TextCellEditor(((TableViewer) viewer).getTable());
 			}
@@ -548,6 +619,7 @@ public class TranslationDialog extends Dialog {
 
 		@Override
 		protected Object getValue(Object element) {
+			log.debug("Column: " + this.column);
 			switch (this.column) {
 			case 0:
 				try {
@@ -568,6 +640,20 @@ public class TranslationDialog extends Dialog {
 					showError(e);
 				}
 				return i == -1 ? 0 : new Integer(i);
+			case 2:
+				// translated
+				try {
+					return getTranslated(element);
+				} catch (DDIFtpException e) {
+					showError(e);
+				}
+			case 3:
+				// translatable
+				try {
+					return getTranslateable(element);
+				} catch (DDIFtpException e) {
+					showError(e);
+				}
 			default:
 				break;
 			}
@@ -591,6 +677,22 @@ public class TranslationDialog extends Dialog {
 							element,
 							Language
 									.getLanguageCodesExcludingOrginalLanguage(originalLanguageCode)[((Integer) value)]);
+				} catch (DDIFtpException e) {
+					showError(e);
+				}
+				break;
+			case 2:
+				// translated
+				try {
+					setTranslated(element, (Boolean) value);
+				} catch (DDIFtpException e) {
+					showError(e);
+				}
+				break;
+			case 3:
+				// translatable
+				try {
+					setTranslateable(element, (Boolean) value);
 				} catch (DDIFtpException e) {
 					showError(e);
 				}
