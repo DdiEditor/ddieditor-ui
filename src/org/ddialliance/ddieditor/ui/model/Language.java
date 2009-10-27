@@ -104,15 +104,10 @@ public class Language {
 			List<String> languageUsed) {
 		// can be optimized
 		List<String> languages = new ArrayList<String>();
-		for (String langUsed : languageUsed) {
-			for (int i = 0; i < LANGUAGE_CODES.length; i++) {
-				if (!langUsed.equals("") && !LANGUAGE_CODES[i].equals(langUsed)) {
-					if (!languages.contains(LANGUAGE_CODES[i])) {
-						languages.add(LANGUAGE_CODES[i]);
-					}
-				}
-			}
+		for (int i = 0; i < LANGUAGE_CODES.length; i++) {
+			languages.add(LANGUAGE_CODES[i]);
 		}
+		languages.removeAll(languageUsed);
 		return (languages.toArray(new String[0]));
 	}
 
