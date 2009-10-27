@@ -262,7 +262,7 @@ public class Editor extends EditorPart {
 		Button button = new Button(group, 0);
 		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false,
 				1, 1));
-		button.setText(Messages.getString(buttonText));
+		button.setText(buttonText);
 		button.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

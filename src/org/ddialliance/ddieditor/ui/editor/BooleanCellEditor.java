@@ -31,9 +31,16 @@ import org.eclipse.swt.widgets.Control;
 
 public class BooleanCellEditor extends CellEditor {
 	protected Button button;
+	String strTrue = "true", strFalse = "false";
 
 	public BooleanCellEditor(Composite parent) {
 		super(parent);
+	}
+
+	public BooleanCellEditor(Composite parent, String strTrue, String strFalse) {
+		super(parent);
+		this.strTrue = strTrue;
+		this.strFalse = strFalse;
 	}
 
 	public BooleanCellEditor(Composite parent, int style) {
@@ -42,7 +49,6 @@ public class BooleanCellEditor extends CellEditor {
 
 	@Override
 	protected Control createControl(Composite parent) {
-		System.out.println("check created");
 		Font font = parent.getFont();
 		Color bg = parent.getBackground();
 
@@ -53,7 +59,7 @@ public class BooleanCellEditor extends CellEditor {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				button.setText(Boolean.toString(button.getSelection()));
+				button.setText(button.getSelection()?strTrue:strFalse);
 			}
 		});
 
@@ -69,7 +75,8 @@ public class BooleanCellEditor extends CellEditor {
 	protected void doSetValue(Object value) {
 		boolean selection = Boolean.TRUE.equals(value);
 		button.setSelection(selection);
-		button.setText(Boolean.toString(selection));
+		button.setText(selection?strTrue:strFalse);
+		this.fireEditorValueChanged(!selection, selection);
 	}
 
 	@Override
@@ -77,15 +84,5 @@ public class BooleanCellEditor extends CellEditor {
 		if (button != null) {
 			button.setFocus();
 		}
-	}
-
-	@Override
-	public Control getControl() {
-		if (button == null) {
-			System.out.println("buttun == null");
-		} else {
-			System.out.println("button: " + button.toString());
-		}
-		return button;
 	}
 }

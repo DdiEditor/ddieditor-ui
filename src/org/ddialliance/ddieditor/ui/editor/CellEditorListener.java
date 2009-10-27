@@ -35,18 +35,21 @@ public class CellEditorListener implements ICellEditorListener {
 		if (log.isDebugEnabled()) {
 			log.debug("Editing applied: "+editor.getValue()+" - "+column);
 		}
-		// TODO Update Model
-		switch (column) {
-		case 0:
-			String text = (String) editor.getValue();
-			//TODO Update Question Item Literal Text - text part.
-			break;
-		case 1:
-			String language = Language.getLanguages()[((Integer) editor.getValue())];
-			//TODO Update Question Item Literal Text - language part.
-			break;
-		default:
-		}
+		// Update Model
+		// DONE in EditingSupport for given element
+		
+		// switch (column) {
+		// case 0:
+		// String text = (String) editor.getValue();
+		// //TODO Update Question Item Literal Text - text part.
+		// break;
+		// case 1:
+		// String language = Language.getLanguages()[((Integer)
+		// editor.getValue())];
+		// //TODO Update Question Item Literal Text - language part.
+		// break;
+		// default:
+		// }
 
 		editorStatus.setChanged();
 	}
@@ -61,5 +64,6 @@ public class CellEditorListener implements ICellEditorListener {
 		if (log.isDebugEnabled()) {
 			log.debug("Editing value changed: Old Valid State: "+oldValidState+" New Valid State: "+newValidState);
 		}
+		editorStatus.setChanged();
 	}
 }
