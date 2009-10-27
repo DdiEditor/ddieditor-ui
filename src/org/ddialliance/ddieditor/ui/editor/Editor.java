@@ -252,9 +252,7 @@ public class Editor extends EditorPart {
 	}
 
 	public void createTranslation(Group group, String buttonText,
-			final List items, String parentLabel) {
-		final TranslationDialog dialog = new TranslationDialog(getEditorSite()
-				.getShell(), editorStatus, items, parentLabel);
+			final List items, final String parentLabel) {
 		Label label = new Label(group, SWT.NONE);
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
@@ -268,7 +266,8 @@ public class Editor extends EditorPart {
 		button.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				dialog.open();
+				new TranslationDialog(getEditorSite().getShell(), editorStatus,
+						items, parentLabel).open();
 			}
 
 			@Override
