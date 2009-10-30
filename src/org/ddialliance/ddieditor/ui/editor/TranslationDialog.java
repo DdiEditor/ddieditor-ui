@@ -433,6 +433,10 @@ public class TranslationDialog extends Dialog {
 		}
 	}
 
+	public enum OPEN_DIALOG {
+		YES, NO;
+	}
+	
 	/**
 	 * Column editing
 	 */
