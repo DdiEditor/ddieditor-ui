@@ -251,30 +251,58 @@ public class Editor extends EditorPart {
 		return group;
 	}
 
-	public void createTranslation(Group group, String buttonText,
-			final List items, final String parentLabel) {
+	public Label createLabel(Group group, String labelText) {
 		Label label = new Label(group, SWT.NONE);
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
 				1, 1));
-		label.setText(Messages.getString("editor.button.translate"));
+		label.setText(labelText);
+		return label;
+	}
 
-		Button button = new Button(group, 0);
-		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false,
-				1, 1));
+	public Text createText(Group group, String initText) {
+		Text text = new Text(group, SWT.BORDER);
+		text
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+						1, 1));
+		text.setText(initText);
+		setControl(text);
+		return text;
+	}
+
+	public Button createButton(Composite composite, String buttonText) {
+		Button button = new Button(composite, 0);
+		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				2, 1));
 		button.setText(buttonText);
-		button.addSelectionListener(new SelectionListener() {
+		return button;
+	}
+
+	public SelectionListener createTranslationSelectionListener(
+			final List items, final String parentLabel) {
+		SelectionListener listener = new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new TranslationDialog(getEditorSite().getShell(), editorStatus,
-						items, parentLabel).open();
+				if (!e.data.equals(TranslationDialog.OPEN_DIALOG.NO)) {
+					new TranslationDialog(getEditorSite().getShell(), editorStatus,
+							items, parentLabel).open();
+				}
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
+				// TODO
 			}
-		});
+		};
+		return listener;
+	}
+
+	public Button createTranslation(Group group, String buttonText,
+			final List items, final String parentLabel) {
+		Button button = createButton(group, buttonText);
+		button.addSelectionListener(createTranslationSelectionListener(items,
+				parentLabel));
+		return button;
 	}
 
 	public void createTextInput(Group group, String labelText, String initText,
