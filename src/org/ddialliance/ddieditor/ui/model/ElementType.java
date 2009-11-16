@@ -1,6 +1,7 @@
 package org.ddialliance.ddieditor.ui.model;
 
 import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
+import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
 import org.ddialliance.ddieditor.ui.view.Messages;
@@ -11,7 +12,7 @@ public enum ElementType {
 	FILE("", "", "", ""), MAINTAINABLE_LIGHTLABEL("", "", "", ""),
 
 	// studyunit
-	STUDY_UNIT("studyunit__StudyUnit", "", "stdu", ""),
+	STUDY_UNIT("studyunit__StudyUnit", InfoPerspective.ID, "stdu", ""),
 
 	// concept
 	CONCEPT_SCHEME("ConceptScheme", ConceptsPerspective.ID, "cons",
@@ -27,7 +28,8 @@ public enum ElementType {
 
 	// instrument
 	INSTRUMENT("Instrument", InstrumentPerspective.ID, "inst",
-			"InstrumentItemView.lable.instrumentItemLabel.Instrument"), QUESTION_CONSTRUCT(
+			"InstrumentItemView.lable.instrumentItemLabel.Instrument"), ControlConstructScheme(
+			"ControlConstructScheme", InstrumentPerspective.ID, "cocs", ""), QUESTION_CONSTRUCT(
 			"QuestionConstruct", InstrumentPerspective.ID, "quec", ""), STATEMENT_ITEM(
 			"StatementItem", InstrumentPerspective.ID, "stai", ""),
 
