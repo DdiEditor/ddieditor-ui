@@ -23,6 +23,7 @@ import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
+import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
@@ -185,9 +186,9 @@ public class InfoView extends View {
 		String perspectiveId = "";
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		
+
 		if (obj instanceof DDIResourceTypeImpl) {
-			return;		
+			return;
 		} else if (obj instanceof ConceptualElement) {
 			String item = ((LightXmlObjectType) ((ConceptualElement) obj)
 					.getValue()).getElement();
@@ -198,8 +199,28 @@ public class InfoView extends View {
 						Messages.getString("ErrorTitle"), e.getMessage());
 				return;
 			}
+		} else if (obj instanceof ConceptualType) {
+			// mapping between ddieditor.model 
+			// and ddieditor-ui.model aka perspective
+			ConceptualType conTypeObj = (ConceptualType) obj;
+			if (conTypeObj.equals(ConceptualType.STUDY)) {
+				perspectiveId = InfoPerspective.ID;
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_Universe)) {
+				perspectiveId = "";
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_concepts)) {
+				perspectiveId = ConceptsPerspective.ID;
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_questions)) {
+				perspectiveId = QuestionsPerspective.ID;
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_instumentation)) {
+				perspectiveId = InstrumentPerspective.ID;
+			}
 		}
 
+		if (perspectiveId.equals("")) {
+			log.error("No perspective found for element : "+obj.getClass().getName()+", value: "+obj.toString());
+			return;
+		}
+		
 		try {
 			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getActivePage()
