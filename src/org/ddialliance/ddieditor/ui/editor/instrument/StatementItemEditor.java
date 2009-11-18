@@ -122,34 +122,7 @@ public class StatementItemEditor extends Editor implements
 		createNameInput(group, model.getDocument().getStatementItem()
 				.getConstructNameList(), model.getDocument().getStatementItem()
 				.getId());
-
-//		NameType name = (NameType) XmlBeansUtil.getDefaultLangElement(model
-//				.getDocument().getStatementItem().getConstructNameList());
-//
-//		Text nameTxt = createTextInput(group, Messages
-//				.getString("InstrumentEditor.software.namelabel"), name
-//				.getStringValue(), name == null ? Boolean.TRUE : Boolean.FALSE);
-//
-//		if (name == null) {
-//			name = ConstructNameDocument.Factory.newInstance()
-//					.addNewConstructName();
-//			name.setTranslatable(true);
-//			name.setTranslated(!model.getDocument().getStatementItem()
-//					.getConstructNameList().isEmpty());
-//			name.setLang(Translator.getLocale().getISO3Country());
-//		}
-//
-//		NameTypeModyfiListener nameModyfiListener = new NameTypeModyfiListener(
-//				name, model.getDocument().getStatementItem()
-//						.getConstructNameList(), editorStatus);
-//		nameTxt.addModifyListener(nameModyfiListener);
-//
-//		Button nameTranslate = createButton(group, Messages
-//				.getString("editor.button.translate"));
-//		nameTranslate.addSelectionListener(createTranslationSelectionListener(
-//				model.getDocument().getStatementItem().getConstructNameList(),
-//				model.getDocument().getStatementItem().getId()));
-
+		
 		// id
 		createPropertiesTab(getTabFolder());
 		editorStatus.clearChanged();
