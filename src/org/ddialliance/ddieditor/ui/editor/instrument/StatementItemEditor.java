@@ -3,33 +3,26 @@ package org.ddialliance.ddieditor.ui.editor.instrument;
 import java.text.MessageFormat;
 
 import org.apache.xmlbeans.XmlOptions;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
-import org.ddialliance.ddieditor.ui.editor.NameTypeModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.instrument.StatementItem;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.view.Messages;
-import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -119,10 +112,16 @@ public class StatementItemEditor extends Editor implements
 		Group group = createGroup(tabItem, Messages
 				.getString("StatementItem.editor.groupdisplaytext"));
 
-		createNameInput(group, model.getDocument().getStatementItem()
-				.getConstructNameList(), model.getDocument().getStatementItem()
-				.getId());
-		
+		createNameInput(group, Messages.getString("editor.label.name"), model
+				.getDocument().getStatementItem().getConstructNameList(), model
+				.getDocument().getStatementItem().getId());
+
+		// description
+		createStructuredStringInput(group, Messages
+				.getString("editor.label.description"), model.getDocument()
+				.getStatementItem().getDescriptionList(), model.getDocument()
+				.getStatementItem().getId());
+
 		// id
 		createPropertiesTab(getTabFolder());
 		editorStatus.clearChanged();

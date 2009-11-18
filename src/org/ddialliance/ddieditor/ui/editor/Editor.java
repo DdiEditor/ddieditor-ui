@@ -16,7 +16,9 @@ import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DescriptionDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.IAddAttr;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
@@ -297,14 +299,13 @@ public class Editor extends EditorPart {
 		return listener;
 	}
 
-	public void createNameInput(Group group, List<NameType> nameList,
-			String parentLabel) {
+	public void createNameInput(Group group, String labelText,
+			List<NameType> nameList, String parentLabel) {
 		NameType name = (NameType) XmlBeansUtil.getDefaultLangElement(nameList);
 
-		Text nameTxt = createTextInput(group, Messages
-				.getString("InstrumentEditor.software.namelabel"),
-				name == null ? "" : name.getStringValue(),
-				name == null ? Boolean.TRUE : Boolean.FALSE);
+		Text nameTxt = createTextInput(group, labelText, name == null ? ""
+				: name.getStringValue(), name == null ? Boolean.TRUE
+				: Boolean.FALSE);
 
 		if (name == null) {
 			name = ConstructNameDocument.Factory.newInstance()
@@ -319,6 +320,29 @@ public class Editor extends EditorPart {
 
 		createTranslation(group, Messages.getString("editor.button.translate"),
 				nameList, parentLabel);
+	}
+
+	public void createStructuredStringInput(Group group, String labelText, 
+			List<StructuredStringType> structuredStringList, String parentLabel) {
+		StructuredStringType structuredString = (StructuredStringType) XmlBeansUtil
+				.getDefaultLangElement(structuredStringList);
+
+		StyledText styledText = createTextAreaInput(group, labelText,
+				structuredString == null ? "" : XmlBeansUtil
+						.getTextOnMixedElement(structuredString),
+				structuredString == null ? Boolean.TRUE : Boolean.FALSE);
+
+		if (structuredString == null) {
+			structuredString = StructuredStringType.Factory.newInstance();
+			structuredString.setTranslatable(true);
+			structuredString.setTranslated(!structuredStringList.isEmpty());
+			structuredString.setLang(Translator.getLocale().getISO3Country());
+		}
+		styledText.addModifyListener(new StructuredStringTypeModyfiListener(
+				structuredString, structuredStringList, editorStatus));
+
+		createTranslation(group, Messages.getString("editor.button.translate"),
+				structuredStringList, parentLabel);
 	}
 
 	public Button createTranslation(Group group, String buttonText,
@@ -344,8 +368,8 @@ public class Editor extends EditorPart {
 		return text;
 	}
 
-	public void createTextAreaInput(Group group, String labelText,
-			String initText, Text text, ModifyListener modifyListener) {
+	public StyledText createTextAreaInput(Group group, String labelText,
+			String initText, Boolean isNew) {
 		final Label label = new Label(group, SWT.NONE);
 		final GridData gd_Label = new GridData(SWT.RIGHT, SWT.TOP, false, false);
 		// gd_simpleDescrLabel.horizontalIndent = 5;
@@ -354,15 +378,16 @@ public class Editor extends EditorPart {
 				.getSystemColor(SWT.COLOR_WHITE));
 		label.setText(labelText);
 
-		final StyledText styledText = new StyledText(group, SWT.WRAP
-				| SWT.V_SCROLL | SWT.BORDER);
+		StyledText styledText = new StyledText(group, SWT.WRAP | SWT.V_SCROLL
+				| SWT.BORDER);
 		styledText.setText(initText);
+		styledText.setData(NEW_ITEM, isNew);
 		final GridData gd_Text = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gd_Text.heightHint = 154;
 		gd_Text.widthHint = 308;
 		styledText.setLayoutData(gd_Text);
-		styledText.addModifyListener(modifyListener);
-		setControl(text);
+		setControl(styledText);
+		return styledText;
 	}
 
 	public void createDateInput(Group group, String labelText, String initDate,
