@@ -10,14 +10,13 @@ package org.ddialliance.ddieditor.ui.editor;
  * $Revision$
  */
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.xmlbeans.XmlObject;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddieditor.ui.IAddAttr;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
@@ -28,6 +27,7 @@ import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
@@ -82,6 +81,7 @@ public class Editor extends EditorPart {
 	private String headerEditorDescr = "";
 	private TabFolder tabFolder;
 	private TabItem labelDescriptionTabItem;
+	public static String NEW_ITEM = "new_ITEM";
 
 	public TabItem getLabelDescriptionTabItem() {
 		return labelDescriptionTabItem;
@@ -260,12 +260,13 @@ public class Editor extends EditorPart {
 		return label;
 	}
 
-	public Text createText(Group group, String initText) {
+	public Text createText(Group group, String initText, Boolean isNew) {
 		Text text = new Text(group, SWT.BORDER);
 		text
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 						1, 1));
 		text.setText(initText);
+		text.setData(NEW_ITEM, isNew);
 		setControl(text);
 		return text;
 	}
@@ -283,10 +284,9 @@ public class Editor extends EditorPart {
 		SelectionListener listener = new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (!e.data.equals(TranslationDialog.OPEN_DIALOG.NO)) {
-					new TranslationDialog(getEditorSite().getShell(), editorStatus,
-							items, parentLabel).open();
-				}
+				new TranslationDialog(getEditorSite().getShell(), editorStatus,
+						items, parentLabel).open();
+				// TODO call back to opener to update label
 			}
 
 			@Override
@@ -297,6 +297,30 @@ public class Editor extends EditorPart {
 		return listener;
 	}
 
+	public void createNameInput(Group group, List<NameType> nameList,
+			String parentLabel) {
+		NameType name = (NameType) XmlBeansUtil.getDefaultLangElement(nameList);
+
+		Text nameTxt = createTextInput(group, Messages
+				.getString("InstrumentEditor.software.namelabel"),
+				name == null ? "" : name.getStringValue(),
+				name == null ? Boolean.TRUE : Boolean.FALSE);
+
+		if (name == null) {
+			name = ConstructNameDocument.Factory.newInstance()
+					.addNewConstructName();
+			name.setTranslatable(true);
+			name.setTranslated(!nameList.isEmpty());
+			name.setLang(Translator.getLocale().getISO3Country());
+		}
+
+		nameTxt.addModifyListener(new NameTypeModyfiListener(name, nameList,
+				editorStatus));
+
+		createTranslation(group, Messages.getString("editor.button.translate"),
+				nameList, parentLabel);
+	}
+
 	public Button createTranslation(Group group, String buttonText,
 			final List items, final String parentLabel) {
 		Button button = createButton(group, buttonText);
@@ -305,8 +329,8 @@ public class Editor extends EditorPart {
 		return button;
 	}
 
-	public void createTextInput(Group group, String labelText, String initText,
-			Text text, ModifyListener modifyListener) {
+	public Text createTextInput(Group group, String labelText, String initText,
+			Boolean isNew) {
 		// label
 		Label label = new Label(group, SWT.NONE);
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -315,13 +339,9 @@ public class Editor extends EditorPart {
 		label.setText(labelText);
 
 		// input
-		text = new Text(group, SWT.BORDER);
-		text
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
-						1, 1));
-		text.setText(initText);
-		text.addModifyListener(modifyListener);
+		Text text = createText(group, initText, isNew);
 		setControl(text);
+		return text;
 	}
 
 	public void createTextAreaInput(Group group, String labelText,

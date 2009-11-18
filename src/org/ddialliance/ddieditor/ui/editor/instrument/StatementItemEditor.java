@@ -1,14 +1,14 @@
 package org.ddialliance.ddieditor.ui.editor.instrument;
 
 import java.text.MessageFormat;
-import java.util.List;
 
 import org.apache.xmlbeans.XmlOptions;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
-import org.ddialliance.ddieditor.ui.editor.TranslationDialog;
+import org.ddialliance.ddieditor.ui.editor.NameTypeModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.instrument.StatementItem;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
@@ -24,19 +24,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -111,87 +102,6 @@ public class StatementItemEditor extends Editor implements
 		setPartName(editorInput.getId());
 	}
 
-	public class TextInputModifyListener implements ModifyListener {
-		private NameType name;
-		private Text text;
-
-		public TextInputModifyListener(Text text, NameType name) {
-			this.name = name;
-			this.text = text;
-		}
-
-		@Override
-		public void modifyText(ModifyEvent e) {
-			editorStatus.setChanged();
-			name.setStringValue(text.getText());
-		}
-	}
-
-	public class CreateNewSelectionListener implements SelectionListener {
-		private Button action;
-		private Text text;
-		private NameType existName;
-		private TextInputModifyListener listener;
-		private List items;
-		private String parentLabel;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param action
-		 * @param existName
-		 * @param text
-		 * @param listener
-		 * @param items
-		 * @param parentLabel
-		 */
-		public CreateNewSelectionListener(Button action, NameType existName,
-				Text text, TextInputModifyListener listener, List items,
-				String parentLabel) {
-			this.action = action;
-			this.existName = existName;
-			this.text = text;
-			this.listener = listener;
-			this.items = items;
-			this.parentLabel = parentLabel;
-		}
-
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-			// 
-		}
-
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			// create new item
-			existName = model.getDocument().getStatementItem()
-					.addNewConstructName();
-			existName.setLang(Translator.getLocale().getISO3Language());
-			editorStatus.setChanged();
-
-			// change action button
-			action.setText(Messages.getString("editor.button.translate"));
-			action.update();
-			Listener[] listerners = action.getListeners(SWT.Selection);
-			action.removeListener(SWT.Selection, listerners[0]);
-			e.data = TranslationDialog.OPEN_DIALOG.NO;
-			action.addSelectionListener(createTranslationSelectionListener(
-					items, parentLabel));
-
-			// modify text input
-			text.setVisible(true);
-			text.removeModifyListener(listener);
-			text
-					.addModifyListener(new TextInputModifyListener(text,
-							existName));
-		}
-
-//		public void updateListener() {
-//			action.addSelectionListener(createTranslationSelectionListener(
-//					items, parentLabel));
-//		}
-	}
-
 	/**
 	 * Create contents of the editor part
 	 * 
@@ -202,47 +112,43 @@ public class StatementItemEditor extends Editor implements
 		parent.setLayout(new GridLayout());
 		super.createPartControl(parent);
 
-		createTabFolder(getComposite_1());
-
 		// name
+		createTabFolder(getComposite_1());
 		TabItem tabItem = createTabItem(Messages
 				.getString("StatementItem.editor.tabdisplaytext"));
-		final Group group = createGroup(tabItem, Messages
+		Group group = createGroup(tabItem, Messages
 				.getString("StatementItem.editor.groupdisplaytext"));
 
-		createLabel(group, Messages.getString("editor.label.name"));
-		NameType existName = (NameType) (XmlBeansUtil
-				.getDefaultLangElement(model.getDocument().getStatementItem()
-						.getConstructNameList()));
+		createNameInput(group, model.getDocument().getStatementItem()
+				.getConstructNameList(), model.getDocument().getStatementItem()
+				.getId());
 
-		final Text text = createText(group, "");
-		TextInputModifyListener textInputListener = new TextInputModifyListener(
-				text, existName);
-		text.addModifyListener(textInputListener);
-		text.setVisible(false);
-
-		final Button action = createButton(group, "");
-		if (existName == null) {
-			action.setText("  "+Messages.getString("editor.button.create")+"  ");
-			action.addSelectionListener(new CreateNewSelectionListener(action,
-					existName, text, textInputListener, model.getDocument()
-							.getStatementItem().getConstructNameList(), model
-							.getDocument().getStatementItem().getId()));
-		} else {
-			action.setText(Messages.getString("editor.button.translate"));
-			action.addSelectionListener(createTranslationSelectionListener(
-					model.getDocument().getStatementItem()
-							.getConstructNameList(), model.getDocument()
-							.getStatementItem().getId()));
-			text.setText(existName.getStringValue());
-			text.setVisible(true);
-		}
-
-		// translation
-		TabItem tabItem2 = createTabItem("Translation");
-		Group group2 = createGroup(tabItem2, "groupText");
-		createTranslation(group2, "Translate", model.getDocument()
-				.getStatementItem().getConstructNameList(), model.getId());
+//		NameType name = (NameType) XmlBeansUtil.getDefaultLangElement(model
+//				.getDocument().getStatementItem().getConstructNameList());
+//
+//		Text nameTxt = createTextInput(group, Messages
+//				.getString("InstrumentEditor.software.namelabel"), name
+//				.getStringValue(), name == null ? Boolean.TRUE : Boolean.FALSE);
+//
+//		if (name == null) {
+//			name = ConstructNameDocument.Factory.newInstance()
+//					.addNewConstructName();
+//			name.setTranslatable(true);
+//			name.setTranslated(!model.getDocument().getStatementItem()
+//					.getConstructNameList().isEmpty());
+//			name.setLang(Translator.getLocale().getISO3Country());
+//		}
+//
+//		NameTypeModyfiListener nameModyfiListener = new NameTypeModyfiListener(
+//				name, model.getDocument().getStatementItem()
+//						.getConstructNameList(), editorStatus);
+//		nameTxt.addModifyListener(nameModyfiListener);
+//
+//		Button nameTranslate = createButton(group, Messages
+//				.getString("editor.button.translate"));
+//		nameTranslate.addSelectionListener(createTranslationSelectionListener(
+//				model.getDocument().getStatementItem().getConstructNameList(),
+//				model.getDocument().getStatementItem().getId()));
 
 		// id
 		createPropertiesTab(getTabFolder());
