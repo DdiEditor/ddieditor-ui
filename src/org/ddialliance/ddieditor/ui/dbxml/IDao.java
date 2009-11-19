@@ -6,8 +6,6 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 
-import com.sun.xml.internal.fastinfoset.sax.Properties;
-
 public interface IDao {
 
 	/**
