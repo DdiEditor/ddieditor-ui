@@ -42,16 +42,18 @@ public class FilteredItemsSelection {
 	 * Create Part Control i.e. create labels, field and browse button
 	 * 
 	 * @param parentComposite
+	 * @param parentCodeComposite
 	 * @param subTitle
 	 * @param itemLabel
 	 * @param referenceList
 	 * @param preIdValue
+	 * @wbp.parser.entryPoint
 	 */
-	public void createPartControl(final Composite parentLabelComposite,
+	public void createPartControl(Composite parentLabelComposite,
 			final Composite parentCodeComposite, String subTitleText,
 			String itemLabelText, final List<LightXmlObjectType> referenceList,
 			String preIdValue) {
-
+		
 		this.parentCodeComposite = parentCodeComposite;
 		this.referenceList = referenceList;
 
@@ -75,7 +77,7 @@ public class FilteredItemsSelection {
 			SubTitleLabel.setBackground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_WHITE));
 		}
-
+		
 		final Label itemLabel = new Label(labelComposite, SWT.NONE);
 		itemLabel
 				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true));
@@ -131,6 +133,7 @@ public class FilteredItemsSelection {
 				SWT.COLOR_WHITE));
 		browseButton.setText(Messages
 				.getString("ResponseTypeDetail.label.Browse")); //$NON-NLS-1$
+		
 	}
 
 	/**
@@ -188,7 +191,7 @@ public class FilteredItemsSelection {
 	}
 
 	/**
-	 * Get result.
+	 * Get result
 	 * 
 	 * @return
 	 */

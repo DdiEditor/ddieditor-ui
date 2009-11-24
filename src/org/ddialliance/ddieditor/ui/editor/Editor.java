@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.DescriptionDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.IAddAttr;
@@ -66,6 +65,8 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+
+
 
 /**
  * The Editor Class consist of a header with a Tabfolder. The Tabfolder contains

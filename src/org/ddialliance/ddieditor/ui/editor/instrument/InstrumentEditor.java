@@ -137,43 +137,43 @@ public class InstrumentEditor extends Editor {
 				.getString("InstrumentEditor.software"));
 
 		// name
-		final Text name = null;
-		createTextInput(softwareGroup, Messages
-				.getString("InstrumentEditor.software.namelabel"), software
-				.getNameList().get(0).getStringValue(), name,
-				new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						editorStatus.setChanged();
-						software.getNameList().get(0).setStringValue(
-								name.getText());
-					}
-				});
-
-		// version
-		final Text version = null;
-		createTextInput(softwareGroup, Messages
-				.getString("InstrumentEditor.software.versionlabel"), software
-				.getVersion(), version, new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				editorStatus.setChanged();
-				software.setVersion(version.getText());
-			}
-		});
-
-		// description
-		final Text description = null;
-		createTextAreaInput(softwareGroup, Messages
-				.getString("InstrumentEditor.software.descriptionlabel"),
-				XmlBeansUtil.getTextOnMixedElement(software
-						.getDescriptionList().get(0)), description,
-				new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						editorStatus.setChanged();
-						XmlBeansUtil.setTextOnMixedElement(software
-								.getDescriptionList().get(0), description
-								.getText());
-					}
-				});
+//		final Text name = null;
+//		createTextInput(softwareGroup, Messages
+//				.getString("InstrumentEditor.software.namelabel"), software
+//				.getNameList().get(0).getStringValue(), name,
+//				new ModifyListener() {
+//					public void modifyText(ModifyEvent e) {
+//						editorStatus.setChanged();
+//						software.getNameList().get(0).setStringValue(
+//								name.getText());
+//					}
+//				});
+//
+//		// version
+//		final Text version = null;
+//		createTextInput(softwareGroup, Messages
+//				.getString("InstrumentEditor.software.versionlabel"), software
+//				.getVersion(), version, new ModifyListener() {
+//			public void modifyText(ModifyEvent e) {
+//				editorStatus.setChanged();
+//				software.setVersion(version.getText());
+//			}
+//		});
+//
+//		// description
+//		final Text description = null;
+//		createTextAreaInput(softwareGroup, Messages
+//				.getString("InstrumentEditor.software.descriptionlabel"),
+//				XmlBeansUtil.getTextOnMixedElement(software
+//						.getDescriptionList().get(0)), description,
+//				new ModifyListener() {
+//					public void modifyText(ModifyEvent e) {
+//						editorStatus.setChanged();
+//						XmlBeansUtil.setTextOnMixedElement(software
+//								.getDescriptionList().get(0), description
+//								.getText());
+//					}
+//				});
 
 		// date
 		final DateTimeWidget dateTimeWidget = null;

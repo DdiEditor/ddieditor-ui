@@ -235,8 +235,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 				SWT.NONE);
 		questionComposite.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		final GridLayout gridLayout = new GridLayout();
-		questionComposite.setLayout(gridLayout);
+		questionComposite.setLayout(new GridLayout());
 
 		// - Question Item Tab Item:
 		TabItem questionTabItem = new TabItem(questionTabFolder, SWT.NONE);
@@ -400,9 +399,8 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 				editorStatus.setChanged();
 			}
 		});
-		final GridData gd_langCombo = new GridData(SWT.FILL, SWT.CENTER, true,
-				false);
-		langCombo.setLayoutData(gd_langCombo);
+		langCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false));
 		langCombo.setItems(Language.getLanguages());
 		langCombo.setText(Language.getLanguage(questionItem
 				.getOriginalLanguageCode()));
@@ -447,9 +445,8 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		ResponseTypeCodeComposite.setRedraw(true);
 		ResponseTypeCodeComposite.setBackground(Display.getCurrent()
 				.getSystemColor(SWT.COLOR_WHITE));
-		final GridData gd_composite_3 = new GridData(SWT.FILL, SWT.CENTER,
-				false, false);
-		ResponseTypeCodeComposite.setLayoutData(gd_composite_3);
+		ResponseTypeCodeComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+				false, false));
 		final GridLayout gridLayout_5 = new GridLayout();
 		gridLayout_5.marginHeight = 0;
 		gridLayout_5.marginWidth = 0;
@@ -541,9 +538,8 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		final Composite composite_4 = new Composite(questionGroup, SWT.NONE);
 		composite_4.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		final GridData gd_composite_4 = new GridData(SWT.FILL, SWT.CENTER,
-				false, false, 2, 1);
-		composite_4.setLayoutData(gd_composite_4);
+		composite_4.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+				false, false, 2, 1));
 		composite_4.setLayout(new GridLayout());
 
 		// Translated Questions Tab:
@@ -555,8 +551,6 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		translatedComposite.setLayout(new GridLayout());
 		translatedComposite.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		final GridLayout translatedGridLayout = new GridLayout();
-		questionComposite.setLayout(translatedGridLayout);
 
 		// - Question Item Tab Item:
 		TabItem simpleTabItem = new TabItem(questionTabFolder, SWT.NONE);
