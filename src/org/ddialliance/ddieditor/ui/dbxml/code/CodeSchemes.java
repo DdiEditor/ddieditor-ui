@@ -118,18 +118,18 @@ public class CodeSchemes extends XmlEntities {
 	static public CodeScheme createCodeScheme(String id, String version, String parentId, String parentVersion)
 			throws Exception {
 		log.debug("CodeSchemes.createCodeScheme()");
+		
+		CodeSchemeDocument codeSchemeDocument = CodeSchemeDocument.Factory.newInstance();
 
-		CodeSchemeDocument CodeShemeDocument = CodeSchemeDocument.Factory.newInstance();
-
-		CodeSchemeType CodeSchemeType = CodeShemeDocument.addNewCodeScheme();
+		CodeSchemeType CodeSchemeType = codeSchemeDocument.addNewCodeScheme();
 		CodeSchemeType.setId(id);
 		if (version != null) {
 			CodeSchemeType.setVersion(version);
 		}
 
-		CodeScheme CodeScheme = new CodeScheme(CodeShemeDocument, parentId, parentVersion);
+		CodeScheme codeScheme = new CodeScheme(codeSchemeDocument, parentId, parentVersion);
 
-		return CodeScheme;
+		return codeScheme;
 	}
 
 	/**
