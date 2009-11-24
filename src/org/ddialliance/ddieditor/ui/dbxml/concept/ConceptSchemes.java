@@ -1,20 +1,8 @@
 package org.ddialliance.ddieditor.ui.dbxml.concept;
 
 import java.io.File;
-
-/**
- * Concept Schemes (DBXML).
- * 
- */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 import java.util.List;
 
-import org.apache.xmlbeans.XmlCursor;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeType;
 import org.ddialliance.ddieditor.model.DdiManager;

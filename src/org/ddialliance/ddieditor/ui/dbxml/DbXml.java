@@ -65,7 +65,7 @@ public class DbXml {
 		} catch (Exception e) {
 			throw e;
 		}
-		log.debug("DbXml.open(Done)");
+		log.debug("DbXml.open("+FULLY_DECLARED_NS_DOC+" - Done)");
 	}
 
 	public static void open(String fileName) throws Exception {
