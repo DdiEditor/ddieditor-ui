@@ -10,10 +10,9 @@ package org.ddialliance.ddieditor.ui.preference;
  * $Revision$
  */
 
+import org.ddialliance.ddieditor.ui.Activator;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-
-import org.ddialliance.ddieditor.ui.Activator;
 
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
