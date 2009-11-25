@@ -12,7 +12,7 @@ package org.ddialliance.ddieditor.ui.model.concept;
 
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.impl.ConceptTypeImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
@@ -26,7 +26,7 @@ public class Concept extends LabelDescription {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Concept.class);
 
 	private ConceptDocument conceptDocument;
-	private ConceptTypeImpl conceptTypeImpl;
+	private ConceptType conceptTypeImpl;
 	
 	/**
 	 * Constructor
@@ -48,7 +48,7 @@ public class Concept extends LabelDescription {
 			this.conceptDocument = null;
 		}
 		this.conceptDocument = conceptDocument;
-		this.conceptTypeImpl = (ConceptTypeImpl) conceptDocument.getConcept();
+		this.conceptTypeImpl = (ConceptType) conceptDocument.getConcept();
 	}
 	
 	/**
