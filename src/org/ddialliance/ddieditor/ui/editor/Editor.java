@@ -45,6 +45,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -84,7 +85,8 @@ public class Editor extends EditorPart {
 	private String headerEditorDescr = "";
 	private TabFolder tabFolder;
 	private TabItem labelDescriptionTabItem;
-	public static String NEW_ITEM = "new_ITEM";
+	public static String NEW_ITEM = "new_item";
+	public static String CONTROL_ID = "control_id";
 
 	public TabItem getLabelDescriptionTabItem() {
 		return labelDescriptionTabItem;
@@ -367,6 +369,22 @@ public class Editor extends EditorPart {
 		Text text = createText(group, initText, isNew);
 		setControl(text);
 		return text;
+	}
+	
+	public Composite createErrorComposite(Composite parent, String controlIdentification) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setVisible(false);
+		composite.setEnabled(false);
+		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
+		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				2,0));
+		composite.setData("", controlIdentification);
+		
+		Label label = new Label(composite, SWT.RIGHT);
+		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		label.setVisible(false);
+		label.setEnabled(false);
+		return composite;
 	}
 
 	public StyledText createTextAreaInput(Group group, String labelText,
