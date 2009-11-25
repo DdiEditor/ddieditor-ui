@@ -10,7 +10,6 @@ package org.ddialliance.ddieditor.ui;
  * $Revision$
  */
 
-import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
