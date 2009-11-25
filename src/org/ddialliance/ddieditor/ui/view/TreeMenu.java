@@ -110,7 +110,6 @@ public class TreeMenu {
 			Properties properties, NEW_TYPE newType, String parentId,
 			String parentVersion) {
 		String editorID = null;
-		ElementType selectedEntityType = null;
 		ElementType newEntityType = null;
 		LightXmlObjectType item = null;
 
@@ -128,7 +127,7 @@ public class TreeMenu {
 		IWorkbenchPage page = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage();
 		try {
-			switch (selectedEntityType) {
+			switch (entityType) {
 			case FILE:
 				MessageUtil.currentNotSupported(currentView.getSite()
 						.getShell());
@@ -181,7 +180,7 @@ public class TreeMenu {
 				break;
 			default:
 				System.err.println("Entity Type not supported: "
-						+ selectedEntityType);
+						+ entityType);
 				System.exit(0);
 				break;
 			}
