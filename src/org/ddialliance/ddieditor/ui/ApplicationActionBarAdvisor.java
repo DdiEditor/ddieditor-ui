@@ -51,8 +51,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction showViewAction;
     private IWorkbenchAction openFileAction;
     private IWorkbenchAction prefs;
-    
-    
+        
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
     }
@@ -158,7 +157,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		{
 			prefs = ActionFactory.PREFERENCES.create(window);
 			register(prefs);
-		}		
+		}
+
     }
 
     protected void fillMenuBar(IMenuManager menuBar) {
