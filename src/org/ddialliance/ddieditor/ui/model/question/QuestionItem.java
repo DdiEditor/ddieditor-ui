@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
@@ -36,7 +35,6 @@ import org.ddialliance.ddieditor.ui.editor.question.ResponseTypeDetail.RESPONSE_
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.view.Messages;
-import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
