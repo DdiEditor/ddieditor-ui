@@ -55,7 +55,7 @@ public class LabelDescriptionEditor extends Editor {
 		createLabelDescriptionTab(getTabFolder(), editorEntityName,
 				simpleElement);
 		createPropertiesTab(getTabFolder());
-
+		createXmlTab(simpleElement);
 		// Clean dirt from initialization
 		editorStatus.clearChanged();
 	}
@@ -71,5 +71,9 @@ public class LabelDescriptionEditor extends Editor {
 		this.simpleElement = simpleElement;
 		// Initialize the Stander Editor Part:
 		super.init(site, input);
+	}
+	
+	public void getList() {
+		//this.site.
 	}
 }
