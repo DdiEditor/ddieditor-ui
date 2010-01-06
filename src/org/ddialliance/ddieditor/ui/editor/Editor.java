@@ -10,16 +10,24 @@ package org.ddialliance.ddieditor.ui.editor;
  * $Revision$
  */
 
+import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.IDType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.IAddAttr;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.DDITabItemAction;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.TabFolderListener;
+import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
@@ -56,9 +64,11 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -66,8 +76,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
-
-
 
 /**
  * The Editor Class consist of a header with a Tabfolder. The Tabfolder contains
@@ -87,6 +95,8 @@ public class Editor extends EditorPart {
 	private TabItem labelDescriptionTabItem;
 	public static String NEW_ITEM = "new_item";
 	public static String CONTROL_ID = "control_id";
+	public static String TAB_ID = "id";
+	public static String DDI_TAB_ID = "ddi";
 
 	public TabItem getLabelDescriptionTabItem() {
 		return labelDescriptionTabItem;
@@ -236,6 +246,7 @@ public class Editor extends EditorPart {
 		tabFolder.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
+		tabFolder.addSelectionListener(new TabFolderListener());
 		return tabFolder;
 	}
 
@@ -325,7 +336,7 @@ public class Editor extends EditorPart {
 				nameList, parentLabel);
 	}
 
-	public void createStructuredStringInput(Group group, String labelText, 
+	public void createStructuredStringInput(Group group, String labelText,
 			List<StructuredStringType> structuredStringList, String parentLabel) {
 		StructuredStringType structuredString = (StructuredStringType) XmlBeansUtil
 				.getDefaultLangElement(structuredStringList);
@@ -356,6 +367,36 @@ public class Editor extends EditorPart {
 		return button;
 	}
 
+	public ReferenceSelectionCombo createRefSelection(Group group,
+			String labelText, String searchTittle, final ReferenceType reference,
+			List<LightXmlObjectType> referenceList, boolean isNew) {
+		Composite labelComposite = new Composite(group, SWT.NONE);
+		labelComposite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+
+		labelComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false));
+		labelComposite.setLayout(new GridLayout());
+
+		Composite composite = new Composite(group, SWT.NONE);
+		composite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+		composite
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		composite.setLayout(new GridLayout());
+
+		final ReferenceSelectionCombo referenceSelectionCombo = new ReferenceSelectionCombo(isNew);
+		try {
+			referenceSelectionCombo.createPartControl(labelComposite,
+					composite, "", labelText, referenceList, "");
+		} catch (Exception e) {
+			ErrorDialog.openError(site.getShell(), Messages
+					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, e.getMessage(), e));
+		}
+		return referenceSelectionCombo;
+	}
+
 	public Text createTextInput(Group group, String labelText, String initText,
 			Boolean isNew) {
 		// label
@@ -370,16 +411,17 @@ public class Editor extends EditorPart {
 		setControl(text);
 		return text;
 	}
-	
-	public Composite createErrorComposite(Composite parent, String controlIdentification) {
+
+	public Composite createErrorComposite(Composite parent,
+			String controlIdentification) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setVisible(false);
 		composite.setEnabled(false);
 		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
-		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
-				2,0));
+		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 2, 0));
 		composite.setData("", controlIdentification);
-		
+
 		Label label = new Label(composite, SWT.RIGHT);
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		label.setVisible(false);
@@ -391,7 +433,6 @@ public class Editor extends EditorPart {
 			String initText, Boolean isNew) {
 		final Label label = new Label(group, SWT.NONE);
 		final GridData gd_Label = new GridData(SWT.RIGHT, SWT.TOP, false, false);
-		// gd_simpleDescrLabel.horizontalIndent = 5;
 		label.setLayoutData(gd_Label);
 		label.setBackground(Display.getCurrent()
 				.getSystemColor(SWT.COLOR_WHITE));
@@ -401,9 +442,7 @@ public class Editor extends EditorPart {
 				| SWT.BORDER);
 		styledText.setText(initText);
 		styledText.setData(NEW_ITEM, isNew);
-		final GridData gd_Text = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		gd_Text.heightHint = 154;
-		gd_Text.widthHint = 308;
+		final GridData gd_Text = new GridData(GridData.FILL_BOTH);
 		styledText.setLayoutData(gd_Text);
 		setControl(styledText);
 		return styledText;
@@ -649,6 +688,31 @@ public class Editor extends EditorPart {
 		label_2.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
 
+	}
+
+	public StyledText createXmlTab(IModel model) {
+		TabItem tabItem = createTabItem(Messages
+				.getString("editor.tabitem.ddi"));
+		tabItem.setData(TAB_ID, DDI_TAB_ID);
+		Group group = createGroup(tabItem, Messages
+				.getString("editor.group.ddi"));
+		StyledText styledText = createTextAreaInput(group, Messages
+				.getString("editor.label.ddi"), "", false);
+		DDITabItemAction action = new DDITabItemAction(DDI_TAB_ID, model,
+				styledText);
+
+		Listener[] list = getTabFolder().getListeners(SWT.Selection);
+		Object obj = null;
+		for (int i = 0; i < list.length; i++) {
+			if (list[i] instanceof TypedListener) {
+				obj = ((TypedListener) list[i]).getEventListener();
+				if (obj instanceof TabFolderListener) {
+					((TabFolderListener) obj).actionMap.put(DDI_TAB_ID, action);
+				}
+				break;
+			}
+		}
+		return styledText;
 	}
 
 	/**
