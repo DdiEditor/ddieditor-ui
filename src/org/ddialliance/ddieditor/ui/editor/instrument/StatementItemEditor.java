@@ -1,6 +1,7 @@
 package org.ddialliance.ddieditor.ui.editor.instrument;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlOptions;
@@ -13,12 +14,19 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddieditor.model.DdiManager;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.ui.dbxml.concept.Concepts;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
+import org.ddialliance.ddieditor.ui.editor.FilteredItemsSelection;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
-import org.ddialliance.ddieditor.ui.editor.genericgetset.GenericGetSetStringValue;
-import org.ddialliance.ddieditor.ui.editor.genericgetset.GenericTextStyledTextModyfiListener;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.GenericGetSetClosure;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceClosure;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.instrument.StatementItem;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
@@ -34,11 +42,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -54,6 +67,7 @@ public class StatementItemEditor extends Editor implements
 	private StatementItem model;
 	private StatementItemDao dao;
 	private IEditorSite site;
+	private List<LightXmlObjectType> questionRefList;
 
 	public StatementItemEditor() {
 		super(
@@ -64,6 +78,7 @@ public class StatementItemEditor extends Editor implements
 		dao = new StatementItemDao();
 	}
 
+	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		// TODO formalize boiler plate code ...
@@ -184,7 +199,7 @@ public class StatementItemEditor extends Editor implements
 			if (condition == null) {
 				condition = newCondition();
 				conditionIsNew = true;
-				
+
 				expression = newExpression(condition);
 				expressionIsNew = true;
 
@@ -232,15 +247,33 @@ public class StatementItemEditor extends Editor implements
 				.getString("StatementItem.editor.textarea"), XmlBeansUtil
 				.getTextOnMixedElement(displayText.getTextList().get(0)),
 				displayTextIsNew);
-		statementTxt.addModifyListener(new GenericTextStyledTextModyfiListener(
+		statementTxt.addModifyListener(new TextStyledTextModyfiListener(
 				displayText, null,
-				GenericTextStyledTextModyfiListener.GET_TEXT_ON_MIXED_ELEMENT,
-				GenericTextStyledTextModyfiListener.SET_TEXT_ON_MIXED_ELEMENT,
-				model.getDocument().getStatementItem().getDisplayTextList(),
+				TextStyledTextModyfiListener.GET_TEXT_ON_MIXED_ELEMENT,
+				TextStyledTextModyfiListener.SET_TEXT_ON_MIXED_ELEMENT, model
+						.getDocument().getStatementItem().getDisplayTextList(),
 				editorStatus, site, ID));
 
-		// question source
-		// 
+		//
+		// question source reference
+		try {
+			questionRefList = DdiManager.getInstance().getQuestionItemsLight(
+					null, null, null, null).getLightXmlObjectList()
+					.getLightXmlObjectList();
+		} catch (Exception e) {
+			DialogUtil.errorDialog(site, ID, e.getMessage(), e);
+		}
+		ReferenceSelectionCombo refSelecCombo = createRefSelection(group,
+				Messages.getString("StatementItem.editor.questionref"),
+				Messages.getString("StatementItem.editor.questionref"),
+				sourceQuestionReference, questionRefList,
+				sourceQuestionReferenceIsNew);
+		refSelecCombo.addSelectionListener(Messages
+				.getString("StatementItem.editor.questionref"),
+				questionRefList, new ReferenceSelectionAdapter(refSelecCombo,
+						sourceQuestionReference, new ReferenceClosure(), null,
+						null, expression.getSourceQuestionReferenceList(),
+						editorStatus, site, ID));
 
 		// condition
 		Composite error = createErrorComposite(group, "");
@@ -248,7 +281,7 @@ public class StatementItemEditor extends Editor implements
 				.getString("StatementItem.editor.code"), condition
 				.getExpression().getCodeList().get(0).getStringValue(),
 				conditionIsNew);
-		conditionTxt.addModifyListener(new GenericTextStyledTextModyfiListener(
+		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(
 				condition, new ProgrammingLanguageGetSet(), null, null,
 				displayText.getTextList(), editorStatus, site, ID));
 
@@ -279,10 +312,14 @@ public class StatementItemEditor extends Editor implements
 
 		// id tab
 		createPropertiesTab(getTabFolder());
+
+		// xml tab
+		createXmlTab(model);
+
 		editorStatus.clearChanged();
 	}
 
-	public class ProgrammingLanguageGetSet implements GenericGetSetStringValue {
+	public class ProgrammingLanguageGetSet implements GenericGetSetClosure {
 		@Override
 		public String getStringValue(Object obj) {
 			if (obj instanceof ConditionalTextType) {

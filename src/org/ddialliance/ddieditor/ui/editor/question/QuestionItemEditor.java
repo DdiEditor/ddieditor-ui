@@ -218,17 +218,8 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 	@Override
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout());
-		log.debug("QuestionItemEditor.createPartControl called");
 		super.createPartControl(parent);
-
-		// Question Tab Folder:
-		// ------------------
-		TabFolder questionTabFolder = new TabFolder(getComposite_1(),
-				SWT.BOTTOM);
-		questionTabFolder.setBackground(SWTResourceManager
-				.getColor(SWT.COLOR_WHITE));
-		questionTabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true, 1, 1));
+		TabFolder questionTabFolder = createTabFolder(getComposite_1());
 
 		// - Question Root Composite:
 		final Composite questionComposite = new Composite(questionTabFolder,
@@ -676,6 +667,9 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 
 		// Create Property Tab Item:
 		createPropertiesTab(questionTabFolder);
+		
+		// ddi xml tab
+		createXmlTab(questionItem);
 
 		// Clean dirt from initialization
 		editorStatus.clearChanged();
