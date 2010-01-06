@@ -47,6 +47,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			TreeContentProvider.class);
 	private List<ConceptualElement> conceptualList;
+	private Object[] contentList;
 
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.TreeContentProvider";
 	private IViewSite site;
@@ -84,7 +85,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				return ConceptSchemes.getConceptSchemesLight(null, null)
 						.toArray();
 			} else if (contentType.equals(ViewContentType.CodeContent)) {
-				return CodeSchemes.getCodeSchemesLight(null, null).toArray();
+				return CodeSchemes.getCodeSchemesLight(null, null).toArray();				
 			} else if (contentType.equals(ViewContentType.QuestionContent)) {
 				return new QuestionSchemeDao().getLightXmlObject(null, null)
 						.toArray();
@@ -171,19 +172,20 @@ public class TreeContentProvider implements IStructuredContentProvider,
 
 			try {
 				if (lightXmlTypeLocalname.equals("ConceptScheme")) {
-					return Concepts.getConceptsLight(lightXmlObjectType)
+					contentList = Concepts.getConceptsLight(lightXmlObjectType)
 							.toArray();
 				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
-					return new QuestionItemDao().getLightXmlObject(
+					contentList = new QuestionItemDao().getLightXmlObject(
 							lightXmlObjectType).toArray();
 				} else if (lightXmlTypeLocalname
 						.equals("ControlConstructScheme")) {
-					return DdiManager.getInstance().getQuestionConstructsLight(
+					contentList = DdiManager.getInstance().getQuestionConstructsLight(
 							null, null, lightXmlObjectType.getId(),
 							lightXmlObjectType.getVersion())
 							.getLightXmlObjectList().getLightXmlObjectList()
 							.toArray();
 				}
+				return contentList;
 			} catch (Exception e) {
 				displayGetChildrenException(e);
 			}
