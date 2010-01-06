@@ -131,12 +131,6 @@ public class Concepts extends XmlEntities {
 			log.error("Create DBXML Concept error: " + e.getMessage());
 			throw e;
 		}
-		
-		// TODO When is xml-file updated - when object saved?
-		if (xml_export_filename.length() > 0) {
-			File outFile = new File("resources" + File.separator + xml_export_filename);
-			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
-		}
 	}
 
 	/**
@@ -156,12 +150,6 @@ public class Concepts extends XmlEntities {
 		} catch (DDIFtpException e) {
 			log.error("Update DBXML Concept error: " + e.getMessage());
 			throw e;
-		}
-		
-		// TODO When is xml-file updated - when object saved?
-		if (xml_export_filename.length() > 0) {
-			File outFile = new File("resources" + File.separator + xml_export_filename);
-			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
 		}
 	}
 
@@ -188,12 +176,6 @@ public class Concepts extends XmlEntities {
 		} catch (DDIFtpException e) {
 			log.error("Delete DBXML Concept Scheme error: " + e.getMessage());
 			throw e;
-		}
-		
-		// TODO When is xml-file updated - when object saved?
-		if (xml_export_filename.length() > 0) {
-			File outFile = new File("resources" + File.separator + xml_export_filename);
-			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
 		}
 	}
 }
