@@ -48,7 +48,7 @@ public interface IModel {
 	 * @return String Parent Version string
 	 */
 	public abstract String getParentVersion();
-	
+
 	public XmlObject getDocument() throws DDIFtpException;
 
 	/**
@@ -58,4 +58,15 @@ public interface IModel {
 	 * @throws Exception
 	 */
 	public void validate() throws Exception;
+
+	/**
+	 * Apply change to the model
+	 * 
+	 * @param value
+	 *            the change
+	 * @param type
+	 *            type of ddi to apply change too
+	 * @throws Exception
+	 */
+	public void applyChange(Object value, Class<?> type) throws Exception;
 }
