@@ -7,8 +7,7 @@ public class ReferenceClosure implements GenericGetSetClosure {
 
 	@Override
 	public Object getObject(Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+		return obj;
 	}
 
 	@Override
