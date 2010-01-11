@@ -368,7 +368,8 @@ public class Editor extends EditorPart {
 	}
 
 	public ReferenceSelectionCombo createRefSelection(Group group,
-			String labelText, String searchTittle, final ReferenceType reference,
+			String labelText, String searchTittle,
+			final ReferenceType reference,
 			List<LightXmlObjectType> referenceList, boolean isNew) {
 		Composite labelComposite = new Composite(group, SWT.NONE);
 		labelComposite.setBackground(Display.getCurrent().getSystemColor(
@@ -385,7 +386,8 @@ public class Editor extends EditorPart {
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		composite.setLayout(new GridLayout());
 
-		final ReferenceSelectionCombo referenceSelectionCombo = new ReferenceSelectionCombo(isNew);
+		final ReferenceSelectionCombo referenceSelectionCombo = new ReferenceSelectionCombo(
+				isNew);
 		try {
 			referenceSelectionCombo.createPartControl(labelComposite,
 					composite, "", labelText, referenceList, "");
@@ -826,6 +828,36 @@ public class Editor extends EditorPart {
 	public void setControl(Control widget) {
 		if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			widget.setEnabled(false);
+		}
+	}
+
+	public EditorIdentification getEditorIdentification() {
+		return new EditorIdentification(ID, editorStatus, site);
+	}
+	
+	public class EditorIdentification {
+		String ID;
+		EditorStatus editorStatus;
+		IEditorSite site;
+
+		public EditorIdentification(String iD, EditorStatus editorStatus,
+				IEditorSite site) {
+			super();
+			ID = iD;
+			this.editorStatus = editorStatus;
+			this.site = site;
+		}
+
+		public String getID() {
+			return ID;
+		}
+
+		public EditorStatus getEditorStatus() {
+			return editorStatus;
+		}
+
+		public IEditorSite getSite() {
+			return site;
 		}
 	}
 }
