@@ -23,11 +23,12 @@ import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
 public class CodeScheme extends LabelDescription {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeScheme.class);
+	private static Log log = LogFactory
+			.getLog(LogType.SYSTEM, CodeScheme.class);
 
 	private CodeSchemeDocument codeSchemeDocument;
 	private CodeSchemeTypeImpl codeSchemeTypeImpl;
-	
+
 	/**
 	 * Constructor of Code Scheme
 	 * 
@@ -36,21 +37,23 @@ public class CodeScheme extends LabelDescription {
 	 * @param parentVersion
 	 * @throws Exception
 	 */
-	public CodeScheme(CodeSchemeDocument codeSchemeDocument, String parentId, String parentVersion)
-			throws Exception {
-		
-		super(codeSchemeDocument.getCodeScheme().getId(), codeSchemeDocument.getCodeScheme().getVersion(),
-				parentId, parentVersion, codeSchemeDocument.getCodeScheme().getLabelList(),
+	public CodeScheme(CodeSchemeDocument codeSchemeDocument, String parentId,
+			String parentVersion) throws Exception {
+
+		super(codeSchemeDocument.getCodeScheme().getId(), codeSchemeDocument
+				.getCodeScheme().getVersion(), parentId, parentVersion,
+				codeSchemeDocument.getCodeScheme().getLabelList(),
 				codeSchemeDocument.getCodeScheme().getDescriptionList());
-		
+
 		if (codeSchemeDocument == null) {
 			// TODO Create new CodeScheme
 			this.codeSchemeDocument = null;
 		}
 		this.codeSchemeDocument = codeSchemeDocument;
-		this.codeSchemeTypeImpl = (CodeSchemeTypeImpl) codeSchemeDocument.getCodeScheme();
+		this.codeSchemeTypeImpl = (CodeSchemeTypeImpl) codeSchemeDocument
+				.getCodeScheme();
 	}
-	
+
 	/**
 	 * Get Code Scheme Document of Code Scheme.
 	 * 
@@ -59,7 +62,7 @@ public class CodeScheme extends LabelDescription {
 	public CodeSchemeDocument getCodeSchemeDocument() {
 		return codeSchemeDocument;
 	}
-		
+
 	/**
 	 * Set label of Code Scheme.
 	 * 
@@ -67,17 +70,16 @@ public class CodeScheme extends LabelDescription {
 	 * @return LabelType (always null)
 	 */
 	public LabelType setLabel(String string, Language language) {
-		
+
 		LabelType labelType = super.setLabel(string, language);
 		if (labelType != null) {
 			codeSchemeTypeImpl.getLabelList().add(labelType);
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Set Original Label of Code Scheme.
-	 * 'Original' means not translated.
+	 * Set Original Label of Code Scheme. 'Original' means not translated.
 	 * 
 	 * @param string
 	 * @return LabelType (always null)
@@ -90,7 +92,7 @@ public class CodeScheme extends LabelDescription {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Set Description of Code Scheme.
 	 * 
@@ -104,10 +106,9 @@ public class CodeScheme extends LabelDescription {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Set Original Description of Code Scheme.
-	 * Original means not translated.
+	 * Set Original Description of Code Scheme. Original means not translated.
 	 * 
 	 * @param string
 	 * @return StructuredStringType (always null)
@@ -120,7 +121,7 @@ public class CodeScheme extends LabelDescription {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Validates the Code Scheme before it is saved. It e.g. checks if all
 	 * mandatory attributes has been given.
@@ -137,5 +138,11 @@ public class CodeScheme extends LabelDescription {
 	@Override
 	public XmlObject getDocument() throws DDIFtpException {
 		return codeSchemeDocument;
+	}
+
+	@Override
+	public void executeChange(Object value, Class<?> type) throws Exception {
+		// TODO Auto-generated method stub
+
 	}
 }

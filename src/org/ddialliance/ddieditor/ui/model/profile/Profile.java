@@ -19,4 +19,10 @@ public class Profile extends Model {
 	public DDIProfileDocument getDocument() throws DDIFtpException {
 		return doc;
 	}
+
+	@Override
+	public void executeChange(Object value, Class<?> type) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
 }

@@ -28,4 +28,10 @@ public class Instrument extends LabelDescription implements IModel {
 	public InstrumentDocument getDocument() {
 		return doc;
 	}
+
+	@Override
+	public void executeChange(Object value, Class<?> type) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
 }

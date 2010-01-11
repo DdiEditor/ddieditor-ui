@@ -27,7 +27,7 @@ public class Concept extends LabelDescription {
 
 	private ConceptDocument conceptDocument;
 	private ConceptType conceptTypeImpl;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -36,13 +36,14 @@ public class Concept extends LabelDescription {
 	 * @param parentVersion
 	 * @throws Exception
 	 */
-	public Concept(ConceptDocument conceptDocument, String parentId, String parentVersion)
-			throws Exception {
-		
-		super(conceptDocument.getConcept().getId(), conceptDocument.getConcept().getVersion(),
-				parentId, parentVersion, conceptDocument.getConcept().getLabelList(),
-				conceptDocument.getConcept().getDescriptionList());
-		
+	public Concept(ConceptDocument conceptDocument, String parentId,
+			String parentVersion) throws Exception {
+
+		super(conceptDocument.getConcept().getId(), conceptDocument
+				.getConcept().getVersion(), parentId, parentVersion,
+				conceptDocument.getConcept().getLabelList(), conceptDocument
+						.getConcept().getDescriptionList());
+
 		if (conceptDocument == null) {
 			// TODO Create new Concept
 			this.conceptDocument = null;
@@ -50,7 +51,7 @@ public class Concept extends LabelDescription {
 		this.conceptDocument = conceptDocument;
 		this.conceptTypeImpl = (ConceptType) conceptDocument.getConcept();
 	}
-	
+
 	/**
 	 * Get Concept Document of Concept.
 	 * 
@@ -59,7 +60,7 @@ public class Concept extends LabelDescription {
 	public ConceptDocument getConceptDocument() {
 		return conceptDocument;
 	}
-		
+
 	/**
 	 * Set label of Concept.
 	 * 
@@ -67,17 +68,16 @@ public class Concept extends LabelDescription {
 	 * @return LabelType (always null)
 	 */
 	public LabelType setLabel(String string, Language language) {
-		
+
 		LabelType labelType = super.setLabel(string, language);
 		if (labelType != null) {
 			conceptTypeImpl.getLabelList().add(labelType);
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Set Original Label of Concept.
-	 * 'Original' means not translated.
+	 * Set Original Label of Concept. 'Original' means not translated.
 	 * 
 	 * @param string
 	 * @return LabelType (always null)
@@ -90,7 +90,7 @@ public class Concept extends LabelDescription {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Set Description of Concept.
 	 * 
@@ -104,10 +104,9 @@ public class Concept extends LabelDescription {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Set Original Description of Concept.
-	 * Original means not translated.
+	 * Set Original Description of Concept. Original means not translated.
 	 * 
 	 * @param string
 	 * @return StructuredStringType (always null)
@@ -120,10 +119,10 @@ public class Concept extends LabelDescription {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Validates the Concept before it is saved. It e.g. checks if all
-	 * mandatory attributes has been given.
+	 * Validates the Concept before it is saved. It e.g. checks if all mandatory
+	 * attributes has been given.
 	 * 
 	 * @throws Exception
 	 */
@@ -137,5 +136,11 @@ public class Concept extends LabelDescription {
 	@Override
 	public XmlObject getDocument() throws DDIFtpException {
 		return this.conceptDocument;
+	}
+
+	@Override
+	public void executeChange(Object value, Class<?> type) throws Exception {
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -7,25 +7,31 @@ import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddieditor.ui.util.FixedIn31;
 
 public class Universe extends LabelDescription implements IModel {
-		private UniverseDocument doc;
-		private UniverseType type;
+	private UniverseDocument doc;
+	private UniverseType type;
 
-		public Universe(UniverseDocument doc, String parentId,
-				String parentVersion) throws Exception {
-			super(doc.getUniverse().getId(), doc.getUniverse().getVersion(),
-					parentId, parentVersion, FixedIn31.getLabelList(), FixedIn31
-							.getDesrcList());
+	public Universe(UniverseDocument doc, String parentId, String parentVersion)
+			throws Exception {
+		super(doc.getUniverse().getId(), doc.getUniverse().getVersion(),
+				parentId, parentVersion, FixedIn31.getLabelList(), FixedIn31
+						.getDesrcList());
 
-			if (doc == null) {
-				this.doc = UniverseDocument.Factory.newInstance();
+		if (doc == null) {
+			this.doc = UniverseDocument.Factory.newInstance();
 
-			} else {
-				this.doc = doc;
-			}
-			this.type = doc.getUniverse();
+		} else {
+			this.doc = doc;
 		}
-
-		public UniverseDocument getDocument() {
-			return doc;
-		}
+		this.type = doc.getUniverse();
 	}
+
+	public UniverseDocument getDocument() {
+		return doc;
+	}
+
+	@Override
+	public void executeChange(Object value, Class<?> type) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+}

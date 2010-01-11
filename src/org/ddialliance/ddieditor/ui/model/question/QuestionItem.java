@@ -486,9 +486,9 @@ public class QuestionItem extends Model {
 		return; // No error found:
 	}
 
-//	@Override
-//	public XmlObject getDocument() throws DDIFtpException {
-//		return questionItemDocument;
-//	}
-
+	@Override
+	public void executeChange(Object value, Class<?> type) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }
