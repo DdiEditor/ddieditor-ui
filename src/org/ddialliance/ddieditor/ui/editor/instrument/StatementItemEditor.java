@@ -1,38 +1,32 @@
 package org.ddialliance.ddieditor.ui.editor.instrument;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlOptions;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConditionalTextDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConditionalTextType;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DisplayTextDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.ui.dbxml.concept.Concepts;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
-import org.ddialliance.ddieditor.ui.editor.FilteredItemsSelection;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.GenericGetSetClosure;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceClosure;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ModelAttributes;
 import org.ddialliance.ddieditor.ui.model.instrument.StatementItem;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
-import org.ddialliance.ddiftp.util.Translator;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -42,16 +36,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -146,115 +133,44 @@ public class StatementItemEditor extends Editor implements
 		Group group = createGroup(tabItem, Messages
 				.getString("StatementItem.editor.groupdisplaytext"));
 
-		DynamicTextType displayText = (DynamicTextType) XmlBeansUtil
-				.getDefaultLangElement(model.getDocument().getStatementItem()
-						.getDisplayTextList());
-		ConditionalTextType condition = null;
-		CodeType expression;
-		ProgrammingLanguageCodeType programmingLanguage;
-		ReferenceType sourceQuestionReference;
-
-		boolean displayTextIsNew, conditionIsNew = false, expressionIsNew = false, programmingLanguageIsNew = false, sourceQuestionReferenceIsNew = false;
-
-		// create new elements
-		if (displayText == null) {
-			displayText = DisplayTextDocument.Factory.newInstance()
-					.addNewDisplayText();
-			try {
-				XmlBeansUtil.addTranslationAttributes(displayText, Translator
-						.getLocaleLanguage(), false, true);
-			} catch (Exception e) {
-				DialogUtil.errorDialog(site, ID, e.getMessage(), e);
-			}
-			displayText.addNewText();
-			displayTextIsNew = true;
-
-			condition = newCondition();
-			conditionIsNew = true;
-			try {
-				XmlBeansUtil.addTranslationAttributes(condition, Translator
-						.getLocale().getCountry(), false, true);
-			} catch (Exception e) {
-				DialogUtil.errorDialog(site, ID, e.getMessage(), e);
-			}
-
-			expression = newExpression(condition);
-			expressionIsNew = true;
-
-			programmingLanguage = newProgrammingLanguage(expression);
-			programmingLanguageIsNew = true;
-
-			sourceQuestionReference = newSourceQuestionReference(expression);
-			sourceQuestionReferenceIsNew = true;
-		}
-		// check existing elements
-		else {
-			displayTextIsNew = false;
-			for (TextType test : displayText.getTextList()) {
-				if (test instanceof ConditionalTextType) {
-					condition = (ConditionalTextType) test;
-					conditionIsNew = false;
-				}
-			}
-			if (condition == null) {
-				condition = newCondition();
-				conditionIsNew = true;
-
-				expression = newExpression(condition);
-				expressionIsNew = true;
-
-				programmingLanguage = newProgrammingLanguage(expression);
-				programmingLanguageIsNew = true;
-
-				sourceQuestionReference = newSourceQuestionReference(expression);
-				sourceQuestionReferenceIsNew = true;
-			} else {
-				expression = condition.getExpression();
-				if (expression != null) {
-					expressionIsNew = false;
-					if (!expression.getCodeList().isEmpty()) {
-						programmingLanguage = expression.getCodeList().get(0);
-						programmingLanguageIsNew = false;
-					} else {
-						programmingLanguage = newProgrammingLanguage(expression);
-						programmingLanguageIsNew = true;
-					}
-					if (expression.getSourceQuestionReferenceList().isEmpty()) {
-						sourceQuestionReference = newSourceQuestionReference(expression);
-						sourceQuestionReferenceIsNew = true;
-					} else {
-						sourceQuestionReference = expression
-								.getSourceQuestionReferenceList().get(0);
-						sourceQuestionReferenceIsNew = false;
-					}
-				} else {
-					expression = newExpression(condition);
-					expressionIsNew = true;
-
-					programmingLanguage = newProgrammingLanguage(expression);
-					programmingLanguageIsNew = true;
-
-					sourceQuestionReference = newSourceQuestionReference(expression);
-					sourceQuestionReferenceIsNew = true;
-				}
-			}
-		}
-
 		// statement
 		// text type in display text is one only by convention i ddi spec
 		// other langs is set on parent DisplayText!!!
+		// check for ddi bug best is LiteralText::Text
+		StructuredStringType text = null;
+		try {
+			text = model.getText();
+		} catch (DDIFtpException e) {
+			DialogUtil.errorDialog(site, ID, e.getMessage(), e);
+			return;
+		}
 		StyledText statementTxt = createTextAreaInput(group, Messages
-				.getString("StatementItem.editor.textarea"), XmlBeansUtil
-				.getTextOnMixedElement(displayText.getTextList().get(0)),
-				displayTextIsNew);
-		statementTxt.addModifyListener(new TextStyledTextModyfiListener(
-				displayText, null,
-				TextStyledTextModyfiListener.GET_TEXT_ON_MIXED_ELEMENT,
-				TextStyledTextModyfiListener.SET_TEXT_ON_MIXED_ELEMENT, model
-						.getDocument().getStatementItem().getDisplayTextList(),
-				editorStatus, site, ID));
+				.getString("StatementItem.editor.textarea"), text == null ? ""
+				: XmlBeansUtil.getTextOnMixedElement(text), false);
+		statementTxt.addModifyListener(new TextStyledTextModyfiListener(model,
+				TextType.class, getEditorIdentification()));
 
-		//
+		// condition
+		Composite error = createErrorComposite(group, "");
+		ProgrammingLanguageCodeType programmingLanguageCode = model
+				.getProgrammingLanguageCode();
+		Text conditionTxt = createTextInput(group, Messages
+				.getString("StatementItem.editor.code"),
+				programmingLanguageCode == null ? "" : programmingLanguageCode
+						.getStringValue(), false);
+		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(model,
+				ProgrammingLanguageCodeType.class, getEditorIdentification()));
+
+		// app lang
+		Text programmingLanguageTxt = createTextInput(group, Messages
+				.getString("StatementItem.editor.programlang"),
+				programmingLanguageCode == null ? "" : programmingLanguageCode
+						.getProgrammingLanguage(), false);
+		programmingLanguageTxt
+				.addModifyListener(new TextStyledTextModyfiListener(model,
+						ModelAttributes.ProgrammingLanguage.getClass(),
+						getEditorIdentification()));
+
 		// question source reference
 		try {
 			questionRefList = DdiManager.getInstance().getQuestionItemsLight(
@@ -265,33 +181,12 @@ public class StatementItemEditor extends Editor implements
 		}
 		ReferenceSelectionCombo refSelecCombo = createRefSelection(group,
 				Messages.getString("StatementItem.editor.questionref"),
-				Messages.getString("StatementItem.editor.questionref"),
-				sourceQuestionReference, questionRefList,
-				sourceQuestionReferenceIsNew);
+				Messages.getString("StatementItem.editor.questionref"), model
+						.getSourceQuestionReference(), questionRefList, false);
 		refSelecCombo.addSelectionListener(Messages
 				.getString("StatementItem.editor.questionref"),
 				questionRefList, new ReferenceSelectionAdapter(refSelecCombo,
-						sourceQuestionReference, new ReferenceClosure(), null,
-						null, expression.getSourceQuestionReferenceList(),
-						editorStatus, site, ID));
-
-		// condition
-		Composite error = createErrorComposite(group, "");
-		Text conditionTxt = createTextInput(group, Messages
-				.getString("StatementItem.editor.code"), condition
-				.getExpression().getCodeList().get(0).getStringValue(),
-				conditionIsNew);
-		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(
-				condition, new ProgrammingLanguageGetSet(), null, null,
-				displayText.getTextList(), editorStatus, site, ID));
-
-		// app lang
-		Text programmingLanguageTxt = createTextInput(group, Messages
-				.getString("StatementItem.editor.programlang"),
-				condition.getExpression().getCodeList().get(0)
-						.getProgrammingLanguage() == null ? "" : condition
-						.getExpression().getCodeList().get(0)
-						.getProgrammingLanguage(), displayTextIsNew);
+						model, ReferenceType.class, getEditorIdentification()));
 
 		// description tab
 		// name
@@ -317,85 +212,6 @@ public class StatementItemEditor extends Editor implements
 		createXmlTab(model);
 
 		editorStatus.clearChanged();
-	}
-
-	public class ProgrammingLanguageGetSet implements GenericGetSetClosure {
-		@Override
-		public String getStringValue(Object obj) {
-			if (obj instanceof ConditionalTextType) {
-				ConditionalTextType xmlObject = (ConditionalTextType) obj;
-				return xmlObject.getExpression().getCodeList().get(0)
-						.getStringValue();
-			}
-			return null;
-		}
-
-		@Override
-		public void setStringValue(Object obj, Object text) {
-			if (obj instanceof ConditionalTextType) {
-				ConditionalTextType xmlObject = (ConditionalTextType) obj;
-				xmlObject.getExpression().getCodeList().get(0).setStringValue(
-						text.toString());
-			}
-		}
-
-		@Override
-		public Object getObject(Object obj) {
-			if (obj instanceof ConditionalTextType) {
-				ConditionalTextType xmlObject = (ConditionalTextType) obj;
-				return xmlObject.getExpression().getCodeList().get(0);
-			}
-			return null;
-		}
-	}
-
-	public class StatementModyfiListener implements ModifyListener {
-		private StructuredStringType name;
-		private List<StructuredStringType> list;
-		private EditorStatus editorStatus;
-
-		public StatementModyfiListener(StructuredStringType item,
-				List<StructuredStringType> list, EditorStatus editorStatus) {
-			this.name = name;
-			this.list = list;
-			this.editorStatus = editorStatus;
-		}
-
-		@Override
-		public void modifyText(ModifyEvent e) {
-			editorStatus.setChanged();
-			StyledText text = (StyledText) e.getSource();
-			XmlBeansUtil.setTextOnMixedElement(name, text.getText());
-			if ((Boolean) text.getData(Editor.NEW_ITEM)) {
-				list.add(name);
-				for (StructuredStringType test : list) {
-					if (XmlBeansUtil.getTextOnMixedElement(name).equals(
-							text.getText())) {
-						name = test;
-					}
-				}
-				text.setData(Editor.NEW_ITEM, Boolean.FALSE);
-			}
-		}
-	}
-
-	private ConditionalTextType newCondition() {
-		ConditionalTextType conditionNew = ConditionalTextDocument.Factory
-				.newInstance().addNewConditionalText();
-		return conditionNew;
-	}
-
-	private CodeType newExpression(ConditionalTextType condition) {
-		return condition.addNewExpression();
-	}
-
-	private ProgrammingLanguageCodeType newProgrammingLanguage(
-			CodeType expression) {
-		return expression.addNewCode();
-	}
-
-	private ReferenceType newSourceQuestionReference(CodeType expression) {
-		return expression.addNewSourceQuestionReference();
 	}
 
 	@Override
