@@ -67,13 +67,14 @@ public class GenericGetSet {
 	}
 
 	/**
-	 * Generically set 
+	 * Generically set
+	 * 
 	 * @param text
 	 * @param isNew
+	 * 
+	 * @return editItem
 	 */
-	public void set(String text, boolean isNew) {
-		log.debug(isNew);
-		
+	public XmlObject set(String text, boolean isNew) {
 		// set input on edit item
 		editorStatus.setChanged();
 		if (setMethodName != null
@@ -99,11 +100,15 @@ public class GenericGetSet {
 		// add edit item to model
 		if (isNew) {
 			// add item to list
-			try {
-				list.add(editItem);
-			} catch (Exception e) {
-				DialogUtil.errorDialog(site, editorId, e.getMessage(),
-						new DDIFtpException(e));
+			if (list != null) {
+				try {
+					list.add(editItem);
+				} catch (Exception e) {
+					DialogUtil.errorDialog(site, editorId, e.getMessage(),
+							new DDIFtpException(e));
+				}
+			} else {
+				return editItem;
 			}
 
 			// recap editItem to newly added item
@@ -113,8 +118,7 @@ public class GenericGetSet {
 				// test on input
 				try {
 					if (closure != null) {
-						Object result = invokeClosure(
-								closure,
+						Object result = invokeClosure(closure,
 								GenericGetSetClosure.GET_STRING_METHOD_NAME,
 								test);
 						testTxt = (result != null ? result.toString() : null);
@@ -132,15 +136,19 @@ public class GenericGetSet {
 
 				if (testTxt != null && testTxt.equals(text)) {
 					if (log.isDebugEnabled()) {
-						log.debug("Test: " + test + "\n ~ editItem: \n"
-								+ editItem);
+						log.debug("Recap editItem: " + test
+								+ "\n ~ editItem: \n" + editItem);
 					}
 					// recap editItem to newly added item
-					editItem = (XmlObject) test;
-					break;
+					return (XmlObject) test;
 				}
 			}
+		} else {
+			return editItem;
 		}
+
+		// guard
+		return null;
 	}
 
 	private Object invokeClosure(Object obj, String methodName, Object... args)
