@@ -1,24 +1,19 @@
 package org.ddialliance.ddieditor.ui.model;
 
+import org.apache.xmlbeans.XmlObject;
+import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 
 /**
- * Model.
- *  - provides 'get' and 'set' methods for accessing Id and Version.
+ * Model. - provides 'get' and 'set' methods for accessing Id and Version.
  * 
  */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
-
 public abstract class Model implements IModel {
-	
+
 	private String id;
 	private String version;
 	private String parentId;
 	private String parentVersion;
+	protected boolean create = false;
 
 	/**
 	 * Constructor
@@ -28,58 +23,101 @@ public abstract class Model implements IModel {
 	 * @param parentId
 	 * @param parentVersion
 	 */
-	public Model(String id, String version, String parentId, String parentVersion) {
-		
+	public Model(String id, String version, String parentId,
+			String parentVersion) {
+
 		this.id = id;
 		this.version = version;
 		this.parentId = parentId;
 		this.parentVersion = parentVersion;
 	}
-	
-	/* (non-Javadoc)
+
+	public Model(XmlObject xmlObject, String parentId, String parentVersion) {
+		id = XmlBeansUtil.getXmlAttributeValue(xmlObject.xmlText(), "id=\"");
+		version = XmlBeansUtil.getXmlAttributeValue(xmlObject.xmlText(),
+				"version=\"");
+		this.parentId = parentId;
+		this.parentVersion = parentVersion;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.ddialliance.ddieditor.ui.model.IModel#getId()
 	 */
 	public String getId() {
 		return id;
 	}
 
-	/* (non-Javadoc)
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.ddialliance.ddieditor.ui.model.IModel#getVersion()
 	 */
 	public String getVersion() {
 		return version;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ddialliance.ddieditor.ui.model.IModel#setParentId(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.ddialliance.ddieditor.ui.model.IModel#setParentId(java.lang.String)
 	 */
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.ddialliance.ddieditor.ui.model.IModel#getParentId()
 	 */
 	public String getParentId() {
 		return this.parentId;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ddialliance.ddieditor.ui.model.IModel#setParentVersion(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.ddialliance.ddieditor.ui.model.IModel#setParentVersion(java.lang.
+	 * String)
 	 */
 	public void setParentVersion(String parentVersion) {
 		this.parentVersion = parentVersion;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.ddialliance.ddieditor.ui.model.IModel#getParentVersion()
 	 */
 	public String getParentVersion() {
 		return this.parentVersion;
 	}
-	
+
+	@Override
 	public void validate() throws Exception {
 		// No error found:
 		return;
 	}
+
+	public void applyChange(Object value,
+			Class<?> type) throws Exception {
+		this.create = true;
+		executeChange(value, type);
+		this.create = false;
+	}
+	
+	public abstract void executeChange(Object value,
+			Class<?> type) throws Exception;
 }
