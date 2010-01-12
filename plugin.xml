@@ -81,6 +81,12 @@
                   id="org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor"
                   name="StatementItemEditor">
             </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor"
+                  default="false"
+                  id="org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor"
+                  name="IfThenElseEditor">
+            </editor>
       </extension>
       <!--extension point="org.eclipse.ui.activities">
             <activity description="Disable unwanted eclipse UI" id="com.test.ui.disable"
