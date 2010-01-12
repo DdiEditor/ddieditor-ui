@@ -9,6 +9,7 @@ import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor;
 import org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor;
+import org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor;
 import org.ddialliance.ddieditor.ui.editor.instrument.InstrumentEditor;
 import org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
@@ -88,10 +89,11 @@ public class TreeMenu {
 			case STATEMENT_ITEM:
 				page.openEditor(input, StatementItemEditor.ID);
 				break;
+			case IF_THEN_ELSE:
+				page.openEditor(input, IfThenElseEditor.ID);
+				break;
 			default:
-				// TODO error handling
-				log.error("Editor Type not supported: " + entityType);
-				System.exit(0);
+				new DDIFtpException("Editor Type not supported: " + entityType, new Throwable());
 				break;
 			}
 

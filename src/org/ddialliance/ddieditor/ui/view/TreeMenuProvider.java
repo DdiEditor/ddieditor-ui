@@ -19,6 +19,7 @@ import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.concept.Concepts;
+import org.ddialliance.ddieditor.ui.dbxml.instrument.IfThenElseDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
@@ -469,6 +470,14 @@ public class TreeMenuProvider extends TreeMenu {
 				case STATEMENT_ITEM:
 					StatementItemDao.init(properties);
 					new StatementItemDao().delete(lightXmlObject.getId(),
+							lightXmlObject.getVersion(), lightXmlObject
+									.getParentId(), lightXmlObject
+									.getParentVersion());
+
+					break;
+
+				case IF_THEN_ELSE:
+					new IfThenElseDao().delete(lightXmlObject.getId(),
 							lightXmlObject.getVersion(), lightXmlObject
 									.getParentId(), lightXmlObject
 									.getParentVersion());
