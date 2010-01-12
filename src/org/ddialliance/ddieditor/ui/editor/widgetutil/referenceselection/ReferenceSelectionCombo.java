@@ -81,7 +81,7 @@ public class ReferenceSelectionCombo {
 		final Label itemLabel = new Label(labelComposite, SWT.NONE);
 		itemLabel
 				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true));
-		itemLabel.setText(itemLabelText + ":");
+		itemLabel.setText(itemLabelText);
 		itemLabel.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
 
