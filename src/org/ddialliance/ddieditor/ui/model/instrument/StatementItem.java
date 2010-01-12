@@ -14,7 +14,9 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.IDType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
-import org.ddialliance.ddieditor.ui.model.ModelAttributes;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.ui.model.ModelAccessor;
+import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
@@ -54,15 +56,14 @@ public class StatementItem extends Model {
 		}
 
 		// ProgrammingLanguage
-		if (type.equals(ModelAttributes.ProgrammingLanguage.getClass())) {
+		if (type.equals(ModelIdentifingType.Type_A.class)) {
 			getProgrammingLanguageCode().setProgrammingLanguage((String) value);
 		}
 
 		// ReferenceType
 		if (type.equals(ReferenceType.class)) {
 			ReferenceType ref = getSourceQuestionReference();
-			IDType id = ref.getIDList().get(0);
-			XmlBeansUtil.setTextOnMixedElement(id, (String) value);
+			ModelAccessor.setReference(ref, (LightXmlObjectType) value);
 		}
 	}
 
@@ -71,7 +72,7 @@ public class StatementItem extends Model {
 		if (codeType == null) {
 			return null;
 		}
-		return programmingLanguageCodeIsNew(codeType);
+		return getProgrammingLanguageCode(codeType);
 	}
 
 	private CodeType getCodeType() {
@@ -153,7 +154,7 @@ public class StatementItem extends Model {
 		return conditionalText.getExpression();
 	}
 
-	public ProgrammingLanguageCodeType programmingLanguageCodeIsNew(
+	public ProgrammingLanguageCodeType getProgrammingLanguageCode(
 			CodeType codeType) {
 		if (codeType.getCodeList().isEmpty()) {
 			return create ? codeType.addNewCode() : null;

@@ -31,7 +31,8 @@ public enum ElementType {
 			"InstrumentItemView.lable.instrumentItemLabel.Instrument"), ControlConstructScheme(
 			"ControlConstructScheme", InstrumentPerspective.ID, "cocs", ""), QUESTION_CONSTRUCT(
 			"QuestionConstruct", InstrumentPerspective.ID, "quec", ""), STATEMENT_ITEM(
-			"StatementItem", InstrumentPerspective.ID, "stai", ""),
+			"StatementItem", InstrumentPerspective.ID, "stai", ""), IF_THEN_ELSE(
+			"IfThenElse", InstrumentPerspective.ID, "ifth", ""),
 
 	// code
 	CODE_SCHEME("CodeScheme", null, "cods",
