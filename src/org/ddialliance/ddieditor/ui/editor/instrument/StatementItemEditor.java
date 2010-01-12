@@ -4,8 +4,6 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlOptions;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConditionalTextType;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
@@ -16,11 +14,10 @@ import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.GenericGetSetClosure;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
-import org.ddialliance.ddieditor.ui.model.ModelAttributes;
+import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.StatementItem;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
@@ -162,13 +159,17 @@ public class StatementItemEditor extends Editor implements
 				ProgrammingLanguageCodeType.class, getEditorIdentification()));
 
 		// app lang
+		String programmingLanguage = programmingLanguageCode == null ? ""
+				: programmingLanguageCode.getProgrammingLanguage();
+		if (programmingLanguage == null) {
+			programmingLanguage = "";
+		}
 		Text programmingLanguageTxt = createTextInput(group, Messages
 				.getString("StatementItem.editor.programlang"),
-				programmingLanguageCode == null ? "" : programmingLanguageCode
-						.getProgrammingLanguage(), false);
+				programmingLanguage, false);
 		programmingLanguageTxt
 				.addModifyListener(new TextStyledTextModyfiListener(model,
-						ModelAttributes.ProgrammingLanguage.getClass(),
+						ModelIdentifingType.Type_A.class,
 						getEditorIdentification()));
 
 		// question source reference
