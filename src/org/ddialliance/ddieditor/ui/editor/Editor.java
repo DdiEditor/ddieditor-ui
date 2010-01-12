@@ -388,9 +388,13 @@ public class Editor extends EditorPart {
 
 		final ReferenceSelectionCombo referenceSelectionCombo = new ReferenceSelectionCombo(
 				isNew);
+		String preIdValue = "";
+		if (reference != null && !reference.getIDList().isEmpty()) {
+			preIdValue = reference.getIDList().get(0).getStringValue();
+		}
 		try {
 			referenceSelectionCombo.createPartControl(labelComposite,
-					composite, "", labelText, referenceList, "");
+					composite, "", labelText, referenceList, preIdValue);
 		} catch (Exception e) {
 			ErrorDialog.openError(site.getShell(), Messages
 					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
@@ -834,7 +838,7 @@ public class Editor extends EditorPart {
 	public EditorIdentification getEditorIdentification() {
 		return new EditorIdentification(ID, editorStatus, site);
 	}
-	
+
 	public class EditorIdentification {
 		String ID;
 		EditorStatus editorStatus;
