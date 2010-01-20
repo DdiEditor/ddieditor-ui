@@ -59,6 +59,12 @@ public class IfThenElse extends Model {
 					(LightXmlObjectType) value);
 		}
 	}
+	
+	@Override
+	public void validate() throws Exception {
+		// TODO Auto-generated method stub
+		super.validate();
+	}
 
 	public ProgrammingLanguageCodeType getIfCondition() {
 		CodeType codeType = getCodeType(doc.getIfThenElse().getIfCondition());
@@ -67,8 +73,16 @@ public class IfThenElse extends Model {
 
 	public ReferenceType getIfQuestionReference() {
 		CodeType codeType = getCodeType(doc.getIfThenElse().getIfCondition());
+		if (codeType==null) {
+			return null;
+		}
+		ReferenceType ref = null;
 		if (codeType.getSourceQuestionReferenceList().isEmpty()) {
-			return create ? codeType.addNewSourceQuestionReference() : null;
+			ref =  create ? codeType.addNewSourceQuestionReference() : null;
+			if (ref!=null) {
+				ref.addNewID();
+			}
+			return ref;
 		} else {
 			return codeType.getSourceQuestionReferenceList().get(0);
 		}
@@ -87,6 +101,9 @@ public class IfThenElse extends Model {
 
 	public ProgrammingLanguageCodeType getProgrammingLanguageCode(
 			CodeType codeType) {
+		if (codeType == null) {
+			return null;
+		}
 		if (codeType.getCodeList().isEmpty()) {
 			return create ? codeType.addNewCode() : null;
 		} else {
