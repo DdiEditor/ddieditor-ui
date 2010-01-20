@@ -4,24 +4,16 @@ package org.ddialliance.ddieditor.ui.view;
  * Code View.
  * 
  */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 import java.util.Arrays;
 import java.util.List;
 
-import org.ddialliance.ddiftp.util.log.Log;
-import org.ddialliance.ddiftp.util.log.LogFactory;
-import org.ddialliance.ddiftp.util.log.LogType;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.eclipse.swt.widgets.Composite;
 
 public class CodeView extends View {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeView.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.CodeView";
-	public static final List<String> newMenuLabelList = Arrays.asList("Code Scheme", "Code");
+	public static final List<String> newMenuLabelList = Arrays.asList(
+			"Code Scheme", "Code");
 
 	public CodeView() {
 		super(
@@ -31,18 +23,14 @@ public class CodeView extends View {
 				Messages
 						.getString("CodeView.lable.selectLabel.NavigatorDescription"),
 				Messages.getString("CodeView.lable.codeLabel.Code"),
-				"CodeScheme",
+				ElementType.CODE_SCHEME,
 				Messages
 						.getString("CodeView.lable.codeTreeGroup.CodeStructure"),
-				newMenuLabelList);
+				Arrays.asList(ElementType.CODE));
 	}
 
 	public void createPartControl(Composite parent) {
-
-		log.debug("");
-
 		super.createPartControl(parent);
 
 	}
-
 }

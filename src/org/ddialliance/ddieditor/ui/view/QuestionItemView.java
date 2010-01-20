@@ -13,6 +13,7 @@ package org.ddialliance.ddieditor.ui.view;
 import java.util.Arrays;
 import java.util.List;
 
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -34,10 +35,10 @@ public class QuestionItemView extends View {
 						.getString("QuestionItemView.lable.selectLabel.NavigatorDescription"),
 				Messages
 						.getString("QuestionItemView.lable.questionItemLabel.Question"),
-				"QuestionScheme",
+				ElementType.QUESTION_SCHEME,
 				Messages
 						.getString("QuestionItemView.lable.questionItemsTreeGroup.QuestionItemStructure"),
-				newMenuLabelList);
+				Arrays.asList(ElementType.QUESTION_ITEM));
 	}
 
 	public void createPartControl(Composite parent) {

@@ -27,7 +27,7 @@ import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
-import org.ddialliance.ddieditor.ui.view.TreeMenu.NEW_TYPE;
+//import org.ddialliance.ddieditor.ui.view.TreeMenu.NewType;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -59,11 +59,16 @@ public class InfoView extends View {
 	MenuItem editMenuItem = null;
 
 	public InfoView() {
+		//super(viewContentType, viewTitle, viewDescr, viewEntityName, rootElement, viewTreeLabel, subElements)
 		super(ViewContentType.StudyContent, Messages
 				.getString("InfoView.label.titleLabel.DDIOverview"), Messages
 				.getString("InfoView.lable.selectLabel.Description"), Messages
-				.getString("InfoView.lable.maskLabel.Id"), "", Messages
-				.getString("InfoView.lable.treeGroup.DDIStructure"), null);
+				.getString("InfoView.lable.maskLabel.Id"),  null, "", null);
+//		super(ViewContentType.StudyContent, Messages
+//				.getString("InfoView.label.titleLabel.DDIOverview"), Messages
+//				.getString("InfoView.lable.selectLabel.Description"), Messages
+//				.getString("InfoView.lable.maskLabel.Id"), "", Messages
+//				.getString("InfoView.lable.treeGroup.DDIStructure"), null, null);
 
 		try {
 			properties.load(new FileInputStream("resources" + File.separator
@@ -139,9 +144,9 @@ public class InfoView extends View {
 				} else if (obj instanceof LightXmlObjectType) {
 					item = (LightXmlObjectType) obj;
 				}
-				TreeMenu.newItem(treeViewer, currentView, properties,
-						NEW_TYPE.SCHEME, item.getParentId(), item
-								.getParentVersion());
+//				TreeMenu.newItem(treeViewer, currentView, properties,
+//						NewType.SCHEME, item.getParentId(), item
+//								.getParentVersion());
 			}
 		});
 
@@ -174,8 +179,8 @@ public class InfoView extends View {
 									Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
 					return;
 				}
-				TreeMenu.openEditor(treeViewer, currentView, properties,
-						EditorModeType.EDIT);
+//				TreeMenu.openEditor(treeViewer, currentView, properties,
+//						EditorModeType.EDIT);
 			}
 		});
 
