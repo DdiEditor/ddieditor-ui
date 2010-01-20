@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.ddialliance.ddieditor.ui.Activator;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -59,10 +60,11 @@ public class View extends ViewPart {
 	private String viewTitle = "viewTitle";
 	private String viewDescr = "viewDescr";
 	private String viewEntityName = "viewEntityName";
-	private String rootElementName;
+	private ElementType rootElement;
 	private String viewTreeLabel = "viewTreeLabel";
 	protected View currentView = this;
-	private List<String> menuLabels;
+	private String schemeMenuLabel;
+	private List<ElementType> subElements;
 	private Action collapseAllAction;
 	private Action expandAllAction;
 	private Action refreshAction;
@@ -78,41 +80,35 @@ public class View extends ViewPart {
 	/**
 	 * Constructor
 	 * 
-	 * @param viewContentType 
-	 * 			-e.g. QuestionContent
-	 * @param viewTitle 
-	 * 			- e.g. Question Item Navigation
+	 * @param viewContentType
+	 *            -e.g. QuestionContent
+	 * @param viewTitle
+	 *            - e.g. Question Item Navigation
 	 * @param viewDescr
-	 * 			- e.g. Select a Question Item and choose a function for ....
+	 *            - e.g. Select a Question Item and choose a function for ....
 	 * @param viewEntityName
-	 * 			- e.g. Question
-	 * @param rootElementName
-	 * 			- e.g. QuestionScheme
+	 *            - e.g. Question
+	 * @param rootElement
+	 *            - e.g. QuestionScheme
 	 * @param viewTreeLabel
-	 * 			- e.g. Question Structure
-	 * @param menuLabels
-	 * 			List of Pop-up Menu Labels e.g. "Question Scheme", "Question Item"
-	 * 			If null no Pop-up Menu is created.
+	 *            - e.g. Question Structure
+	 * @param subElements
+	 *            List of Pop-up Menu Labels e.g. "Question Scheme",
+	 *            "Question Item" If null no Pop-up Menu is created.
 	 */
-	public View(ViewContentType viewContentType, String viewTitle, String viewDescr, String viewEntityName, String rootElementName,
-			String viewTreeLabel, List<String> menuLabels) {
+	public View(ViewContentType viewContentType, String viewTitle,
+			String viewDescr, String viewEntityName, ElementType rootElement,
+			String viewTreeLabel, List<ElementType> subElements) {
 
 		this.viewContentType = viewContentType;
 		this.viewTitle = viewTitle;
 		this.viewDescr = viewDescr;
 		this.viewEntityName = viewEntityName;
-		this.rootElementName = rootElementName;
 		this.viewTreeLabel = viewTreeLabel;
-		this.menuLabels = menuLabels;
-
-		try {
-			properties.load(new FileInputStream("resources" + File.separator + "ddieditor-ui.properties"));
-		} catch (IOException e) {
-			System.err.println("Error during property load:" + e.getMessage());
-			System.exit(0);
-		}
+		this.rootElement = rootElement;
+		this.subElements = subElements;
 	}
-	
+
 	private void refreshTreeViewer(TreeViewer treeViewer) {
 		treeViewer.getControl().setRedraw(false);
 		treeViewer.refresh();
@@ -120,15 +116,15 @@ public class View extends ViewPart {
 		treeViewer.expandAll();
 		treeViewer.getTree().setFocus();
 	}
-	
+
 	public void refreshView() {
 		refreshTreeViewer(treeViewer);
 	}
-	
+
 	public void set(TreeContentProvider contentProvider) {
 		treeViewer.setContentProvider(contentProvider);
 	}
-	
+
 	public void setLabelProvider(LabelProvider labelProvider) {
 		treeViewer.setLabelProvider(labelProvider);
 	}
@@ -144,25 +140,32 @@ public class View extends ViewPart {
 		log.debug("Generic createPartControl called");
 
 		final Composite composite_2 = new Composite(parent, SWT.NONE);
-		composite_2.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+		composite_2.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+		composite_2
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		composite_2.setLayout(new GridLayout());
 
 		final Composite composite_1 = new Composite(composite_2, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false));
 		final GridLayout gridLayout_1 = new GridLayout();
 		composite_1.setLayout(gridLayout_1);
 		composite_1.setBackground(SWTResourceManager.getColor(230, 230, 250));
 
 		final Label navigationTitle = new Label(composite_1, SWT.WRAP);
-		navigationTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		navigationTitle.setBackground(SWTResourceManager.getColor(230, 230, 250));
-		navigationTitle.setFont(SWTResourceManager.getFont("Sans", 14, SWT.BOLD));
+		navigationTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false));
+		navigationTitle.setBackground(SWTResourceManager
+				.getColor(230, 230, 250));
+		navigationTitle.setFont(SWTResourceManager
+				.getFont("Sans", 14, SWT.BOLD));
 		navigationTitle.setText(viewTitle);
 
 		final Label selectLabel = new Label(composite_1, SWT.WRAP);
 		selectLabel.setRedraw(true);
-		final GridData gd_selectLabel = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		final GridData gd_selectLabel = new GridData(SWT.FILL, SWT.CENTER,
+				true, false);
 		gd_selectLabel.widthHint = 468;
 		selectLabel.setLayoutData(gd_selectLabel);
 		selectLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
@@ -171,17 +174,20 @@ public class View extends ViewPart {
 		// Prepare TreeViewer
 		Composite composite = new Composite(composite_2, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
-		composite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		composite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		composite.setLayout(layout);
 
 		final Label viewEntityNameLabel = new Label(composite, SWT.NONE);
-		viewEntityNameLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		viewEntityNameLabel.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
 		viewEntityNameLabel.setText(viewEntityName);
 
 		filterText = new Text(composite, SWT.BORDER);
-		filterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		filterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
+				false));
 		filterText.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				// on a CR we want to filter
@@ -198,10 +204,12 @@ public class View extends ViewPart {
 
 		// Define group
 		final Group treeGroup = new Group(composite, SWT.NONE);
-		treeGroup.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		treeGroup.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
 		final GridLayout gridLayout = new GridLayout();
 		treeGroup.setLayout(gridLayout);
-		final GridData gd_treeGroup = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+		final GridData gd_treeGroup = new GridData(SWT.FILL, SWT.FILL, true,
+				true, 2, 1);
 		gd_treeGroup.widthHint = 460;
 		gd_treeGroup.heightHint = 640;
 		treeGroup.setLayoutData(gd_treeGroup);
@@ -231,9 +239,9 @@ public class View extends ViewPart {
 		tree.setLayoutData(gd_tree);
 
 		// Define Tree Pop-up Menu
-		if (menuLabels != null) {
-			TreeMenuProvider treeMenuProvider = new TreeMenuProvider(treeViewer, currentView, viewEntityName,
-					rootElementName, menuLabels, properties);
+		if (subElements != null) {
+			TreeMenuProvider treeMenuProvider = new TreeMenuProvider(
+					treeViewer, currentView, rootElement, subElements);
 			treeMenuProvider.setMenu();
 		}
 
@@ -247,21 +255,25 @@ public class View extends ViewPart {
 	 */
 	private void createActions() {
 
-		expandAllAction = new Action(Messages.getString("View.label.expandAllAction.ExpandAll")) { //$NON-NLS-1$)
+		expandAllAction = new Action(Messages
+				.getString("View.label.expandAllAction.ExpandAll")) { //$NON-NLS-1$)
 			public void run() {
 				treeViewer.expandAll();
 			}
 		};
-		expandAllAction.setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.getDefault(),
-				"icons/expand_all.gif"));
+		expandAllAction.setImageDescriptor(ResourceManager
+				.getPluginImageDescriptor(Activator.getDefault(),
+						"icons/expand_all.gif"));
 
-		collapseAllAction = new Action(Messages.getString("View.label.collapseAllAction.CollapseAll")) { //$NON-NLS-1$)
+		collapseAllAction = new Action(Messages
+				.getString("View.label.collapseAllAction.CollapseAll")) { //$NON-NLS-1$)
 			public void run() {
 				treeViewer.collapseAll();
 			}
 		};
-		collapseAllAction.setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.getDefault(),
-				"icons/collapse_all.gif"));
+		collapseAllAction.setImageDescriptor(ResourceManager
+				.getPluginImageDescriptor(Activator.getDefault(),
+						"icons/collapse_all.gif"));
 
 		refreshAction = new Action("Refresh") {
 			public void run() {
@@ -272,8 +284,9 @@ public class View extends ViewPart {
 			}
 		};
 
-		refreshAction.setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.getDefault(),
-				"icons/refresh.gif"));
+		refreshAction.setImageDescriptor(ResourceManager
+				.getPluginImageDescriptor(Activator.getDefault(),
+						"icons/refresh.gif"));
 
 		helpContentsAction = new HelpContentsAction();
 
@@ -283,7 +296,8 @@ public class View extends ViewPart {
 	 * Initialize the tool bar
 	 */
 	private void initializeToolBar() {
-		IToolBarManager toolbarManager = getViewSite().getActionBars().getToolBarManager();
+		IToolBarManager toolbarManager = getViewSite().getActionBars()
+				.getToolBarManager();
 
 		toolbarManager.add(new Separator());
 
@@ -304,7 +318,8 @@ public class View extends ViewPart {
 	 * Initialize the menu
 	 */
 	private void initializeMenu() {
-		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
+		IMenuManager menuManager = getViewSite().getActionBars()
+				.getMenuManager();
 
 		menuManager.add(helpContentsAction);
 	}
