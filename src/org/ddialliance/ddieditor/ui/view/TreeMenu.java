@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
+import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.ElementType;
@@ -56,10 +57,14 @@ public class TreeMenu {
 				lightXmlObject.getVersion(), lightXmlObject.getParentId(),
 				lightXmlObject.getParentVersion(), entityType, mode,
 				currentView);
+		 
 		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+			Editor editor = (Editor)PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getActivePage()
 					.openEditor(input, entityType.getEditorId());
+			if (mode.equals(EditorModeType.NEW)) {
+				editor.editorStatus.setChanged();
+			}			
 		} catch (PartInitException e) {
 			DialogUtil.errorDialog(currentView.getSite().getShell(),
 					currentView.ID, null, e.getMessage(), e);
