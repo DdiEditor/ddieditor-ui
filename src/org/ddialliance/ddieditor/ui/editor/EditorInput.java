@@ -10,7 +10,6 @@ package org.ddialliance.ddieditor.ui.editor;
  * $Revision$
  */
 
-import java.util.Properties;
 import java.util.Random;
 
 import org.ddialliance.ddieditor.ui.Activator;
@@ -34,7 +33,6 @@ public class EditorInput implements IEditorInput {
 	private final String parentId;
 	private final String parentVersion;
 	private View parentView;
-	private Properties properties;
 
 	public static enum EditorModeType {
 		NEW, EDIT, VIEW
@@ -58,11 +56,10 @@ public class EditorInput implements IEditorInput {
 	 * @param type
 	 * @param mode
 	 * @param parentView
-	 * @param properties
 	 */
 	public EditorInput(String id, String version, String parentId,
 			String parentVersion, ElementType type, EditorModeType mode,
-			View parentView, Properties properties) {
+			View parentView) {
 
 		// TODO ID generation
 		if (mode.equals(EditorModeType.NEW)) {
@@ -77,7 +74,6 @@ public class EditorInput implements IEditorInput {
 		this.parentVersion = parentVersion;
 		this.mode = mode;
 		this.parentView = parentView;
-		this.properties = properties;
 	}
 
 	final public String getId() {
@@ -110,10 +106,6 @@ public class EditorInput implements IEditorInput {
 		}
 		// TODO Get User identification from XML
 		return "Dummy";
-	}
-
-	public Properties getProperties() {
-		return properties;
 	}
 
 	public View getParentView() {
