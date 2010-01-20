@@ -26,7 +26,7 @@ public abstract class GenericModifyListener implements ModifyListener {
 		} catch (Exception e) {
 			DDIFtpException e1 = new DDIFtpException(e);
 			DialogUtil.errorDialog(editorIdentification.getSite(),
-					editorIdentification.getID(), e1.getMessage(), e1);
+					editorIdentification.getID(), null, e1.getMessage(), e1);
 		}
 	}
 }

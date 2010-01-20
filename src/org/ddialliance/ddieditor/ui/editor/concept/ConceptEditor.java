@@ -127,8 +127,6 @@ public class ConceptEditor extends LabelDescriptionEditor {
 					+ editorInput.getEditorMode());
 		}
 
-		Concepts.init(((EditorInput) input).getProperties());
-
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
 				concept = Concepts.createConcept(editorInput.getId(),

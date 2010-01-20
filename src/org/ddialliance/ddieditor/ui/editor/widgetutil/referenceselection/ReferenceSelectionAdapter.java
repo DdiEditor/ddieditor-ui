@@ -30,7 +30,7 @@ public class ReferenceSelectionAdapter implements SelectionListener {
 		} catch (Exception ex) {
 			DDIFtpException e1 = new DDIFtpException(ex);
 			DialogUtil.errorDialog(editorIdentification.getSite(),
-					editorIdentification.getID(), e1.getMessage(), e1);
+					editorIdentification.getID(), null, e1.getMessage(), e1);
 		}
 		editorIdentification.getEditorStatus().setChanged();
 	}

@@ -114,8 +114,6 @@ public class CodeSchemeEditor extends LabelDescriptionEditor{
 			log.debug("CodeSchemeEditor.init() - Editor Mode: " + editorInput.getEditorMode());
 		}
 
-		CodeSchemes.init(((EditorInput) input).getProperties());
-
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
 				codeScheme = CodeSchemes.createCodeScheme(editorInput.getId(), editorInput.getVersion(),

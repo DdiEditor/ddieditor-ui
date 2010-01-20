@@ -114,8 +114,6 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 			log.debug("ConceptSchemeEditor.init() - Editor Mode: " + editorInput.getEditorMode());
 		}
 
-		ConceptSchemes.init(((EditorInput) input).getProperties());
-
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
 				conceptScheme = ConceptSchemes.createConceptScheme(editorInput.getId(), editorInput.getVersion(),

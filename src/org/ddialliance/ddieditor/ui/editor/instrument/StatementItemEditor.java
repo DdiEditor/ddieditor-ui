@@ -138,7 +138,7 @@ public class StatementItemEditor extends Editor implements
 		try {
 			text = model.getText();
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(site, ID, e.getMessage(), e);
+			DialogUtil.errorDialog(site, ID, null, e.getMessage(), e);
 			return;
 		}
 		StyledText statementTxt = createTextAreaInput(group, Messages
@@ -178,7 +178,7 @@ public class StatementItemEditor extends Editor implements
 					null, null, null, null).getLightXmlObjectList()
 					.getLightXmlObjectList();
 		} catch (Exception e) {
-			DialogUtil.errorDialog(site, ID, e.getMessage(), e);
+			DialogUtil.errorDialog(site, ID, null, e.getMessage(), e);
 		}
 		ReferenceSelectionCombo refSelecCombo = createRefSelection(group,
 				Messages.getString("StatementItem.editor.questionref"),

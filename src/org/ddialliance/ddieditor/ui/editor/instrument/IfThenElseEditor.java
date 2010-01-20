@@ -158,7 +158,7 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 					null, null, null, null).getLightXmlObjectList()
 					.getLightXmlObjectList();
 		} catch (Exception e) {
-			DialogUtil.errorDialog(site, ID, e.getMessage(), e);
+			DialogUtil.errorDialog(site, ID, null, e.getMessage(), e);
 		}
 		ReferenceSelectionCombo questionRefSelectCombo = createRefSelection(
 				group, Messages.getString("IfThenElse.editor.ifquestionref"),
@@ -176,7 +176,7 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 			controlConstructRefListTemp = DdiManager.getInstance()
 					.getInstrumentLabel(null, null, null, null);
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(site, ID, e.getMessage(), e);
+			DialogUtil.errorDialog(site, ID, null, e.getMessage(), e);
 		}
 		List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
 		for (LinkedList<LightXmlObjectType> lightXmlObjectList : controlConstructRefListTemp

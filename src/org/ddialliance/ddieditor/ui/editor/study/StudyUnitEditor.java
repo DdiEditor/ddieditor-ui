@@ -599,8 +599,6 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 			log.debug("StudyUnitEditor.init() - Editor Mode: " + editorInput.getEditorMode());
 		}
 
-		StudyUnits.init(((EditorInput) input).getProperties());
-
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
 				studyUnit = StudyUnits.createStudyUnit(editorInput.getId(), editorInput.getVersion(), editorInput

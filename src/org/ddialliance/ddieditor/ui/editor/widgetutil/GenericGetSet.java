@@ -92,7 +92,7 @@ public class GenericGetSet {
 							text);
 				}
 			} catch (Exception e) {
-				DialogUtil.errorDialog(site, editorId, e.getMessage(),
+				DialogUtil.errorDialog(site, editorId, null, e.getMessage(),
 						new DDIFtpException(e));
 			}
 		}
@@ -104,7 +104,7 @@ public class GenericGetSet {
 				try {
 					list.add(editItem);
 				} catch (Exception e) {
-					DialogUtil.errorDialog(site, editorId, e.getMessage(),
+					DialogUtil.errorDialog(site, editorId, null, e.getMessage(),
 							new DDIFtpException(e));
 				}
 			} else {
@@ -130,7 +130,7 @@ public class GenericGetSet {
 								getMethodName, false, null);
 					}
 				} catch (Exception e) {
-					DialogUtil.errorDialog(site, editorId, e.getMessage(),
+					DialogUtil.errorDialog(site, editorId, null, e.getMessage(),
 							new DDIFtpException(e));
 				}
 

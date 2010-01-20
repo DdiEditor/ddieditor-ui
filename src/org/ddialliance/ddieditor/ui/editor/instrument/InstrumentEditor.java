@@ -61,7 +61,6 @@ public class InstrumentEditor extends Editor {
 		// TODO formalize boiler plate code ...
 		this.editorInput = (EditorInput) input;
 		instruments = new InstrumentDao();
-		instruments.init(((EditorInput) input).getProperties());
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
 				instrument = instruments.create(editorInput.getId(),
