@@ -10,14 +10,12 @@ package org.ddialliance.ddieditor.ui.editor;
  * $Revision$
  */
 
-import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.IDType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
@@ -727,7 +725,6 @@ public class Editor extends EditorPart {
 	 * @param parent
 	 */
 	public void createPartControl(Composite parent) {
-		log.debug("Editor.createPartControl called");
 		parent.setLayout(new GridLayout());
 
 		// General Editor GUI layout:
