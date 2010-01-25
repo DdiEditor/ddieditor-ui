@@ -98,7 +98,7 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 					ID, 0, errMess, e));
 			return;
 		}
-		editorInput.getParentView().refreshView();
+		updateParentView();
 		editorStatus.clearChanged();
 		log.debug("ConceptSchemeEditor.doSave(1): " + editorStatus.getStatus());
 	}

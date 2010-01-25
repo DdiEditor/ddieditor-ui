@@ -579,7 +579,7 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 					ID, 0, errMess, e));
 			return;
 		}
-		editorInput.getParentView().refreshView();
+		updateParentView();
 		editorStatus.clearChanged();
 		log.debug("StudyUnitEditor.doSave(1): " + editorStatus.getStatus());
 	}

@@ -707,7 +707,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 					.equals(EditorModeType.VIEW)) {
 				log.error("*** Saved ignored! ***");
 			}
-			editorInput.getParentView().refreshView();
+			updateParentView();
 		} catch (Exception e) {
 			String errMess = MessageFormat
 					.format(

@@ -108,7 +108,7 @@ public class ConceptEditor extends LabelDescriptionEditor {
 					ID, 0, errMess, e));
 			return;
 		}
-		editorInput.getParentView().refreshView();
+		updateParentView();
 		editorStatus.clearChanged();
 		log.debug("ConceptEditor.doSave(1): " + editorStatus.getStatus());
 	}

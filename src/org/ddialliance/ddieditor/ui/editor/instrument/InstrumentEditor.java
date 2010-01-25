@@ -143,7 +143,7 @@ public class InstrumentEditor extends Editor {
 //				new ModifyListener() {
 //					public void modifyText(ModifyEvent e) {
 //						editorStatus.setChanged();
-//						software.getNameList().get(0).setStringValue(
+//						software.getNameList().get(0).setStringValue(	
 //								name.getText());
 //					}
 //				});
@@ -188,40 +188,9 @@ public class InstrumentEditor extends Editor {
 				});
 	}
 
-	public String getPreferredPerspectiveId() {
-		return InstrumentPerspective.ID;
-	}
-
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(Messages
 				.getString("perspective.switch.dialogtext"), Messages
 				.getString("perspective.instruments"));
-	}
-
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		super.doSave(monitor);
-
-		try {
-			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				instruments.create(instrument);
-				editorInput.setEditorMode(EditorModeType.EDIT);
-			} else if (editorInput.getEditorMode()
-					.equals(EditorModeType.EDIT)) {
-				instruments.update(instrument);
-			} else if (editorInput.getEditorMode()
-					.equals(EditorModeType.VIEW)) {
-				log.debug("*** Saved ignored! ***");
-			}
-		} catch (Exception e) {
-			String errMess = Messages
-					.getString("InstrumentEditor.mess.ErrorDuringSave"); //$NON-NLS-1$
-			ErrorDialog.openError(site.getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, errMess, e));
-			return;
-		}
-		editorInput.getParentView().refreshView();
-		editorStatus.clearChanged();
 	}
 }

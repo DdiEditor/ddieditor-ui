@@ -99,7 +99,7 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 					ID, 0, errMess, e));
 			return;
 		}
-		editorInput.getParentView().refreshView();
+		updateParentView();
 		editorStatus.clearChanged();
 		log.debug("QuestionSchemeEditor.doSave(1): " + editorStatus.getStatus());
 	}
