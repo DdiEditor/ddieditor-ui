@@ -25,6 +25,7 @@ import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.ElementType;
+import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.MessageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -57,8 +58,6 @@ public class TreeMenuProvider extends TreeMenu {
 	final Menu menu;
 	MenuItem editMenuItem = null;
 	private List<ElementType> subElements;
-
-	// private static enum NEW_TYPE {SCHEME, ITEM};
 
 	/**
 	 * Constructor for TreeMenuProvider
@@ -128,11 +127,11 @@ public class TreeMenuProvider extends TreeMenu {
 				.getDefault(), "icons/delete_obj.gif"));
 		deleteMenuItem.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
-				TreeItem[] t = treeViewer.getTree().getSelection();
-				for (int i = 0; i < t.length; i++) {
-					log.debug(t[i].getText() + ", ");
-					log.debug(t[i].getData("parentId"));
-				}
+				// TreeItem[] t = treeViewer.getTree().getSelection();
+				// for (int i = 0; i < t.length; i++) {
+				// log.debug(t[i].getText() + ", ");
+				// log.debug(t[i].getData("parentId"));
+				// }
 				// TODO Distinguish between Schemes and Items
 				deleteItem(EditorModeType.EDIT);
 			}
@@ -180,10 +179,8 @@ public class TreeMenuProvider extends TreeMenu {
 				menuItem.setImage(ResourceManager.getPluginImage(Activator
 						.getDefault(), "icons/new_wiz.gif"));
 
-				// is this nessesary menuItem.setData(ELEMENT_TYPE, type);
 				menuItem.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(final SelectionEvent e) {
-						log.debug(type);
 						openEditor(treeViewer, currentView, EditorModeType.NEW,
 								type);
 					}
@@ -201,11 +198,12 @@ public class TreeMenuProvider extends TreeMenu {
 			entityType = ElementType
 					.getElementType(lightXmlObject.getElement());
 		} catch (DDIFtpException e) {
-			MessageDialog
-					.openError(
+			DialogUtil
+					.errorDialog(
 							currentView.getSite().getShell(),
+							currentView.ID,
 							Messages.getString("ErrorTitle"),
-							Messages.getString("View.mess.EditorNewError") + "\n" + e.getMessage()); //$NON-NLS-1$
+							Messages.getString("View.mess.EditorNewError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
 		}
 
 		if (MessageDialog.openConfirm(currentView.getSite().getShell(),
@@ -322,27 +320,30 @@ public class TreeMenuProvider extends TreeMenu {
 
 					break;
 				default:
-					// TODO error handling
-					System.err.println("Editor Type not supported: "
-							+ entityType);
-					// System.exit(0);
+					DDIFtpException e = new DDIFtpException(
+							"Editor type not supported: " + entityType,
+							new Throwable());
+					DialogUtil.errorDialog(currentView.getSite().getShell(),
+							this.currentView.ID,
+							"Editor type is not supported", e.getMessage(), e);
 					break;
 				}
-				// TODO firePropertyChange(IEditorPart.PROP_DIRTY);
 			} catch (PartInitException ex) {
-				MessageDialog
-						.openError(
+				DialogUtil
+						.errorDialog(
 								currentView.getSite().getShell(),
+								currentView.ID,
 								Messages.getString("ErrorTitle"),
 								Messages
-										.getString("View.mess.EditorUIDeleteError") + "\n" + ex.getMessage()); //$NON-NLS-1$
+										.getString("View.mess.EditorUIDeleteError") + "\n" + ex.getMessage(), ex); //$NON-NLS-1$
 			} catch (Exception e) {
-				MessageDialog
-						.openError(
+				DialogUtil
+						.errorDialog(
 								currentView.getSite().getShell(),
+								currentView.ID,
 								Messages.getString("ErrorTitle"),
 								Messages
-										.getString("View.mess.EditorDeleteError") + "\n" + e.getMessage()); //$NON-NLS-1$
+										.getString("View.mess.EditorDeleteError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
 			}
 			removeItemFromMenu(lightXmlObject);
 			treeViewer.refresh();
