@@ -10,6 +10,7 @@ package org.ddialliance.ddieditor.ui.editor;
  * $Revision$
  */
 
+import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -21,12 +22,15 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.IAddAttr;
+import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.DDITabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.TabFolderListener;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
+import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
+import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -83,7 +87,7 @@ import org.eclipse.ui.part.EditorPart;
  * @author ddadak
  * 
  */
-public class Editor extends EditorPart {
+public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
 
@@ -151,6 +155,8 @@ public class Editor extends EditorPart {
 	public EditorStatus editorStatus = new EditorStatus();
 	private IEditorSite site;
 	protected EditorInput editorInput;
+	protected IModel model;
+	protected IDao dao;
 	private Composite composite;
 
 	public static enum FIELD_TYPE {
@@ -719,6 +725,43 @@ public class Editor extends EditorPart {
 		return styledText;
 	}
 
+	@Override
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
+		setInput(input);
+		setSite(site);
+		this.editorInput = (EditorInput) input;
+		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+			try {
+				model = dao.create(editorInput.getId(), editorInput
+						.getVersion(), editorInput.getParentId(), editorInput
+						.getParentVersion());
+			} catch (Exception e) {
+				throw new PartInitException(Messages
+						.getString("editor.init.error.create"),
+						new DDIFtpException(e));
+			}
+		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
+				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+			try {
+				model = dao.getModel(editorInput.getId(), editorInput
+						.getVersion(), editorInput.getParentId(), editorInput
+						.getParentVersion());
+			} catch (Exception e) {
+				throw new PartInitException(Messages
+						.getString("editor.init.error.retrieval"),
+						new DDIFtpException(e));
+			}
+		} else {
+			throw new PartInitException(Messages
+					.getString("editor.init.error.editmodeunsupported"),
+					new DDIFtpException());
+		}
+		// Sets the name of this part. The name will be shown in the tab area
+		// for the part
+		setPartName(model.getId()); // TODO i18n
+	}
+
 	/**
 	 * Create contents of the editor part
 	 * 
@@ -779,6 +822,14 @@ public class Editor extends EditorPart {
 		editorStatus.clearChanged();
 	}
 
+	/**
+	 * Update parent view by fireing a property change event
+	 */
+	public void updateParentView() {
+		// update view
+		firePropertyChange(IEditorPart.PROP_INPUT);
+	}
+
 	@Override
 	public void setFocus() {
 		// log.debug("Editor.setFocus()");
@@ -787,7 +838,24 @@ public class Editor extends EditorPart {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// log.debug("Editor.doSave()");
+		try {
+			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+				dao.create(model);
+				editorInput.setEditorMode(EditorModeType.EDIT);
+			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
+				dao.update(model);
+			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+				log.debug("*** Saved ignored! ***");
+			}
+		} catch (Exception e) {
+			String errMess = Messages
+					.getString("IfThenElseEditor.mess.ErrorDuringSave"); //$NON-NLS-1$
+			DialogUtil.errorDialog(site, ID, Messages.getString("ErrorTitle"),
+					errMess, e);
+			return;
+		}
+		editorStatus.clearChanged();
+		updateParentView();
 	}
 
 	@Override
@@ -797,12 +865,6 @@ public class Editor extends EditorPart {
 				.openError(
 						site.getShell(),
 						Messages.getString("ErrorTitle"), Messages.getString("Editor.mess.SaveAsNotSupported")); //$NON-NLS-1$
-	}
-
-	@Override
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
-		this.site = site;
 	}
 
 	@Override
@@ -860,5 +922,16 @@ public class Editor extends EditorPart {
 		public IEditorSite getSite() {
 			return site;
 		}
+	}
+
+	@Override
+	public String getPerspectiveSwitchDialogText() {
+		return MessageFormat.format(Messages
+				.getString("perspective.switch.dialogtext"), editorInput.getElementType().getPerspectiveId());
+	}
+
+	@Override
+	public String getPreferredPerspectiveId() {
+		return this.editorInput.getElementType().getPerspectiveId();
 	}
 }
