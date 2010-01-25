@@ -10,9 +10,6 @@ package org.ddialliance.ddieditor.ui.view;
  * $Revision$
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
@@ -28,6 +25,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -42,11 +40,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.internal.actions.HelpContentsAction;
 import org.eclipse.ui.part.ViewPart;
 
-public class View extends ViewPart {
+public class View extends ViewPart implements IPropertyListener {
 	/**
 	 * View Member variable
 	 */
@@ -63,7 +63,6 @@ public class View extends ViewPart {
 	private ElementType rootElement;
 	private String viewTreeLabel = "viewTreeLabel";
 	protected View currentView = this;
-	private String schemeMenuLabel;
 	private List<ElementType> subElements;
 	private Action collapseAllAction;
 	private Action expandAllAction;
@@ -73,7 +72,6 @@ public class View extends ViewPart {
 	private HelpContentsAction helpContentsAction;
 	private Tree tree;
 	private Text filterText;
-	private Properties properties = new Properties();
 	final PatternFilter nameFilter = new PatternFilter();
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.View";
 
@@ -107,6 +105,11 @@ public class View extends ViewPart {
 		this.viewTreeLabel = viewTreeLabel;
 		this.rootElement = rootElement;
 		this.subElements = subElements;
+	}
+
+	@Override
+	public void addPartPropertyListener(IPropertyChangeListener listener) {
+		super.addPartPropertyListener(listener);
 	}
 
 	private void refreshTreeViewer(TreeViewer treeViewer) {
@@ -329,4 +332,10 @@ public class View extends ViewPart {
 		// Set the focus
 	}
 
+	@Override
+	public void propertyChanged(Object source, int propId) {
+		if (propId == IEditorPart.PROP_INPUT) {
+			refreshView();
+		}
+	}
 }
