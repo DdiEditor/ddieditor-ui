@@ -10,16 +10,10 @@ package org.ddialliance.ddieditor.ui.editor;
  * $Revision$
  */
 
-import java.util.Random;
-
-import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.model.ElementType;
-import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
-import org.ddialliance.ddieditor.ui.view.View;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -28,75 +22,75 @@ public class EditorInput implements IEditorInput {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			EditorInput.class);
 
-	private final String id;
-	private final String version;
-	private final String parentId;
-	private final String parentVersion;
-	private View parentView;
+	private String id;
+	private String version;
+	private String parentId;
+	private String parentVersion;
+	private ElementType elementType;
 
+	/**
+	 * State of editor based on persistence and access
+	 * <ul>
+	 * <li>NEW - new element not created before</li>
+	 * <li>EDIT - editable element retrieved from persistence store</li>
+	 * <li>NEW - viewable element retrieved from persistence store</li>
+	 * </ul>
+	 */
 	public static enum EditorModeType {
 		NEW, EDIT, VIEW
 	};
 
 	public EditorModeType mode;
 
-	private String genID(String prefix, String agency) {
-		// TODO Generate ID according to standard
-		return prefix + "-" + agency + "-" + Math.abs(new Random().nextInt())
-				% 1000000000;
-	}
-
 	/**
 	 * Constructor
 	 * 
-	 * @param id
-	 * @param version
-	 * @param parentId
-	 * @param parentVersion
-	 * @param type
-	 * @param mode
-	 * @param parentView
+	 * @param id of DDI identifiable
+	 * @param version of DDI versionable
+	 * @param parentId of parent DDI identifiable
+	 * @param parentVersion of parent DDI versionable
+	 * @param elementType @see {@link org.ddialliance.ddieditor.ui.model.ElementType} 
+	 * @param mode @see {@link EditorModeType}
 	 */
 	public EditorInput(String id, String version, String parentId,
-			String parentVersion, ElementType type, EditorModeType mode,
-			View parentView) {
+			String parentVersion, ElementType elementType, EditorModeType mode) {
 
-		// TODO ID generation
 		if (mode.equals(EditorModeType.NEW)) {
-			IPreferenceStore store = Activator.getDefault()
-					.getPreferenceStore();
-			id = genID(type.getIdPrefix(), store
-					.getString(PreferenceConstants.DDI_AGENCY));
+			// id and version generation handled by model
+			
+			// clean version
+			this.version = null;			
+		} else {
+			this.id = id;
+			this.version = version;
 		}
-		this.id = id;
-		this.version = version;
 		this.parentId = parentId;
 		this.parentVersion = parentVersion;
 		this.mode = mode;
-		this.parentView = parentView;
+		this.elementType = elementType;
 	}
 
-	final public String getId() {
+	 public String getId() {
 		return id;
 	}
 
-	final public String getVersion() {
+	 public String getVersion() {
 		return version;
 	}
 
-	final public String getParentId() {
+	 public String getParentId() {
 		return parentId;
 	}
 
-	final public String getParentVersion() {
+	 public String getParentVersion() {
 		return parentVersion;
 	}
 
-	final public void setEditorMode(EditorModeType mode) {
+	 public void setEditorMode(EditorModeType mode) {
 		this.mode = mode;
 	}
 
-	final public EditorModeType getEditorMode() {
+	 public EditorModeType getEditorMode() {
 		return mode;
 	}
 
@@ -107,9 +101,9 @@ public class EditorInput implements IEditorInput {
 		// TODO Get User identification from XML
 		return "Dummy";
 	}
-
-	public View getParentView() {
-		return parentView;
+	
+	public ElementType getElementType() {
+		return elementType;
 	}
 
 	@Override
@@ -155,6 +149,6 @@ public class EditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "DDI Editor";
+		return elementType.getTranslatedDisplayMessageEntry();
 	}
 }
