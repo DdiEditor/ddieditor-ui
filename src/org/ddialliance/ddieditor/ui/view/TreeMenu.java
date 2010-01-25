@@ -13,7 +13,6 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -39,11 +38,8 @@ public class TreeMenu {
 				entityType = ElementType.getElementType(lightXmlObject
 						.getElement());
 			} catch (DDIFtpException e) {
-				MessageDialog
-						.openError(
-								currentView.getSite().getShell(),
-								Messages.getString("ErrorTitle"),
-								Messages.getString("View.mess.EditorNewError") + "\n" + e.getMessage()); //$NON-NLS-1$
+				DialogUtil.errorDialog(currentView.getSite().getShell(),
+						currentView.ID, null, e.getMessage(), e);
 			}
 		}
 
@@ -55,16 +51,20 @@ public class TreeMenu {
 		// open editor
 		EditorInput input = new EditorInput(lightXmlObject.getId(),
 				lightXmlObject.getVersion(), lightXmlObject.getParentId(),
-				lightXmlObject.getParentVersion(), entityType, mode,
-				currentView);
-		 
+				lightXmlObject.getParentVersion(), entityType, mode);
+
 		try {
-			Editor editor = (Editor)PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage()
-					.openEditor(input, entityType.getEditorId());
+			Editor editor = (Editor) PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage().openEditor(
+							input, entityType.getEditorId());
+
+			// add update on save listener
+			editor.addPropertyListener(currentView);
+
+			// set editor as dirty on new
 			if (mode.equals(EditorModeType.NEW)) {
 				editor.editorStatus.setChanged();
-			}			
+			}
 		} catch (PartInitException e) {
 			DialogUtil.errorDialog(currentView.getSite().getShell(),
 					currentView.ID, null, e.getMessage(), e);
