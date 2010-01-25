@@ -24,6 +24,16 @@ import org.ddialliance.ddieditor.ui.view.CodeView;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 
+/**
+ * Type to bind DDI elements with Eclipse RCP via the following properties:
+ * <ul>
+ * <li>elementName DDI local name</li>
+ * <li>perspectiveId preferred RCP prospective ID</li>
+ * <li>editorId corresponding RCP editor ID</li>
+ * <li>idPrefix prefix for DDI ID generation</li>
+ * <li>displayMessageEntry message key for retrieving i18n label of elementName</li>
+ * </ul>
+ */
 public enum ElementType {
 	// application
 	FILE("", "", "", "", ""), MAINTAINABLE_LIGHTLABEL("", "", "", "", ""),
@@ -81,6 +91,20 @@ public enum ElementType {
 	private String idPrefix;
 	private String displayMessageEntry;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param elementName
+	 *            DDI local name
+	 * @param perspectiveId
+	 *            RCP prospective ID
+	 * @param editorId
+	 *            editor ID
+	 * @param idPrefix
+	 *            prefix for DDI ID generation
+	 * @param displayMessageEntry
+	 *            message key for retrieving i18n label of elementName
+	 */
 	private ElementType(String elementName, String perspectiveId,
 			String editorId, String idPrefix, String displayMessageEntry) {
 		this.elementName = elementName;
@@ -106,10 +130,20 @@ public enum ElementType {
 		return idPrefix;
 	}
 
+	/**
+	 * Get message key
+	 * 
+	 * @return message key
+	 */
 	public String getDisplayMessageEntry() {
 		return displayMessageEntry;
 	}
 
+	/**
+	 * Translate message key
+	 * 
+	 * @return translated message key
+	 */
 	public String getTranslatedDisplayMessageEntry() {
 		return Messages.getString(displayMessageEntry);
 	}
