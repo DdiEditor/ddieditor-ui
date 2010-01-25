@@ -3,7 +3,7 @@ package org.ddialliance.ddieditor.ui.dbxml.instrument;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.IfThenElseDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.IfThenElseType;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
@@ -47,22 +47,15 @@ public class IfThenElseDao extends XmlEntities implements IDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.ddialliance.ddieditor.ui.dbxml.Dao#create(java.lang.String,
+	 * @see org.ddialliance.ddieditor.ui.dbxml.Dao#create(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public IfThenElse create(String id, String version, String parentId,
 			String parentVersion) throws Exception {
 		IfThenElseDocument doc = IfThenElseDocument.Factory.newInstance();
-
-		IfThenElseType type = doc.addNewIfThenElse();
-		type.setId(id);
-		if (version != null) {
-			type.setVersion(version);
-		}
-
+		IdentificationManager.getInstance().addIdentification(
+				doc.addNewIfThenElse(), null, null);
 		IfThenElse model = new IfThenElse(doc, parentId, parentVersion);
-
 		return model;
 	}
 
@@ -115,6 +108,7 @@ public class IfThenElseDao extends XmlEntities implements IDao {
 			String parentVersion) throws Exception {
 		IfThenElse model = getModel(id, version, parentId, parentVersion);
 		DdiManager.getInstance().deleteElement(model.getDocument(),
-				model.getParentId(), model.getParentVersion(), "ControlConstructScheme");
+				model.getParentId(), model.getParentVersion(),
+				"ControlConstructScheme");
 	}
 }
