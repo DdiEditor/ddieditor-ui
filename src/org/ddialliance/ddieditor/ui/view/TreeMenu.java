@@ -25,7 +25,8 @@ public class TreeMenu {
 
 	public void openEditor(TreeViewer treeViewer, View currentView,
 			EditorModeType mode, ElementType entityType) {
-		LightXmlObjectType lightXmlObject = defineSelection(treeViewer);
+		LightXmlObjectType lightXmlObject = defineSelection(treeViewer,
+				currentView.ID);
 
 		// legacy code to check up on!!
 		// case FILE:
@@ -57,7 +58,7 @@ public class TreeMenu {
 			Editor editor = (Editor) PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getActivePage().openEditor(
 							input, entityType.getEditorId());
-
+			
 			// add update on save listener
 			editor.addPropertyListener(currentView);
 
@@ -67,20 +68,21 @@ public class TreeMenu {
 			}
 		} catch (PartInitException e) {
 			DialogUtil.errorDialog(currentView.getSite().getShell(),
-					currentView.ID, null, e.getMessage(), e);
+					currentView.ID, "Error", e.getMessage(), e);
 		}
 
 		// notify any listeners of the view with the actual data of the view
 		treeViewer.setSelection(treeViewer.getSelection());
 	}
 
-	public LightXmlObjectType defineSelection(TreeViewer treeViewer) {
+	public LightXmlObjectType defineSelection(TreeViewer treeViewer, String ID) {
 		ISelection selection = treeViewer.getSelection();
 		Object obj = null;
 		try {
 			obj = ((IStructuredSelection) selection).getFirstElement();
 		} catch (Exception e) {
-			// TODO error dialog for view
+			DialogUtil.errorDialog(treeViewer.getTree().getShell(), ID,
+					"Error", e.getMessage(), e);
 		}
 
 		LightXmlObjectType lightXmlObject = null;
@@ -106,7 +108,6 @@ public class TreeMenu {
 					+ obj.getClass() + " , value: " + obj, new Throwable());
 			// TODO error dialog for view
 		}
-
 		return lightXmlObject;
 	}
 }

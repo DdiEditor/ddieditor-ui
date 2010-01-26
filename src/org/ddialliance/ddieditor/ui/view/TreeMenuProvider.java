@@ -145,7 +145,7 @@ public class TreeMenuProvider extends TreeMenu {
 
 		newMenuItem.addArmListener(new ArmListener() {
 			public void widgetArmed(final ArmEvent event) {
-				LightXmlObjectType lightXmlObject = defineSelection(treeViewer);
+				LightXmlObjectType lightXmlObject = defineSelection(treeViewer, "none");
 
 				ElementType type = null;
 				try {
