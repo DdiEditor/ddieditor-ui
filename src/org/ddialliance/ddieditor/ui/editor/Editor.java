@@ -599,7 +599,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				.setText(Messages
 						.getString("Editor.label.idText.UniqueIdentificationOfQuestionItem"));
 		idText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		idText.setText(editorInput.getId());
+		idText.setText(model.getId() == null ? "" : model.getId());
 		idText.setEnabled(false);
 
 		final Label action = new Label(propertiesGroup, SWT.RIGHT);
@@ -728,18 +728,23 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
-		setInput(input);
 		setSite(site);
 		this.editorInput = (EditorInput) input;
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
-				model = dao.create(editorInput.getId(), editorInput
-						.getVersion(), editorInput.getParentId(), editorInput
-						.getParentVersion());
+				model = dao.create("", "", editorInput.getParentId(),
+						editorInput.getParentVersion());
 			} catch (Exception e) {
 				throw new PartInitException(Messages
 						.getString("editor.init.error.create"),
 						new DDIFtpException(e));
+			}
+			catch (Throwable t) {
+				DDIFtpException e = new DDIFtpException(Messages
+						.getString("editor.init.error.create"));
+				e.setRealThrowable(t);
+				throw new PartInitException(Messages
+						.getString("editor.init.error.create"),e);
 			}
 		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
@@ -757,10 +762,18 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					.getString("editor.init.error.editmodeunsupported"),
 					new DDIFtpException());
 		}
+		
+		// update input 
+		editorInput.setId(model.getId());
+		editorInput.setVersion(model.getVersion());
+		editorInput.setParentId(model.getParentId());
+		editorInput.setParentVersion(model.getParentVersion());		
+		setInput(editorInput);
+		
 		// Sets the name of this part. The name will be shown in the tab area
 		// for the part
 		setPartName(model.getId()); // TODO i18n
-	}
+	}	
 
 	/**
 	 * Create contents of the editor part
@@ -927,7 +940,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	@Override
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(Messages
-				.getString("perspective.switch.dialogtext"), editorInput.getElementType().getPerspectiveId());
+				.getString("perspective.switch.dialogtext"), editorInput
+				.getElementType().getPerspectiveId());
 	}
 
 	@Override
