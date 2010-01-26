@@ -6,10 +6,13 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 
+/**
+ * Defines access signatures for CRUD of XMLBeans, plus creation new instances of XMLBeans
+ */
 public interface IDao {
 
 	/**
-	 * Get Light XML Object
+	 * Get Light XML Object from persistent store
 	 * 
 	 * @param lightXmlObject
 	 * @return List<LightXmlObjectType>
@@ -19,7 +22,7 @@ public interface IDao {
 			LightXmlObjectType lightXmlObject) throws Exception;
 
 	/**
-	 * Get Light XML Object
+	 * Get Light XML Object from persistent store
 	 * 
 	 * @param id
 	 * @param version
@@ -33,7 +36,7 @@ public interface IDao {
 			throws Exception;
 
 	/**
-	 * Get model
+	 * Get model from persistent store
 	 * 
 	 * @param id
 	 * @param version
@@ -46,7 +49,8 @@ public interface IDao {
 			String parentVersion) throws Exception;
 
 	/**
-	 * Create model
+	 * Create model scratch. After modeling it is NOT persistented in store!!!<br><br>
+	 * Hint, remember to add identification ;- )
 	 * 
 	 * @param id
 	 * @param version
@@ -59,7 +63,7 @@ public interface IDao {
 			String parentVersion) throws Exception;
 
 	/**
-	 * Create
+	 * Create model in persistent store
 	 * 
 	 * @param model
 	 *            model
@@ -73,7 +77,7 @@ public interface IDao {
 
 	/**
 	 * 
-	 * Update
+	 * Update model to persistent store
 	 * 
 	 * @param model
 	 *            model
@@ -83,7 +87,7 @@ public interface IDao {
 
 	/**
 	 * 
-	 * Delete
+	 * Delete from persistent store
 	 * 
 	 * @param id
 	 *            Identification
