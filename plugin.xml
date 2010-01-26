@@ -87,6 +87,12 @@
                   id="org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor"
                   name="IfThenElseEditor">
             </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.instrument.RepeatUntilEditor"
+                  default="false"
+                  id="org.ddialliance.ddieditor.ui.editor.instrument.RepeatUntilEditor"
+                  name="RepeatUntil">
+            </editor>
       </extension>
       <!--extension point="org.eclipse.ui.activities">
             <activity description="Disable unwanted eclipse UI" id="com.test.ui.disable"
