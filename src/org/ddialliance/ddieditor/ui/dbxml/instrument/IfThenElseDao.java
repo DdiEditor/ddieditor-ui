@@ -8,6 +8,7 @@ import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.XmlEntities;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.instrument.IfThenElse;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -54,7 +55,8 @@ public class IfThenElseDao extends XmlEntities implements IDao {
 			String parentVersion) throws Exception {
 		IfThenElseDocument doc = IfThenElseDocument.Factory.newInstance();
 		IdentificationManager.getInstance().addIdentification(
-				doc.addNewIfThenElse(), null, null);
+				doc.addNewIfThenElse(),
+				ElementType.getElementType("IfThenElse").getIdPrefix(), null);
 		IfThenElse model = new IfThenElse(doc, parentId, parentVersion);
 		return model;
 	}
@@ -82,7 +84,8 @@ public class IfThenElseDao extends XmlEntities implements IDao {
 	 */
 	public void create(IModel model) throws DDIFtpException {
 		DdiManager.getInstance().createElement(model.getDocument(),
-				model.getParentId(), model.getParentVersion(), "IfThenElse");
+				model.getParentId(), model.getParentVersion(),
+				"ControlConstructScheme");
 	}
 
 	/*

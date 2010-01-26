@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.StatementItemDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.StatementItemType;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.XmlEntities;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.instrument.StatementItem;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -47,22 +49,19 @@ public class StatementItemDao extends XmlEntities implements IDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.ddialliance.ddieditor.ui.dbxml.Dao#create(java.lang.String,
+	 * @see org.ddialliance.ddieditor.ui.dbxml.Dao#create(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public StatementItem create(String id, String version, String parentId,
 			String parentVersion) throws Exception {
 		StatementItemDocument doc = StatementItemDocument.Factory.newInstance();
-
 		StatementItemType type = doc.addNewStatementItem();
-		type.setId(id);
-		if (version != null) {
-			type.setVersion(version);
-		}
-
+		IdentificationManager.getInstance()
+				.addIdentification(
+						type,
+						ElementType.getElementType("StatementItem")
+								.getIdPrefix(), null);
 		StatementItem model = new StatementItem(doc, parentId, parentVersion);
-
 		return model;
 	}
 
@@ -74,8 +73,8 @@ public class StatementItemDao extends XmlEntities implements IDao {
 	 */
 	public StatementItem getModel(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		StatementItemDocument doc = DdiManager.getInstance().getStatementItem(id,
-				version, parentId, parentVersion);
+		StatementItemDocument doc = DdiManager.getInstance().getStatementItem(
+				id, version, parentId, parentVersion);
 		StatementItem model = new StatementItem(doc, parentId, parentVersion);
 		return model;
 	}
@@ -115,6 +114,7 @@ public class StatementItemDao extends XmlEntities implements IDao {
 			String parentVersion) throws Exception {
 		StatementItem model = getModel(id, version, parentId, parentVersion);
 		DdiManager.getInstance().deleteElement(model.getDocument(),
-				model.getParentId(), model.getParentVersion(), "ControlConstructScheme");
+				model.getParentId(), model.getParentVersion(),
+				"ControlConstructScheme");
 	}
 }
