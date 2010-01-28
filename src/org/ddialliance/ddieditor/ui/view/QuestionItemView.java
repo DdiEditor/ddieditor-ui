@@ -32,12 +32,12 @@ public class QuestionItemView extends View {
 				Messages
 						.getString("QuestionItemView.label.questionItemNavigationLabel.QuestionItemNavigation"),
 				Messages
-						.getString("QuestionItemView.lable.selectLabel.NavigatorDescription"),
+						.getString("QuestionItemView.label.selectLabel.NavigatorDescription"),
 				Messages
-						.getString("QuestionItemView.lable.questionItemLabel.Question"),
+						.getString("QuestionItemView.label.questionItemLabel.QuestionItem"),
 				ElementType.QUESTION_SCHEME,
 				Messages
-						.getString("QuestionItemView.lable.questionItemsTreeGroup.QuestionItemStructure"),
+						.getString("QuestionItemView.label.questionItemsTreeGroup.QuestionItemStructure"),
 				Arrays.asList(ElementType.QUESTION_ITEM));
 	}
 
