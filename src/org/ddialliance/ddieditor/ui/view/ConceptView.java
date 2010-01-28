@@ -18,11 +18,11 @@ public class ConceptView extends View {
 				Messages
 						.getString("ConceptView.label.conceptNavigationLabel.ConceptNavigation"),
 				Messages
-						.getString("ConceptView.lable.selectLabel.NavigatorDescription"),
-				Messages.getString("ConceptView.lable.conceptLabel.Concept"),
+						.getString("ConceptView.label.selectLabel.NavigatorDescription"),
+				Messages.getString("ConceptView.label.conceptLabel.Concept"),
 				ElementType.CONCEPT_SCHEME,
 				Messages
-						.getString("ConceptView.lable.conceptTreeGroup.ConceptStructure"),
+						.getString("ConceptView.label.conceptTreeGroup.ConceptStructure"),
 				Arrays.asList(ElementType.CONCEPT));
 	}
 
