@@ -2,6 +2,9 @@ package org.ddialliance.ddieditor.ui.view;
 
 import java.util.List;
 
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptType;
+import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
+import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.editor.Editor;
@@ -16,12 +19,34 @@ import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.WorkbenchException;
 
 public class TreeMenu {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			TreeMenuProvider.class);
+	
+	public void openPerspective(TreeViewer treeViewer, View currentView) {
+		LightXmlObjectType lightXmlObject = defineSelection(treeViewer, currentView.ID);
+		String elementName = lightXmlObject.getElement();
+		try {
+			String perspectiveId = ElementType.getPerspectiveId(elementName);
+			if (perspectiveId.equals("")) {
+				return;
+			}
+			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.getWorkbenchWindow();
+			workbenchWindow.getWorkbench().showPerspective(perspectiveId, workbenchWindow);
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (WorkbenchException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
 
 	public void openEditor(TreeViewer treeViewer, View currentView,
 			EditorModeType mode, ElementType entityType) {
@@ -94,8 +119,8 @@ public class TreeMenu {
 			lightXmlObject.setElement(result.getMaintainableTarget());
 			lightXmlObject.setId(result.getId());
 			lightXmlObject.setVersion(result.getVersion());
-			lightXmlObject.setParentId(result.getParentId());
-			lightXmlObject.setParentVersion(result.getParentVersion());
+//			lightXmlObject.setParentId(result.getParentId());
+//			lightXmlObject.setParentVersion(result.getParentVersion());
 		} else if (obj instanceof List) {
 			List list = ((List) obj);
 			if (!list.isEmpty()) {
@@ -103,6 +128,11 @@ public class TreeMenu {
 					lightXmlObject = (LightXmlObjectType) list.get(0);
 				}
 			}
+		} else if (obj instanceof ConceptualElement) {
+			ConceptualElement result = (ConceptualElement) obj;
+			lightXmlObject = (LightXmlObjectType) result.getValue();
+		} else if (obj instanceof ConceptualType) {
+			// Ignore this level
 		} else {
 			DDIFtpException e = new DDIFtpException("Not recognized: "
 					+ obj.getClass() + " , value: " + obj, new Throwable());

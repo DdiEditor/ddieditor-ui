@@ -41,6 +41,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ArmEvent;
 import org.eclipse.swt.events.ArmListener;
+import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
@@ -58,6 +59,7 @@ public class TreeMenuProvider extends TreeMenu {
 	final Menu menu;
 	MenuItem editMenuItem = null;
 	private List<ElementType> subElements;
+	private boolean withOpen;
 
 	/**
 	 * Constructor for TreeMenuProvider
@@ -75,6 +77,7 @@ public class TreeMenuProvider extends TreeMenu {
 		this.currentView = currentView;
 		this.rootElement = rootElement;
 		this.subElements = subElements;
+		this.withOpen = true;
 		menu = new Menu(treeViewer.getTree());
 	}
 
@@ -89,6 +92,33 @@ public class TreeMenuProvider extends TreeMenu {
 		// menu
 		menu.setDefaultItem(editMenuItem);
 		treeViewer.getTree().setMenu(menu);
+		
+		// menu open
+		try {
+			if (ElementType.withOpenMenuItem(rootElement.getElementName())) {
+				final MenuItem openMenuItem = new MenuItem(menu, SWT.CASCADE);
+				openMenuItem.setSelection(true);
+				openMenuItem.setText(Messages.getString("View.label.openMenuItem.Open")); //$NON-NLS-1$
+				openMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/new_wiz.gif"));
+				openMenuItem.setData("name", "OPEN");
+				openMenuItem.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(final SelectionEvent e) {
+						TreeItem[] t = treeViewer.getTree().getSelection();
+						if (t.length != 1) {
+							MessageDialog
+									.openInformation(
+											currentView.getSite().getShell(),
+											Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
+							return;
+						}
+						openPerspective(treeViewer, currentView);
+					}
+				});
+			}
+		} catch (DDIFtpException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		// menu new
 		final MenuItem newMenuItem = new MenuItem(menu, SWT.CASCADE);
@@ -142,11 +172,14 @@ public class TreeMenuProvider extends TreeMenu {
 		newMenuItem.setMenu(subMenu);
 		MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
 		menuItem.setText("initial");
-
+		
 		newMenuItem.addArmListener(new ArmListener() {
 			public void widgetArmed(final ArmEvent event) {
 				LightXmlObjectType lightXmlObject = defineSelection(treeViewer, "none");
 
+				System.out.println("TreeMenuProvider.setMenu().new ArmListener() {...}.widgetArmed()");
+				System.out.println("lightXmlObject: "+lightXmlObject);
+				System.out.println("type: "+lightXmlObject.getElement());
 				ElementType type = null;
 				try {
 					type = ElementType.getElementType(lightXmlObject
@@ -161,7 +194,7 @@ public class TreeMenuProvider extends TreeMenu {
 					menuItems[i].dispose();
 				}
 
-				// create menu items
+				// create menu itemssearch?hl=da&q=google+news+danmark&sourceid=navclient-ff&rlz=1B3GGGL_daDK248DK248&ie=UTF-8&aq=0&oq=google+news
 				if (type.equals(rootElement)) {
 					createNewMenuItem(type, true);
 					for (ElementType subType : subElements) {
@@ -174,6 +207,7 @@ public class TreeMenuProvider extends TreeMenu {
 
 			private void createNewMenuItem(final ElementType type,
 					boolean isRoot) {
+				System.out.println("TreeMenuProvider.setMenu().new ArmListener() {...}.createNewMenuItem()");
 				MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
 				menuItem.setText(type.getTranslatedDisplayMessageEntry());
 				menuItem.setImage(ResourceManager.getPluginImage(Activator
