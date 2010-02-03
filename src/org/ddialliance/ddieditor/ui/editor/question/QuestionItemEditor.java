@@ -29,7 +29,6 @@ import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItemLiteralText;
 import org.ddialliance.ddieditor.ui.model.reference.ResponseTypeReference;
-import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -76,14 +75,13 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 			QuestionItemEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor";
 
-	private QuestionItemDao questionItems;
 	public QuestionItemEditor() {
 		super(
 				Messages
 						.getString("QuestionItemEditor.label.questionItemEditorLabel.QuestionItemEditor"),
 				Messages
 						.getString("QuestionItemEditor.label.useTheEditorLabel.Description"));
-		questionItems = new QuestionItemDao(); 
+		this.dao = new QuestionItemDao(); 
 	}
 
 	/**
@@ -698,11 +696,11 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		}
 		try {
 			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				questionItems.create(questionItem);
+				this.dao.create(questionItem);
 				editorInput.setEditorMode(EditorModeType.EDIT);
 			} else if (editorInput.getEditorMode()
 					.equals(EditorModeType.EDIT)) {
-				questionItems.update(questionItem);
+				this.dao.update(questionItem);
 			} else if (editorInput.getEditorMode()
 					.equals(EditorModeType.VIEW)) {
 				log.error("*** Saved ignored! ***");
