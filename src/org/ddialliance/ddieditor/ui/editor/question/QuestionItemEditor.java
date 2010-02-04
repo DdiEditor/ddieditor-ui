@@ -81,7 +81,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 						.getString("QuestionItemEditor.label.questionItemEditorLabel.QuestionItemEditor"),
 				Messages
 						.getString("QuestionItemEditor.label.useTheEditorLabel.Description"));
-		this.dao = new QuestionItemDao(); 
+		super.dao = new QuestionItemDao(); 
 	}
 
 	/**
@@ -696,11 +696,11 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		}
 		try {
 			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				this.dao.create(questionItem);
+				super.dao.create(questionItem);
 				editorInput.setEditorMode(EditorModeType.EDIT);
 			} else if (editorInput.getEditorMode()
 					.equals(EditorModeType.EDIT)) {
-				this.dao.update(questionItem);
+				super.dao.update(questionItem);
 			} else if (editorInput.getEditorMode()
 					.equals(EditorModeType.VIEW)) {
 				log.error("*** Saved ignored! ***");
