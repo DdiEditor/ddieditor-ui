@@ -15,9 +15,9 @@ import org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor;
 import org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
+import org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor;
 import org.ddialliance.ddieditor.ui.model.instrument.LoopEditor;
 import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
-import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
 import org.ddialliance.ddieditor.ui.view.CodeView;
@@ -36,60 +36,63 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
  */
 public enum ElementType {
 	// application
-	FILE("", "", "", "", ""), MAINTAINABLE_LIGHTLABEL("", "", "", "", ""),
+	FILE("", "", "", "", "", ""), MAINTAINABLE_LIGHTLABEL("", "", "", "", "", ""),
 
 	// studyunit
-	STUDY_UNIT("studyunit__StudyUnit", InfoPerspective.ID, "", "stdu", ""),
+	CONCEPTUAL_STUDY_UNIT("studyunit__StudyUnit", "", "", "", "InfoView.label.studyUnitLabel.StudyUnit", "OPEN"), 
+	STUDY_UNIT("studyunit__StudyUnit", "", StudyUnitEditor.ID, "stdu", 
+	"InfoView.label.studyUnitLabel.StudyUnit", "OPEN"),
 
 	// concept
 	CONCEPT_SCHEME("ConceptScheme", ConceptsPerspective.ID,
 			ConceptSchemeEditor.ID, "cons",
-			"ConceptView.lable.conceptSchemeLabel.ConceptScheme"), CONCEPT(
+			"ConceptView.label.conceptSchemeLabel.ConceptScheme", ""), CONCEPT(
 			"Concept", ConceptsPerspective.ID, ConceptEditor.ID, "conc",
-			"ConceptView.lable.conceptLabel.Concept"),
+			"ConceptView.label.conceptLabel.Concept", ""),
 
 	// question
 	QUESTION_SCHEME("QuestionScheme", QuestionsPerspective.ID,
 			QuestionSchemeEditor.ID, "ques",
-			"QuestionItemView.lable.questionSchemeLabel.QuesitionScheme"), QUESTION_ITEM(
+			"QuestionItemView.label.questionSchemeLabel.QuesitionScheme", ""), QUESTION_ITEM(
 			"QuestionItem", QuestionsPerspective.ID, QuestionItemEditor.ID,
-			"quei", "QuestionItemView.lable.questionItemLabel.Question"),
+			"quei", "QuestionItemView.label.questionItemLabel.QuestionItem", ""),
 
 	// instrument
 	INSTRUMENT("Instrument", InstrumentPerspective.ID, InstrumentEditor.ID,
-			"inst", "InstrumentItemView.lable.instrumentItemLabel.Instrument"), CONTROL_CONSTRUCT_SCHEME(
+			"inst", "InstrumentItemView.label.instrumentItemLabel.Instrument", ""), CONTROL_CONSTRUCT_SCHEME(
 			"ControlConstructScheme", InstrumentPerspective.ID,
 			ControlConstructSchemeEditor.ID, "cocs",
-			"InstrumentView.ControlConstructScheme.label"), QUESTION_CONSTRUCT(
+			"InstrumentView.ControlConstructScheme.label", ""), QUESTION_CONSTRUCT(
 			"QuestionConstruct", InstrumentPerspective.ID,
 			QuestionConstructEditor.ID, "quec",
-			"InstrumentView.QuestionConstruct.label"), STATEMENT_ITEM(
+			"InstrumentView.QuestionConstruct.label", ""), STATEMENT_ITEM(
 			"StatementItem", InstrumentPerspective.ID, StatementItemEditor.ID,
-			"stai", "InstrumentView.StatementItem.label"), IF_THEN_ELSE(
+			"stai", "InstrumentView.StatementItem.label", ""), IF_THEN_ELSE(
 			"IfThenElse", InstrumentPerspective.ID, IfThenElseEditor.ID,
-			"ifth", "InstrumentView.IfThenElse.label"), REPEAT_UNTIL(
+			"ifth", "InstrumentView.IfThenElse.label", ""), REPEAT_UNTIL(
 			"RepeatUntil", InstrumentPerspective.ID, RepeatUntilEditor.ID,
-			"repu", "InstrumentView.RepeatUntil.label"), LOOP("Loop",
+			"repu", "InstrumentView.RepeatUntil.label", ""), LOOP("Loop",
 			InstrumentPerspective.ID, LoopEditor.ID, "loop",
-			"InstrumentView.Loop.label"), REPEAT_WHILE("RepeatWhile",
+			"InstrumentView.Loop.label", ""), REPEAT_WHILE("RepeatWhile",
 			InstrumentPerspective.ID, RepeatWhileEditor.ID, "repw",
-			"InstrumentView.RepeatWhile.label"), SEQUENCE("Sequence",
+			"InstrumentView.RepeatWhile.label", ""), SEQUENCE("Sequence",
 			InstrumentPerspective.ID, SequenceEditor.ID, "seqc",
-			"InstrumentView.Sequence.label"), COMPUTATION_ITEM(
+			"InstrumentView.Sequence.label", ""), COMPUTATION_ITEM(
 			"ComputationItem", InstrumentPerspective.ID,
 			ComputationItemEditor.ID, "copi",
-			"InstrumentView.ComputationItem.label"),
+			"InstrumentView.ComputationItem.label", ""),
 
 	// code
 	CODE_SCHEME("CodeScheme", CodeView.ID, CodeSchemeEditor.ID, "cods",
-			"codeView.lable.codeShemeLabel.CodeScheme"), CODE("Code",
-			CodeView.ID, CodeEditor.ID, "code", "");
+			"codeView.label.codeShemeLabel.CodeScheme", ""), CODE("Code",
+			CodeView.ID, CodeEditor.ID, "code", "", "");
 
 	private String elementName;
 	private String perspectiveId;
 	private String editorId;
 	private String idPrefix;
 	private String displayMessageEntry;
+	private String withOpen;
 
 	/**
 	 * Constructor
@@ -106,12 +109,13 @@ public enum ElementType {
 	 *            message key for retrieving i18n label of elementName
 	 */
 	private ElementType(String elementName, String perspectiveId,
-			String editorId, String idPrefix, String displayMessageEntry) {
+			String editorId, String idPrefix, String displayMessageEntry, String withOpen) {
 		this.elementName = elementName;
 		this.perspectiveId = perspectiveId;
 		this.editorId = editorId;
 		this.idPrefix = idPrefix;
 		this.displayMessageEntry = displayMessageEntry;
+		this.withOpen = withOpen;
 	}
 
 	public String getElementName() {
@@ -148,12 +152,16 @@ public enum ElementType {
 		return Messages.getString(displayMessageEntry);
 	}
 
+	public String getWithOpen() {
+		return withOpen;
+	}
+
 	public static String getPerspectiveId(String elementName)
 			throws DDIFtpException {
 		for (int i = 0; i < ElementType.values().length; i++) {
-			ElementType elmentType = ElementType.values()[i];
-			if (elmentType.getElementName().equals(elementName)) {
-				return elmentType.getPerspectiveId();
+			ElementType elementType = ElementType.values()[i];
+			if (elementType.getElementName().equals(elementName)) {
+				return elementType.getPerspectiveId();
 			}
 		}
 		// not found
@@ -166,9 +174,23 @@ public enum ElementType {
 	public static ElementType getElementType(String elementName)
 			throws DDIFtpException {
 		for (int i = 0; i < ElementType.values().length; i++) {
-			ElementType elmentType = ElementType.values()[i];
-			if (elmentType.getElementName().equals(elementName)) {
-				return elmentType;
+			ElementType elementType = ElementType.values()[i];
+			if (elementType.getElementName().equals(elementName)) {
+				return elementType;
+			}
+		}
+		// not found
+		DDIFtpException e = new DDIFtpException(Messages
+				.getString("editor.editelement.notimplemented"),
+				new Object[] { elementName }, new Throwable());
+		throw e;
+	}
+	
+	public static boolean withOpenMenuItem(String elementName) throws DDIFtpException {
+		for (int i = 0; i < ElementType.values().length; i++) {
+			ElementType elementType = ElementType.values()[i];
+			if (elementType.getElementName().equals(elementName)) {
+				return (elementType.getWithOpen().equals("") ? false : true);
 			}
 		}
 		// not found
