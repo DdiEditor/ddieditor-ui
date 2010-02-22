@@ -2,7 +2,6 @@ package org.ddialliance.ddieditor.ui.view;
 
 import java.util.List;
 
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptType;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -27,24 +26,28 @@ import org.eclipse.ui.WorkbenchException;
 public class TreeMenu {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			TreeMenuProvider.class);
-	
+
 	public void openPerspective(TreeViewer treeViewer, View currentView) {
-		LightXmlObjectType lightXmlObject = defineSelection(treeViewer, currentView.ID);
+		LightXmlObjectType lightXmlObject = defineSelection(treeViewer,
+				currentView.ID);
 		String elementName = lightXmlObject.getElement();
 		try {
 			String perspectiveId = ElementType.getPerspectiveId(elementName);
 			if (perspectiveId.equals("")) {
 				return;
 			}
-			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage()
 					.getWorkbenchWindow();
-			workbenchWindow.getWorkbench().showPerspective(perspectiveId, workbenchWindow);
+			workbenchWindow.getWorkbench().showPerspective(perspectiveId,
+					workbenchWindow);
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DialogUtil.errorDialog(currentView.getSite().getShell(),
+					currentView.ID, "Error", e.getMessage(), e);
 		} catch (WorkbenchException e) {
-			// TODO: handle exception
-			e.printStackTrace();
+			DDIFtpException ex = new DDIFtpException(e.getMessage(), e);
+			DialogUtil.errorDialog(currentView.getSite().getShell(),
+					currentView.ID, "Error", ex.getMessage(), ex);
 		}
 	}
 
@@ -83,7 +86,7 @@ public class TreeMenu {
 			Editor editor = (Editor) PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getActivePage().openEditor(
 							input, entityType.getEditorId());
-			
+
 			// add update on save listener
 			editor.addPropertyListener(currentView);
 
@@ -119,8 +122,8 @@ public class TreeMenu {
 			lightXmlObject.setElement(result.getMaintainableTarget());
 			lightXmlObject.setId(result.getId());
 			lightXmlObject.setVersion(result.getVersion());
-//			lightXmlObject.setParentId(result.getParentId());
-//			lightXmlObject.setParentVersion(result.getParentVersion());
+			// lightXmlObject.setParentId(result.getParentId());
+			// lightXmlObject.setParentVersion(result.getParentVersion());
 		} else if (obj instanceof List) {
 			List list = ((List) obj);
 			if (!list.isEmpty()) {
@@ -136,7 +139,8 @@ public class TreeMenu {
 		} else {
 			DDIFtpException e = new DDIFtpException("Not recognized: "
 					+ obj.getClass() + " , value: " + obj, new Throwable());
-			// TODO error dialog for view
+			DialogUtil.errorDialog(treeViewer.getTree().getShell(), ID,
+					"Error", e.getMessage(), e);
 		}
 		return lightXmlObject;
 	}
