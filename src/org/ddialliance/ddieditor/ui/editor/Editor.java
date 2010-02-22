@@ -459,7 +459,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public void createDateInput(Group group, String labelText, String initDate,
-			DateTimeWidget dateTimeWidget, SelectionAdapter selectionAdapter) {
+			DateTimeWidget dateTimeWidget, SelectionAdapter selectionAdapter)
+			throws DDIFtpException {
 		Label label = new Label(group, SWT.NONE);
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
@@ -468,15 +469,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 		dateTimeWidget = new DateTimeWidget(group);
 		if (!initDate.equals("")) {
-			try {
-				// TODO Improve Date handling
-				Calendar calendar = Translator.formatIso8601DateTime(initDate);
-				dateTimeWidget.setSelection(calendar.getTime());
-			} catch (DDIFtpException e1) {
-				ErrorDialog.openError(site.getShell(), Messages
-						.getString("ErrorTitle"), null, new Status(
-						IStatus.ERROR, ID, 0, e1.getMessage(), e1));
-			}
+			Calendar calendar = Translator.formatIso8601DateTime(initDate);
+			dateTimeWidget.setSelection(calendar.getTime());
 		}
 		dateTimeWidget.addSelectionListener(selectionAdapter);
 		setControl(dateTimeWidget);
@@ -738,13 +732,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				throw new PartInitException(Messages
 						.getString("editor.init.error.create"),
 						new DDIFtpException(e));
-			}
-			catch (Throwable t) {
+			} catch (Throwable t) {
 				DDIFtpException e = new DDIFtpException(Messages
 						.getString("editor.init.error.create"));
 				e.setRealThrowable(t);
 				throw new PartInitException(Messages
-						.getString("editor.init.error.create"),e);
+						.getString("editor.init.error.create"), e);
 			}
 		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
@@ -762,18 +755,18 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					.getString("editor.init.error.editmodeunsupported"),
 					new DDIFtpException());
 		}
-		
-		// update input 
+
+		// update input
 		editorInput.setId(model.getId());
 		editorInput.setVersion(model.getVersion());
 		editorInput.setParentId(model.getParentId());
-		editorInput.setParentVersion(model.getParentVersion());		
+		editorInput.setParentVersion(model.getParentVersion());
 		setInput(editorInput);
-		
+
 		// Sets the name of this part. The name will be shown in the tab area
 		// for the part
 		setPartName(model.getId()); // TODO i18n
-	}	
+	}
 
 	/**
 	 * Create contents of the editor part
