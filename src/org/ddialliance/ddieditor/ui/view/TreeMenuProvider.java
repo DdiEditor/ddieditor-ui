@@ -41,7 +41,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ArmEvent;
 import org.eclipse.swt.events.ArmListener;
-import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
@@ -92,14 +91,16 @@ public class TreeMenuProvider extends TreeMenu {
 		// menu
 		menu.setDefaultItem(editMenuItem);
 		treeViewer.getTree().setMenu(menu);
-		
+
 		// menu open
 		try {
 			if (ElementType.withOpenMenuItem(rootElement.getElementName())) {
 				final MenuItem openMenuItem = new MenuItem(menu, SWT.CASCADE);
 				openMenuItem.setSelection(true);
-				openMenuItem.setText(Messages.getString("View.label.openMenuItem.Open")); //$NON-NLS-1$
-				openMenuItem.setImage(ResourceManager.getPluginImage(Activator.getDefault(), "icons/new_wiz.gif"));
+				openMenuItem.setText(Messages
+						.getString("View.label.openMenuItem.Open")); //$NON-NLS-1$
+				openMenuItem.setImage(ResourceManager.getPluginImage(Activator
+						.getDefault(), "icons/new_wiz.gif"));
 				openMenuItem.setData("name", "OPEN");
 				openMenuItem.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(final SelectionEvent e) {
@@ -115,9 +116,9 @@ public class TreeMenuProvider extends TreeMenu {
 					}
 				});
 			}
-		} catch (DDIFtpException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (DDIFtpException e) {
+			DialogUtil.errorDialog(currentView.getSite().getShell(),
+					currentView.ID, "Error", e.getMessage(), e);
 		}
 
 		// menu new
@@ -172,20 +173,19 @@ public class TreeMenuProvider extends TreeMenu {
 		newMenuItem.setMenu(subMenu);
 		MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
 		menuItem.setText("initial");
-		
+
 		newMenuItem.addArmListener(new ArmListener() {
 			public void widgetArmed(final ArmEvent event) {
-				LightXmlObjectType lightXmlObject = defineSelection(treeViewer, "none");
-
-				System.out.println("TreeMenuProvider.setMenu().new ArmListener() {...}.widgetArmed()");
-				System.out.println("lightXmlObject: "+lightXmlObject);
-				System.out.println("type: "+lightXmlObject.getElement());
+				LightXmlObjectType lightXmlObject = defineSelection(treeViewer,
+						"none");
+				
 				ElementType type = null;
 				try {
 					type = ElementType.getElementType(lightXmlObject
 							.getElement());
 				} catch (DDIFtpException e) {
-					// TODO error dialog for view
+					DialogUtil.errorDialog(currentView.getSite().getShell(),
+							currentView.ID, "Error", e.getMessage(), e);
 				}
 
 				// clean previous items
@@ -194,7 +194,7 @@ public class TreeMenuProvider extends TreeMenu {
 					menuItems[i].dispose();
 				}
 
-				// create menu itemssearch?hl=da&q=google+news+danmark&sourceid=navclient-ff&rlz=1B3GGGL_daDK248DK248&ie=UTF-8&aq=0&oq=google+news
+				// create menu
 				if (type.equals(rootElement)) {
 					createNewMenuItem(type, true);
 					for (ElementType subType : subElements) {
@@ -207,7 +207,6 @@ public class TreeMenuProvider extends TreeMenu {
 
 			private void createNewMenuItem(final ElementType type,
 					boolean isRoot) {
-				System.out.println("TreeMenuProvider.setMenu().new ArmListener() {...}.createNewMenuItem()");
 				MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
 				menuItem.setText(type.getTranslatedDisplayMessageEntry());
 				menuItem.setImage(ResourceManager.getPluginImage(Activator
@@ -232,6 +231,7 @@ public class TreeMenuProvider extends TreeMenu {
 			entityType = ElementType
 					.getElementType(lightXmlObject.getElement());
 		} catch (DDIFtpException e) {
+			// TODO: Use dialogutil for error dialogs
 			DialogUtil
 					.errorDialog(
 							currentView.getSite().getShell(),
