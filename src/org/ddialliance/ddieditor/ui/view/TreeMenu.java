@@ -10,6 +10,10 @@ import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.ElementType;
+import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
+import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
+import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
+import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -135,7 +139,21 @@ public class TreeMenu {
 			ConceptualElement result = (ConceptualElement) obj;
 			lightXmlObject = (LightXmlObjectType) result.getValue();
 		} else if (obj instanceof ConceptualType) {
-			// Ignore this level
+			// mapping between ddieditor.model 
+			// and ddieditor-ui.model aka perspective
+			ConceptualType conTypeObj = (ConceptualType) obj;
+			lightXmlObject = LightXmlObjectType.Factory.newInstance();
+			if (conTypeObj.equals(ConceptualType.STUDY)) {
+				lightXmlObject.setElement(ElementType.STUDY_UNIT.getElementName());
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_Universe)) {
+				lightXmlObject.setElement("TODO implementation!!!");
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_concepts)) {
+				lightXmlObject.setElement(ElementType.CONCEPT_SCHEME.getElementName());
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_questions)) {
+				lightXmlObject.setElement(ElementType.QUESTION_SCHEME.getElementName());
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_instumentation)) {
+				lightXmlObject.setElement(ElementType.INSTRUMENT.getElementName());
+			}
 		} else {
 			DDIFtpException e = new DDIFtpException("Not recognized: "
 					+ obj.getClass() + " , value: " + obj, new Throwable());
