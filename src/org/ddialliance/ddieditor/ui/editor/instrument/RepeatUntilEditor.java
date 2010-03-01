@@ -109,7 +109,7 @@ public class RepeatUntilEditor extends Editor {
 				.getString("RepeatUntil.editor.untilref"),
 				controlConstructRefList, new ReferenceSelectionAdapter(
 						thenRefSelectCombo, modelImpl,
-						ModelIdentifingType.Type_C.class,
+						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
 
 		// description tab
