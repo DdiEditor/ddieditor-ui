@@ -13,6 +13,7 @@ package org.ddialliance.ddieditor.ui.view;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
@@ -37,6 +38,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ArmEvent;
@@ -84,6 +86,12 @@ public class TreeMenuProvider extends TreeMenu {
 		// double click edit
 		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(final DoubleClickEvent event) {
+				Object obj = ((TreeSelection) event.getSelection())
+						.getFirstElement();
+				if (obj instanceof ConceptualType) {
+					openPerspective(treeViewer, currentView);
+					return;
+				}
 				openEditor(treeViewer, currentView, EditorModeType.EDIT, null);
 			}
 		});
@@ -167,8 +175,13 @@ public class TreeMenuProvider extends TreeMenu {
 				deleteItem(EditorModeType.EDIT);
 			}
 		});
-
+		
 		// sub menu
+		createSubMenu(newMenuItem, subElements);
+	}
+
+	public void createSubMenu(MenuItem newMenuItem,
+			final List<ElementType> subElements) {
 		final Menu subMenu = new Menu(newMenuItem);
 		newMenuItem.setMenu(subMenu);
 		MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
@@ -178,7 +191,7 @@ public class TreeMenuProvider extends TreeMenu {
 			public void widgetArmed(final ArmEvent event) {
 				LightXmlObjectType lightXmlObject = defineSelection(treeViewer,
 						"none");
-				
+
 				ElementType type = null;
 				try {
 					type = ElementType.getElementType(lightXmlObject
