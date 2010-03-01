@@ -3,7 +3,6 @@ package org.ddialliance.ddieditor.ui.dbxml.instrument;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.RepeatUntilDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.RepeatUntilType;
 import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
