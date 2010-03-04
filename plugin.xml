@@ -84,14 +84,37 @@
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor"
                   default="false"
+                  icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor"
                   name="IfThenElseEditor">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.RepeatUntilEditor"
                   default="false"
+                  icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.RepeatUntilEditor"
                   name="RepeatUntil">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.instrument.RepeatWhileEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.instrument.RepeatWhileEditor"
+                  name="RepeatWhileEditor">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.instrument.ComputationItemEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.instrument.ComputationItemEditor"
+                  name="ComputationItemEditor">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.instrument.LoopEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.instrument.LoopEditor"
+                  name="LoopEditor">
             </editor>
       </extension>
       <!--extension point="org.eclipse.ui.activities">
