@@ -136,7 +136,7 @@ public class StudyUnits extends XmlEntities {
 		
 //		StudyUnit studyUnit = new StudyUnit(studyUnitDocument, parentId, parentVersion, maintainableLabelQueryResult);
 		
-		StudyUnit studyUnit = new StudyUnit(id, version, parentId, parentVersion, maintainableLabelQueryResult);
+		StudyUnit studyUnit = new StudyUnit(id, version, parentId, parentVersion, "TODO", maintainableLabelQueryResult);
 		
 		return studyUnit;
 	}
