@@ -15,11 +15,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddieditor.logic.urn.ddi.Urn2Util;
+import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.IAddAttr;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
@@ -62,7 +66,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -144,9 +147,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			firePropertyChange(IEditorPart.PROP_DIRTY);
 		}
 	}
-
-	// TODO Define Actions via property file
-	private static final String[] ACTIONS = { "", "Add", "Update", "Delete" };
 
 	// Member variables:
 	private Text urnText;
@@ -297,6 +297,14 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				2, 1));
 		button.setText(buttonText);
 		return button;
+	}
+
+	public Combo createCombo(Group group, String[] options) {
+		final Combo actionCombo = new Combo(group, SWT.READ_ONLY);
+		actionCombo.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true,
+				false));
+		actionCombo.setItems(options);
+		return actionCombo;
 	}
 
 	public SelectionListener createTranslationSelectionListener(
@@ -564,134 +572,130 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public void createPropertiesTab(TabFolder tabFolder) {
+		final TabItem tabItem = createTabItem(Messages
+				.getString("Editor.label.propertiesTabItem.Properties"));
+		final Group group = createGroup(tabItem, Messages
+				.getString("Editor.label.propertiesGroup.Properties"));
 
-		// Properties Tab Item:
-		// --------------------
-		final TabItem propertiesTabItem = new TabItem(tabFolder, SWT.NONE);
-		propertiesTabItem.setText(Messages
-				.getString("Editor.label.propertiesTabItem.Properties")); //$NON-NLS-1$
+		// agency
+		boolean isMaintainable = false;
+		try {
+			isMaintainable = DdiManager.getInstance().getDdi3NamespaceHelper()
+					.isMaintainable(model.getDocument());
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (isMaintainable) {
+			createLabel(group, Messages
+					.getString("Editor.label.agencyLabel.agency"));
+			createText(group, model.getAgency() == null ? "" : model
+					.getAgency(), null);
+		}
 
-		final Group propertiesGroup = new Group(tabFolder, SWT.NONE);
-		propertiesGroup.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		propertiesGroup.setText(Messages
-				.getString("Editor.label.propertiesGroup.Properties")); //$NON-NLS-1$
-		final GridLayout gridLayout_3 = new GridLayout();
-		gridLayout_3.numColumns = 2;
-		propertiesGroup.setLayout(gridLayout_3);
-		propertiesTabItem.setControl(propertiesGroup);
+		// id
+		createLabel(group, Messages.getString("Editor.label.idLabel.ID"));
+		Text idText = createText(group, model.getId(), null);
+		idText.setEditable(false);
 
-		final Label idLabel = new Label(propertiesGroup, SWT.RIGHT);
-		idLabel
-				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-		idLabel.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		idLabel.setText(Messages.getString("Editor.label.idLabel.ID")); //$NON-NLS-1$
+		// action
+		createLabel(group, Messages.getString("Editor.label.action.Action"));
+		Combo actionCombo = createCombo(group, new String[] { "1", "2", "3" });
 
-		idText = new Text(propertiesGroup, SWT.BORDER | SWT.READ_ONLY);
-		idText
-				.setText(Messages
-						.getString("Editor.label.idText.UniqueIdentificationOfQuestionItem"));
-		idText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		idText.setText(model.getId() == null ? "" : model.getId());
-		idText.setEnabled(false);
+		// urn
+		createLabel(group, Messages.getString("Editor.label.urnLabel.URN"));
+		String urn = null;
+		try {
+			QName qName = model.getDocument().schemaType().getDocumentElementName();
+			//log.debug(qName.getLocalPart());
+			urn = Urn2Util.getUrn(qName.getLocalPart(), model.getId(), model.getVersion(),
+					model.getParentId(), model.getParentVersion())
+					.toUrnString();
+		} catch (DDIFtpException e) {
+			DialogUtil.errorDialog(group.getShell(), ID, "URN error", e.getMessage(), e);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 
-		final Label action = new Label(propertiesGroup, SWT.RIGHT);
-		action.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-		action.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		action.setText(Messages.getString("Editor.label.action.Action")); //$NON-NLS-1$
+		Text urnText = createText(group, urn == null ? "" : urn, null);
 
-		final Combo actionCombo = new Combo(propertiesGroup, SWT.READ_ONLY);
-		actionCombo.setEnabled(false);
-		actionCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false));
-		actionCombo.setItems(ACTIONS);
-		actionCombo.select(0);
+		// not used - layout only
+		// final Label label_3 = new Label(propertiesGroup, SWT.NONE);
+		// label_3.setBackground(Display.getCurrent().getSystemColor(
+		// SWT.COLOR_WHITE));
 
-		final Label urnLabel = new Label(propertiesGroup, SWT.RIGHT);
-		urnLabel
-				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-		urnLabel.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		urnLabel.setText(Messages.getString("Editor.label.urnLabel.URN")); //$NON-NLS-1$
+		// final Button versionalButton = new Button(group, SWT.CHECK);
+		// versionalButton.setBackground(Display.getCurrent().getSystemColor(
+		// SWT.COLOR_WHITE));
+		// versionalButton.setText(Messages
+		//				.getString("Editor.label.versionalButton.Versional")); //$NON-NLS-1$
+		// versionalButton.setSelection(true); // TODO: Get versional state
+		// versionalButton.setEnabled(false);
+		//
+		// final Label versional = new Label(group, SWT.NONE);
+		// versional.setBackground(Display.getCurrent().getSystemColor(
+		// SWT.COLOR_WHITE));
+		//
+		// final Group versionGroup = new Group(group, SWT.NONE);
+		// versionGroup.setLayoutData(new GridData(422, SWT.DEFAULT));
+		// versionGroup.setBackground(Display.getCurrent().getSystemColor(
+		// SWT.COLOR_WHITE));
+		// versionGroup.setText(Messages
+		//				.getString("Editor.label.versionGroup.Version")); //$NON-NLS-1$
+		// final GridLayout gridLayout = new GridLayout();
+		// gridLayout.numColumns = 4;
+		// versionGroup.setLayout(gridLayout);
+		//
+		// final Label versionLabel = new Label(versionGroup, SWT.NONE);
+		// versionLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER,
+		// false,
+		// false));
+		// versionLabel.setBackground(Display.getCurrent().getSystemColor(
+		// SWT.COLOR_WHITE));
+		// versionLabel.setText(Messages
+		//				.getString("Editor.label.versionLabel.Number")); //$NON-NLS-1$
+		//
+		// final Text versionText = new Text(versionGroup, SWT.READ_ONLY
+		// | SWT.BORDER);
+		// versionText.setEditable(false);
+		// versionText.setText(editorInput.getVersion() == null ? "" :
+		// editorInput
+		// .getVersion());
+		// versionText.setEnabled(false);
+		//
+		// final Label versionDateLabel = new Label(versionGroup, SWT.NONE);
+		// versionDateLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
+		// false, false));
+		// versionDateLabel.setBackground(Display.getCurrent().getSystemColor(
+		// SWT.COLOR_WHITE));
+		// versionDateLabel.setText(Messages
+		//				.getString("Editor.label.versionDateLabel.Date")); //$NON-NLS-1$
+		//
+		// final DateTime dateTime = new DateTime(versionGroup, SWT.NONE);
+		// dateTime.setEnabled(false);
+		// dateTime.setDate(2008, 0, 1);
+		//
+		// final Label responsibelLabel = new Label(versionGroup, SWT.NONE);
+		// responsibelLabel.setBackground(Display.getCurrent().getSystemColor(
+		// SWT.COLOR_WHITE));
+		// responsibelLabel.setText(Messages
+		//				.getString("Editor.label.responsibelLabel.Responsibel")); //$NON-NLS-1$
+		//
+		// final Text responsibelText = new Text(versionGroup, SWT.READ_ONLY
+		// | SWT.BORDER);
+		// responsibelText.setEditable(false);
+		// responsibelText.setText(editorInput.getUser());
+		// responsibelText.setEnabled(false);
+		// final GridData gd_responsibelText = new GridData(SWT.LEFT,
+		// SWT.CENTER,
+		// false, false, 3, 1);
+		// gd_responsibelText.widthHint = 226;
+		// responsibelText.setLayoutData(gd_responsibelText);
 
-		urnText = new Text(propertiesGroup, SWT.READ_ONLY | SWT.BORDER);
-		urnText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-		final Label label_3 = new Label(propertiesGroup, SWT.NONE);
-		label_3.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-
-		final Button versionalButton = new Button(propertiesGroup, SWT.CHECK);
-		versionalButton.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		versionalButton.setText(Messages
-				.getString("Editor.label.versionalButton.Versional")); //$NON-NLS-1$
-		versionalButton.setSelection(true); // TODO: Get versional state
-		versionalButton.setEnabled(false);
-
-		final Label versional = new Label(propertiesGroup, SWT.NONE);
-		versional.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-
-		final Group versionGroup = new Group(propertiesGroup, SWT.NONE);
-		versionGroup.setLayoutData(new GridData(422, SWT.DEFAULT));
-		versionGroup.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		versionGroup.setText(Messages
-				.getString("Editor.label.versionGroup.Version")); //$NON-NLS-1$
-		final GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 4;
-		versionGroup.setLayout(gridLayout);
-
-		final Label versionLabel = new Label(versionGroup, SWT.NONE);
-		versionLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false,
-				false));
-		versionLabel.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		versionLabel.setText(Messages
-				.getString("Editor.label.versionLabel.Number")); //$NON-NLS-1$
-
-		final Text versionText = new Text(versionGroup, SWT.READ_ONLY
-				| SWT.BORDER);
-		versionText.setEditable(false);
-		versionText.setText(editorInput.getVersion() == null ? "" : editorInput
-				.getVersion());
-		versionText.setEnabled(false);
-
-		final Label versionDateLabel = new Label(versionGroup, SWT.NONE);
-		versionDateLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
-				false, false));
-		versionDateLabel.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		versionDateLabel.setText(Messages
-				.getString("Editor.label.versionDateLabel.Date")); //$NON-NLS-1$
-
-		final DateTime dateTime = new DateTime(versionGroup, SWT.NONE);
-		dateTime.setEnabled(false);
-		dateTime.setDate(2008, 0, 1);
-
-		final Label responsibelLabel = new Label(versionGroup, SWT.NONE);
-		responsibelLabel.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		responsibelLabel.setText(Messages
-				.getString("Editor.label.responsibelLabel.Responsibel")); //$NON-NLS-1$
-
-		final Text responsibelText = new Text(versionGroup, SWT.READ_ONLY
-				| SWT.BORDER);
-		responsibelText.setEditable(false);
-		responsibelText.setText(editorInput.getUser());
-		responsibelText.setEnabled(false);
-		final GridData gd_responsibelText = new GridData(SWT.LEFT, SWT.CENTER,
-				false, false, 3, 1);
-		gd_responsibelText.widthHint = 226;
-		responsibelText.setLayoutData(gd_responsibelText);
-
-		final Label label_2 = new Label(propertiesGroup, SWT.NONE);
-		label_2.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-
+		// not used - layout only
+		// final Label label_2 = new Label(propertiesGroup, SWT.NONE);
+		// label_2.setBackground(Display.getCurrent().getSystemColor(
+		// SWT.COLOR_WHITE));
 	}
 
 	public StyledText createXmlTab(IModel model) {
