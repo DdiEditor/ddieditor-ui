@@ -47,7 +47,7 @@ public abstract class LabelDescription extends Model implements IModel {
 	public LabelDescription(String id, String version, String parentId,
 			String parentVersion, List<LabelType> labels,
 			List<StructuredStringType> descrs) {
-		super(id, version, parentId, parentVersion);
+		super(id, version, parentId, parentVersion, "TODO");
 
 		this.labels = labels;
 		this.descrs = descrs;
