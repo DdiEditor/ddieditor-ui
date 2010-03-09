@@ -13,6 +13,7 @@ public abstract class Model implements IModel {
 	private String version;
 	private String parentId;
 	private String parentVersion;
+	private String agency;
 	protected boolean create = false;
 
 	/**
@@ -24,18 +25,21 @@ public abstract class Model implements IModel {
 	 * @param parentVersion
 	 */
 	public Model(String id, String version, String parentId,
-			String parentVersion) {
+			String parentVersion, String agency) {
 
 		this.id = id;
 		this.version = version;
 		this.parentId = parentId;
 		this.parentVersion = parentVersion;
+		this.agency = agency;
 	}
 
 	public Model(XmlObject xmlObject, String parentId, String parentVersion) {
 		id = XmlBeansUtil.getXmlAttributeValue(xmlObject.xmlText(), "id=\"");
 		version = XmlBeansUtil.getXmlAttributeValue(xmlObject.xmlText(),
 				"version=\"");
+		this.agency = XmlBeansUtil.getXmlAttributeValue(xmlObject.xmlText(),
+				"agency=\"");
 		this.parentId = parentId;
 		this.parentVersion = parentVersion;
 	}
@@ -64,6 +68,14 @@ public abstract class Model implements IModel {
 	 */
 	public String getVersion() {
 		return version;
+	}
+
+	public String getAgency() {
+		return agency;
+	}
+
+	public void setAgency(String agency) {
+		this.agency = agency;
 	}
 
 	/*
@@ -111,13 +123,12 @@ public abstract class Model implements IModel {
 		return;
 	}
 
-	public void applyChange(Object value,
-			Class<?> type) throws Exception {
+	public void applyChange(Object value, Class<?> type) throws Exception {
 		this.create = true;
 		executeChange(value, type);
 		this.create = false;
 	}
-	
-	public abstract void executeChange(Object value,
-			Class<?> type) throws Exception;
+
+	public abstract void executeChange(Object value, Class<?> type)
+			throws Exception;
 }

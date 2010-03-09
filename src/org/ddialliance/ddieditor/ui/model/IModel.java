@@ -19,6 +19,10 @@ public interface IModel {
 	 */
 	public abstract String getVersion();
 
+	public abstract String getAgency();
+	
+	public abstract void setAgency(String agency);
+	
 	/**
 	 * Set Parent ID.
 	 * 
