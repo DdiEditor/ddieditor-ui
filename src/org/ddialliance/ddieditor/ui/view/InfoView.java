@@ -28,7 +28,7 @@ public class InfoView extends View {
 		super(ViewContentType.StudyContent, Messages
 				.getString("InfoView.label.titleLabel.DDIOverview"), Messages
 				.getString("InfoView.label.selectLabel.Description"), Messages
-				.getString("InfoView.label.maskLabel.Id"),  ElementType.CONCEPTUAL_STUDY_UNIT, Messages
+				.getString("InfoView.label.maskLabel.Id"),  ElementType.FILE, Messages
 				.getString("InfoView.label.treeGroup.DDIStructure"), 
 				Arrays.asList(ElementType.STUDY_UNIT));
 	}
