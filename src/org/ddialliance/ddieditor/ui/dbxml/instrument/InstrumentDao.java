@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.InstrumentDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.InstrumentType;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.XmlEntities;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.instrument.Instrument;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -73,10 +75,14 @@ public class InstrumentDao extends XmlEntities implements IDao {
 			String parentVersion) throws Exception {
 		InstrumentDocument doc = InstrumentDocument.Factory.newInstance();
 		InstrumentType type = doc.addNewInstrument();
-		type.setId(id);
-		if (version != null) {
-			type.setVersion(version);
-		}
+		
+		IdentificationManager.getInstance()
+		.addIdentification(
+				doc.getInstrument(),
+				ElementType.getElementType(type.getDomNode().getLocalName())
+				.getIdPrefix(), "");
+		IdentificationManager.getInstance().addVersionInformation(
+				doc.getInstrument(), null, null);
 
 		Instrument model = new Instrument(doc, parentId, parentVersion);
 		return model;
