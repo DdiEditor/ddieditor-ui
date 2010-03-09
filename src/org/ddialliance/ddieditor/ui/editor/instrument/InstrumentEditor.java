@@ -6,12 +6,18 @@ package org.ddialliance.ddieditor.ui.editor.instrument;
  */
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.SoftwareType;
+import org.ddialliance.ddieditor.model.DdiManager;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
 import org.ddialliance.ddieditor.ui.editor.DateTimeWidget;
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.model.LabelDescription;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.Instrument;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
@@ -58,24 +64,66 @@ public class InstrumentEditor extends Editor {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		parent.setLayout(new GridLayout());
 		super.createPartControl(parent);
-
+		parent.setLayout(new GridLayout());
 		createTabFolder(getComposite_1());
-		createLabelDescriptionTab(getTabFolder(), Messages
-				.getString("InstrumentEditor.label.InstrumentTabItem"),
-				(LabelDescription) modelImpl);
 
+		// main tab
+		TabItem tabItem = createTabItem(Messages
+				.getString("InstrumentEditor.label.InstrumentTabItem"));
+		Group group = createGroup(tabItem, Messages
+				.getString("InstrumentEditor.label.InstrumentTabItem"));
+		// main sequence ref
+		// condition ref
+		List<LightXmlObjectType> sequenceRefList = new ArrayList<LightXmlObjectType>();
+		try {
+			sequenceRefList = DdiManager.getInstance().getSequencesLight(null,
+					null, null, null).getLightXmlObjectList()
+					.getLightXmlObjectList();
+		} catch (Exception e) {
+			DialogUtil.errorDialog(getSite().getShell(), ID, null, e
+					.getMessage(), e);
+		}
+
+		ReferenceSelectionCombo sequenceRefSelectCombo = createRefSelection(
+				group, Messages.getString("InstrumentEditor.software.mainsequence"),
+				Messages.getString("InstrumentEditor.software.mainsequence"), null,
+				sequenceRefList, false);
+		sequenceRefSelectCombo.addSelectionListener(Messages
+				.getString("InstrumentEditor.software.mainsequence"), sequenceRefList,
+				new ReferenceSelectionAdapter(sequenceRefSelectCombo,
+						modelImpl, ModelIdentifingType.Type_B.class,
+						getEditorIdentification()));
+
+		// software tab
 		for (SoftwareType software : modelImpl.getDocument().getInstrument()
 				.getSoftwareList()) {
 			createSoftwareTab(software);
 		}
-		
+
+		// label - description - tab
+		TabItem tabItem2 = createTabItem(Messages
+				.getString("editor.label.description"));
+		Group group2 = createGroup(tabItem2, Messages
+				.getString("editor.label.description"));
+
+		createNameInput(
+				group2,
+				Messages.getString("editor.label.name"),
+				modelImpl.getDocument().getInstrument().getInstrumentNameList(),
+				modelImpl.getDocument().getInstrument().getId());
+
+		createStructuredStringInput(group2, Messages
+				.getString("editor.label.description"), modelImpl.getDocument()
+				.getInstrument().getDescriptionList(), modelImpl.getDocument()
+				.getInstrument().getId());
+
+		// id - version tab
 		createPropertiesTab(getTabFolder());
-		
+
 		// xml tab
 		createXmlTab(modelImpl);
-		
+
 		editorStatus.clearChanged();
 	}
 
@@ -133,13 +181,13 @@ public class InstrumentEditor extends Editor {
 					new SelectionAdapter() {
 						public void widgetSelected(SelectionEvent e) {
 							editorStatus.setChanged();
-							software
-									.setDate(getDate(dateTimeWidget.getSelection()));
+							software.setDate(getDate(dateTimeWidget
+									.getSelection()));
 						}
 					});
 		} catch (Exception e) {
 			DialogUtil.errorDialog(getSite().getShell(), ID, Messages
-			.getString("ErrorTitle"), e.getMessage(), e);
+					.getString("ErrorTitle"), e.getMessage(), e);
 		}
 	}
 
