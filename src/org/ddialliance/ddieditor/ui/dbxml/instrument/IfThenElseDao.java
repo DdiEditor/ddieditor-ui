@@ -57,6 +57,8 @@ public class IfThenElseDao extends XmlEntities implements IDao {
 		IdentificationManager.getInstance().addIdentification(
 				doc.addNewIfThenElse(),
 				ElementType.getElementType("IfThenElse").getIdPrefix(), null);
+		IdentificationManager.getInstance().addVersionInformation(
+				doc.getIfThenElse(), null, null);
 		IfThenElse model = new IfThenElse(doc, parentId, parentVersion);
 		return model;
 	}
