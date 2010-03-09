@@ -10,8 +10,8 @@ public class Profile extends Model {
 	private DDIProfileType type;
 
 	public Profile(String id, String version, String parentId,
-			String parentVersion) {
-		super(id, version, parentId, parentVersion);
+			String parentVersion, String agency) {
+		super(id, version, parentId, parentVersion, agency);
 		// TODO Auto-generated constructor stub
 	}
 

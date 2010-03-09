@@ -58,8 +58,7 @@ public class QuestionItem extends Model {
 	public QuestionItem(QuestionItemDocument questionItemDocument, String parentId, String parentVersion)
 			throws Exception {
 		
-		super(questionItemDocument.getQuestionItem().getId(), questionItemDocument.getQuestionItem().getVersion(),
-				parentId, parentVersion);
+		super(questionItemDocument.getQuestionItem(), parentId, parentVersion);
 		
 		if (questionItemDocument == null) {
 			// TODO Create new Question Item

@@ -142,29 +142,22 @@ public class StudyUnit extends Model {
 	 * @throws DDIFtpException
 	 */
 	public StudyUnit(String id, String version, String parentId,
-			String parentVersion,
+			String parentVersion, String agency,
 			MaintainableLabelQueryResult studyUnitQueryResult)
 			throws DDIFtpException {
-		super(id, version, parentId, parentVersion);
-		log.debug("StudyUnit.StudyUnit()");
+		super(id, version, parentId, parentVersion, agency);
 		this.studyUnitQueryResult = studyUnitQueryResult;
 		if (studyUnitQueryResult != null) {
-			try {
-				xcitations = new SubElements(studyUnitQueryResult
-						.getSubElement("Citation"));
-				xabstracts = new SubElements(studyUnitQueryResult
-						.getSubElement("Abstract"));
-				xuniverseRefs = new SubElements(studyUnitQueryResult
-						.getSubElement("UniverseReference"));
-				xfundings = new SubElements(studyUnitQueryResult
-						.getSubElement("FundingInformation"));
-				xpurposes = new SubElements(studyUnitQueryResult
-						.getSubElement("Purpose"));
-			} catch (DDIFtpException e) {
-				log.error("GetSubElement DDIFtpException: " + e.getMessage());
-				throw new DDIFtpException(e);
-			}
-
+			xcitations = new SubElements(studyUnitQueryResult
+					.getSubElement("Citation"));
+			xabstracts = new SubElements(studyUnitQueryResult
+					.getSubElement("Abstract"));
+			xuniverseRefs = new SubElements(studyUnitQueryResult
+					.getSubElement("UniverseReference"));
+			xfundings = new SubElements(studyUnitQueryResult
+					.getSubElement("FundingInformation"));
+			xpurposes = new SubElements(studyUnitQueryResult
+					.getSubElement("Purpose"));
 		}
 	}
 
@@ -172,6 +165,7 @@ public class StudyUnit extends Model {
 	 * Clear changed status of Study Unit subelements
 	 */
 	public void clearChanged() {
+		// TODO add is debug enabled
 		log.debug("StudyUnit.clearChanged()");
 		xcitations.changed(false);
 		xabstracts.changed(false);
@@ -227,6 +221,7 @@ public class StudyUnit extends Model {
 				return true;
 			}
 		}
+		// TODO add is debug enabled
 		log
 				.debug("No matching International String found! International Strings: "
 						+ internationalStringTypes.toString()
@@ -246,6 +241,7 @@ public class StudyUnit extends Model {
 				return internationalStringType.getStringValue();
 			}
 		}
+		// TODO add is debug enabled
 		log.debug("*** No matching International String ***");
 		return "";
 	}
@@ -259,6 +255,7 @@ public class StudyUnit extends Model {
 			XmlBeansUtil.setTextOnMixedElement(structuredStringType, string);
 			return true;
 		}
+		// TODO add is debug enabled
 		log.debug("*** No matching Structured String ***");
 		return false;
 	}
@@ -271,6 +268,7 @@ public class StudyUnit extends Model {
 						.getLang().equals(languageCode))) {
 			return XmlBeansUtil.getTextOnMixedElement(structuredStringType);
 		}
+		// TODO add is debug enabled
 		log.debug("*** No matching Structured String ***");
 		return "";
 	}
@@ -300,7 +298,9 @@ public class StudyUnit extends Model {
 					|| (internationalStringType.getLang() != null && internationalStringType
 							.getLang().equals(languageCode))) {
 				return internationalStringType.getStringValue();
-			} else {
+			}
+			// TODO add is debug enabled
+			else {
 				log.debug("*** No matching sub-element ***");
 			}
 		}
@@ -321,6 +321,7 @@ public class StudyUnit extends Model {
 			String languageCode) throws DDIFtpException {
 		InternationalStringType internationalStringType;
 
+		// TODO add is debug enabled
 		log.debug("StudyUnit.xsetElement()");
 		XmlObject[] xmlObjects = subElements.getXmlObjects();
 		for (int i = 0; i < xmlObjects.length; i++) {
@@ -356,9 +357,8 @@ public class StudyUnit extends Model {
 	 * @param title
 	 * @param languageCode
 	 */
-	@SuppressWarnings("deprecation")
 	public void setCitationTitle(String title, String languageCode) {
-
+		// TODO add is debug enabled
 		log.debug("StudyUnit.setCitationTitle()");
 		XmlObject[] citations = xcitations.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
@@ -386,9 +386,8 @@ public class StudyUnit extends Model {
 	 * 
 	 * @param languageCode
 	 */
-	@SuppressWarnings("deprecation")
 	public String getCitationTitle(String languageCode) {
-
+		// TODO add is debug enabled
 		log.debug("StudyUnit.getCitationTitle()");
 		XmlObject[] citations = xcitations.getXmlObjects();
 		if (citations != null) {
@@ -412,9 +411,8 @@ public class StudyUnit extends Model {
 	 * @param subTitle
 	 * @param languageCode
 	 */
-	@SuppressWarnings("deprecation")
 	public void setCitationSubTitle(String subTitle, String languageCode) {
-
+		// TODO add is debug enabled
 		log.debug("StudyUnit.setCitationSubTitle()");
 		XmlObject[] citations = xcitations.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
@@ -442,9 +440,8 @@ public class StudyUnit extends Model {
 	 * 
 	 * @param languageCode
 	 */
-	@SuppressWarnings("deprecation")
 	public String getCitationSubTitle(String languageCode) {
-
+		// TODO add is debug enabled
 		log.debug("StudyUnit.getCitationSubTitle()");
 		XmlObject[] citations = xcitations.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
@@ -498,7 +495,7 @@ public class StudyUnit extends Model {
 	 * @param languageCode
 	 */
 	public String getCitationAltTitle(String languageCode) {
-
+		// TODO add is debug enabled
 		log.debug("StudyUnit.getCitationAltTitle()");
 		XmlObject[] citations = xcitations.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
@@ -520,7 +517,6 @@ public class StudyUnit extends Model {
 	 * @param title
 	 * @param languageCode
 	 */
-	@SuppressWarnings("deprecation")
 	public void setCitationCreator(String creator, String languageCode) {
 
 		XmlObject[] citations = xcitations.getXmlObjects();
@@ -550,9 +546,8 @@ public class StudyUnit extends Model {
 	 * 
 	 * @param languageCode
 	 */
-	@SuppressWarnings("deprecation")
 	public String getCitationCreator(String languageCode) {
-
+		// TODO add is debug enabled
 		log.debug("StudyUnit.getCitationSubTitle()");
 		XmlObject[] citations = xcitations.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
@@ -574,9 +569,9 @@ public class StudyUnit extends Model {
 	 * @param title
 	 * @param languageCode
 	 */
-	@SuppressWarnings("deprecation")
-	public void setCitationPublisher(String publisher, String languageCode) {
 
+	public void setCitationPublisher(String publisher, String languageCode) {
+		// TODO add is debug enabled
 		log.debug("StudyUnit.setCitationPublisher()");
 		XmlObject[] citations = xcitations.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
@@ -605,9 +600,9 @@ public class StudyUnit extends Model {
 	 * 
 	 * @param languageCode
 	 */
-	@SuppressWarnings("deprecation")
-	public String getCitationPublisher(String languageCode) {
 
+	public String getCitationPublisher(String languageCode) {
+		// TODO add is debug enabled
 		log.debug("StudyUnit.getCitationSubTitle()");
 		XmlObject[] citations = xcitations.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
@@ -629,9 +624,9 @@ public class StudyUnit extends Model {
 	 * @param title
 	 * @param languageCode
 	 */
-	@SuppressWarnings("deprecation")
-	public void setCitationContributor(String contributor, String languageCode) {
 
+	public void setCitationContributor(String contributor, String languageCode) {
+		// TODO add is debug enabled
 		log.debug("StudyUnit.setCitationContributor()");
 		XmlObject[] citations = xcitations.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
@@ -660,9 +655,8 @@ public class StudyUnit extends Model {
 	 * 
 	 * @param languageCode
 	 */
-	@SuppressWarnings("deprecation")
 	public String getCitationContributor(String languageCode) {
-
+		// TODO add is debug enabled
 		log.debug("StudyUnit.getCitationContributor()");
 		XmlObject[] citations = xcitations.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
@@ -684,9 +678,10 @@ public class StudyUnit extends Model {
 	 * @param publicationDate
 	 */
 	public void setCitationPublicationDate(String publicationDate) {
-
+		// TODO add is debug enabled
 		log.debug("StudyUnit.setCitationPublicationDate()");
 		XmlObject[] citations = xcitations.getXmlObjects();
+		// TODO add is debug enabled
 		if (citations.length > 1) {
 			log
 					.error("*** More Study Unit Citations - 'Publication Date' of first one set! ***");
@@ -709,7 +704,7 @@ public class StudyUnit extends Model {
 	 * 
 	 */
 	public String getCitationPublicationDate() throws Exception {
-
+		// TODO add is debug enabled
 		log.debug("StudyUnit.getCitationContributor()");
 		XmlObject[] citations = xcitations.getXmlObjects();
 		if (citations.length > 1) {
@@ -733,9 +728,10 @@ public class StudyUnit extends Model {
 	 * @param publicationDate
 	 */
 	public void setCitationLanguage(String language) {
-
+		// TODO add is debug enabled
 		log.debug("StudyUnit.setCitationLanguage()");
 		XmlObject[] citations = xcitations.getXmlObjects();
+		// TODO add is debug enabled
 		if (citations.length > 1) {
 			log
 					.error("*** More Study Unit Citations - 'Language' of first one used! ***");
@@ -753,9 +749,10 @@ public class StudyUnit extends Model {
 	 * 
 	 */
 	public String getCitationLanguage() {
-
+		// TODO add is debug enabled
 		log.debug("StudyUnit.getCitationLanguage()");
 		XmlObject[] citations = xcitations.getXmlObjects();
+		// TODO add is debug enabled
 		if (citations.length > 1) {
 			log
 					.error("*** More Study Unit Citations - 'Language' of first one retrieved! ***");
