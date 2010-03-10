@@ -27,6 +27,8 @@ public class IfThenElse extends Model {
 
 	@Override
 	public void executeChange(Object value, Class<?> type) throws Exception {
+		super.executeChange(value, type);
+
 		// ProgrammingLanguageCodeType
 		if (type.equals(ProgrammingLanguageCodeType.class)) {
 			getProgrammingLanguageCode(
@@ -59,7 +61,7 @@ public class IfThenElse extends Model {
 					(LightXmlObjectType) value);
 		}
 	}
-	
+
 	@Override
 	public void validate() throws Exception {
 		// TODO Auto-generated method stub
@@ -73,13 +75,13 @@ public class IfThenElse extends Model {
 
 	public ReferenceType getIfQuestionReference() {
 		CodeType codeType = getCodeType(doc.getIfThenElse().getIfCondition());
-		if (codeType==null) {
+		if (codeType == null) {
 			return null;
 		}
 		ReferenceType ref = null;
 		if (codeType.getSourceQuestionReferenceList().isEmpty()) {
-			ref =  create ? codeType.addNewSourceQuestionReference() : null;
-			if (ref!=null) {
+			ref = create ? codeType.addNewSourceQuestionReference() : null;
+			if (ref != null) {
 				ref.addNewID();
 			}
 			return ref;
