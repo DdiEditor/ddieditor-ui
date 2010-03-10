@@ -27,8 +27,6 @@ public class IfThenElse extends Model {
 
 	@Override
 	public void executeChange(Object value, Class<?> type) throws Exception {
-		super.executeChange(value, type);
-
 		// ProgrammingLanguageCodeType
 		if (type.equals(ProgrammingLanguageCodeType.class)) {
 			getProgrammingLanguageCode(
