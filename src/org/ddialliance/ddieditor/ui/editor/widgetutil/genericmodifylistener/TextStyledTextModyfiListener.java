@@ -31,16 +31,20 @@ public class TextStyledTextModyfiListener extends GenericModifyListener {
 		if (event.getSource() instanceof Text) {
 			Text textTxt = ((Text) event.getSource());
 			text = textTxt.getText();
-			isNew = (Boolean) textTxt.getData(Editor.NEW_ITEM);
-			if (isNew) {
-				textTxt.setData(Editor.NEW_ITEM, false);
+			if (textTxt.getData(Editor.NEW_ITEM)!=null) {
+				isNew = (Boolean) textTxt.getData(Editor.NEW_ITEM);
+				if (isNew) {
+					textTxt.setData(Editor.NEW_ITEM, false);
+				}
 			}
 		} else if (event.getSource() instanceof StyledText) {
 			StyledText textTxt = (StyledText) event.getSource();
 			text = textTxt.getText();
-			isNew = (Boolean) textTxt.getData(Editor.NEW_ITEM);
-			if (isNew) {
-				textTxt.setData(Editor.NEW_ITEM, false);
+			if (textTxt.getData(Editor.NEW_ITEM)!=null) {
+				isNew = (Boolean) textTxt.getData(Editor.NEW_ITEM);
+				if (isNew) {
+					textTxt.setData(Editor.NEW_ITEM, false);
+				}
 			}
 		}
 
