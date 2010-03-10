@@ -11,8 +11,10 @@ import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.xml.Urn;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -57,8 +59,7 @@ public class PropertyTabItemAction extends TabItemAction {
 		}
 
 		// action
-		// Combo actionCombo = createCombo(group, new String[] { "1", "2", "3"
-		// });
+		// actionCombo
 
 		// urn
 		Urn urn = null;
@@ -122,11 +123,20 @@ public class PropertyTabItemAction extends TabItemAction {
 			versionDate.setText(versionDateStr);
 
 			// version rationale
+			// remove listener to avoid the modification event in following set
+			Listener[] listeners = versionRationaleText
+					.getListeners(SWT.Modify);
+			versionRationaleText.removeListener(SWT.Modify, listeners[0]);
+
+			// set text
 			versionRationaleText
 					.setText(versionInformation.versionRationaleList.isEmpty() ? ""
 							: versionInformation.versionRationaleList.get(
 									versionInformation.versionRationaleList
 											.size() - 1).getStringValue());
+
+			// reattach listener after set text
+			versionRationaleText.addListener(SWT.Modify, listeners[0]);
 		}
 		return null;
 	}
