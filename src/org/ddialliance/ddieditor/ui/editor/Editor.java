@@ -153,9 +153,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		setInput(editorInput);
 
 		// name
-		setPartName(Messages.getString(editorInput.getElementType()
-				.getDisplayMessageEntry()
-				+ " " + model.getId()));
+		setPartName(model.getId());
+		setTitleToolTip(Messages.getString(editorInput.getElementType()
+				.getDisplayMessageEntry())); // TODO i18n
 	}
 
 	@Override
@@ -355,6 +355,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		createLabel(group, Messages.getString("Editor.label.action.Action"));
 		Combo actionCombo = createCombo(group, new String[] { "1", "2", "3" });
 
+		// urn
+		StyledText urnText = createTextAreaInput(group, Messages
+				.getString("Editor.label.urnLabel.URN"), "", null);
+
 		// agency
 		Text agencyText = null;
 		if (isMaintainable) {
@@ -402,11 +406,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			versionRationaleText = createTextAreaInput(group, Messages
 					.getString("Editor.label.versionrationale"), "", null);
 		}
-
-		// urn
-		StyledText urnText = createTextAreaInput(group, Messages
-				.getString("Editor.label.urnLabel.URN"), "", null);
-
+		
 		// update on tab item click
 		tabItem.setData(TAB_ID, PROPERTY_TAB_ID);
 		PropertyTabItemAction action = new PropertyTabItemAction(ID, model,
