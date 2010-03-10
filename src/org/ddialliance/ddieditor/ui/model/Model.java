@@ -130,11 +130,13 @@ public abstract class Model implements IModel {
 
 	public void applyChange(Object value, Class<?> type) throws Exception {
 		this.create = true;
+		executeGeneralChange(value, type);
 		executeChange(value, type);
 		this.create = false;
 	}
 
-	public void executeChange(Object value, Class<?> type) throws Exception {
+	private void executeGeneralChange(Object value, Class<?> type)
+			throws Exception {
 		// VersionRationaleDocument
 		if (type.equals(VersionRationaleDocument.class)) {
 			VersionInformation versionInformation = IdentificationManager
@@ -156,4 +158,7 @@ public abstract class Model implements IModel {
 			}
 		}
 	}
+
+	public abstract void executeChange(Object value, Class<?> type)
+			throws Exception;
 }
