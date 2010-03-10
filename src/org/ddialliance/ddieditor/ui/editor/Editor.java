@@ -10,10 +10,12 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.VersionRationaleDocument;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.DDITabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.PropertyTabItemAction;
@@ -68,8 +70,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 /**
- * An editor consists of a header with a tab folder. The tab folder contains
- * a set of tab items.
+ * An editor consists of a header with a tab folder. The tab folder contains a
+ * set of tab items.
  */
 public class Editor extends EditorPart implements IAutoChangePerspective {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
@@ -183,19 +185,17 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 		// title
 		final Label titleLabel = new Label(composite_2, SWT.WRAP);
-		titleLabel.setLayoutData(new GridData(SWT.FILL,
-				SWT.CENTER, true, false, 1, 1));
-		titleLabel.setFont(SWTResourceManager.getFont("Sans", 14,
-				SWT.BOLD));
+		titleLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
+		titleLabel.setFont(SWTResourceManager.getFont("Sans", 14, SWT.BOLD));
 
-		titleLabel.setBackground(SWTResourceManager.getColor(230,
-				230, 250));
+		titleLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
 		titleLabel.setText(title);
 
 		// description
 		final Label descriptionLabel = new Label(composite_2, SWT.WRAP);
-		final GridData gd_descriptionLabel = new GridData(SWT.FILL,
-				SWT.CENTER, true, false);
+		final GridData gd_descriptionLabel = new GridData(SWT.FILL, SWT.CENTER,
+				true, false);
 		gd_descriptionLabel.widthHint = 471;
 		descriptionLabel.setLayoutData(gd_descriptionLabel);
 		descriptionLabel.setBackground(SWTResourceManager.getColor(230, 230,
@@ -358,6 +358,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		// urn
 		StyledText urnText = createTextAreaInput(group, Messages
 				.getString("Editor.label.urnLabel.URN"), "", null);
+		urnText.setEditable(false);
 
 		// agency
 		Text agencyText = null;
@@ -365,6 +366,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			createLabel(group, Messages
 					.getString("Editor.label.agencyLabel.agency"));
 			agencyText = createText(group, "", null);
+			agencyText.setEditable(false);
 		}
 
 		// id
@@ -391,22 +393,29 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			createLabel(group, Messages
 					.getString("Editor.label.versionGroup.Version"));
 			versionText = createText(group, "", null);
+			versionText.setEditable(false);
 
 			// version responsibility
 			createLabel(group, Messages
 					.getString("Editor.label.responsibelLabel.Responsibel"));
 			versionResponsibilityText = createText(group, "", null);
+			versionResponsibilityText.setEditable(false);
 
 			// version date
 			createLabel(group, Messages
 					.getString("Editor.label.versionDateLabel.Date"));
 			versionDate = createText(group, "", null);
+			versionDate.setEditable(false);
 
 			// version rationale
 			versionRationaleText = createTextAreaInput(group, Messages
 					.getString("Editor.label.versionrationale"), "", null);
+			versionRationaleText
+					.addModifyListener(new TextStyledTextModyfiListener(model,
+							VersionRationaleDocument.class,
+							getEditorIdentification()));
 		}
-		
+
 		// update on tab item click
 		tabItem.setData(TAB_ID, PROPERTY_TAB_ID);
 		PropertyTabItemAction action = new PropertyTabItemAction(ID, model,
@@ -462,12 +471,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				SWT.COLOR_WHITE));
 		final GridLayout gridLayout = new GridLayout();
 		simpleRootComposite.setLayout(gridLayout);
-	
+
 		// - Simple Tab Item:
 		labelDescriptionTabItem = new TabItem(getTabFolder(), SWT.NONE);
 		labelDescriptionTabItem.setControl(simpleRootComposite);
 		labelDescriptionTabItem.setText(editorEntityName);
-	
+
 		// - Simple Group
 		final Group labelDescriptionGroup = new Group(simpleRootComposite,
 				SWT.NONE);
@@ -482,7 +491,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		gridLayout_1.numColumns = 2;
 		labelDescriptionGroup.setLayout(gridLayout_1);
 		labelDescriptionGroup.setText(editorEntityName);
-	
+
 		// Simple Label:
 		final Label labelLabel = new Label(labelDescriptionGroup, SWT.NONE);
 		final GridData gd_conceptLabel = new GridData(SWT.RIGHT, SWT.CENTER,
@@ -492,7 +501,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		labelLabel.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
 		labelLabel.setText(Messages.getString("SimpleEditor.label.Label")); //$NON-NLS-1$
-	
+
 		final Text labelText = new Text(labelDescriptionGroup, SWT.BORDER);
 		final GridData gd_labelText = new GridData(SWT.FILL, SWT.CENTER, true,
 				false);
@@ -505,7 +514,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				editorStatus.setChanged();
 			}
 		});
-	
+
 		// Simple Description:
 		final Label simpleDescrLabel = new Label(labelDescriptionGroup,
 				SWT.NONE);
@@ -517,7 +526,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				SWT.COLOR_WHITE));
 		simpleDescrLabel.setText(Messages
 				.getString("SimpleEditor.label.DescriptionText.Label")); //$NON-NLS-1$
-	
+
 		final StyledText simpleDescrStyledText = new StyledText(
 				labelDescriptionGroup, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
 		simpleDescrStyledText.setText(simpleElement.getDescr());
