@@ -1,15 +1,5 @@
 package org.ddialliance.ddieditor.ui;
 
-/**
- * Activator
- * 
- */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 import org.ddialliance.ddieditor.ui.dbxml.DbXml;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -40,14 +30,12 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public Activator() throws Exception {
 		this.context = context;
-		log.debug("Activator.Activator()");
 		try {
 			DbXml.open();
 		} catch (Exception e) {
 			log.error("Error during DB XML opening: " + e.getMessage());
 			throw new Exception("Error during DB XML opening: " + e.getMessage());
 		}
-
 	}
 
 	/*
@@ -57,6 +45,7 @@ public class Activator extends AbstractUIPlugin {
 	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
 	 * )
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
