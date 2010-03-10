@@ -1,38 +1,22 @@
 package org.ddialliance.ddieditor.ui.editor;
 
-/**
- * Generic Editor.
- * 
- */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.AbstractVersionableType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
-import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
-import org.ddialliance.ddieditor.logic.identification.VersionInformation;
-import org.ddialliance.ddieditor.logic.urn.ddi.Urn2Util;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.ui.IAddAttr;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.DDITabItemAction;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.PropertyTabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.TabFolderListener;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
@@ -45,12 +29,9 @@ import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.ddialliance.ddiftp.util.xml.Urn;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -87,45 +68,142 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 /**
- * The Editor Class consist of a header with a Tabfolder. The Tabfolder contains
- * a set of TabItems. The number is configurable but minimum is one Property
- * TabItem.
- * 
- * @author ddadak
- * 
+ * An editor consists of a header with a tab folder. The tab folder contains
+ * a set of tab items.
  */
 public class Editor extends EditorPart implements IAutoChangePerspective {
-
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
 
-	private String headerEditorTitle = "";
-	private String headerEditorDescr = "";
+	public static final String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
+	public EditorStatus editorStatus = new EditorStatus();
+	protected EditorInput editorInput;
+	private IEditorSite site;
+
+	private String title = "";
+	private String description = "";
+
+	private Composite composite;
 	private TabFolder tabFolder;
 	private TabItem labelDescriptionTabItem;
+
 	public static String NEW_ITEM = "new_item";
 	public static String CONTROL_ID = "control_id";
 	public static String TAB_ID = "id";
 	public static String DDI_TAB_ID = "ddi";
+	public static String PROPERTY_TAB_ID = "property";
 
-	public TabItem getLabelDescriptionTabItem() {
-		return labelDescriptionTabItem;
+	protected IModel model;
+	protected IDao dao;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param title
+	 *            title
+	 * @param description
+	 *            description
+	 */
+	public Editor(String title, String description) {
+		this.title = title;
+		this.description = description;
 	}
 
-	public void setLabelDescriptionTabItem(TabItem labelDescriptionTabItem) {
-		this.labelDescriptionTabItem = labelDescriptionTabItem;
+	@Override
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
+		setSite(site);
+		this.editorInput = (EditorInput) input;
+		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+			try {
+				model = dao.create("", "", editorInput.getParentId(),
+						editorInput.getParentVersion());
+			} catch (Exception e) {
+				throw new PartInitException(Messages
+						.getString("editor.init.error.create"),
+						new DDIFtpException(e));
+			} catch (Throwable t) {
+				DDIFtpException e = new DDIFtpException(Messages
+						.getString("editor.init.error.create"));
+				e.setRealThrowable(t);
+				throw new PartInitException(Messages
+						.getString("editor.init.error.create"), e);
+			}
+		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
+				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+			try {
+				model = dao.getModel(editorInput.getId(), editorInput
+						.getVersion(), editorInput.getParentId(), editorInput
+						.getParentVersion());
+			} catch (Exception e) {
+				throw new PartInitException(Messages
+						.getString("editor.init.error.retrieval"),
+						new DDIFtpException(e));
+			}
+		} else {
+			throw new PartInitException(Messages
+					.getString("editor.init.error.editmodeunsupported"),
+					new DDIFtpException());
+		}
+
+		// update input
+		editorInput.setId(model.getId());
+		editorInput.setVersion(model.getVersion());
+		editorInput.setParentId(model.getParentId());
+		editorInput.setParentVersion(model.getParentVersion());
+		setInput(editorInput);
+
+		// name
+		setPartName(Messages.getString(editorInput.getElementType()
+				.getDisplayMessageEntry()
+				+ " " + model.getId()));
 	}
 
-	public TabFolder getTabFolder() {
-		return tabFolder;
-	}
+	@Override
+	public void createPartControl(Composite parent) {
+		parent.setLayout(new GridLayout());
 
-	public void setTabFolder(TabFolder tabFolder) {
-		this.tabFolder = tabFolder;
-	}
+		// general ui layout
+		composite = new Composite(parent, SWT.BORDER);
+		composite.setLayout(new GridLayout());
+		composite.setRedraw(true);
 
-	public Editor(String headerEditorTitle, String headerEditorDescr) {
-		this.headerEditorTitle = headerEditorTitle;
-		this.headerEditorDescr = headerEditorDescr;
+		final GridData gd_composite_1 = new GridData(SWT.FILL, SWT.FILL, true,
+				true);
+		gd_composite_1.widthHint = 539;
+		gd_composite_1.heightHint = 573;
+		composite.setLayoutData(gd_composite_1);
+		composite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+
+		final Composite composite_2 = new Composite(composite, SWT.NONE);
+		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
+		composite_2.setBackground(SWTResourceManager.getColor(230, 230, 250));
+		composite_2.setLayout(new GridLayout());
+
+		// title
+		final Label titleLabel = new Label(composite_2, SWT.WRAP);
+		titleLabel.setLayoutData(new GridData(SWT.FILL,
+				SWT.CENTER, true, false, 1, 1));
+		titleLabel.setFont(SWTResourceManager.getFont("Sans", 14,
+				SWT.BOLD));
+
+		titleLabel.setBackground(SWTResourceManager.getColor(230,
+				230, 250));
+		titleLabel.setText(title);
+
+		// description
+		final Label descriptionLabel = new Label(composite_2, SWT.WRAP);
+		final GridData gd_descriptionLabel = new GridData(SWT.FILL,
+				SWT.CENTER, true, false);
+		gd_descriptionLabel.widthHint = 471;
+		descriptionLabel.setLayoutData(gd_descriptionLabel);
+		descriptionLabel.setBackground(SWTResourceManager.getColor(230, 230,
+				250));
+		descriptionLabel.setText(description);
+
+		// clean dirt from initialization
+		editorStatus.clearChanged();
 	}
 
 	/**
@@ -135,117 +213,92 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		private boolean changed = false;
 
 		public void setChanged() {
-			// log.debug("EditorStatus.setChanged()");
 			changed = true; // Set 'changed' before fire the property change!
 			firePropertyChange(IEditorPart.PROP_DIRTY);
 		}
 
 		public boolean getStatus() {
-			// log.debug("EditorStatus.getStatus()");
 			return changed;
 		}
 
 		public void clearChanged() {
-			// log.debug("EditorStatus.clearChanged()");
 			changed = false; // Set 'changed' before fire the property change!
 			firePropertyChange(IEditorPart.PROP_DIRTY);
 		}
 	}
 
-	// Member variables:
-	private Text urnText;
-	private Text idText;
-	public static final String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
-	public EditorStatus editorStatus = new EditorStatus();
-	private IEditorSite site;
-	protected EditorInput editorInput;
-	protected IModel model;
-	protected IDao dao;
-	private Composite composite;
-
-	public static enum FIELD_TYPE {
-		DIGIT, LETTER, LETTER_DIGIT
-	};
-
-	/**
-	 * Verify field data and report eventually errors
-	 * 
-	 * @param ft
-	 *            Field type e.g. DIGIT, LETTER, LETTER_DIGIT
-	 * @param e
-	 *            Verify event
-	 * @param currentSite
-	 *            Current Site
-	 */
-	public static void verifyField(FIELD_TYPE ft, VerifyEvent e,
-			IEditorSite currentSite) {
-		char myChar;
-
-		// Assume we don't allow it
-		e.doit = false;
-		// Get the character typed
-		myChar = e.character;
-		log.debug("Verify char: '" + myChar + "'");
-
-		int i = myChar;
-		log.debug("Verify char(hex): " + Integer.toHexString(i));
-
-		IActionBars bars = currentSite.getActionBars();
-
-		switch (ft) {
-		case DIGIT:
-			// Allow 0-9 and backspace
-			if (Character.isDigit(myChar) || myChar == 0x08) {
-				e.doit = true;
-				bars.getStatusLineManager().setMessage("");
-			} else {
-				bars.getStatusLineManager().setMessage(
-						Messages.getString("Editor.mess.UseOnlyDigits")); //$NON-NLS-1$
-			}
-			break;
-		case LETTER:
-			// Allow letters and backspace
-			if (Character.isLetter(myChar) || myChar == '\b') {
-				e.doit = true;
-				bars.getStatusLineManager().setMessage("");
-			} else {
-				bars.getStatusLineManager().setMessage(
-						Messages.getString("Editor.mess.UseOnlyLetters")); //$NON-NLS-1$
-			}
-			break;
-		case LETTER_DIGIT:
-			// Allow letters and/or digits and backspace
-			if (Character.isLetterOrDigit(myChar) || myChar == '\b') {
-				e.doit = true;
-				bars.getStatusLineManager().setMessage("");
-			} else {
-				bars.getStatusLineManager().setMessage(
-						Messages.getString("Editor.mess.UseOnlyLettersDigits")); //$NON-NLS-1$
-			}
-			break;
-		}
+	@Override
+	public boolean isDirty() {
+		return editorStatus.getStatus();
 	}
 
-	// Test only:
-	private void runAddAttrExtension(Composite parent) {
-		log.debug("Editor.runAddAttrExtension()");
+	@Override
+	public void doSave(IProgressMonitor monitor) {
 		try {
-			IConfigurationElement[] config = Platform
-					.getExtensionRegistry()
-					.getConfigurationElementsFor(
-							"org.ddialliance.ddieditor.extensionpoints.addattr");
-			for (IConfigurationElement e : config) {
-				log.debug("Debug: " + e.getAttribute("new_attribute"));
-				Object o = e.createExecutableExtension("class");
-				if (o instanceof IAddAttr) {
-					site.getShell().setText(e.getAttribute("title"));
-					((IAddAttr) o).AddAttr(parent, e
-							.getAttribute("new_attribute"));
-				}
+			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+				dao.create(model);
+				editorInput.setEditorMode(EditorModeType.EDIT);
+			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
+				dao.update(model);
+			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+				log.debug("*** Saved ignored! ***");
 			}
-		} catch (Exception ex) {
-			log.debug(ex.getMessage());
-			System.exit(0);
+		} catch (Exception e) {
+			DialogUtil
+					.errorDialog(
+							site,
+							ID,
+							Messages.getString("ErrorTitle"),
+							Messages
+									.getString("IfThenElseEditor.mess.ErrorDuringSave"),
+							e);
+			return;
+		}
+		editorStatus.clearChanged();
+		updateParentView();
+	}
+
+	@Override
+	public void doSaveAs() {
+		MessageDialog
+				.openError(
+						site.getShell(),
+						Messages.getString("ErrorTitle"), Messages.getString("Editor.mess.SaveAsNotSupported")); //$NON-NLS-1$
+	}
+
+	@Override
+	public boolean isSaveAsAllowed() {
+		// save as not supported
+		return false;
+	}
+
+	@Override
+	public void setFocus() {
+		// Set the focus
+	}
+
+	/**
+	 * Update parent view by firing a property change event
+	 */
+	public void updateParentView() {
+		// update view
+		firePropertyChange(IEditorPart.PROP_INPUT);
+	}
+
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		// do nothing
+	}
+
+	// -----------------------------------------------------------------------
+	// composite, tab folder and item operations
+	// -----------------------------------------------------------------------
+	protected Composite getComposite_1() {
+		return composite;
+	}
+
+	public void setControl(Control widget) {
+		if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+			widget.setEnabled(false);
 		}
 	}
 
@@ -256,6 +309,14 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				1));
 		tabFolder.addSelectionListener(new TabFolderListener());
 		return tabFolder;
+	}
+
+	public TabFolder getTabFolder() {
+		return tabFolder;
+	}
+
+	public void setTabFolder(TabFolder tabFolder) {
+		this.tabFolder = tabFolder;
 	}
 
 	public TabItem createTabItem(String tabText) {
@@ -275,6 +336,216 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return group;
 	}
 
+	public void createPropertiesTab(TabFolder tabFolder) {
+		TabItem tabItem = createTabItem(Messages
+				.getString("Editor.label.propertiesTabItem.Properties"));
+		Group group = createGroup(tabItem, Messages
+				.getString("Editor.label.propertiesGroup.Properties"));
+
+		boolean isMaintainable = false;
+		try {
+			isMaintainable = DdiManager.getInstance().getDdi3NamespaceHelper()
+					.isMaintainable(model.getDocument());
+		} catch (DDIFtpException e) {
+			DialogUtil.errorDialog(group.getShell(), ID,
+					"Maintainable check error", e.getMessage(), e);
+		}
+
+		// action
+		createLabel(group, Messages.getString("Editor.label.action.Action"));
+		Combo actionCombo = createCombo(group, new String[] { "1", "2", "3" });
+
+		// agency
+		Text agencyText = null;
+		if (isMaintainable) {
+			createLabel(group, Messages
+					.getString("Editor.label.agencyLabel.agency"));
+			agencyText = createText(group, "", null);
+		}
+
+		// id
+		createLabel(group, Messages.getString("Editor.label.idLabel.ID"));
+		Text idText = createText(group, "", null);
+		idText.setEditable(false);
+
+		// version
+		boolean isVersionable = false;
+		try {
+			isVersionable = DdiManager.getInstance().getDdi3NamespaceHelper()
+					.isVersionable(model.getDocument());
+		} catch (DDIFtpException e) {
+			DialogUtil.errorDialog(group.getShell(), ID,
+					"Versionable check error", e.getMessage(), e);
+		}
+
+		Text versionText = null;
+		Text versionResponsibilityText = null;
+		Text versionDate = null;
+		StyledText versionRationaleText = null;
+		if (isVersionable) {
+			// version
+			createLabel(group, Messages
+					.getString("Editor.label.versionGroup.Version"));
+			versionText = createText(group, "", null);
+
+			// version responsibility
+			createLabel(group, Messages
+					.getString("Editor.label.responsibelLabel.Responsibel"));
+			versionResponsibilityText = createText(group, "", null);
+
+			// version date
+			createLabel(group, Messages
+					.getString("Editor.label.versionDateLabel.Date"));
+			versionDate = createText(group, "", null);
+
+			// version rationale
+			versionRationaleText = createTextAreaInput(group, Messages
+					.getString("Editor.label.versionrationale"), "", null);
+		}
+
+		// urn
+		StyledText urnText = createTextAreaInput(group, Messages
+				.getString("Editor.label.urnLabel.URN"), "", null);
+
+		// update on tab item click
+		tabItem.setData(TAB_ID, PROPERTY_TAB_ID);
+		PropertyTabItemAction action = new PropertyTabItemAction(ID, model,
+				group.getShell(), actionCombo, urnText, agencyText, idText,
+				versionText, versionResponsibilityText, versionDate,
+				versionRationaleText);
+		Listener[] list = getTabFolder().getListeners(SWT.Selection);
+		Object obj = null;
+		for (int i = 0; i < list.length; i++) {
+			if (list[i] instanceof TypedListener) {
+				obj = ((TypedListener) list[i]).getEventListener();
+				if (obj instanceof TabFolderListener) {
+					((TabFolderListener) obj).actionMap.put(PROPERTY_TAB_ID,
+							action);
+				}
+				break;
+			}
+		}
+	}
+
+	public StyledText createXmlTab(IModel model) {
+		TabItem tabItem = createTabItem(Messages
+				.getString("editor.tabitem.ddi"));
+		Group group = createGroup(tabItem, Messages
+				.getString("editor.group.ddi"));
+		StyledText styledText = createTextAreaInput(group, Messages
+				.getString("editor.label.ddi"), "", false);
+		// styledText.addModifyListener(new TextStyledTextModyfiListener(model,
+		// sometype.class, getEditorIdentification()));
+
+		// update on tab item click
+		tabItem.setData(TAB_ID, DDI_TAB_ID);
+		DDITabItemAction action = new DDITabItemAction(DDI_TAB_ID, model,
+				styledText);
+		Listener[] list = getTabFolder().getListeners(SWT.Selection);
+		Object obj = null;
+		for (int i = 0; i < list.length; i++) {
+			if (list[i] instanceof TypedListener) {
+				obj = ((TypedListener) list[i]).getEventListener();
+				if (obj instanceof TabFolderListener) {
+					((TabFolderListener) obj).actionMap.put(DDI_TAB_ID, action);
+				}
+				break;
+			}
+		}
+		return styledText;
+	}
+
+	public void createLabelDescriptionTab(Composite parent,
+			String editorEntityName, final LabelDescription simpleElement) {
+		Composite simpleRootComposite = new Composite(parent, SWT.NONE);
+		simpleRootComposite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+		final GridLayout gridLayout = new GridLayout();
+		simpleRootComposite.setLayout(gridLayout);
+	
+		// - Simple Tab Item:
+		labelDescriptionTabItem = new TabItem(getTabFolder(), SWT.NONE);
+		labelDescriptionTabItem.setControl(simpleRootComposite);
+		labelDescriptionTabItem.setText(editorEntityName);
+	
+		// - Simple Group
+		final Group labelDescriptionGroup = new Group(simpleRootComposite,
+				SWT.NONE);
+		final GridData gd_labelDescriptionGroup = new GridData(SWT.FILL,
+				SWT.CENTER, true, true);
+		gd_labelDescriptionGroup.heightHint = 632;
+		gd_labelDescriptionGroup.widthHint = 861;
+		labelDescriptionGroup.setLayoutData(gd_labelDescriptionGroup);
+		labelDescriptionGroup.setBackground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_WHITE));
+		final GridLayout gridLayout_1 = new GridLayout();
+		gridLayout_1.numColumns = 2;
+		labelDescriptionGroup.setLayout(gridLayout_1);
+		labelDescriptionGroup.setText(editorEntityName);
+	
+		// Simple Label:
+		final Label labelLabel = new Label(labelDescriptionGroup, SWT.NONE);
+		final GridData gd_conceptLabel = new GridData(SWT.RIGHT, SWT.CENTER,
+				false, false);
+		gd_conceptLabel.horizontalIndent = 5;
+		labelLabel.setLayoutData(gd_conceptLabel);
+		labelLabel.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+		labelLabel.setText(Messages.getString("SimpleEditor.label.Label")); //$NON-NLS-1$
+	
+		final Text labelText = new Text(labelDescriptionGroup, SWT.BORDER);
+		final GridData gd_labelText = new GridData(SWT.FILL, SWT.CENTER, true,
+				false);
+		labelText.setLayoutData(gd_labelText);
+		labelText.setText(simpleElement.getLabel());
+		labelText.addModifyListener(new ModifyListener() {
+			public void modifyText(final ModifyEvent e) {
+				log.debug("Label changed");
+				simpleElement.setLabel(labelText.getText());
+				editorStatus.setChanged();
+			}
+		});
+	
+		// Simple Description:
+		final Label simpleDescrLabel = new Label(labelDescriptionGroup,
+				SWT.NONE);
+		final GridData gd_simpleDescrLabel = new GridData(SWT.RIGHT, SWT.TOP,
+				false, false);
+		gd_simpleDescrLabel.horizontalIndent = 5;
+		simpleDescrLabel.setLayoutData(gd_simpleDescrLabel);
+		simpleDescrLabel.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+		simpleDescrLabel.setText(Messages
+				.getString("SimpleEditor.label.DescriptionText.Label")); //$NON-NLS-1$
+	
+		final StyledText simpleDescrStyledText = new StyledText(
+				labelDescriptionGroup, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
+		simpleDescrStyledText.setText(simpleElement.getDescr());
+		final GridData gd_originalConceptTextStyledText = new GridData(
+				SWT.FILL, SWT.CENTER, true, false);
+		gd_originalConceptTextStyledText.heightHint = 154;
+		gd_originalConceptTextStyledText.widthHint = 308;
+		simpleDescrStyledText.setLayoutData(gd_originalConceptTextStyledText);
+		simpleDescrStyledText.addModifyListener(new ModifyListener() {
+			public void modifyText(final ModifyEvent e) {
+				log.debug("Description changed");
+				simpleElement.setDescr(simpleDescrStyledText.getText());
+				editorStatus.setChanged();
+			}
+		});
+	}
+
+	public TabItem getLabelDescriptionTabItem() {
+		return labelDescriptionTabItem;
+	}
+
+	public void setLabelDescriptionTabItem(TabItem labelDescriptionTabItem) {
+		this.labelDescriptionTabItem = labelDescriptionTabItem;
+	}
+
+	// -----------------------------------------------------------------------
+	// widget operations
+	// -----------------------------------------------------------------------
 	public Label createLabel(Group group, String labelText) {
 		Label label = new Label(group, SWT.NONE);
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -495,395 +766,16 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return dateType;
 	}
 
-	public void createLabelDescriptionTab(Composite parent,
-			String editorEntityName, final LabelDescription simpleElement) {
-		Composite simpleRootComposite = new Composite(parent, SWT.NONE);
-		simpleRootComposite.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		final GridLayout gridLayout = new GridLayout();
-		simpleRootComposite.setLayout(gridLayout);
-
-		// - Simple Tab Item:
-		labelDescriptionTabItem = new TabItem(getTabFolder(), SWT.NONE);
-		labelDescriptionTabItem.setControl(simpleRootComposite);
-		labelDescriptionTabItem.setText(editorEntityName);
-
-		// - Simple Group
-		final Group labelDescriptionGroup = new Group(simpleRootComposite,
-				SWT.NONE);
-		final GridData gd_labelDescriptionGroup = new GridData(SWT.FILL,
-				SWT.CENTER, true, true);
-		gd_labelDescriptionGroup.heightHint = 632;
-		gd_labelDescriptionGroup.widthHint = 861;
-		labelDescriptionGroup.setLayoutData(gd_labelDescriptionGroup);
-		labelDescriptionGroup.setBackground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_WHITE));
-		final GridLayout gridLayout_1 = new GridLayout();
-		gridLayout_1.numColumns = 2;
-		labelDescriptionGroup.setLayout(gridLayout_1);
-		labelDescriptionGroup.setText(editorEntityName);
-
-		// Simple Label:
-		final Label labelLabel = new Label(labelDescriptionGroup, SWT.NONE);
-		final GridData gd_conceptLabel = new GridData(SWT.RIGHT, SWT.CENTER,
-				false, false);
-		gd_conceptLabel.horizontalIndent = 5;
-		labelLabel.setLayoutData(gd_conceptLabel);
-		labelLabel.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		labelLabel.setText(Messages.getString("SimpleEditor.label.Label")); //$NON-NLS-1$
-
-		final Text labelText = new Text(labelDescriptionGroup, SWT.BORDER);
-		final GridData gd_labelText = new GridData(SWT.FILL, SWT.CENTER, true,
-				false);
-		labelText.setLayoutData(gd_labelText);
-		labelText.setText(simpleElement.getLabel());
-		labelText.addModifyListener(new ModifyListener() {
-			public void modifyText(final ModifyEvent e) {
-				log.debug("Label changed");
-				simpleElement.setLabel(labelText.getText());
-				editorStatus.setChanged();
-			}
-		});
-
-		// Simple Description:
-		final Label simpleDescrLabel = new Label(labelDescriptionGroup,
-				SWT.NONE);
-		final GridData gd_simpleDescrLabel = new GridData(SWT.RIGHT, SWT.TOP,
-				false, false);
-		gd_simpleDescrLabel.horizontalIndent = 5;
-		simpleDescrLabel.setLayoutData(gd_simpleDescrLabel);
-		simpleDescrLabel.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		simpleDescrLabel.setText(Messages
-				.getString("SimpleEditor.label.DescriptionText.Label")); //$NON-NLS-1$
-
-		final StyledText simpleDescrStyledText = new StyledText(
-				labelDescriptionGroup, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
-		simpleDescrStyledText.setText(simpleElement.getDescr());
-		final GridData gd_originalConceptTextStyledText = new GridData(
-				SWT.FILL, SWT.CENTER, true, false);
-		gd_originalConceptTextStyledText.heightHint = 154;
-		gd_originalConceptTextStyledText.widthHint = 308;
-		simpleDescrStyledText.setLayoutData(gd_originalConceptTextStyledText);
-		simpleDescrStyledText.addModifyListener(new ModifyListener() {
-			public void modifyText(final ModifyEvent e) {
-				log.debug("Description changed");
-				simpleElement.setDescr(simpleDescrStyledText.getText());
-				editorStatus.setChanged();
-			}
-		});
-	}
-
-	public void createPropertiesTab(TabFolder tabFolder) {
-		final TabItem tabItem = createTabItem(Messages
-				.getString("Editor.label.propertiesTabItem.Properties"));
-		final Group group = createGroup(tabItem, Messages
-				.getString("Editor.label.propertiesGroup.Properties"));
-
-		boolean isMaintainable = false;
-		try {
-			isMaintainable = DdiManager.getInstance().getDdi3NamespaceHelper()
-					.isMaintainable(model.getDocument());
-		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(group.getShell(), ID,
-					"Maintainable check error", e.getMessage(), e);
-		}
-
-		// action
-		createLabel(group, Messages.getString("Editor.label.action.Action"));
-		Combo actionCombo = createCombo(group, new String[] { "1", "2", "3" });
-
-		// urn
-		Urn urn = null;
-		String urnStr = "";
-		try {
-			QName qName = model.getDocument().schemaType()
-					.getDocumentElementName();
-			urn = Urn2Util.getUrn(qName.getLocalPart(), model.getId(), model
-					.getVersion(), model.getParentId(), model
-					.getParentVersion());
-			urnStr = urn.toUrnString();
-		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(group.getShell(), ID, "URN error", e
-					.getMessage(), e);
-		}
-		StyledText urnText = createTextAreaInput(group, Messages
-				.getString("Editor.label.urnLabel.URN"), urnStr, null);
-
-		// agency
-		Text agencyText = null;
-		if (isMaintainable) {
-			createLabel(group, Messages
-					.getString("Editor.label.agencyLabel.agency"));
-			agencyText = createText(group, model.getAgency() == null ? (urn == null ? ""
-					: urn.getIdentifingAgency()) : model.getAgency(), null);
-		}
-
-		// id
-		createLabel(group, Messages.getString("Editor.label.idLabel.ID"));
-		Text idText = createText(group, model.getId(), null);
-		idText.setEditable(false);
-
-		// version
-		boolean isVersionable = false;
-		try {
-			isVersionable = DdiManager.getInstance().getDdi3NamespaceHelper()
-					.isVersionable(model.getDocument());
-		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(group.getShell(), ID,
-					"Versionable check error", e.getMessage(), e);
-		}
-		if (isVersionable) {
-			// version
-			createLabel(group, Messages
-					.getString("Editor.label.versionGroup.Version"));
-			Text versionText = createText(group,
-					model.getVersion() == null ? "" : model.getVersion(), null);
-
-			VersionInformation versionInformation = null;
-			try {
-				versionInformation = IdentificationManager.getInstance()
-						.getVersionInformation(model.getDocument());
-			} catch (DDIFtpException e) {
-				DialogUtil.errorDialog(group.getShell(), ID, "Error", e
-						.getMessage(), e);
-			}
-
-			// version responsibility
-			createLabel(group, Messages
-					.getString("Editor.label.responsibelLabel.Responsibel"));
-			Text versionResponsibilityText = createText(group,
-					versionInformation.versionResponsibility == null ? ""
-							: versionInformation.versionResponsibility, null);
-
-			// version date
-			createLabel(group, Messages
-					.getString("Editor.label.versionDateLabel.Date"));
-			String versionDateStr = "";
-			try {
-				versionDateStr = XmlBeansUtil.getXmlAttributeValue(model.getDocument()
-						.xmlText(), "versionDate=\"");
-			} catch (DDIFtpException e) {
-				DialogUtil.errorDialog(group.getShell(), ID, "Error", e
-						.getMessage(), e);
-			}
-			Text versionDate = createText(group, versionDateStr, null);
-
-			// version rationale
-			StyledText versionRationaleText = createTextAreaInput(group,
-					Messages.getString("Editor.label.versionrationale"),
-					versionInformation.versionRationaleList.isEmpty() ? ""
-							: versionInformation.versionRationaleList.get(
-									versionInformation.versionRationaleList
-											.size() - 1).getStringValue(), null);
-		}
-	}
-
-	public StyledText createXmlTab(IModel model) {
-		TabItem tabItem = createTabItem(Messages
-				.getString("editor.tabitem.ddi"));
-		tabItem.setData(TAB_ID, DDI_TAB_ID);
-		Group group = createGroup(tabItem, Messages
-				.getString("editor.group.ddi"));
-		StyledText styledText = createTextAreaInput(group, Messages
-				.getString("editor.label.ddi"), "", false);
-		DDITabItemAction action = new DDITabItemAction(DDI_TAB_ID, model,
-				styledText);
-
-		Listener[] list = getTabFolder().getListeners(SWT.Selection);
-		Object obj = null;
-		for (int i = 0; i < list.length; i++) {
-			if (list[i] instanceof TypedListener) {
-				obj = ((TypedListener) list[i]).getEventListener();
-				if (obj instanceof TabFolderListener) {
-					((TabFolderListener) obj).actionMap.put(DDI_TAB_ID, action);
-				}
-				break;
-			}
-		}
-		return styledText;
+	@Override
+	public String getPerspectiveSwitchDialogText() {
+		return MessageFormat.format(Messages
+				.getString("perspective.switch.dialogtext"), editorInput
+				.getElementType().getPerspectiveId());
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
-		setSite(site);
-		this.editorInput = (EditorInput) input;
-		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-			try {
-				model = dao.create("", "", editorInput.getParentId(),
-						editorInput.getParentVersion());
-			} catch (Exception e) {
-				throw new PartInitException(Messages
-						.getString("editor.init.error.create"),
-						new DDIFtpException(e));
-			} catch (Throwable t) {
-				DDIFtpException e = new DDIFtpException(Messages
-						.getString("editor.init.error.create"));
-				e.setRealThrowable(t);
-				throw new PartInitException(Messages
-						.getString("editor.init.error.create"), e);
-			}
-		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
-				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
-			try {
-				model = dao.getModel(editorInput.getId(), editorInput
-						.getVersion(), editorInput.getParentId(), editorInput
-						.getParentVersion());
-			} catch (Exception e) {
-				throw new PartInitException(Messages
-						.getString("editor.init.error.retrieval"),
-						new DDIFtpException(e));
-			}
-		} else {
-			throw new PartInitException(Messages
-					.getString("editor.init.error.editmodeunsupported"),
-					new DDIFtpException());
-		}
-
-		// update input
-		editorInput.setId(model.getId());
-		editorInput.setVersion(model.getVersion());
-		editorInput.setParentId(model.getParentId());
-		editorInput.setParentVersion(model.getParentVersion());
-		setInput(editorInput);
-
-		// Sets the name of this part. The name will be shown in the tab area
-		// for the part
-		setPartName(model.getId()); // TODO i18n
-	}
-
-	/**
-	 * Create contents of the editor part
-	 * 
-	 * @param parent
-	 */
-	public void createPartControl(Composite parent) {
-		parent.setLayout(new GridLayout());
-
-		// General Editor GUI layout:
-		// ---------------------------
-		composite = new Composite(parent, SWT.BORDER);
-		composite.setLayout(new GridLayout());
-		composite.setRedraw(true);
-
-		final GridData gd_composite_1 = new GridData(SWT.FILL, SWT.FILL, true,
-				true);
-		gd_composite_1.widthHint = 539;
-		gd_composite_1.heightHint = 573;
-		composite.setLayoutData(gd_composite_1);
-		composite.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-
-		final Composite composite_2 = new Composite(composite, SWT.NONE);
-		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
-		composite_2.setBackground(SWTResourceManager.getColor(230, 230, 250));
-		composite_2.setLayout(new GridLayout());
-
-		final Label questionItemEditorLabel = new Label(composite_2, SWT.WRAP);
-		questionItemEditorLabel.setLayoutData(new GridData(SWT.FILL,
-				SWT.CENTER, true, false, 1, 1));
-		questionItemEditorLabel.setFont(SWTResourceManager.getFont("Sans", 14,
-				SWT.BOLD));
-
-		questionItemEditorLabel.setBackground(SWTResourceManager.getColor(230,
-				230, 250));
-		questionItemEditorLabel.setText(headerEditorTitle);
-
-		final Label useTheEditorLabel = new Label(composite_2, SWT.WRAP);
-		final GridData gd_useTheEditorLabel = new GridData(SWT.FILL,
-				SWT.CENTER, true, false);
-		gd_useTheEditorLabel.widthHint = 471;
-		useTheEditorLabel.setLayoutData(gd_useTheEditorLabel);
-		useTheEditorLabel.setBackground(SWTResourceManager.getColor(230, 230,
-				250));
-		useTheEditorLabel.setText(headerEditorDescr);
-
-		// Create Properties Tab - test only:
-		// - should normally be commented out!
-		// --------------------------
-		// createPropertiesTab(tabFolder);
-
-		// site.getPage().addSelectionListener(QuestionItemView.ID,
-		// (ISelectionListener) this);
-		log.debug("Part Properties: " + getPartProperties());
-
-		// Clean dirt from initialization
-		editorStatus.clearChanged();
-	}
-
-	/**
-	 * Update parent view by fireing a property change event
-	 */
-	public void updateParentView() {
-		// update view
-		firePropertyChange(IEditorPart.PROP_INPUT);
-	}
-
-	@Override
-	public void setFocus() {
-		// log.debug("Editor.setFocus()");
-		// Set the focus
-	}
-
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		try {
-			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				dao.create(model);
-				editorInput.setEditorMode(EditorModeType.EDIT);
-			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
-				dao.update(model);
-			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
-				log.debug("*** Saved ignored! ***");
-			}
-		} catch (Exception e) {
-			String errMess = Messages
-					.getString("IfThenElseEditor.mess.ErrorDuringSave"); //$NON-NLS-1$
-			DialogUtil.errorDialog(site, ID, Messages.getString("ErrorTitle"),
-					errMess, e);
-			return;
-		}
-		editorStatus.clearChanged();
-		updateParentView();
-	}
-
-	@Override
-	public void doSaveAs() {
-		// log.error("Editor.doSaveAs()");
-		MessageDialog
-				.openError(
-						site.getShell(),
-						Messages.getString("ErrorTitle"), Messages.getString("Editor.mess.SaveAsNotSupported")); //$NON-NLS-1$
-	}
-
-	@Override
-	public boolean isDirty() {
-		// log.debug("Editor.isDirty(): " + editorStatus.getStatus());
-		return editorStatus.getStatus();
-	}
-
-	@Override
-	public boolean isSaveAsAllowed() {
-		// log.debug("Editor.isSaveAsAllowed(): False");
-		// Save as not supported
-		return false;
-	}
-
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		// log.debug("Editor.selectionChanged()");
-	}
-
-	protected Composite getComposite_1() {
-		return composite;
-	}
-
-	public void setControl(Control widget) {
-		if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
-			widget.setEnabled(false);
-		}
+	public String getPreferredPerspectiveId() {
+		return this.editorInput.getElementType().getPerspectiveId();
 	}
 
 	public EditorIdentification getEditorIdentification() {
@@ -916,15 +808,66 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 	}
 
-	@Override
-	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages
-				.getString("perspective.switch.dialogtext"), editorInput
-				.getElementType().getPerspectiveId());
-	}
+	public static enum FIELD_TYPE {
+		DIGIT, LETTER, LETTER_DIGIT
+	};
 
-	@Override
-	public String getPreferredPerspectiveId() {
-		return this.editorInput.getElementType().getPerspectiveId();
+	/**
+	 * Verify field data and report eventually errors
+	 * 
+	 * @param ft
+	 *            Field type e.g. DIGIT, LETTER, LETTER_DIGIT
+	 * @param e
+	 *            Verify event
+	 * @param currentSite
+	 *            Current Site
+	 */
+	public static void verifyField(FIELD_TYPE ft, VerifyEvent e,
+			IEditorSite currentSite) {
+		char myChar;
+
+		// Assume we don't allow it
+		e.doit = false;
+		// Get the character typed
+		myChar = e.character;
+		log.debug("Verify char: '" + myChar + "'");
+
+		int i = myChar;
+		log.debug("Verify char(hex): " + Integer.toHexString(i));
+
+		IActionBars bars = currentSite.getActionBars();
+
+		switch (ft) {
+		case DIGIT:
+			// Allow 0-9 and backspace
+			if (Character.isDigit(myChar) || myChar == 0x08) {
+				e.doit = true;
+				bars.getStatusLineManager().setMessage("");
+			} else {
+				bars.getStatusLineManager().setMessage(
+						Messages.getString("Editor.mess.UseOnlyDigits")); //$NON-NLS-1$
+			}
+			break;
+		case LETTER:
+			// Allow letters and backspace
+			if (Character.isLetter(myChar) || myChar == '\b') {
+				e.doit = true;
+				bars.getStatusLineManager().setMessage("");
+			} else {
+				bars.getStatusLineManager().setMessage(
+						Messages.getString("Editor.mess.UseOnlyLetters")); //$NON-NLS-1$
+			}
+			break;
+		case LETTER_DIGIT:
+			// Allow letters and/or digits and backspace
+			if (Character.isLetterOrDigit(myChar) || myChar == '\b') {
+				e.doit = true;
+				bars.getStatusLineManager().setMessage("");
+			} else {
+				bars.getStatusLineManager().setMessage(
+						Messages.getString("Editor.mess.UseOnlyLettersDigits")); //$NON-NLS-1$
+			}
+			break;
+		}
 	}
 }
