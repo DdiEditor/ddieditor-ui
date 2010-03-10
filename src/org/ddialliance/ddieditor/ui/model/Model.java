@@ -1,6 +1,11 @@
 package org.ddialliance.ddieditor.ui.model;
 
 import org.apache.xmlbeans.XmlObject;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.AbstractVersionableType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.VersionRationaleDocument;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
+import org.ddialliance.ddieditor.logic.identification.VersionInformation;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 
 /**
@@ -129,6 +134,26 @@ public abstract class Model implements IModel {
 		this.create = false;
 	}
 
-	public abstract void executeChange(Object value, Class<?> type)
-			throws Exception;
+	public void executeChange(Object value, Class<?> type) throws Exception {
+		// VersionRationaleDocument
+		if (type.equals(VersionRationaleDocument.class)) {
+			VersionInformation versionInformation = IdentificationManager
+					.getInstance().getVersionInformation(getDocument());
+			if (versionInformation.versionRationaleList.isEmpty()) {
+				versionInformation = null;
+			}
+			if (versionInformation == null) {
+				XmlObject xmlObject = XmlBeansUtil
+						.getXmlObjectTypeFromXmlDocument(getDocument(),
+								new Throwable());
+				InternationalStringType internationalStringType = ((AbstractVersionableType) xmlObject)
+						.addNewVersionRationale();
+				internationalStringType.setStringValue((String) value);
+			} else {
+				versionInformation.versionRationaleList.get(
+						versionInformation.versionRationaleList.size() - 1)
+						.setStringValue((String) value);
+			}
+		}
+	}
 }
