@@ -61,6 +61,8 @@ public class StatementItemDao extends XmlEntities implements IDao {
 						type,
 						ElementType.getElementType("StatementItem")
 								.getIdPrefix(), null);
+		IdentificationManager.getInstance().addVersionInformation(
+				doc.getStatementItem(), null, null);
 		StatementItem model = new StatementItem(doc, parentId, parentVersion);
 		return model;
 	}
