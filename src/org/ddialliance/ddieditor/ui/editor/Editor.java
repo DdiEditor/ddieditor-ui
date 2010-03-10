@@ -18,10 +18,13 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.AbstractVersionableType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
+import org.ddialliance.ddieditor.logic.identification.VersionInformation;
 import org.ddialliance.ddieditor.logic.urn.ddi.Urn2Util;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -42,6 +45,7 @@ import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.ddialliance.ddiftp.util.xml.Urn;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -577,20 +581,43 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		final Group group = createGroup(tabItem, Messages
 				.getString("Editor.label.propertiesGroup.Properties"));
 
-		// agency
 		boolean isMaintainable = false;
 		try {
 			isMaintainable = DdiManager.getInstance().getDdi3NamespaceHelper()
 					.isMaintainable(model.getDocument());
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DialogUtil.errorDialog(group.getShell(), ID,
+					"Maintainable check error", e.getMessage(), e);
 		}
+
+		// action
+		createLabel(group, Messages.getString("Editor.label.action.Action"));
+		Combo actionCombo = createCombo(group, new String[] { "1", "2", "3" });
+
+		// urn
+		Urn urn = null;
+		String urnStr = "";
+		try {
+			QName qName = model.getDocument().schemaType()
+					.getDocumentElementName();
+			urn = Urn2Util.getUrn(qName.getLocalPart(), model.getId(), model
+					.getVersion(), model.getParentId(), model
+					.getParentVersion());
+			urnStr = urn.toUrnString();
+		} catch (DDIFtpException e) {
+			DialogUtil.errorDialog(group.getShell(), ID, "URN error", e
+					.getMessage(), e);
+		}
+		StyledText urnText = createTextAreaInput(group, Messages
+				.getString("Editor.label.urnLabel.URN"), urnStr, null);
+
+		// agency
+		Text agencyText = null;
 		if (isMaintainable) {
 			createLabel(group, Messages
 					.getString("Editor.label.agencyLabel.agency"));
-			createText(group, model.getAgency() == null ? "" : model
-					.getAgency(), null);
+			agencyText = createText(group, model.getAgency() == null ? (urn == null ? ""
+					: urn.getIdentifingAgency()) : model.getAgency(), null);
 		}
 
 		// id
@@ -598,104 +625,59 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		Text idText = createText(group, model.getId(), null);
 		idText.setEditable(false);
 
-		// action
-		createLabel(group, Messages.getString("Editor.label.action.Action"));
-		Combo actionCombo = createCombo(group, new String[] { "1", "2", "3" });
-
-		// urn
-		createLabel(group, Messages.getString("Editor.label.urnLabel.URN"));
-		String urn = null;
+		// version
+		boolean isVersionable = false;
 		try {
-			QName qName = model.getDocument().schemaType().getDocumentElementName();
-			//log.debug(qName.getLocalPart());
-			urn = Urn2Util.getUrn(qName.getLocalPart(), model.getId(), model.getVersion(),
-					model.getParentId(), model.getParentVersion())
-					.toUrnString();
+			isVersionable = DdiManager.getInstance().getDdi3NamespaceHelper()
+					.isVersionable(model.getDocument());
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(group.getShell(), ID, "URN error", e.getMessage(), e);
-		} catch (Throwable e) {
-			e.printStackTrace();
+			DialogUtil.errorDialog(group.getShell(), ID,
+					"Versionable check error", e.getMessage(), e);
 		}
+		if (isVersionable) {
+			// version
+			createLabel(group, Messages
+					.getString("Editor.label.versionGroup.Version"));
+			Text versionText = createText(group,
+					model.getVersion() == null ? "" : model.getVersion(), null);
 
-		Text urnText = createText(group, urn == null ? "" : urn, null);
+			VersionInformation versionInformation = null;
+			try {
+				versionInformation = IdentificationManager.getInstance()
+						.getVersionInformation(model.getDocument());
+			} catch (DDIFtpException e) {
+				DialogUtil.errorDialog(group.getShell(), ID, "Error", e
+						.getMessage(), e);
+			}
 
-		// not used - layout only
-		// final Label label_3 = new Label(propertiesGroup, SWT.NONE);
-		// label_3.setBackground(Display.getCurrent().getSystemColor(
-		// SWT.COLOR_WHITE));
+			// version responsibility
+			createLabel(group, Messages
+					.getString("Editor.label.responsibelLabel.Responsibel"));
+			Text versionResponsibilityText = createText(group,
+					versionInformation.versionResponsibility == null ? ""
+							: versionInformation.versionResponsibility, null);
 
-		// final Button versionalButton = new Button(group, SWT.CHECK);
-		// versionalButton.setBackground(Display.getCurrent().getSystemColor(
-		// SWT.COLOR_WHITE));
-		// versionalButton.setText(Messages
-		//				.getString("Editor.label.versionalButton.Versional")); //$NON-NLS-1$
-		// versionalButton.setSelection(true); // TODO: Get versional state
-		// versionalButton.setEnabled(false);
-		//
-		// final Label versional = new Label(group, SWT.NONE);
-		// versional.setBackground(Display.getCurrent().getSystemColor(
-		// SWT.COLOR_WHITE));
-		//
-		// final Group versionGroup = new Group(group, SWT.NONE);
-		// versionGroup.setLayoutData(new GridData(422, SWT.DEFAULT));
-		// versionGroup.setBackground(Display.getCurrent().getSystemColor(
-		// SWT.COLOR_WHITE));
-		// versionGroup.setText(Messages
-		//				.getString("Editor.label.versionGroup.Version")); //$NON-NLS-1$
-		// final GridLayout gridLayout = new GridLayout();
-		// gridLayout.numColumns = 4;
-		// versionGroup.setLayout(gridLayout);
-		//
-		// final Label versionLabel = new Label(versionGroup, SWT.NONE);
-		// versionLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER,
-		// false,
-		// false));
-		// versionLabel.setBackground(Display.getCurrent().getSystemColor(
-		// SWT.COLOR_WHITE));
-		// versionLabel.setText(Messages
-		//				.getString("Editor.label.versionLabel.Number")); //$NON-NLS-1$
-		//
-		// final Text versionText = new Text(versionGroup, SWT.READ_ONLY
-		// | SWT.BORDER);
-		// versionText.setEditable(false);
-		// versionText.setText(editorInput.getVersion() == null ? "" :
-		// editorInput
-		// .getVersion());
-		// versionText.setEnabled(false);
-		//
-		// final Label versionDateLabel = new Label(versionGroup, SWT.NONE);
-		// versionDateLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
-		// false, false));
-		// versionDateLabel.setBackground(Display.getCurrent().getSystemColor(
-		// SWT.COLOR_WHITE));
-		// versionDateLabel.setText(Messages
-		//				.getString("Editor.label.versionDateLabel.Date")); //$NON-NLS-1$
-		//
-		// final DateTime dateTime = new DateTime(versionGroup, SWT.NONE);
-		// dateTime.setEnabled(false);
-		// dateTime.setDate(2008, 0, 1);
-		//
-		// final Label responsibelLabel = new Label(versionGroup, SWT.NONE);
-		// responsibelLabel.setBackground(Display.getCurrent().getSystemColor(
-		// SWT.COLOR_WHITE));
-		// responsibelLabel.setText(Messages
-		//				.getString("Editor.label.responsibelLabel.Responsibel")); //$NON-NLS-1$
-		//
-		// final Text responsibelText = new Text(versionGroup, SWT.READ_ONLY
-		// | SWT.BORDER);
-		// responsibelText.setEditable(false);
-		// responsibelText.setText(editorInput.getUser());
-		// responsibelText.setEnabled(false);
-		// final GridData gd_responsibelText = new GridData(SWT.LEFT,
-		// SWT.CENTER,
-		// false, false, 3, 1);
-		// gd_responsibelText.widthHint = 226;
-		// responsibelText.setLayoutData(gd_responsibelText);
+			// version date
+			createLabel(group, Messages
+					.getString("Editor.label.versionDateLabel.Date"));
+			String versionDateStr = "";
+			try {
+				versionDateStr = XmlBeansUtil.getXmlAttributeValue(model.getDocument()
+						.xmlText(), "versionDate=\"");
+			} catch (DDIFtpException e) {
+				DialogUtil.errorDialog(group.getShell(), ID, "Error", e
+						.getMessage(), e);
+			}
+			Text versionDate = createText(group, versionDateStr, null);
 
-		// not used - layout only
-		// final Label label_2 = new Label(propertiesGroup, SWT.NONE);
-		// label_2.setBackground(Display.getCurrent().getSystemColor(
-		// SWT.COLOR_WHITE));
+			// version rationale
+			StyledText versionRationaleText = createTextAreaInput(group,
+					Messages.getString("Editor.label.versionrationale"),
+					versionInformation.versionRationaleList.isEmpty() ? ""
+							: versionInformation.versionRationaleList.get(
+									versionInformation.versionRationaleList
+											.size() - 1).getStringValue(), null);
+		}
 	}
 
 	public StyledText createXmlTab(IModel model) {
