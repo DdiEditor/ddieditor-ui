@@ -4,11 +4,6 @@ package org.ddialliance.ddieditor.ui.dbxml;
  * DBXML utilities.
  * 
  */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
 
 import java.io.File;
 
@@ -20,12 +15,14 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
+/**
+ * @deprecated use command OpenFile
+ */
 public class DbXml {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, DbXml.class);
 	public static final String FULLY_DECLARED_NS_DOC = "large-doc.xml";
 
 	public static void open() throws Exception {
-		log.debug("DbXml.open()");
 		try {
 			// Clean up DbXml
 			File[] files = new File(DbXmlManager.ENVIROMENT_HOME).listFiles();
@@ -69,7 +66,6 @@ public class DbXml {
 	}
 
 	public static void open(String fileName) throws Exception {
-		log.debug("DbXml.open(" + fileName + ")");
 		try {
 			// // Clean up DbXml
 			// File[] files = new
@@ -104,12 +100,10 @@ public class DbXml {
 		} catch (Exception e) {
 			throw e;
 		}
-		log.debug("DbXml.open(" + fileName + ") - Done");
 	}
 
 	@Override
 	public void finalize() throws Exception {
-		log.debug("Shutdown ...");
 		PersistenceManager.getInstance().close();
 	}
 }
