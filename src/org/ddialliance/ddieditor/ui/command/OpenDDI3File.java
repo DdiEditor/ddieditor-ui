@@ -7,6 +7,7 @@ import java.text.MessageFormat;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.filesystem.FilesystemManager;
+import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.view.InfoView;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.View;
@@ -17,8 +18,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.WorkbenchException;
 
 /**
  * RCP entry point to open ddi xml
@@ -46,7 +49,7 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 								try {
 									// import ddi file into dbxml
 									monitor.beginTask("Importing file: "
-											+ fileName, 4);
+											+ fileName, 5);
 
 									PersistenceManager.getInstance();
 									DdiManager.getInstance();
@@ -67,17 +70,34 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 									monitor
 											.setTaskName("Refreshing info view ...");
 
-									IWorkbenchWindow[] workbenchWindows = PlatformUI
+									final IWorkbenchWindow[] workbenchWindows = PlatformUI
 											.getWorkbench()
 											.getWorkbenchWindows();
-									IViewPart iViewPart = workbenchWindows[0]
-											.getActivePage().findView(
-													InfoView.ID);
+
+									IWorkbenchPage workbenchPage = null;
+									PlatformUI.getWorkbench().getDisplay()
+											.asyncExec(new Runnable() {
+												@Override
+												public void run() {
+													try {
+														PlatformUI
+																.getWorkbench()
+																.showPerspective(
+																		InfoPerspective.ID,
+																		workbenchWindows[0]);
+													} catch (WorkbenchException e) {
+														// TODO Auto-generated catch block
+														e.printStackTrace();
+													}
+												}
+											});
+									IViewPart iViewPart = workbenchWindows[0].getActivePage()
+											.findView(InfoView.ID);
 									if (iViewPart == null) {
-										iViewPart = workbenchWindows[0]
-												.getActivePage().showView(
-														InfoView.ID);
+										iViewPart = workbenchPage
+												.showView(InfoView.ID);
 									}
+									monitor.worked(1);
 
 									// refresh in async to avoid swt thread
 									// violation
