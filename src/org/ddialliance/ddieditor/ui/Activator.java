@@ -29,7 +29,6 @@ public class Activator extends AbstractUIPlugin {
 	 * @throws Exception
 	 */
 	public Activator() throws Exception {
-		this.context = context;
 		try {
 			DbXml.open();
 		} catch (Exception e) {
