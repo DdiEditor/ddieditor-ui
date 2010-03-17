@@ -16,7 +16,7 @@ import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
 /**
- * @deprecated use command OpenFile
+ * @deprecated use command OpenDDI3File
  */
 public class DbXml {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, DbXml.class);
