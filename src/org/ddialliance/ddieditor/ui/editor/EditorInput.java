@@ -11,11 +11,14 @@ import org.eclipse.ui.IPersistableElement;
 /**
  * Specific editor input for DDI content
  * 
- * <p>The input is light weight and does not hold the model to drive the editor. 
- * The editor input holds identification of the model.<br><br>
+ * <p>
+ * The input is light weight and does not hold the model to drive the editor.
+ * The editor input holds identification of the model.<br>
+ * <br>
  * 
- * IMPORTENT it is to UPDATE the opened Editor.editorInput when model identification changes: 
- * id, version, parentId, parentVersion<br><br>
+ * IMPORTENT it is to UPDATE the opened Editor.editorInput when model
+ * identification changes: id, version, parentId, parentVersion<br>
+ * <br>
  * 
  * Update is performed via Editor.setInput
  * 
@@ -25,8 +28,7 @@ import org.eclipse.ui.IPersistableElement;
  * @see org.ddialliance.ddieditor.ui.editor.Editor
  */
 public class EditorInput implements IEditorInput {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM,
-			EditorInput.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM, EditorInput.class);
 
 	private String id;
 	private String version;
@@ -64,8 +66,8 @@ public class EditorInput implements IEditorInput {
 	 * @param mode
 	 * @see {@link EditorModeType}
 	 */
-	public EditorInput(String id, String version, String parentId,
-			String parentVersion, ElementType elementType, EditorModeType mode) {
+	public EditorInput(String id, String version, String parentId, String parentVersion, ElementType elementType,
+			EditorModeType mode) {
 
 		if (mode.equals(EditorModeType.NEW)) {
 			// id and version generation handled by model
@@ -177,21 +179,23 @@ public class EditorInput implements IEditorInput {
 			return false;
 
 		EditorInput test = (EditorInput) obj;
-		return (id == test.id || (id != null && id.equals(test.id)))
-				&& (version == test.version || (version != null && version
-						.equals(test.version)))
-				&& (parentId == test.parentId || (parentId != null && parentId
-						.equals(test.parentId)))
+		boolean result = (id == test.id || (id != null && id.equals(test.id)))
+				&& (version == test.version || (version != null && version.equals(test.version)))
+				&& (parentId == test.parentId || (parentId != null && parentId.equals(test.parentId)))
 				&& (parentVersion == test.parentVersion || (parentVersion != null && parentVersion
 						.equals(test.parentVersion)))
-				&& (elementType == test.elementType || (elementType != null && elementType
-						.equals(test.elementType)));
+				&& (elementType == test.elementType || (elementType != null && elementType.equals(test.elementType)));
+		if (log.isDebugEnabled()) {
+			log.debug("This id: " + id + ", obj id: " + ((EditorInput) obj).id + ", result: " + result);
+		}
+		return result;
 	}
 
 	@Override
 	public int hashCode() {
-		return id.hashCode() + version.hashCode() + parentId.hashCode()
-				+ parentVersion.hashCode() + elementType.hashCode();
+		int result = id.hashCode() + version.hashCode() + parentId.hashCode() + parentVersion.hashCode()
+				+ elementType.hashCode();
+		return result;
 	}
 
 	@Override
