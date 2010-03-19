@@ -1,6 +1,7 @@
 package org.ddialliance.ddieditor.ui.editor;
 
 import org.ddialliance.ddieditor.ui.model.ElementType;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -28,7 +29,8 @@ import org.eclipse.ui.IPersistableElement;
  * @see org.ddialliance.ddieditor.ui.editor.Editor
  */
 public class EditorInput implements IEditorInput {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, EditorInput.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			EditorInput.class);
 
 	private String id;
 	private String version;
@@ -66,14 +68,14 @@ public class EditorInput implements IEditorInput {
 	 * @param mode
 	 * @see {@link EditorModeType}
 	 */
-	public EditorInput(String id, String version, String parentId, String parentVersion, ElementType elementType,
-			EditorModeType mode) {
+	public EditorInput(String id, String version, String parentId,
+			String parentVersion, ElementType elementType, EditorModeType mode) {
 
 		if (mode.equals(EditorModeType.NEW)) {
 			// id and version generation handled by model
-			this.id = "";
+			this.id = null;
 			// clean version
-			this.version = "";
+			this.version = null;
 		} else {
 			this.id = id;
 			this.version = version;
@@ -180,26 +182,46 @@ public class EditorInput implements IEditorInput {
 
 		EditorInput test = (EditorInput) obj;
 		boolean result = (id == test.id || (id != null && id.equals(test.id)))
-				&& (version == test.version || (version != null && version.equals(test.version)))
-				&& (parentId == test.parentId || (parentId != null && parentId.equals(test.parentId)))
+				&& (version == test.version || (version != null && version
+						.equals(test.version)))
+				&& (parentId == test.parentId || (parentId != null && parentId
+						.equals(test.parentId)))
 				&& (parentVersion == test.parentVersion || (parentVersion != null && parentVersion
 						.equals(test.parentVersion)))
-				&& (elementType == test.elementType || (elementType != null && elementType.equals(test.elementType)));
-		if (log.isDebugEnabled()) {
-			log.debug("This id: " + id + ", obj id: " + ((EditorInput) obj).id + ", result: " + result);
-		}
+				&& (elementType == test.elementType || (elementType != null && elementType
+						.equals(test.elementType)));
 		return result;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = id.hashCode() + version.hashCode() + parentId.hashCode() + parentVersion.hashCode()
-				+ elementType.hashCode();
+		int result = id.hashCode() + version.hashCode() + parentId.hashCode()
+				+ parentVersion.hashCode() + elementType.hashCode();
 		return result;
 	}
 
 	@Override
 	public String getName() {
-		return elementType.getTranslatedDisplayMessageEntry();
+		String name = elementType.getTranslatedDisplayMessageEntry();
+		if (name == null) {
+			new DDIFtpException("Name null, check up on: "+elementType.getTranslatedDisplayMessageEntry());
+		}
+		return name;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder();
+		b.append("Id: ");
+		b.append(id);
+		b.append(", version: ");
+		b.append(version);
+		b.append(", parentId: ");
+		b.append(parentId);
+		b.append(", parentVersion: ");
+		b.append(parentVersion);
+		b.append(", elementType: ");
+		b.append(elementType.getElementName());
+		return b.toString();
 	}
 }
