@@ -154,11 +154,14 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 
 		// update input
-		editorInput.setId(model.getId());
-		editorInput.setVersion(model.getVersion());
+		editorInput.setId(model.getId());				
+		// check for change in getLightElements vs getElement in DDIManager
+		if (!(editorInput.getVersion()!=null&&model.getVersion()==null)) {			
+			editorInput.setVersion(model.getVersion());			
+		}
 		editorInput.setParentId(model.getParentId());
 		editorInput.setParentVersion(model.getParentVersion());
-		setInput(editorInput);
+		setInput(editorInput);	
 
 		// name
 		setPartName(model.getId());
