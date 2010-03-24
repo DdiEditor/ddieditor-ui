@@ -14,9 +14,11 @@ import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionSchemeDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionSchemeType;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.question.QuestionScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -90,20 +92,14 @@ public class QuestionSchemeDao implements IDao {
 			String parentVersion) throws Exception {
 		log.debug("QuestionSchemes.createQuestionScheme()");
 
-		QuestionSchemeDocument questionShemeDocument = QuestionSchemeDocument.Factory
-				.newInstance();
+		QuestionSchemeDocument doc = QuestionSchemeDocument.Factory.newInstance();
+		IdentificationManager.getInstance().addIdentification(
+				doc.addNewQuestionScheme(),
+				ElementType.getElementType("QuestionScheme").getIdPrefix(), null);
+		IdentificationManager.getInstance().addVersionInformation(doc.getQuestionScheme(), null, null);
 
-		QuestionSchemeType questionSchemeType = questionShemeDocument
-				.addNewQuestionScheme();
-		questionSchemeType.setId(id);
-		if (version != null) {
-			questionSchemeType.setVersion(version);
-		}
-
-		QuestionScheme questionScheme = new QuestionScheme(
-				questionShemeDocument, parentId, parentVersion);
-
-		return questionScheme;
+		QuestionScheme model = new QuestionScheme(doc, parentId, parentVersion);
+		return model;		
 	}
 
 	/**
