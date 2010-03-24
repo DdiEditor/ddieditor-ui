@@ -41,7 +41,6 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 	// Member variables:
 	private QuestionScheme questionScheme;
 	private IEditorSite site;
-	private QuestionSchemeDao dao;
 	public QuestionSchemeEditor() {
 		super(Messages
 				.getString("QuestionSchemeEditor.label.QuestionSchemeEditorLabel.QuestionSchemeEditor"), Messages
@@ -117,7 +116,7 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
-				questionScheme = dao.create(editorInput.getId(), editorInput.getVersion(),
+				questionScheme = (QuestionScheme) dao.create(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
 				log.error("QuestionSchemeEditor.init(): " + e.getMessage());
@@ -129,7 +128,7 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
-				questionScheme = dao.getModel(editorInput.getId(), editorInput.getVersion(),
+				questionScheme = (QuestionScheme) dao.getModel(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
 				String errMess = Messages.getString("QuestionSchemeEditor.mess.GetQuestionSchemeByIdError"); //$NON-NLS-1$
