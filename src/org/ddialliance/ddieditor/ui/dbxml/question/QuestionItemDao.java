@@ -14,11 +14,12 @@ import java.util.List;
 
 import org.apache.xmlbeans.XmlCursor;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionItemDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionItemType;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -131,20 +132,15 @@ public class QuestionItemDao implements IDao {
 			String parentVersion) throws Exception {
 		log.debug("QuestionItems.createQuestionItem()");
 
-		QuestionItemDocument questionItemDocument = QuestionItemDocument.Factory
-				.newInstance();
-
-		QuestionItemType questionItemType = questionItemDocument
-				.addNewQuestionItem();
-		questionItemType.setId(id);
-		if (version != null) {
-			questionItemType.setVersion(version);
-		}
-
-		QuestionItem questionItem = new QuestionItem(questionItemDocument,
-				parentId, parentVersion);
-
-		return questionItem;
+		
+		QuestionItemDocument doc = QuestionItemDocument.Factory.newInstance();
+		IdentificationManager.getInstance().addIdentification(
+				doc.addNewQuestionItem(),
+				ElementType.getElementType("QuestionItem").getIdPrefix(), null);
+		IdentificationManager.getInstance().addVersionInformation(
+				doc.getQuestionItem(), null, null);
+		QuestionItem model = new QuestionItem(doc, parentId, parentVersion);
+		return model;
 	}
 
 	/**
