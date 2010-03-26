@@ -39,7 +39,7 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor";
 
 	// Member variables:
-	private QuestionScheme questionScheme;
+	private QuestionScheme modelImpl;
 	private IEditorSite site;
 	public QuestionSchemeEditor() {
 		super(Messages
@@ -76,7 +76,7 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 		super.doSave(monitor);
 
 		try {
-			questionScheme.validate();
+			modelImpl.validate();
 		} catch (Exception e1) {
 			String errMess = Messages.getString("QuestionSchemeEditor.mess.ValidationError"); //$NON-NLS-1$
 			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
@@ -85,10 +85,10 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 		}
 		try {
 			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				dao.create(questionScheme);
+				dao.create(modelImpl);
 				editorInput.setEditorMode(EditorModeType.EDIT);
 			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
-				dao.update(questionScheme);
+				dao.update(modelImpl);
 			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
@@ -116,7 +116,7 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
-				questionScheme = (QuestionScheme) dao.create(editorInput.getId(), editorInput.getVersion(),
+				modelImpl = (QuestionScheme) dao.create(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
 				log.error("QuestionSchemeEditor.init(): " + e.getMessage());
@@ -128,7 +128,7 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
-				questionScheme = (QuestionScheme) dao.getModel(editorInput.getId(), editorInput.getVersion(),
+				modelImpl = (QuestionScheme) dao.getModel(editorInput.getId(), editorInput.getVersion(),
 						editorInput.getParentId(), editorInput.getParentVersion());
 			} catch (Exception e) {
 				String errMess = Messages.getString("QuestionSchemeEditor.mess.GetQuestionSchemeByIdError"); //$NON-NLS-1$
@@ -144,7 +144,7 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 		}
 		
 		// Initialize the Simple Editor Part with Question Scheme:
-		super.init(site, input, (LabelDescription) questionScheme);
+		super.init(site, input, (LabelDescription) modelImpl);
 
 		this.site = site;
 		setSite(site);
