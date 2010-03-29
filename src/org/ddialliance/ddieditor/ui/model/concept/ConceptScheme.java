@@ -139,7 +139,7 @@ public class ConceptScheme extends LabelDescription {
 
 	@Override
 	public XmlObject getDocument() throws DDIFtpException {
-		return conceptSchemeDocument;
+		return this.conceptSchemeDocument;
 	}
 
 	@Override
