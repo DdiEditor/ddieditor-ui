@@ -265,9 +265,7 @@ public class TreeMenuProvider extends TreeMenu {
 							.getShell());
 					break;
 				case CONCEPT_SCHEME:
-					List<LightXmlObjectType> conceptList = ConceptSchemes
-							.getConceptsLight(lightXmlObject.getId(),
-									lightXmlObject.getVersion());
+					List<LightXmlObjectType> conceptList = new ConceptSchemes().getLightXmlObject(lightXmlObject);
 					if (conceptList.size() > 0
 							&& !MessageDialog
 									.openConfirm(
@@ -280,15 +278,17 @@ public class TreeMenuProvider extends TreeMenu {
 															conceptList.size()))) {
 						break;
 					}
-					ConceptSchemes.delete(lightXmlObject.getId(),
+					new ConceptSchemes().delete(lightXmlObject.getId(),
 							lightXmlObject.getVersion(), lightXmlObject
 									.getParentId(), lightXmlObject
 									.getParentVersion());
 					break;
 				case CONCEPT:
-					Concepts.delete(lightXmlObject.getId(), lightXmlObject
-							.getVersion(), lightXmlObject.getParentId(),
-							lightXmlObject.getParentVersion());
+					new Concepts().delete(lightXmlObject.getId(),
+							lightXmlObject.getVersion(), lightXmlObject
+									.getParentId(), lightXmlObject
+									.getParentVersion());
+
 					break;
 				case CODE_SCHEME:
 					List<LightXmlObjectType> codeList = CodeSchemes

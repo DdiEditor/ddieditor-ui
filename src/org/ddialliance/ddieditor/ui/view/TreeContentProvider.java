@@ -82,7 +82,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				return PersistenceManager.getInstance().getResources()
 						.toArray();
 			} else if (contentType.equals(ViewContentType.ConceptContent)) {
-				return ConceptSchemes.getConceptSchemesLight(null, null)
+				return new ConceptSchemes().getLightXmlObject(null, null, null, null)
 						.toArray();
 			} else if (contentType.equals(ViewContentType.CodeContent)) {
 				return CodeSchemes.getCodeSchemesLight(null, null).toArray();				
@@ -172,7 +172,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 
 			try {
 				if (lightXmlTypeLocalname.equals("ConceptScheme")) {
-					contentList = Concepts.getConceptsLight(lightXmlObjectType)
+					contentList = new Concepts().getLightXmlObject(lightXmlObjectType)
 							.toArray();
 				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
 					contentList = new QuestionItemDao().getLightXmlObject(
