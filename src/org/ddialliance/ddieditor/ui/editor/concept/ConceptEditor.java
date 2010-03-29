@@ -12,6 +12,7 @@ package org.ddialliance.ddieditor.ui.editor.concept;
 
 import java.text.MessageFormat;
 
+import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.Concepts;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
@@ -40,7 +41,7 @@ public class ConceptEditor extends LabelDescriptionEditor {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor";
 
 	// Member variables:
-	private Concept concept;
+	private Concept modelImpl;
 	private IEditorSite site;
 
 	public ConceptEditor() {
@@ -50,6 +51,7 @@ public class ConceptEditor extends LabelDescriptionEditor {
 				Messages
 						.getString("ConceptEditor.label.useTheEditorLabel.Description"),
 				Messages.getString("ConceptEditor.label.ConceptTabItem"));
+		dao = (IDao) new Concepts();
 	}
 
 	public String getPreferredPerspectiveId() {
@@ -80,7 +82,7 @@ public class ConceptEditor extends LabelDescriptionEditor {
 		super.doSave(monitor);
 
 		try {
-			concept.validate();
+			modelImpl.validate();
 		} catch (Exception e1) {
 			String errMess = Messages
 					.getString("ConceptEditor.mess.ValidationError"); //$NON-NLS-1$
@@ -91,11 +93,11 @@ public class ConceptEditor extends LabelDescriptionEditor {
 		}
 		try {
 			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				Concepts.create(concept);
+				dao.create(modelImpl);
 				editorInput.setEditorMode(EditorModeType.EDIT);
 			} else if (editorInput.getEditorMode()
 					.equals(EditorModeType.EDIT)) {
-				Concepts.update(concept);
+				dao.update(modelImpl);
 			} else if (editorInput.getEditorMode()
 					.equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
@@ -116,61 +118,10 @@ public class ConceptEditor extends LabelDescriptionEditor {
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
-		// Initialize Concept Editor Part:
-		this.editorInput = (EditorInput) input;
-		if (log.isDebugEnabled()) {
-			log.debug("ConceptEditor.init() - Name: " + editorInput.getName());
-			log.debug("ConceptEditor.init() - ID: " + editorInput.getId());
-			log.debug("ConceptEditor.init() - Parent ID: "
-					+ editorInput.getParentId());
-			log.debug("ConceptEditor.init() - Editor Mode: "
-					+ editorInput.getEditorMode());
-		}
-
-		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-			try {
-				concept = Concepts.createConcept(editorInput.getId(),
-						editorInput.getVersion(), editorInput.getParentId(),
-						editorInput.getParentVersion());
-			} catch (Exception e) {
-				log.error("ConceptEditor.init(): " + e.getMessage());
-				String errMess = Messages
-						.getString("ConceptEditor.mess.ErrorDuringCreateNewConcept"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages
-						.getString("ErrorTitle"), null, new Status(
-						IStatus.ERROR, ID, 0, errMess, e));
-				System.exit(0);
-			}
-		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
-				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
-			try {
-				concept = Concepts.getConcept(editorInput.getId(), editorInput
-						.getVersion(), editorInput.getParentId(), editorInput
-						.getParentVersion());
-			} catch (Exception e) {
-				String errMess = Messages
-						.getString("ConceptEditor.mess.GetConceptByIdError"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages
-						.getString("ErrorTitle"), null, new Status(
-						IStatus.ERROR, ID, 0, errMess, e));
-				System.exit(0);
-			}
-		} else {
-			String errMess = MessageFormat
-					.format(
-							Messages
-									.getString("ConceptSchemeEditor.mess.UnknownEditorMode"), editorInput.getEditorMode()); //$NON-NLS-1$
-			MessageDialog.openError(site.getShell(), Messages
-					.getString("ErrorTitle"), errMess);
-			System.exit(0);
-		}
 
 		// Initialize the Simple Editor Part with Concept:
-		super.init(site, input, (LabelDescription) concept);
-
-		this.site = site;
-		setSite(site);
-		setInput(editorInput);
-		setPartName(editorInput.getId());
+		super.init(site, input);
+		log.debug("ConceptEditor.init()");
+		this.modelImpl = (Concept) model;
 	}
 }

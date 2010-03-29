@@ -12,6 +12,7 @@ package org.ddialliance.ddieditor.ui.editor.concept;
 
 import java.text.MessageFormat;
 
+import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemes;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
@@ -39,7 +40,7 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor";
 
 	// Member variables:
-	private ConceptScheme conceptScheme;
+	private ConceptScheme modelImpl;
 	private IEditorSite site;
 	
 	public ConceptSchemeEditor() {
@@ -47,6 +48,7 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 				.getString("ConceptSchemeEditor.label.ConceptSchemeEditorLabel.ConceptSchemeEditor"), Messages
 				.getString("ConceptSchemeEditor.label.useTheEditorLabel.Description"), Messages
 				.getString("ConceptSchemeEditor.label.ConceptSchemeTabItem"));
+		dao = (IDao) new ConceptSchemes();
 	}
 
 	public String getPreferredPerspectiveId() {
@@ -76,7 +78,7 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 		super.doSave(monitor);
 
 		try {
-			conceptScheme.validate();
+			modelImpl.validate();
 		} catch (Exception e1) {
 			String errMess = Messages.getString("ConceptSchemeEditor.mess.ValidationError"); //$NON-NLS-1$
 			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
@@ -85,10 +87,10 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 		}
 		try {
 			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				ConceptSchemes.create(conceptScheme);
+				new ConceptSchemes().create(modelImpl);
 				editorInput.setEditorMode(EditorModeType.EDIT);
 			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
-				ConceptSchemes.update(conceptScheme);
+				ConceptSchemes.update(modelImpl);
 			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
@@ -105,52 +107,10 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 	
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		
-		// Initialize Concept Scheme Editor Part:
-		this.editorInput = (EditorInput) input;
-		if (log.isDebugEnabled()) {
-			log.debug("ConceptSchemeEditor.init() - Name: " + editorInput.getName());
-			log.debug("ConceptSchemeEditor.init() - ID: " + editorInput.getId());
-			log.debug("ConceptSchemeEditor.init() - Parent ID: " + editorInput.getParentId());
-			log.debug("ConceptSchemeEditor.init() - Editor Mode: " + editorInput.getEditorMode());
-		}
-
-		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-			try {
-				conceptScheme = ConceptSchemes.createConceptScheme(editorInput.getId(), editorInput.getVersion(),
-						editorInput.getParentId(), editorInput.getParentVersion());
-			} catch (Exception e) {
-				log.error("ConceptSchemeEditor.init(): " + e.getMessage());
-				String errMess = Messages.getString("ConceptSchemeEditor.mess.ErrorDuringCreateNewConcept"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, errMess, e));
-				System.exit(0);
-			}
-		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
-				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
-			try {
-				conceptScheme = ConceptSchemes.getConceptScheme(editorInput.getId(), editorInput.getVersion(),
-						editorInput.getParentId(), editorInput.getParentVersion());
-			} catch (Exception e) {
-				String errMess = Messages.getString("ConceptSchemeEditor.mess.GetConceptByIdError"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, errMess, e));
-				System.exit(0);
-			}
-		} else {
-			String errMess = MessageFormat.format(
-					Messages.getString("ConceptSchemeEditor.mess.UnknownEditorMode"), editorInput.getEditorMode()); //$NON-NLS-1$
-			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
-			System.exit(0);
-		}
-		
 		// Initialize the Simple Editor Part with Concept Scheme:
-		super.init(site, input, (LabelDescription) conceptScheme);
-
-		this.site = site;
-		setSite(site);
-		setInput(editorInput);
-		setPartName(editorInput.getId());
-
+		super.init(site, input);
+		log.debug("ConceptSchemeEditor.init()");
+		this.modelImpl = (ConceptScheme) model;
 	}
 	
 }
