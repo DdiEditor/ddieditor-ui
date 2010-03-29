@@ -14,7 +14,6 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.VersionRationaleDocument;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
-import org.ddialliance.ddieditor.ui.dialogs.TranslationDialog;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
@@ -654,6 +653,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	public void createStructuredStringInput(Group group, String labelText,
 			List<StructuredStringType> structuredStringList, String parentLabel) {
+		System.out.println("Editor.createStructuredStringInput()");
 		StructuredStringType structuredString = (StructuredStringType) XmlBeansUtil
 				.getDefaultLangElement(structuredStringList);
 

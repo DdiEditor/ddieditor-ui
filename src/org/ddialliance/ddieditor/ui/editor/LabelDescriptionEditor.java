@@ -65,12 +65,11 @@ public class LabelDescriptionEditor extends Editor {
 		return this.tableViewer;
 	}
 
-	// @Override
-	public void init(IEditorSite site, IEditorInput input, LabelDescription simpleElement)
+	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
-		this.simpleElement = simpleElement;
 		// Initialize the Stander Editor Part:
 		super.init(site, input);
+		this.simpleElement = (LabelDescription )model;
 	}
 	
 	public void getList() {
