@@ -31,18 +31,23 @@ public class QuestionSchemeDao implements IDao {
 			.getLog(LogType.SYSTEM, QuestionSchemeDao.class);
 
 	@Override
-	public List<LightXmlObjectType> getLightXmlObject(
-			LightXmlObjectType lightXmlObject) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<LightXmlObjectType> getLightXmlObject(LightXmlObjectType parentDataCollection) throws Exception {
+
+		log.debug("QuestionSchemes.getLightXmlObject()");
+
+		return getLightXmlObject("", "", parentDataCollection.getId(), parentDataCollection.getVersion());
 	}
 
 	@Override
 	public List<LightXmlObjectType> getLightXmlObject(String id,
 			String version, String parentId, String parentVersion)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		log.debug("QuestionSchemes.getLightXmlObject()");
+
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getQuestionSchemesLight(id, version,
+				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
+
+		return lightXmlObjectTypeList;
 	}
 
 	/**
@@ -113,7 +118,7 @@ public class QuestionSchemeDao implements IDao {
 	 */
 	public QuestionScheme getModel(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		log.debug("QuestionSchemes.getQuestionScheme()");
+		log.debug("QuestionSchemes.getModel()");
 
 		QuestionSchemeDocument questionSchemeDocument = DdiManager
 				.getInstance().getQuestionScheme(id, version, parentId,
