@@ -1,15 +1,13 @@
 package org.ddialliance.ddieditor.ui.dbxml.concept;
 
-import java.io.File;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
-import org.ddialliance.ddieditor.ui.dbxml.DbXml;
-import org.ddialliance.ddieditor.ui.dbxml.XmlEntities;
+import org.ddialliance.ddieditor.ui.dbxml.IDao;
+import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.concept.Concept;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -26,7 +24,7 @@ import org.ddialliance.ddiftp.util.log.LogType;
  * $Revision$
  */
 
-public class Concepts extends XmlEntities {
+public class Concepts implements IDao {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Concepts.class);
 
 	/**
@@ -36,11 +34,12 @@ public class Concepts extends XmlEntities {
 	 * @return List<LightXmlObjectType>
 	 * @throws Exception
 	 */
-	static public List<LightXmlObjectType> getConceptsLight(LightXmlObjectType parentConceptScheme) throws Exception {
+	@Override
+	public List<LightXmlObjectType> getLightXmlObject(LightXmlObjectType parentConceptScheme) throws Exception {
 
-		log.debug("Concepts.getConceptsLight()");
+		log.debug("Concepts.getLightXmlObject()");
 
-		return Concepts.getConceptsLight("", "", parentConceptScheme.getId(), parentConceptScheme.getVersion());
+		return getLightXmlObject("", "", parentConceptScheme.getId(), parentConceptScheme.getVersion());
 	}
 
 	/**
@@ -54,10 +53,11 @@ public class Concepts extends XmlEntities {
 	 * @return List<LightXmlObjectType>
 	 * @throws Exception
 	 */
-	static public List<LightXmlObjectType> getConceptsLight(String id, String version, String parentId,
+	@Override
+	public List<LightXmlObjectType> getLightXmlObject(String id, String version, String parentId,
 			String parentVersion) throws Exception {
 
-		log.debug("Concepts.getConceptsLight()");
+		log.debug("Concepts.getLightXmlObject()");
 
 		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getConceptsLight(id, version,
 				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
@@ -75,9 +75,10 @@ public class Concepts extends XmlEntities {
 	 * @return Concept
 	 * @throws Exception
 	 */
-	static public Concept createConcept(String id, String version, String parentId, String parentVersion)
+	@Override
+	public Concept create(String id, String version, String parentId, String parentVersion)
 			throws Exception {
-		log.debug("Concept.createConcept()");
+		log.debug("Concepts.create()");
 
 		ConceptDocument conceptDocument = ConceptDocument.Factory.newInstance();
 
@@ -103,8 +104,9 @@ public class Concepts extends XmlEntities {
 	 * @return Concept
 	 * @throws Exception
 	 */
-	static public Concept getConcept(String id, String version, String parentId, String parentVersion) throws Exception {
-		log.debug("Concepts.getConcept("+id+")");
+	@Override
+	public Concept getModel(String id, String version, String parentId, String parentVersion) throws Exception {
+		log.debug("Concepts.getModel("+id+")");
 
 		ConceptDocument conceptDocument = DdiManager.getInstance().getConcept(id, version, parentId, parentVersion);
 		Concept concept = new Concept(conceptDocument, parentId, parentVersion);
@@ -123,10 +125,10 @@ public class Concepts extends XmlEntities {
 	 *            Version of Concept Scheme
 	 * @throws DDIFtpException
 	 */
-	static public void create(Concept concept) throws DDIFtpException {
+	static public void create(Concept model) throws DDIFtpException {
 		try {
-			DdiManager.getInstance().createElement(concept.getConceptDocument(),
-					concept.getParentId(), concept.getParentVersion(), "ConceptScheme");
+			DdiManager.getInstance().createElement(model.getConceptDocument(),
+					model.getParentId(), model.getParentVersion(), "ConceptScheme");
 		} catch (DDIFtpException e) {
 			log.error("Create DBXML Concept error: " + e.getMessage());
 			throw e;
@@ -141,12 +143,12 @@ public class Concepts extends XmlEntities {
 	 *            Concept instance
 	 * @throws DDIFtpException
 	 */
-	static public void update(Concept concept) throws DDIFtpException {
+	static public void update(Concept model) throws DDIFtpException {
 		// TODO Version Control - not supported
-		log.debug("Update DBXML Concept:\n" + concept.getConceptDocument());
+		log.debug("Update DBXML Concept:\n" + model.getConceptDocument());
 		try {
-			DdiManager.getInstance().updateElement(concept.getConceptDocument(), concept.getId(),
-					concept.getVersion());
+			DdiManager.getInstance().updateElement(model.getConceptDocument(), model.getId(),
+					model.getVersion());
 		} catch (DDIFtpException e) {
 			log.error("Update DBXML Concept error: " + e.getMessage());
 			throw e;
@@ -167,9 +169,10 @@ public class Concepts extends XmlEntities {
 	 *            Parent Version
 	 * @throws Exception
 	 */
-	static public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
+	@Override
+	public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
 		log.debug("Delete DBXML Concept Scheme");
-		Concept concept = getConcept(id, version, parentId, parentVersion);
+		Concept concept = getModel(id, version, parentId, parentVersion);
 		try {
 			DdiManager.getInstance().deleteElement(concept.getConceptDocument(), concept.getParentId(),
 					concept.getParentVersion(), "ConceptScheme");
@@ -177,5 +180,19 @@ public class Concepts extends XmlEntities {
 			log.error("Delete DBXML Concept Scheme error: " + e.getMessage());
 			throw e;
 		}
+	}
+
+	@Override
+	public void create(IModel model) throws DDIFtpException {
+		DdiManager.getInstance().createElement(model.getDocument(),
+				model.getParentId(),
+				model.getParentVersion(),
+				"ConceptualScheme");
+	}
+
+	@Override
+	public void update(IModel model) throws DDIFtpException {
+		DdiManager.getInstance().updateElement(model.getDocument(),
+				model.getId(), model.getVersion());
 	}
 }

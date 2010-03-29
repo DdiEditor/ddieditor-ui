@@ -11,88 +11,96 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dbxml.DbXml;
+import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.XmlEntities;
+import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.concept.ConceptScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class ConceptSchemes extends XmlEntities {
+public class ConceptSchemes implements IDao {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, ConceptSchemes.class);
 
 	/**
-	 * Get Light Concept Scheme List
+	 * Get Concept Schemes - light version
 	 * 
+	 * @param parentConceptComponent
 	 * @return List<LightXmlObjectType>
 	 * @throws Exception
 	 */
-	public static List<LightXmlObjectType> getConceptSchemesLight() throws Exception {
-		return getConceptSchemesLight("", "");
+	@Override
+	public List<LightXmlObjectType> getLightXmlObject(LightXmlObjectType parentConceptComponent) throws Exception {
+
+		log.debug("ConceptSchemes.getLightXmlObject()");
+
+		return getLightXmlObject("", "", parentConceptComponent.getId(), parentConceptComponent.getVersion());
 	}
+
 
 	/**
 	 * 
-	 * Get Light Concept Scheme List
+	 * Get Light version of Concept Schemes
 	 * 
 	 * @param id
 	 * @param version
-	 * @return List<LightXmlObjectType>
-	 * @throws Exception
-	 */
-	public static List<LightXmlObjectType> getConceptSchemesLight(String id, String version) throws Exception {
-		log.debug("ConceptScheme.getConceptSchemesLight(). Id: "+id+" Version: "+version);
-
-		DdiManager ddiManager = DdiManager.getInstance();
-
-		LightXmlObjectListDocument listDoc = ddiManager.getConceptSchemeLight(id, version, null, null);
-
-		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
-
-		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
-
-		return listLightXmlObjectListType;
-	}
-
-	/**
-	 * 
-	 * Get Light Concept List
-	 * 
-	 * - get children (Concepts) of given Concept Scheme
-	 * 
-	 * @param id
-	 * @param version
-	 * @return List<LightXmlObjectType>
-	 * @throws Exception
-	 */
-	public static List<LightXmlObjectType> getConceptsLight(String id, String version) throws Exception {
-		log.debug("ConceptScheme.getConceptsLight(). Id: "+id+" Version: "+version);
-
-		DdiManager ddiManager = DdiManager.getInstance();
-
-		LightXmlObjectListDocument listDoc = ddiManager.getConceptsLight("", "", id, version);
-
-		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
-
-		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
-
-		return listLightXmlObjectListType;
-	}
-
-
-	/**
-	 * Get Concept Scheme by Id
-	 * 
-	 * @param id
 	 * @param parentId
-	 * @return ConceptSchemeType
+	 * @param parentVersion
+	 * @return List<LightXmlObjectType>
 	 * @throws Exception
 	 */
-	public ConceptSchemeType getConceptSchemeById(String id, String parentId) throws Exception {
-		log.debug("ConceptScheme.getConceptSchemeById()");
-		return DdiManager.getInstance().getConceptScheme(id, null, parentId, null).getConceptScheme();
-	}
+	@Override
+	public List<LightXmlObjectType> getLightXmlObject(String id, String version, String parentId,
+			String parentVersion) throws Exception {
 
+		log.debug("ConceptSchemes.getLightXmlObject()");
+
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getConceptSchemeLight(id, version,
+				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
+
+		return lightXmlObjectTypeList;
+	}
+	
+//	/**
+//	 * 
+//	 * Get Light Concept List
+//	 * 
+//	 * - get children (Concepts) of given Concept Scheme
+//	 * 
+//	 * @param id
+//	 * @param version
+//	 * @return List<LightXmlObjectType>
+//	 * @throws Exception
+//	 */
+//	public static List<LightXmlObjectType> getModel(String id, String version) throws Exception {
+//		log.debug("ConceptScheme.getModel(). Id: "+id+" Version: "+version);
+//
+//		DdiManager ddiManager = DdiManager.getInstance();
+//
+//		LightXmlObjectListDocument listDoc = ddiManager.getConceptsLight("", "", id, version);
+//
+//		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
+//
+//		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
+//
+//		return listLightXmlObjectListType;
+//	}
+
+
+//	/**
+//	 * Get Concept Scheme by Id
+//	 * 
+//	 * @param id
+//	 * @param parentId
+//	 * @return ConceptSchemeType
+//	 * @throws Exception
+//	 */
+//	public ConceptSchemeType getConceptSchemeById(String id, String parentId) throws Exception {
+//		log.debug("ConceptScheme.getConceptSchemeById()");
+//		return DdiManager.getInstance().getConceptScheme(id, null, parentId, null).getConceptScheme();
+//	}
+	
 	/**
 	 * Create Concept Scheme object
 	 * 
@@ -103,7 +111,8 @@ public class ConceptSchemes extends XmlEntities {
 	 * @return ConceptScheme
 	 * @throws Exception
 	 */
-	static public ConceptScheme createConceptScheme(String id, String version, String parentId, String parentVersion)
+	@Override
+	public ConceptScheme create(String id, String version, String parentId, String parentVersion)
 			throws Exception {
 		log.debug("ConceptSchemes.createConceptScheme()");
 
@@ -129,7 +138,8 @@ public class ConceptSchemes extends XmlEntities {
 	 * @return ConceptScheme
 	 * @throws Exception
 	 */
-	static public ConceptScheme getConceptScheme(String id, String version, String parentId, String parentVersion)
+	@Override
+	public ConceptScheme getModel(String id, String version, String parentId, String parentVersion)
 			throws Exception {
 		log.debug("ConceptSchemes.getConceptScheme()");
 
@@ -152,21 +162,21 @@ public class ConceptSchemes extends XmlEntities {
 	 *            Version of Conceptual Component
 	 * @throws DDIFtpException
 	 */
-	static public void create(ConceptScheme conceptScheme) throws DDIFtpException {
+	public void create(ConceptScheme model) throws DDIFtpException {
 		try {
-			DdiManager.getInstance().createElement(conceptScheme.getConceptSchemeDocument(),
-					conceptScheme.getParentId(), conceptScheme.getParentVersion(), "ConceptualComponent");
+			DdiManager.getInstance().createElement(model.getConceptSchemeDocument(),
+					model.getParentId(), model.getParentVersion(), "ConceptualComponent");
 		} catch (DDIFtpException e) {
 			log.error("Create DBXML Concept Scheme error: " + e.getMessage());
 			
 			throw new DDIFtpException(e.getMessage());
 		}
 		
-		// TODO When is xml-file updated - when object saved?
-		if (xml_export_filename.length() > 0) {
-			File outFile = new File("resources" + File.separator + xml_export_filename);
-			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
-		}
+//		// TODO When is xml-file updated - when object saved?
+//		if (xml_export_filename.length() > 0) {
+//			File outFile = new File("resources" + File.separator + xml_export_filename);
+//			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+//		}
 	}
 
 	/**
@@ -178,23 +188,23 @@ public class ConceptSchemes extends XmlEntities {
 	 *            concept Scheme instance
 	 * @throws DDIFtpException
 	 */
-	static public void update(ConceptScheme conceptScheme) throws DDIFtpException {
+	static public void update(ConceptScheme model) throws DDIFtpException {
 		// TODO Version Control - not supported
-		log.debug("Update DBXML Concept Scheme:\n" + conceptScheme.getConceptSchemeDocument());
+		log.debug("Update DBXML Concept Scheme:\n" + model.getConceptSchemeDocument());
 		try {
-			DdiManager.getInstance().updateElement(conceptScheme.getConceptSchemeDocument(), conceptScheme.getId(),
-					conceptScheme.getVersion());
+			DdiManager.getInstance().updateElement(model.getConceptSchemeDocument(), model.getId(),
+					model.getVersion());
 		} catch (DDIFtpException e) {
 			log.error("Update DBXML Concept Scheme error: " + e.getMessage());
 			
 			throw new DDIFtpException(e.getMessage());
 		}
 		
-		// TODO When is xml-file updated - when object saved?
-		if (xml_export_filename.length() > 0) {
-			File outFile = new File("resources" + File.separator + xml_export_filename);
-			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
-		}
+//		// TODO When is xml-file updated - when object saved?
+//		if (xml_export_filename.length() > 0) {
+//			File outFile = new File("resources" + File.separator + xml_export_filename);
+//			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+//		}
 	}
 
 	/**
@@ -211,9 +221,10 @@ public class ConceptSchemes extends XmlEntities {
 	 *            Parent Version
 	 * @throws Exception
 	 */
-	static public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
+	@Override
+	public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
 		log.debug("Delete DBXML Concept Scheme");
-		ConceptScheme conceptScheme = getConceptScheme(id, version, parentId, parentVersion);
+		ConceptScheme conceptScheme = getModel(id, version, parentId, parentVersion);
 		try {
 			DdiManager.getInstance().deleteElement(conceptScheme.getConceptSchemeDocument(), conceptScheme.getParentId(),
 					conceptScheme.getParentVersion(), "ConceptualComponent");
@@ -224,9 +235,21 @@ public class ConceptSchemes extends XmlEntities {
 		}
 		
 		// TODO When is xml-file updated - when object saved?
-		if (xml_export_filename.length() > 0) {
-			File outFile = new File("resources" + File.separator + xml_export_filename);
-			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
-		}
+//		if (xml_export_filename.length() > 0) {
+//			File outFile = new File("resources" + File.separator + xml_export_filename);
+//			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
+//		}
+	}
+
+	@Override
+	public void create(IModel model) throws DDIFtpException {
+		DdiManager.getInstance().createElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
+				"ConceptualComponent");
+	}
+
+	@Override
+	public void update(IModel model) throws DDIFtpException {
+		DdiManager.getInstance().updateElement(model.getDocument(),
+				model.getId(), model.getVersion());
 	}
 }
