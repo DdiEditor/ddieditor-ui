@@ -112,7 +112,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		// - Get available Concepts:
 		List<LightXmlObjectType> conceptReferenceList = new ArrayList();
 		try {
-			conceptReferenceList = Concepts.getConceptsLight("", "", "", "");
+			conceptReferenceList = new Concepts().getLightXmlObject("", "", "", "");
 		} catch (Exception e1) {
 			String errMess = Messages
 					.getString("QuestionItemEditor.mess.ConceptRetrievalError"); //$NON-NLS-1$

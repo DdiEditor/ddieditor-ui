@@ -105,52 +105,9 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 	
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		
-		// Initialize Question Scheme Editor Part:
-		this.editorInput = (EditorInput) input;
-		if (log.isDebugEnabled()) {
-			log.debug("QuestionSchemeEditor.init() - Name: " + editorInput.getName());
-			log.debug("QuestionSchemeEditor.init() - ID: " + editorInput.getId());
-			log.debug("QuestionSchemeEditor.init() - Parent ID: " + editorInput.getParentId());
-			log.debug("QuestionSchemeEditor.init() - Editor Mode: " + editorInput.getEditorMode());
-		}
-
-		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-			try {
-				modelImpl = (QuestionScheme) dao.create(editorInput.getId(), editorInput.getVersion(),
-						editorInput.getParentId(), editorInput.getParentVersion());
-			} catch (Exception e) {
-				log.error("QuestionSchemeEditor.init(): " + e.getMessage());
-				String errMess = Messages.getString("QuestionSchemeEditor.mess.ErrorDuringCreateNewQuestionScheme"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, errMess, e));
-				System.exit(0);
-			}
-		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
-				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
-			try {
-				modelImpl = (QuestionScheme) dao.getModel(editorInput.getId(), editorInput.getVersion(),
-						editorInput.getParentId(), editorInput.getParentVersion());
-			} catch (Exception e) {
-				String errMess = Messages.getString("QuestionSchemeEditor.mess.GetQuestionSchemeByIdError"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, errMess, e));
-				System.exit(0);
-			}
-		} else {
-			String errMess = MessageFormat.format(
-					Messages.getString("QuestionSchemeEditor.mess.UnknownEditorMode"), editorInput.getEditorMode()); //$NON-NLS-1$
-			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
-			System.exit(0);
-		}
-		
-		// Initialize the Simple Editor Part with Question Scheme:
-		super.init(site, input, (LabelDescription) modelImpl);
-
-		this.site = site;
-		setSite(site);
-		setInput(editorInput);
-		setPartName(editorInput.getId());
-
+		super.init(site, input);
+		log.debug("QuestionItemEditor.init()");
+		this.modelImpl = (QuestionScheme) model;
 	}
 	
 }
