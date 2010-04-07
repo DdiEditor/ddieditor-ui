@@ -144,7 +144,7 @@ public class CodeSchemeEditor extends LabelDescriptionEditor{
 		}
 		
 		// Initialize the Simple Editor Part with Code Scheme:
-		super.init(site, input, (LabelDescription) codeScheme);
+		super.init(site, input);
 		
 		this.site = site;
 		setSite(site);
