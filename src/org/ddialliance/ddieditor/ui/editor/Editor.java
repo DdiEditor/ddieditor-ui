@@ -14,7 +14,6 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.VersionRationaleDocument;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
-import org.ddialliance.ddieditor.ui.dialogs.TranslationDialog;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
@@ -116,6 +115,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 *            description
 	 */
 	public Editor(String title, String description) {
+		editorInput = new EditorInput(null, null, null, null, null,
+				EditorModeType.EDIT);
 		this.title = title;
 		this.description = description;
 	}
@@ -249,6 +250,13 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		try {
+			model.validate();
+		} catch (Exception e1) {
+			DialogUtil.errorDialog(site, ID, Messages.getString("ErrorTitle"), Messages
+					.getString("Editor.mess.ValidationErrorDuringSave"), e1);
+			return;
+		}
+		try {
 			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 				dao.create(model);
 				editorInput.setEditorMode(EditorModeType.EDIT);
@@ -258,14 +266,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
-			DialogUtil
-					.errorDialog(
-							site,
-							ID,
-							Messages.getString("ErrorTitle"),
-							Messages
-									.getString("IfThenElseEditor.mess.ErrorDuringSave"),
-							e);
+			DialogUtil.errorDialog(site, ID, Messages.getString("ErrorTitle"), Messages
+					.getString("Editor.mess.ErrorDuringSave"), e);
 			return;
 		}
 		editorStatus.clearChanged();
