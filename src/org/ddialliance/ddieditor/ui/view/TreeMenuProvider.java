@@ -17,8 +17,8 @@ import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
-import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemes;
-import org.ddialliance.ddieditor.ui.dbxml.concept.Concepts;
+import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.IfThenElseDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
@@ -265,7 +265,7 @@ public class TreeMenuProvider extends TreeMenu {
 							.getShell());
 					break;
 				case CONCEPT_SCHEME:
-					List<LightXmlObjectType> conceptList = new ConceptSchemes().getLightXmlObject(lightXmlObject);
+					List<LightXmlObjectType> conceptList = new ConceptSchemeDao().getLightXmlObject(lightXmlObject);
 					if (conceptList.size() > 0
 							&& !MessageDialog
 									.openConfirm(
@@ -278,13 +278,13 @@ public class TreeMenuProvider extends TreeMenu {
 															conceptList.size()))) {
 						break;
 					}
-					new ConceptSchemes().delete(lightXmlObject.getId(),
+					new ConceptSchemeDao().delete(lightXmlObject.getId(),
 							lightXmlObject.getVersion(), lightXmlObject
 									.getParentId(), lightXmlObject
 									.getParentVersion());
 					break;
 				case CONCEPT:
-					new Concepts().delete(lightXmlObject.getId(),
+					new ConceptDao().delete(lightXmlObject.getId(),
 							lightXmlObject.getVersion(), lightXmlObject
 									.getParentId(), lightXmlObject
 									.getParentVersion());
