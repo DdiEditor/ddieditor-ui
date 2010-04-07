@@ -112,6 +112,13 @@
                   id="org.ddialliance.ddieditor.ui.editor.instrument.LoopEditor"
                   name="LoopEditor">
             </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.file.FileEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.file.FileEditor"
+                  name="DDI 3 File">
+            </editor>
       </extension>
       <extension id="org.eclipse.ui.idexportwizard" name="Export Wizard Extension Point"
             point="org.eclipse.ui.exportWizards">
@@ -164,6 +171,16 @@
                id="org.ddialliance.ddieditor.ui.command.ExportDDI3File"
                name="ExportDDI3File">
          </command>
+         <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.NewDDI3File"
+               id="org.ddialliance.ddieditor.ui.command.NewDDI3File"
+               name="New DDi 3 File">
+         </command>
+         <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.ExportResourceList"
+               id="org.ddialliance.ddieditor.ui.command.ExportResourceList"
+               name="Export resource list">
+         </command>
       </extension>
       <extension
             point="org.eclipse.ui.menus">
@@ -186,16 +203,32 @@
                      style="push">
                </command>
                <command
-                     commandId="org.ddialliance.ddieditor.ui.command.OpenDDI3File"
+                     commandId="org.ddialliance.ddieditor.ui.command.NewDDI3File"
                      icon="icons/newfile_wiz.gif"
-                     id="new-file"
-                     label="New File"
+                     id="new-ddi-3-file"
+                     label="New DDI 3 File"
                      mnemonic="N"
                      style="push">
                </command>
                </menu>
                <separator
-                     name="seperator"
+                     name="seperator-1"
+                     visible="true">
+               </separator>
+               <command
+                     commandId="org.eclipse.ui.file.close"
+                     label="Close"
+                     mnemonic="C"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.eclipse.ui.file.closeAll"
+                     id="l"
+                     label="Close All"
+                     style="push">
+               </command>
+               <separator
+                     name="seperator-2"
                      visible="true">
                </separator>
                <command
@@ -212,7 +245,7 @@
                      style="push">
                </command>
                <separator
-                     name="separator"
+                     name="separator-3"
                      visible="true">
                </separator>
                <menu
@@ -225,6 +258,13 @@
                         id="ddi-export"
                         label="DDI3"
                         mnemonic="D"
+                        style="push">
+                  </command>
+                  <command
+                        commandId="org.ddialliance.ddieditor.ui.command.ExportResourceList"
+                        icon="icons/usage.gif"
+                        label="Resource list"
+                        mnemonic="r"
                         style="push">
                   </command>
                </menu>
