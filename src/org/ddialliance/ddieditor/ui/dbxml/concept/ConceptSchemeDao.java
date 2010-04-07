@@ -1,29 +1,20 @@
 package org.ddialliance.ddieditor.ui.dbxml.concept;
 
-import java.io.File;
 import java.util.List;
 
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeType;
 import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
-import org.ddialliance.ddieditor.ui.dbxml.DbXml;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.XmlEntities;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
-import org.ddialliance.ddieditor.ui.model.concept.Concept;
 import org.ddialliance.ddieditor.ui.model.concept.ConceptScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.eclipse.osgi.framework.debug.Debug;
 
 public class ConceptSchemeDao extends XmlEntities implements IDao {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, ConceptSchemeDao.class);
@@ -42,7 +33,6 @@ public class ConceptSchemeDao extends XmlEntities implements IDao {
 
 		return getLightXmlObject("", "", parentConceptComponent.getId(), parentConceptComponent.getVersion());
 	}
-
 
 	/**
 	 * 
