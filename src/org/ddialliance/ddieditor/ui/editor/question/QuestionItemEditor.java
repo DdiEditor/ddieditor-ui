@@ -19,7 +19,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.ui.dbxml.concept.Concepts;
+import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
@@ -112,7 +112,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		// - Get available Concepts:
 		List<LightXmlObjectType> conceptReferenceList = new ArrayList();
 		try {
-			conceptReferenceList = new Concepts().getLightXmlObject("", "", "", "");
+			conceptReferenceList = new ConceptDao().getLightXmlObject("", "", "", "");
 		} catch (Exception e1) {
 			String errMess = Messages
 					.getString("QuestionItemEditor.mess.ConceptRetrievalError"); //$NON-NLS-1$
@@ -289,12 +289,6 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 	public Viewer getViewer() {
 		log.debug("QuestionItemEditor.getViewer()");
 		return this.tableViewer;
-	}
-
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		log.debug("QuestionItemEditor.doSave()");
-		super.doSave(monitor);
 	}
 
 	@Override
