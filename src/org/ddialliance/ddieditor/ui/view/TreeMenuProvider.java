@@ -1,24 +1,15 @@
 package org.ddialliance.ddieditor.ui.view;
 
-/**
- * Tree Menu Provider.
- * 
- */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 import java.text.MessageFormat;
 import java.util.List;
 
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
-import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
+import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.IfThenElseDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
@@ -50,6 +41,9 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PartInitException;
 
+/**
+ * Provides menus to view list items
+ */
 public class TreeMenuProvider extends TreeMenu {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			TreeMenuProvider.class);
@@ -60,7 +54,6 @@ public class TreeMenuProvider extends TreeMenu {
 	final Menu menu;
 	MenuItem editMenuItem = null;
 	private List<ElementType> subElements;
-	private boolean withOpen;
 
 	/**
 	 * Constructor for TreeMenuProvider
@@ -78,7 +71,6 @@ public class TreeMenuProvider extends TreeMenu {
 		this.currentView = currentView;
 		this.rootElement = rootElement;
 		this.subElements = subElements;
-		this.withOpen = true;
 		menu = new Menu(treeViewer.getTree());
 	}
 
@@ -175,7 +167,7 @@ public class TreeMenuProvider extends TreeMenu {
 				deleteItem(EditorModeType.EDIT);
 			}
 		});
-		
+
 		// sub menu
 		createSubMenu(newMenuItem, subElements);
 	}
@@ -189,32 +181,46 @@ public class TreeMenuProvider extends TreeMenu {
 
 		newMenuItem.addArmListener(new ArmListener() {
 			public void widgetArmed(final ArmEvent event) {
-				LightXmlObjectType lightXmlObject = defineSelection(treeViewer,
-						"none");
+				Object obj = defineSelection(treeViewer, "na");
 
-				ElementType type = null;
-				try {
-					type = ElementType.getElementType(lightXmlObject
-							.getElement());
-				} catch (DDIFtpException e) {
-					DialogUtil.errorDialog(currentView.getSite().getShell(),
-							currentView.ID, "Error", e.getMessage(), e);
+				// light xml object
+				if (obj instanceof LightXmlObjectType) {
+					LightXmlObjectType lightXmlObject = (LightXmlObjectType) obj;
+
+					ElementType type = null;
+					try {
+						type = ElementType.getElementType(lightXmlObject
+								.getElement());
+					} catch (DDIFtpException e) {
+						DialogUtil.errorDialog(
+								currentView.getSite().getShell(),
+								currentView.ID, "Error", e.getMessage(), e);
+					}
+
+					cleanPreviousMenuItems();
+
+					// create menu
+					if (type.equals(rootElement)) {
+						createNewMenuItem(type, true);
+						for (ElementType subType : subElements) {
+							createNewMenuItem(subType, false);
+						}
+					} else {
+						createNewMenuItem(type, false);
+					}
 				}
 
-				// clean previous items
+				// ddi resource
+				else if (obj instanceof DDIResourceType) {
+					cleanPreviousMenuItems();
+					createNewMenuItem(ElementType.FILE, true);
+				}
+			}
+
+			private void cleanPreviousMenuItems() {
 				MenuItem[] menuItems = subMenu.getItems();
 				for (int i = 0; i < menuItems.length; i++) {
 					menuItems[i].dispose();
-				}
-
-				// create menu
-				if (type.equals(rootElement)) {
-					createNewMenuItem(type, true);
-					for (ElementType subType : subElements) {
-						createNewMenuItem(subType, false);
-					}
-				} else {
-					createNewMenuItem(type, false);
 				}
 			}
 
@@ -234,6 +240,8 @@ public class TreeMenuProvider extends TreeMenu {
 			}
 		});
 	}
+
+
 
 	private void deleteItem(EditorModeType mode) {
 		ISelection selection = treeViewer.getSelection();
