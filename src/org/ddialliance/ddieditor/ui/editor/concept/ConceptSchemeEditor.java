@@ -13,7 +13,7 @@ package org.ddialliance.ddieditor.ui.editor.concept;
 import java.text.MessageFormat;
 
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
-import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemes;
+import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
@@ -48,7 +48,7 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 				.getString("ConceptSchemeEditor.label.ConceptSchemeEditorLabel.ConceptSchemeEditor"), Messages
 				.getString("ConceptSchemeEditor.label.useTheEditorLabel.Description"), Messages
 				.getString("ConceptSchemeEditor.label.ConceptSchemeTabItem"));
-		dao = (IDao) new ConceptSchemes();
+		dao = (IDao) new ConceptSchemeDao();
 	}
 
 	public String getPreferredPerspectiveId() {
@@ -70,39 +70,6 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 		parent.setLayout(new GridLayout());
 		log.debug("ConceptSchemeEditor.createPartControl called");
 		super.createPartControl(parent);
-	}
-	
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		log.debug("ConceptSchemeEditor.doSave()");
-		super.doSave(monitor);
-
-		try {
-			modelImpl.validate();
-		} catch (Exception e1) {
-			String errMess = Messages.getString("ConceptSchemeEditor.mess.ValidationError"); //$NON-NLS-1$
-			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, errMess, null));
-			return;
-		}
-		try {
-			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				new ConceptSchemes().create(modelImpl);
-				editorInput.setEditorMode(EditorModeType.EDIT);
-			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
-				ConceptSchemes.update(modelImpl);
-			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
-				log.debug("*** Saved ignored! ***");
-			}
-		} catch (Exception e) {
-			String errMess = Messages.getString("ConceptSchemeEditor.mess.ErrorDuringSave"); //$NON-NLS-1$
-			ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, errMess, e));
-			return;
-		}
-		updateParentView();
-		editorStatus.clearChanged();
-		log.debug("ConceptSchemeEditor.doSave(1): " + editorStatus.getStatus());
 	}
 	
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
