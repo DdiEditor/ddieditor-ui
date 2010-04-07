@@ -4,6 +4,7 @@ import org.ddialliance.ddieditor.ui.editor.code.CodeEditor;
 import org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor;
 import org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor;
+import org.ddialliance.ddieditor.ui.editor.file.FileEditor;
 import org.ddialliance.ddieditor.ui.editor.instrument.ComputationItemEditor;
 import org.ddialliance.ddieditor.ui.editor.instrument.ControlConstructSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor;
@@ -18,6 +19,7 @@ import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor;
 import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
+import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
 import org.ddialliance.ddieditor.ui.view.CodeView;
@@ -36,12 +38,14 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
  */
 public enum ElementType {
 	// application
-	FILE("", "", "", "", "", ""), MAINTAINABLE_LIGHTLABEL("", "", "", "", "", ""),
+	FILE("", InfoPerspective.ID, FileEditor.ID, "", "ddi3file.label", ""), MAINTAINABLE_LIGHTLABEL(
+			"", "", "", "", "", ""),
 
 	// studyunit
-	CONCEPTUAL_STUDY_UNIT("studyunit__StudyUnit", "", "", "", "InfoView.label.studyUnitLabel.StudyUnit", "OPEN"), 
-	STUDY_UNIT("studyunit__StudyUnit", "", StudyUnitEditor.ID, "stdu", 
-	"InfoView.label.studyUnitLabel.StudyUnit", "OPEN"),
+	CONCEPTUAL_STUDY_UNIT("studyunit__StudyUnit", "", StudyUnitEditor.ID, "",
+			"InfoView.label.studyUnitLabel.StudyUnit", "OPEN"), STUDY_UNIT(
+			"studyunit__StudyUnit", "", StudyUnitEditor.ID, "stdu",
+			"InfoView.label.studyUnitLabel.StudyUnit", "OPEN"),
 
 	// concept
 	CONCEPT_SCHEME("ConceptScheme", ConceptsPerspective.ID,
@@ -59,9 +63,9 @@ public enum ElementType {
 
 	// instrument
 	INSTRUMENT("Instrument", InstrumentPerspective.ID, InstrumentEditor.ID,
-			"inst", "InstrumentItemView.label.instrumentItemLabel.Instrument", ""), CONTROL_CONSTRUCT_SCHEME(
-			"ControlConstructScheme", InstrumentPerspective.ID,
-			ControlConstructSchemeEditor.ID, "cocs",
+			"inst", "InstrumentItemView.label.instrumentItemLabel.Instrument",
+			""), CONTROL_CONSTRUCT_SCHEME("ControlConstructScheme",
+			InstrumentPerspective.ID, ControlConstructSchemeEditor.ID, "cocs",
 			"InstrumentView.ControlConstructScheme.label", ""), QUESTION_CONSTRUCT(
 			"QuestionConstruct", InstrumentPerspective.ID,
 			QuestionConstructEditor.ID, "quec",
@@ -109,7 +113,8 @@ public enum ElementType {
 	 *            message key for retrieving i18n label of elementName
 	 */
 	private ElementType(String elementName, String perspectiveId,
-			String editorId, String idPrefix, String displayMessageEntry, String withOpen) {
+			String editorId, String idPrefix, String displayMessageEntry,
+			String withOpen) {
 		this.elementName = elementName;
 		this.perspectiveId = perspectiveId;
 		this.editorId = editorId;
@@ -185,8 +190,9 @@ public enum ElementType {
 				new Object[] { elementName }, new Throwable());
 		throw e;
 	}
-	
-	public static boolean withOpenMenuItem(String elementName) throws DDIFtpException {
+
+	public static boolean withOpenMenuItem(String elementName)
+			throws DDIFtpException {
 		for (int i = 0; i < ElementType.values().length; i++) {
 			ElementType elementType = ElementType.values()[i];
 			if (elementType.getElementName().equals(elementName)) {
