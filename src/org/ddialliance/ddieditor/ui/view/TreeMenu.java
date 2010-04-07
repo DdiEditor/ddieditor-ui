@@ -5,15 +5,12 @@ import java.util.List;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.ElementType;
-import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
-import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
-import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
-import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -27,13 +24,20 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 
+/**
+ * Tree helper, opens perspectives and editors based on the current selected
+ * element in the tree
+ */
 public class TreeMenu {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			TreeMenuProvider.class);
 
 	public void openPerspective(TreeViewer treeViewer, View currentView) {
-		LightXmlObjectType lightXmlObject = defineSelection(treeViewer,
-				currentView.ID);
+		Object obj = defineSelection(treeViewer, currentView.ID);
+		if (!(obj instanceof LightXmlObjectType)) {
+			return;
+		}
+		LightXmlObjectType lightXmlObject = (LightXmlObjectType) obj;
 		String elementName = lightXmlObject.getElement();
 		try {
 			String perspectiveId = ElementType.getPerspectiveId(elementName);
@@ -57,34 +61,53 @@ public class TreeMenu {
 
 	public void openEditor(TreeViewer treeViewer, View currentView,
 			EditorModeType mode, ElementType entityType) {
-		LightXmlObjectType lightXmlObject = defineSelection(treeViewer,
-				currentView.ID);
+		Object obj = defineSelection(treeViewer, currentView.ID);
 
-		// legacy code to check up on!!
-		// case FILE:
-		// MessageUtil.currentNotSupported(currentView.getSite().getShell());
-		// break;
+		// define editor input
+		EditorInput input = null;
 
-		// guard
-		if (entityType == null) {
-			try {
-				entityType = ElementType.getElementType(lightXmlObject
-						.getElement());
-			} catch (DDIFtpException e) {
-				DialogUtil.errorDialog(currentView.getSite().getShell(),
-						currentView.ID, null, e.getMessage(), e);
+		// ddi resource type
+		if (obj instanceof DDIResourceType) {
+			DDIResourceType ddiResource = (DDIResourceType) obj;
+			entityType = ElementType.FILE;
+			input = new EditorInput(ddiResource.getOrgName(), null, null, null,
+					entityType, mode);
+		}
+
+		// light xml object
+		if (obj instanceof LightXmlObjectType) {
+			LightXmlObjectType lightXmlObject = (LightXmlObjectType) obj;
+
+			// guard
+			if (entityType == null) {
+				try {
+					entityType = ElementType.getElementType(lightXmlObject
+							.getElement());
+				} catch (DDIFtpException e) {
+					DialogUtil.errorDialog(currentView.getSite().getShell(),
+							currentView.ID, null, e.getMessage(), e);
+				}
 			}
+
+			input = new EditorInput(lightXmlObject.getId(), lightXmlObject
+					.getVersion(), lightXmlObject.getParentId(), lightXmlObject
+					.getParentVersion(), entityType, mode);
 		}
 
 		if (log.isDebugEnabled()) {
 			log.debug("EditorMode:" + mode + ", elementType: " + entityType
-					+ ", xmlLightObject: " + lightXmlObject);
+					+ ", selection: " + obj);
 		}
 
 		// open editor
-		EditorInput input = new EditorInput(lightXmlObject.getId(),
-				lightXmlObject.getVersion(), lightXmlObject.getParentId(),
-				lightXmlObject.getParentVersion(), entityType, mode);
+		if (input == null) {
+			DDIFtpException e = new DDIFtpException(
+					"editor.editelement.notimplemented", new Object[] { obj
+							.getClass().getName() }, new Throwable());
+			DialogUtil.errorDialog(currentView.getSite().getShell(),
+					currentView.ID, "Error", e.getMessage(), e);
+			return;
+		}
 
 		try {
 			Editor editor = (Editor) PlatformUI.getWorkbench()
@@ -100,14 +123,15 @@ public class TreeMenu {
 			}
 		} catch (PartInitException e) {
 			DialogUtil.errorDialog(currentView.getSite().getShell(),
-					currentView.ID, "Error", e.getMessage(), e);
+					currentView.ID, "Error", e.getMessage() + input, e);
+			return;
 		}
 
 		// notify any listeners of the view with the actual data of the view
 		treeViewer.setSelection(treeViewer.getSelection());
 	}
 
-	public LightXmlObjectType defineSelection(TreeViewer treeViewer, String ID) {
+	public Object defineSelection(TreeViewer treeViewer, String ID) {
 		ISelection selection = treeViewer.getSelection();
 		Object obj = null;
 		try {
@@ -117,10 +141,17 @@ public class TreeMenu {
 					"Error", e.getMessage(), e);
 		}
 
+		if (log.isDebugEnabled()) {
+			log.debug("Class: " + obj.getClass().getName() + ", value: " + obj);
+		}
+
+		// light xml object resolvement
 		LightXmlObjectType lightXmlObject = null;
 		if (obj instanceof LightXmlObjectType) {
 			lightXmlObject = (LightXmlObjectType) obj;
-		} else if (obj instanceof MaintainableLightLabelQueryResult) {
+		}
+		// maintainable light label query result
+		else if (obj instanceof MaintainableLightLabelQueryResult) {
 			MaintainableLightLabelQueryResult result = (MaintainableLightLabelQueryResult) obj;
 			lightXmlObject = LightXmlObjectType.Factory.newInstance();
 			lightXmlObject.setElement(result.getMaintainableTarget());
@@ -128,38 +159,58 @@ public class TreeMenu {
 			lightXmlObject.setVersion(result.getVersion());
 			// lightXmlObject.setParentId(result.getParentId());
 			// lightXmlObject.setParentVersion(result.getParentVersion());
-		} else if (obj instanceof List) {
+		}
+		// list
+		else if (obj instanceof List) {
 			List list = ((List) obj);
 			if (!list.isEmpty()) {
 				if (list.get(0) instanceof LightXmlObjectType) {
 					lightXmlObject = (LightXmlObjectType) list.get(0);
 				}
 			}
-		} else if (obj instanceof ConceptualElement) {
+		}
+		// conceptual element
+		else if (obj instanceof ConceptualElement) {
 			ConceptualElement result = (ConceptualElement) obj;
 			lightXmlObject = (LightXmlObjectType) result.getValue();
 		} else if (obj instanceof ConceptualType) {
-			// mapping between ddieditor.model 
+			// mapping between ddieditor.model
 			// and ddieditor-ui.model aka perspective
 			ConceptualType conTypeObj = (ConceptualType) obj;
 			lightXmlObject = LightXmlObjectType.Factory.newInstance();
 			if (conTypeObj.equals(ConceptualType.STUDY)) {
-				lightXmlObject.setElement(ElementType.STUDY_UNIT.getElementName());
+				lightXmlObject.setElement(ElementType.STUDY_UNIT
+						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_Universe)) {
+				// TODO implementation of universes
 				lightXmlObject.setElement("TODO implementation!!!");
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_concepts)) {
-				lightXmlObject.setElement(ElementType.CONCEPT_SCHEME.getElementName());
+				lightXmlObject.setElement(ElementType.CONCEPT_SCHEME
+						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_questions)) {
-				lightXmlObject.setElement(ElementType.QUESTION_SCHEME.getElementName());
+				lightXmlObject.setElement(ElementType.QUESTION_SCHEME
+						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_instumentation)) {
-				lightXmlObject.setElement(ElementType.INSTRUMENT.getElementName());
+				lightXmlObject.setElement(ElementType.INSTRUMENT
+						.getElementName());
 			}
-		} else {
+		}
+		if (lightXmlObject != null) {
+			return lightXmlObject;
+		}
+
+		// ddi resource type DDIResourceTypeImpl
+		if (obj instanceof DDIResourceType) {
+			return (DDIResourceType) obj;
+		}
+
+		// not recognized!
+		else {
 			DDIFtpException e = new DDIFtpException("Not recognized: "
 					+ obj.getClass() + " , value: " + obj, new Throwable());
 			DialogUtil.errorDialog(treeViewer.getTree().getShell(), ID,
 					"Error", e.getMessage(), e);
+			return null;
 		}
-		return lightXmlObject;
 	}
 }
