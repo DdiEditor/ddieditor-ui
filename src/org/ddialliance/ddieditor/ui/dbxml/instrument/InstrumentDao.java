@@ -17,7 +17,7 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class InstrumentDao extends XmlEntities implements IDao {
+public class InstrumentDao implements IDao {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			InstrumentDao.class);
 	

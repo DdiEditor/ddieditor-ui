@@ -16,7 +16,7 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class IfThenElseDao extends XmlEntities implements IDao {
+public class IfThenElseDao implements IDao {
 	private Log log = LogFactory.getLog(LogType.SYSTEM, IfThenElseDao.class);
 
 	/*
