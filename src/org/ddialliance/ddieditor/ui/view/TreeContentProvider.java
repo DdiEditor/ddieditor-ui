@@ -14,8 +14,8 @@ import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
-import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemes;
-import org.ddialliance.ddieditor.ui.dbxml.concept.Concepts;
+import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
@@ -75,8 +75,8 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				return PersistenceManager.getInstance().getResources()
 						.toArray();
 			} else if (contentType.equals(ViewContentType.ConceptContent)) {
-				return new ConceptSchemes().getLightXmlObject(null, null, null,
-						null).toArray();
+				return new ConceptSchemeDao().getLightXmlObject(null, null, null, null)
+						.toArray();
 			} else if (contentType.equals(ViewContentType.CodeContent)) {
 				return CodeSchemes.getCodeSchemesLight(null, null).toArray();
 			} else if (contentType.equals(ViewContentType.QuestionContent)) {
@@ -164,11 +164,9 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			try {
 				// concept scheme
 				if (lightXmlTypeLocalname.equals("ConceptScheme")) {
-					contentList = new Concepts().getLightXmlObject(
-							lightXmlObjectType).toArray();
-				}
-				// question scheme
-				else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
+					contentList = new ConceptDao().getLightXmlObject(lightXmlObjectType)
+							.toArray();
+				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
 					contentList = new QuestionItemDao().getLightXmlObject(
 							lightXmlObjectType).toArray();
 				}
