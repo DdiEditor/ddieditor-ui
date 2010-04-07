@@ -13,7 +13,7 @@ package org.ddialliance.ddieditor.ui.editor.concept;
 import java.text.MessageFormat;
 
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
-import org.ddialliance.ddieditor.ui.dbxml.concept.Concepts;
+import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
@@ -51,7 +51,7 @@ public class ConceptEditor extends LabelDescriptionEditor {
 				Messages
 						.getString("ConceptEditor.label.useTheEditorLabel.Description"),
 				Messages.getString("ConceptEditor.label.ConceptTabItem"));
-		dao = (IDao) new Concepts();
+		super.dao = new ConceptDao();
 	}
 
 	public String getPreferredPerspectiveId() {
@@ -74,45 +74,6 @@ public class ConceptEditor extends LabelDescriptionEditor {
 		parent.setLayout(new GridLayout());
 		log.debug("ConceptEditor.createPartControl called");
 		super.createPartControl(parent);
-	}
-
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		log.debug("ConceptEditor.doSave()");
-		super.doSave(monitor);
-
-		try {
-			modelImpl.validate();
-		} catch (Exception e1) {
-			String errMess = Messages
-					.getString("ConceptEditor.mess.ValidationError"); //$NON-NLS-1$
-			ErrorDialog.openError(site.getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, errMess, null));
-			return;
-		}
-		try {
-			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
-				dao.create(modelImpl);
-				editorInput.setEditorMode(EditorModeType.EDIT);
-			} else if (editorInput.getEditorMode()
-					.equals(EditorModeType.EDIT)) {
-				dao.update(modelImpl);
-			} else if (editorInput.getEditorMode()
-					.equals(EditorModeType.VIEW)) {
-				log.debug("*** Saved ignored! ***");
-			}
-		} catch (Exception e) {
-			String errMess = Messages
-					.getString("ConceptEditor.mess.ErrorDuringSave"); //$NON-NLS-1$
-			ErrorDialog.openError(site.getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, errMess, e));
-			return;
-		}
-		updateParentView();
-		editorStatus.clearChanged();
-		log.debug("ConceptEditor.doSave(1): " + editorStatus.getStatus());
 	}
 
 	@Override
