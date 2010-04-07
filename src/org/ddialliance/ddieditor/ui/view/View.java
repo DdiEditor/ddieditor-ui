@@ -11,7 +11,6 @@ package org.ddialliance.ddieditor.ui.view;
  */
 
 import java.util.List;
-import java.util.Properties;
 
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.model.ElementType;
@@ -47,9 +46,6 @@ import org.eclipse.ui.internal.actions.HelpContentsAction;
 import org.eclipse.ui.part.ViewPart;
 
 public class View extends ViewPart implements IPropertyListener {
-	/**
-	 * View Member variable
-	 */
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, View.class);
 
 	public enum ViewContentType {
