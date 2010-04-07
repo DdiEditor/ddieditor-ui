@@ -3,7 +3,6 @@ package org.ddialliance.ddieditor.ui.dbxml.concept;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptType;
 import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -15,7 +14,6 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 
 /**
  * Concepts (DBXML).
