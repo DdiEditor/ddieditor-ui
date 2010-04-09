@@ -1,525 +1,366 @@
 <?xml version="1.0"?>
-<s:StudyUnit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="ddi:studyunit:3_0_CR2 ../XMLSchemas/instance.xsd"
- xmlns:dc="ddi:datacollection:3_0_CR2"
- xmlns:s="ddi:studyunit:3_0_CR2"
- xmlns:r="ddi:reusable:3_0_CR2"
- xmlns:c="ddi:conceptualcomponent:3_0_CR2"
- xmlns:xhtml="http://www.w3.org/1999/xhtml"
- xmlns:l="ddi:logicalproduct:3_0_CR2">
-  <s:Identifier>
-    <r:ID>WLT_QUEST</r:ID>
-    <r:IdentifyingAgency>pop.umn.edu</r:IdentifyingAgency>
-    <r:Version>1.0</r:Version>
-  </s:Identifier>
-  <r:Citation>
-    <r:Title>Question Test Example</r:Title>
-    <r:Creator>Wendy L. Thomas</r:Creator>
-    <r:Publisher>Wendy L. Thomas</r:Publisher>
-    <r:PublicationDate>
-      <r:SimpleDate>2007-02-03</r:SimpleDate>
-    </r:PublicationDate>
-  </r:Citation>
-  <s:Abstract>
-    <r:Identifier>
-      <r:ID>Quest_abs</r:ID>
-    </r:Identifier>
-    <r:Content>The example shows the use of concept, universe, category, coding, and question schemes and their assembly into a simple questionnaire instrument.</r:Content>
-  </s:Abstract>
-  <r:UniverseReference>
-    <r:ID>U_1</r:ID>
-  </r:UniverseReference>
-  <s:Purpose>
-    <r:Identifier>
-      <r:ID>Quest_purp</r:ID>
-    </r:Identifier>
-    <r:Content>Provide a simple questionnaire example for DDI 3.0 CR_2</r:Content>
-  </s:Purpose>
-  <c:ConceptualComponent>
-    <c:Identifier>
-      <r:ID>CC_1</r:ID>
-    </c:Identifier>
-    <c:ConceptScheme>
-      <c:Identifier>
-        <r:ID>CS_1</r:ID>
-      </c:Identifier>
-      <c:Concept>
-        <c:Identifier>
-          <r:ID>C_1</r:ID>
-        </c:Identifier>
-        <r:Label>Sex</r:Label>
-      </c:Concept>
-      <c:Concept>
-        <c:Identifier>
-          <r:ID>C_2</r:ID>
-        </c:Identifier>
-        <r:Label>Age</r:Label>
-      </c:Concept>
-      <c:Concept>
-        <c:Identifier>
-          <r:ID>C_3</r:ID>
-        </c:Identifier>
-        <r:Label>School Type</r:Label>
-      </c:Concept>
-      <c:Concept>
-        <c:Identifier>
-          <r:ID>C_4</r:ID>
-        </c:Identifier>
-        <r:Label>Living Situation</r:Label>
-      </c:Concept>
-    </c:ConceptScheme>
-    <c:UniverseScheme>
-      <c:Identifier>
-        <r:ID>UniS_1</r:ID>
-        <r:IdentifyingAgency>pop.umn.edu</r:IdentifyingAgency>
-        <r:Version>1.0</r:Version>
-      </c:Identifier>
-      <c:Universe>
-        <r:Identifier>
-          <r:ID>U_1</r:ID>
-        </r:Identifier>
-        <r:HumanReadable>Population of Black Duck Minnesota</r:HumanReadable>
-        <r:SubUniverse>
-          <r:Identifier>
-            <r:ID>U_2</r:ID>
-          </r:Identifier>
-          <r:HumanReadable>Population 18 Years of Age or Older</r:HumanReadable>
-        </r:SubUniverse>
-      </c:Universe>
-    </c:UniverseScheme>
-  </c:ConceptualComponent>
-  <dc:DataCollection>
-    <dc:Identifier>
-      <r:ID>WLT_DC_1</r:ID>
-      <r:IdentifyingAgency>MPC</r:IdentifyingAgency>
-      <r:Version>1.0</r:Version>
-      <r:VersionDate>
+<ns1:DDIInstance xsi:schemaLocation="ddi:instance:3_1 http://www.ddialliance.org/schema/ddi3.1/instance.xsd" id="dda-21432" version="1.0.0" agency="dda.dk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="ddi:instance:3_1" xmlns:d="ddi:datacollection:3_1" xmlns:s="ddi:studyunit:3_1" xmlns:r="ddi:reusable:3_1" xmlns:c="ddi:conceptualcomponent:3_1" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:p="ddi:physicaldataproduct:3_1" xmlns:l="ddi:logicalproduct:3_1" xmlns:pi="ddi:physicalinstance:3_0">
+  <s:StudyUnit id="WLT_QUEST">
+    <r:Citation>
+      <r:Title>Question Test Example</r:Title>
+      <r:Creator>Wendy L. Thomas</r:Creator>
+      <r:Publisher>Wendy L. Thomas</r:Publisher>
+      <r:PublicationDate>
         <r:SimpleDate>2007-02-03</r:SimpleDate>
-      </r:VersionDate>
-      <r:VersionResponsibility>Wendy Thomas</r:VersionResponsibility>
-    </dc:Identifier>
-    <dc:QuestionScheme>
-      <dc:Identifier>
-        <r:ID>QS</r:ID>
-      </dc:Identifier>
-      <dc:QuestionItem>
-        <dc:Identifier>
-          <r:ID>Q1</r:ID>
-        </dc:Identifier>
-        <dc:QuestionText>
-          <dc:LiteralText>
-            <dc:Text>How old are you?</dc:Text>
-          </dc:LiteralText>
-        </dc:QuestionText>
-        <dc:NumericDomain type="Integer">
-          <r:NumberRange>
-            <r:Low>0</r:Low>
-            <r:High>99</r:High>
-          </r:NumberRange>
-        </dc:NumericDomain>
-        <dc:ConceptReference>
-          <r:ID>C_2</r:ID>
-        </dc:ConceptReference>
-      </dc:QuestionItem>
-      <dc:QuestionItem>
-        <dc:Identifier>
-          <r:ID>Q2</r:ID>
-        </dc:Identifier>
-        <dc:QuestionText>
-          <dc:LiteralText>
-            <dc:Text>Sex</dc:Text>
-          </dc:LiteralText>
-        </dc:QuestionText>
-        <dc:CodeDomain>
-          <r:CodeSchemeReference>
-            <r:ID>CODS_1</r:ID>
-          </r:CodeSchemeReference>
-        </dc:CodeDomain>
-        <dc:ConceptReference>
-          <r:ID>C_1</r:ID>
-        </dc:ConceptReference>
-      </dc:QuestionItem>
-      <dc:QuestionItem>
-        <dc:Identifier>
-          <r:ID>Q3</r:ID>
-        </dc:Identifier>
-        <dc:QuestionText>
-          <dc:LiteralText>
-            <dc:Text>Are you 18 years or older?</dc:Text>
-          </dc:LiteralText>
-        </dc:QuestionText>
-        <dc:CodeDomain>
-          <r:CodeSchemeReference>
-            <r:ID>CODS_2</r:ID>
-          </r:CodeSchemeReference>
-        </dc:CodeDomain>
-        <dc:ConceptReference>
-          <r:ID>C_2</r:ID>
-        </dc:ConceptReference>
-      </dc:QuestionItem>
-      <dc:QuestionItem>
-        <dc:Identifier>
-          <r:ID>Q4</r:ID>
-        </dc:Identifier>
-        <dc:QuestionText>
-          <dc:LiteralText>
-            <dc:Text>Who do you live with?</dc:Text>
-          </dc:LiteralText>
-        </dc:QuestionText>
-        <dc:CodeDomain>
-          <r:CodeSchemeReference>
-            <r:ID>CODS_3</r:ID>
-          </r:CodeSchemeReference>
-        </dc:CodeDomain>
-        <dc:ConceptReference>
-          <r:ID>C_4</r:ID>
-        </dc:ConceptReference>
-      </dc:QuestionItem>
-      <dc:QuestionItem>
-        <dc:Identifier>
-          <r:ID>Q5</r:ID>
-        </dc:Identifier>
-        <dc:QuestionText>
-          <dc:LiteralText>
-            <dc:Text>What type of school do you attend?</dc:Text>
-          </dc:LiteralText>
-        </dc:QuestionText>
-        <dc:CodeDomain>
-          <r:CodeSchemeReference>
-            <r:ID>CODS_4</r:ID>
-          </r:CodeSchemeReference>
-        </dc:CodeDomain>
-        <dc:ConceptReference>
-          <r:ID>C_3</r:ID>
-        </dc:ConceptReference>
-      </dc:QuestionItem>
-    </dc:QuestionScheme>
-    <dc:ControlConstructScheme>
-      <dc:Identifier>
-        <r:ID>CCS_1</r:ID>
-      </dc:Identifier>
-      <dc:QuestionConstruct>
-        <dc:Identifier>
-          <r:ID>IQ_1</r:ID>
-        </dc:Identifier>
-        <dc:QuestionReference>
-          <r:ID>Q2</r:ID>
-        </dc:QuestionReference>
-        <dc:ResponseUnit>Interviewee</dc:ResponseUnit>
-        <r:UniverseReference>
-          <r:ID>U_1</r:ID>
-        </r:UniverseReference>
-      </dc:QuestionConstruct>
-      <dc:QuestionConstruct>
-        <dc:Identifier>
-          <r:ID>IQ_2</r:ID>
-        </dc:Identifier>
-        <dc:QuestionReference>
-          <r:ID>Q3</r:ID>
-        </dc:QuestionReference>
-        <dc:ResponseUnit>Interviewee</dc:ResponseUnit>
-        <r:UniverseReference>
-          <r:ID>U_1</r:ID>
-        </r:UniverseReference>
-      </dc:QuestionConstruct>
-      <dc:QuestionConstruct>
-        <dc:Identifier>
-          <r:ID>IQ_4</r:ID>
-        </dc:Identifier>
-        <dc:QuestionReference>
-          <r:ID>Q4</r:ID>
-        </dc:QuestionReference>
-        <dc:ResponseUnit>Interviewee</dc:ResponseUnit>
-        <r:UniverseReference>
-          <r:ID>U_1</r:ID>
-        </r:UniverseReference>
-      </dc:QuestionConstruct>
-      <dc:QuestionConstruct>
-        <dc:Identifier>
-          <r:ID>IQ_5</r:ID>
-        </dc:Identifier>
-        <dc:QuestionReference>
-          <r:ID>Q5</r:ID>
-        </dc:QuestionReference>
-        <dc:ResponseUnit>Interviewee</dc:ResponseUnit>
-        <r:UniverseReference>
-          <r:ID>U_1</r:ID>
-        </r:UniverseReference>
-      </dc:QuestionConstruct>
-      <dc:QuestionConstruct>
-        <dc:Identifier>
-          <r:ID>IQ_3</r:ID>
-        </dc:Identifier>
-        <dc:QuestionReference>
-          <r:ID>Q1</r:ID>
-        </dc:QuestionReference>
-        <dc:ResponseUnit>Interviewee</dc:ResponseUnit>
-        <r:UniverseReference>
-          <r:ID>U_2</r:ID>
-        </r:UniverseReference>
-      </dc:QuestionConstruct>
-      <dc:StatementItem>
-        <dc:Identifier>
-          <r:ID>SI_2</r:ID>
-        </dc:Identifier>
-        <dc:DisplayText>
-          <dc:LiteralText>
-            <dc:Text>Just a few more questions regarding living sitution and school attendence.</dc:Text>
-          </dc:LiteralText>
-        </dc:DisplayText>
-      </dc:StatementItem>
-      <dc:IfThenElse>
-        <dc:Identifier>
-          <r:ID>IFTE_1</r:ID>
-        </dc:Identifier>
-        <dc:IfCondition>
-          <r:Code>If yes [response = 1]</r:Code>
-          <r:SourceQuestionReference>
+      </r:PublicationDate>
+    </r:Citation>
+    <s:Abstract id="Quest_abs">
+      <r:Content>The example shows the use of concept, universe, category, coding, and question schemes and their assembly into a simple questionnaire instrument.</r:Content>
+    </s:Abstract>
+    <r:UniverseReference>
+      <r:ID>U_1</r:ID>
+    </r:UniverseReference>
+    <s:Purpose id="Quest_purp">
+      <r:Content>Provide a simple questionnaire example for DDI 3.0 CR_2</r:Content>
+    </s:Purpose>
+    <c:ConceptualComponent id="CC_1">
+      <c:ConceptScheme id="CS_1">
+        <c:Concept id="C_1">
+          <r:Label>Sex</r:Label>
+        </c:Concept>
+        <c:Concept id="C_2">
+          <r:Label>Age</r:Label>
+        </c:Concept>
+        <c:Concept id="C_3">
+          <r:Label>School Type</r:Label>
+        </c:Concept>
+        <c:Concept id="C_4">
+          <r:Label>Living Situation</r:Label>
+        </c:Concept>
+      </c:ConceptScheme>
+      <c:UniverseScheme id="UniS_1">
+        <c:Universe id="U_1">
+          <c:HumanReadable>Population of Black Duck Minnesota</c:HumanReadable>
+          <c:SubUniverse id="U_2">
+            <c:HumanReadable>Population 18 Years of Age or Older</c:HumanReadable>
+          </c:SubUniverse>
+        </c:Universe>
+      </c:UniverseScheme>
+    </c:ConceptualComponent>
+    <d:DataCollection id="WLT_DC_1"  agency="MPC" version="1.0.0" versionDate="2007-02-03" >
+      <d:QuestionScheme id="QS">
+        <d:QuestionItem id="Q1">
+          <d:QuestionText>
+            <d:LiteralText>
+              <d:Text>How old are you?</d:Text>
+            </d:LiteralText>
+          </d:QuestionText>
+          <d:NumericDomain type="Integer">
+            <r:NumberRange>
+              <r:Low>0</r:Low>
+              <r:High>99</r:High>
+            </r:NumberRange>
+          </d:NumericDomain>
+          <d:ConceptReference>
+            <r:ID>C_2</r:ID>
+          </d:ConceptReference>
+        </d:QuestionItem>
+        <d:QuestionItem id="Q2">
+          <d:QuestionText>
+            <d:LiteralText>
+              <d:Text>Sex</d:Text>
+            </d:LiteralText>
+          </d:QuestionText>
+          <d:CodeDomain>
+            <r:CodeSchemeReference>
+              <r:ID>CODS_1</r:ID>
+            </r:CodeSchemeReference>
+          </d:CodeDomain>
+          <d:ConceptReference>
+            <r:ID>C_1</r:ID>
+          </d:ConceptReference>
+        </d:QuestionItem>
+        <d:QuestionItem id="Q3">
+          <d:QuestionText>
+            <d:LiteralText>
+              <d:Text>Are you 18 years or older?</d:Text>
+            </d:LiteralText>
+          </d:QuestionText>
+          <d:CodeDomain>
+            <r:CodeSchemeReference>
+              <r:ID>CODS_2</r:ID>
+            </r:CodeSchemeReference>
+          </d:CodeDomain>
+          <d:ConceptReference>
+            <r:ID>C_2</r:ID>
+          </d:ConceptReference>
+        </d:QuestionItem>
+        <d:QuestionItem id="Q4">
+          <d:QuestionText>
+            <d:LiteralText>
+              <d:Text>Who do you live with?</d:Text>
+            </d:LiteralText>
+          </d:QuestionText>
+          <d:CodeDomain>
+            <r:CodeSchemeReference>
+              <r:ID>CODS_3</r:ID>
+            </r:CodeSchemeReference>
+          </d:CodeDomain>
+          <d:ConceptReference>
+            <r:ID>C_4</r:ID>
+          </d:ConceptReference>
+        </d:QuestionItem>
+        <d:QuestionItem id="Q5">
+          <d:QuestionText>
+            <d:LiteralText>
+              <d:Text>What type of school do you attend?</d:Text>
+            </d:LiteralText>
+          </d:QuestionText>
+          <d:CodeDomain>
+            <r:CodeSchemeReference>
+              <r:ID>CODS_4</r:ID>
+            </r:CodeSchemeReference>
+          </d:CodeDomain>
+          <d:ConceptReference>
+            <r:ID>C_3</r:ID>
+          </d:ConceptReference>
+        </d:QuestionItem>
+      </d:QuestionScheme>
+      <d:ControlConstructScheme id="CCS_1">
+        <d:QuestionConstruct id="IQ_1">
+          <d:QuestionReference>
             <r:ID>Q2</r:ID>
-          </r:SourceQuestionReference>
-        </dc:IfCondition>
-        <dc:ThenConstructReference>
-          <r:ID>IQ_3</r:ID>
-        </dc:ThenConstructReference>
-        <dc:ElseConstructReference>
-          <r:ID>SI_1</r:ID>
-        </dc:ElseConstructReference>
-      </dc:IfThenElse>
-      <dc:StatementItem>
-        <dc:Identifier>
-          <r:ID>SI_1</r:ID>
-        </dc:Identifier>
-        <dc:DisplayText>
-          <dc:LiteralText>
-            <dc:Text>Go to Question 4</dc:Text>
-          </dc:LiteralText>
-        </dc:DisplayText>
-      </dc:StatementItem>
-      <dc:Sequence>
-        <dc:Identifier>
+          </d:QuestionReference>
+          <d:ResponseUnit>Interviewee</d:ResponseUnit>
+          <r:UniverseReference>
+            <r:ID>U_1</r:ID>
+          </r:UniverseReference>
+        </d:QuestionConstruct>
+        <d:QuestionConstruct id="IQ_2">
+          <d:QuestionReference>
+            <r:ID>Q3</r:ID>
+          </d:QuestionReference>
+          <d:ResponseUnit>Interviewee</d:ResponseUnit>
+          <r:UniverseReference>
+            <r:ID>U_1</r:ID>
+          </r:UniverseReference>
+        </d:QuestionConstruct>
+        <d:QuestionConstruct id="IQ_4">
+          <d:QuestionReference>
+            <r:ID>Q4</r:ID>
+          </d:QuestionReference>
+          <d:ResponseUnit>Interviewee</d:ResponseUnit>
+          <r:UniverseReference>
+            <r:ID>U_1</r:ID>
+          </r:UniverseReference>
+        </d:QuestionConstruct>
+        <d:QuestionConstruct id="IQ_5">
+          <d:QuestionReference>
+            <r:ID>Q5</r:ID>
+          </d:QuestionReference>
+          <d:ResponseUnit>Interviewee</d:ResponseUnit>
+          <r:UniverseReference>
+            <r:ID>U_1</r:ID>
+          </r:UniverseReference>
+        </d:QuestionConstruct>
+        <d:QuestionConstruct id="IQ_3">
+          <d:QuestionReference>
+            <r:ID>Q1</r:ID>
+          </d:QuestionReference>
+          <d:ResponseUnit>Interviewee</d:ResponseUnit>
+          <r:UniverseReference>
+            <r:ID>U_2</r:ID>
+          </r:UniverseReference>
+        </d:QuestionConstruct>
+        <d:StatementItem id="SI_2">
+          <d:DisplayText>
+            <d:LiteralText>
+              <d:Text>Just a few more questions regarding living sitution and school attendence.</d:Text>
+            </d:LiteralText>
+          </d:DisplayText>
+        </d:StatementItem>
+        <d:IfThenElse id="IFTE_1">
+          <d:IfCondition>
+            <r:Code>If yes [response = 1]</r:Code>
+            <r:SourceQuestionReference>
+              <r:ID>Q2</r:ID>
+            </r:SourceQuestionReference>
+          </d:IfCondition>
+          <d:ThenConstructReference>
+            <r:ID>IQ_3</r:ID>
+          </d:ThenConstructReference>
+          <d:ElseConstructReference>
+            <r:ID>SI_1</r:ID>
+          </d:ElseConstructReference>
+        </d:IfThenElse>
+        <d:StatementItem id="SI_1">
+          <d:DisplayText>
+            <d:LiteralText>
+              <d:Text>Go to Question 4</d:Text>
+            </d:LiteralText>
+          </d:DisplayText>
+        </d:StatementItem>
+        <d:Sequence id="MAS_SEQ">
+          <d:ControlConstructReference>
+            <r:ID>IQ_1</r:ID>
+          </d:ControlConstructReference>
+          <d:ControlConstructReference>
+            <r:ID>IQ_2</r:ID>
+          </d:ControlConstructReference>
+          <d:ControlConstructReference>
+            <r:ID>IFTE_1</r:ID>
+          </d:ControlConstructReference>
+          <d:ControlConstructReference>
+            <r:ID>SI_2</r:ID>
+          </d:ControlConstructReference>
+          <d:ControlConstructReference>
+            <r:ID>IQ_4</r:ID>
+          </d:ControlConstructReference>
+          <d:ControlConstructReference>
+            <r:ID>IQ_5</r:ID>
+          </d:ControlConstructReference>
+        </d:Sequence>
+      </d:ControlConstructScheme>
+      <d:Instrument id="Inst_1">
+        <r:Software id="software_id">
+          <r:Name>Paper</r:Name>
+          <r:Version>1.0</r:Version>
+          <r:Description>A simple paper questionnaire</r:Description>
+          <r:Date>
+            <r:SimpleDate>1977</r:SimpleDate>
+          </r:Date>
+        </r:Software>
+        <d:ControlConstructReference>
           <r:ID>MAS_SEQ</r:ID>
-        </dc:Identifier>
-        <dc:ControlConstructReference>
-          <r:ID>IQ_1</r:ID>
-        </dc:ControlConstructReference>
-        <dc:ControlConstructReference>
-          <r:ID>IQ_2</r:ID>
-        </dc:ControlConstructReference>
-        <dc:ControlConstructReference>
-          <r:ID>IFTE_1</r:ID>
-        </dc:ControlConstructReference>
-        <dc:ControlConstructReference>
-          <r:ID>SI_2</r:ID>
-        </dc:ControlConstructReference>
-        <dc:ControlConstructReference>
-          <r:ID>IQ_4</r:ID>
-        </dc:ControlConstructReference>
-        <dc:ControlConstructReference>
-          <r:ID>IQ_5</r:ID>
-        </dc:ControlConstructReference>
-      </dc:Sequence>
-    </dc:ControlConstructScheme>
-    <dc:Instrument>
-      <dc:Identifier>
-        <r:ID>Inst_1</r:ID>
-      </dc:Identifier>
-      <r:Software>
-        <r:Name>Paper</r:Name>
-        <r:Version>1.0</r:Version>
-        <r:Description>A simple paper questionnaire</r:Description>
-        <r:Date>
-          <r:SimpleDate>1977</r:SimpleDate>
-        </r:Date>
-      </r:Software>
-      <dc:ControlConstructReference>
-        <r:ID>MAS_SEQ</r:ID>
-      </dc:ControlConstructReference>
-    </dc:Instrument>
-  </dc:DataCollection>
-  <l:LogicalProduct>
-    <l:Identifier>
-      <r:ID>LP_1</r:ID>
-    </l:Identifier>
-    <l:CategoryScheme>
-      <l:Identifier>
-        <r:ID>CATS_1</r:ID>
-      </l:Identifier>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_1</r:ID>
-        </l:Identifier>
-        <r:Label>Yes</r:Label>
-      </l:Category>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_2</r:ID>
-        </l:Identifier>
-        <r:Label>No</r:Label>
-      </l:Category>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_3</r:ID>
-        </l:Identifier>
-        <r:Label>Male</r:Label>
-      </l:Category>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_4</r:ID>
-        </l:Identifier>
-        <r:Label>Female</r:Label>
-      </l:Category>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_5</r:ID>
-        </l:Identifier>
-        <r:Label>Public school</r:Label>
-      </l:Category>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_6</r:ID>
-        </l:Identifier>
-        <r:Label>Private school</r:Label>
-      </l:Category>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_7</r:ID>
-        </l:Identifier>
-        <r:Label>Do not attend school</r:Label>
-      </l:Category>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_8</r:ID>
-        </l:Identifier>
-        <r:Label>Both parents (with or without other non-parents)</r:Label>
-      </l:Category>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_9</r:ID>
-        </l:Identifier>
-        <r:Label>One parent (with or without other non-parents)</r:Label>
-      </l:Category>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_10</r:ID>
-        </l:Identifier>
-        <r:Label>Non-parent relative (with or without other non-parents)</r:Label>
-      </l:Category>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_11</r:ID>
-        </l:Identifier>
-        <r:Label>Non-relatives only</r:Label>
-      </l:Category>
-      <l:Category>
-        <l:Identifier>
-          <r:ID>Cat_12</r:ID>
-        </l:Identifier>
-        <r:Label>Live alone</r:Label>
-      </l:Category>
-    </l:CategoryScheme>
-    <l:CodeScheme>
-      <l:Identifier>
-        <r:ID>CODS_1</r:ID>
-      </l:Identifier>
-      <l:CategorySchemeReference>
-        <r:ID>CATS_1</r:ID>
-      </l:CategorySchemeReference>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_3</r:ID>
-        </l:CategoryReference>
-        <l:Value>0</l:Value>
-      </l:Code>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_4</r:ID>
-        </l:CategoryReference>
-        <l:Value>1</l:Value>
-      </l:Code>
-    </l:CodeScheme>
-    <l:CodeScheme>
-      <l:Identifier>
-        <r:ID>CODS_2</r:ID>
-      </l:Identifier>
-      <l:CategorySchemeReference>
-        <r:ID>CATS_1</r:ID>
-      </l:CategorySchemeReference>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_1</r:ID>
-        </l:CategoryReference>
-        <l:Value>1</l:Value>
-      </l:Code>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_2</r:ID>
-        </l:CategoryReference>
-        <l:Value>2</l:Value>
-      </l:Code>
-    </l:CodeScheme>
-    <l:CodeScheme>
-      <l:Identifier>
-        <r:ID>CODS_3</r:ID>
-      </l:Identifier>
-      <l:CategorySchemeReference>
-        <r:ID>CATS_1</r:ID>
-      </l:CategorySchemeReference>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_8</r:ID>
-        </l:CategoryReference>
-        <l:Value>1</l:Value>
-      </l:Code>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_9</r:ID>
-        </l:CategoryReference>
-        <l:Value>2</l:Value>
-      </l:Code>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_10</r:ID>
-        </l:CategoryReference>
-        <l:Value>3</l:Value>
-      </l:Code>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_11</r:ID>
-        </l:CategoryReference>
-        <l:Value>4</l:Value>
-      </l:Code>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_12</r:ID>
-        </l:CategoryReference>
-        <l:Value>5</l:Value>
-      </l:Code>
-    </l:CodeScheme>
-    <l:CodeScheme>
-      <l:Identifier>
-        <r:ID>CODS_4</r:ID>
-      </l:Identifier>
-      <l:CategorySchemeReference>
-        <r:ID>CATS_1</r:ID>
-      </l:CategorySchemeReference>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_5</r:ID>
-        </l:CategoryReference>
-        <l:Value>1</l:Value>
-      </l:Code>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_6</r:ID>
-        </l:CategoryReference>
-        <l:Value>2</l:Value>
-      </l:Code>
-      <l:Code isDiscrete="true">
-        <l:CategoryReference>
-          <r:ID>Cat_7</r:ID>
-        </l:CategoryReference>
-        <l:Value>3</l:Value>
-      </l:Code>
-    </l:CodeScheme>
-  </l:LogicalProduct>
-</s:StudyUnit>
+        </d:ControlConstructReference>
+      </d:Instrument>
+    </d:DataCollection>
+    <l:LogicalProduct id="LP_1">
+      <l:CategoryScheme id="CATS_1">
+        <l:Category id="Cat_1">
+          <r:Label>Yes</r:Label>
+        </l:Category>
+        <l:Category id="Cat_2">
+          <r:Label>No</r:Label>
+        </l:Category>
+        <l:Category id="Cat_3">
+          <r:Label>Male</r:Label>
+        </l:Category>
+        <l:Category id="Cat_4">
+          <r:Label>Female</r:Label>
+        </l:Category>
+        <l:Category id="Cat_5">
+          <r:Label>Public school</r:Label>
+        </l:Category>
+        <l:Category id="Cat_6">
+          <r:Label>Private school</r:Label>
+        </l:Category>
+        <l:Category id="Cat_7">
+          <r:Label>Do not attend school</r:Label>
+        </l:Category>
+        <l:Category id="Cat_8">
+          <r:Label>Both parents (with or without other non-parents)</r:Label>
+        </l:Category>
+        <l:Category id="Cat_9">
+          <r:Label>One parent (with or without other non-parents)</r:Label>
+        </l:Category>
+        <l:Category id="Cat_10">
+          <r:Label>Non-parent relative (with or without other non-parents)</r:Label>
+        </l:Category>
+        <l:Category id="Cat_11">
+          <r:Label>Non-relatives only</r:Label>
+        </l:Category>
+        <l:Category id="Cat_12">
+          <r:Label>Live alone</r:Label>
+        </l:Category>
+      </l:CategoryScheme>
+      <l:CodeScheme id="CODS_1">
+        <l:CategorySchemeReference>
+          <r:ID>CATS_1</r:ID>
+        </l:CategorySchemeReference>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_3</r:ID>
+          </l:CategoryReference>
+          <l:Value>0</l:Value>
+        </l:Code>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_4</r:ID>
+          </l:CategoryReference>
+          <l:Value>1</l:Value>
+        </l:Code>
+      </l:CodeScheme>
+      <l:CodeScheme id="CODS_2">
+        <l:CategorySchemeReference>
+          <r:ID>CATS_1</r:ID>
+        </l:CategorySchemeReference>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_1</r:ID>
+          </l:CategoryReference>
+          <l:Value>1</l:Value>
+        </l:Code>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_2</r:ID>
+          </l:CategoryReference>
+          <l:Value>2</l:Value>
+        </l:Code>
+      </l:CodeScheme>
+      <l:CodeScheme id="CODS_3">
+        <l:CategorySchemeReference>
+          <r:ID>CATS_1</r:ID>
+        </l:CategorySchemeReference>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_8</r:ID>
+          </l:CategoryReference>
+          <l:Value>1</l:Value>
+        </l:Code>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_9</r:ID>
+          </l:CategoryReference>
+          <l:Value>2</l:Value>
+        </l:Code>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_10</r:ID>
+          </l:CategoryReference>
+          <l:Value>3</l:Value>
+        </l:Code>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_11</r:ID>
+          </l:CategoryReference>
+          <l:Value>4</l:Value>
+        </l:Code>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_12</r:ID>
+          </l:CategoryReference>
+          <l:Value>5</l:Value>
+        </l:Code>
+      </l:CodeScheme>
+      <l:CodeScheme id="CODS_4">
+        <l:CategorySchemeReference>
+          <r:ID>CATS_1</r:ID>
+        </l:CategorySchemeReference>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_5</r:ID>
+          </l:CategoryReference>
+          <l:Value>1</l:Value>
+        </l:Code>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_6</r:ID>
+          </l:CategoryReference>
+          <l:Value>2</l:Value>
+        </l:Code>
+        <l:Code isDiscrete="true">
+          <l:CategoryReference>
+            <r:ID>Cat_7</r:ID>
+          </l:CategoryReference>
+          <l:Value>3</l:Value>
+        </l:Code>
+      </l:CodeScheme>
+    </l:LogicalProduct>
+  </s:StudyUnit>
+</ns1:DDIInstance>
