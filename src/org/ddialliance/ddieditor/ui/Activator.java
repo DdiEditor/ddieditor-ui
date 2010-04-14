@@ -1,10 +1,5 @@
 package org.ddialliance.ddieditor.ui;
 
-import org.ddialliance.ddieditor.ui.dbxml.DbXml;
-import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddiftp.util.log.Log;
-import org.ddialliance.ddiftp.util.log.LogFactory;
-import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -13,29 +8,12 @@ import org.osgi.framework.BundleContext;
  * The activator class controls the plug-in life cycle
  */
 public class Activator extends AbstractUIPlugin {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "ddieditor-ui";
 
 	// The shared instance
 	private static Activator plugin;
-
-	private BundleContext context;
-
-	/**
-	 * The constructor
-	 * 
-	 * @throws Exception
-	 */
-	public Activator() throws Exception {
-		try {
-			DbXml.open();
-		} catch (Exception e) {
-			log.error("Error during DB XML opening: " + e.getMessage());
-			throw new Exception("Error during DB XML opening: " + e.getMessage());
-		}
-	}
 
 	/*
 	 * (non-Javadoc)
