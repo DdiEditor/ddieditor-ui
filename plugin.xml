@@ -181,6 +181,16 @@
                id="org.ddialliance.ddieditor.ui.command.ExportResourceList"
                name="Export resource list">
          </command>
+         <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.DeleteSingleDDI3"
+               id="org.ddialliance.ddieditor.ui.command.DeleteSingleDDI3"
+               name="Delete Single DDI3 resource">
+         </command>
+         <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.DeleteAllDDI3"
+               id="org.ddialliance.ddieditor.ui.command.DeleteAllDDI3"
+               name="Delete All DDI3 Resources">
+         </command>
       </extension>
       <extension
             point="org.eclipse.ui.menus">
@@ -271,6 +281,23 @@
                <separator
                      name="ddieditor-ui.separator4"
                      visible="true">
+               </separator>
+               <command
+                     commandId="org.ddialliance.ddieditor.ui.command.DeleteSingleDDI3"
+                     icon="icons/delete_obj.gif"
+                     label="Delete"
+                     mnemonic="D"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.ddialliance.ddieditor.ui.command.DeleteAllDDI3"
+                     icon="icons/delete_obj.gif"
+                     label="Delete All"
+                     mnemonic="e"
+                     style="push">
+               </command>
+               <separator
+                     name="ddieditor-ui.separator5">
                </separator>
                <command
                      commandId="org.eclipse.ui.file.exit"
