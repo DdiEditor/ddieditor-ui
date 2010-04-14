@@ -34,8 +34,9 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		try {
 			resources = PersistenceManager.getInstance().getResources();
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
+					.getActiveShell(), Messages.getString("ErrorTitle"), e
+					.getMessage());
 		}
 
 		try {
