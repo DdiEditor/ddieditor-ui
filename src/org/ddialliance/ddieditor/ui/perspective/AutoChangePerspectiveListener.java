@@ -1,16 +1,7 @@
 package org.ddialliance.ddieditor.ui.perspective;
 
-/**
- * Auto Change Perspective Listener.
- * 
- */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 import org.ddialliance.ddieditor.ui.Activator;
+import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -27,16 +18,16 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 
+/**
+ * Auto change perspective listener
+ */
 public class AutoChangePerspectiveListener implements IPartListener, IStartup {
-	private static final Log log = LogFactory.getLog(LogType.EXCEPTION,
+	private static final Log log = LogFactory.getLog(LogType.SYSTEM,
 			AutoChangePerspectiveListener.class);
 
 	@Override
 	public void partActivated(IWorkbenchPart part) {
-		refresh(part);
-	}
-
-	public static void refresh(final IWorkbenchPart part) {
+		// log.debug(this);
 		if (!(part instanceof IAutoChangePerspective)) {
 			return;
 		}
@@ -58,13 +49,14 @@ public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 			// load settings
 			IPreferenceStore store = Activator.getDefault()
 					.getPreferenceStore();
+
 			String keyToggle = dedicatedPerspectiveId + "perspective.toggle";
-			String propertyToggle = store.getString(keyToggle);
+			boolean propertyToggle = store.getBoolean(keyToggle);
 			String keyYesNo = dedicatedPerspectiveId + "perspective.open";
-			Integer propertyYesNo = null;
+			Integer propertyYesNo = -1;
 
 			// always ask
-			if (!propertyToggle.equals(MessageDialogWithToggle.ALWAYS)) {
+			if (!propertyToggle) {
 				MessageDialogWithToggle dialog = MessageDialogWithToggle
 						.openYesNoQuestion(
 								part.getSite().getShell(),
@@ -73,13 +65,11 @@ public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 										.getPerspectiveSwitchDialogText(),
 								Messages.getString("perspective.switch.toogle"),
 								false, store, keyYesNo);
-				propertyYesNo = dialog.getReturnCode();
-				store.setValue(keyYesNo, propertyYesNo);
-			} else {
-				propertyYesNo = store.getInt(keyYesNo);
+				propertyYesNo = dialog.open();
+				store.setValue(keyToggle, dialog.getToggleState());
 			}
 
-			if (propertyYesNo.equals(IDialogConstants.YES_ID)) {
+			if (propertyToggle || propertyYesNo.equals(IDialogConstants.YES_ID)) {
 				// open perspective
 				Display.getCurrent().asyncExec(new Runnable() {
 					public void run() {
@@ -87,13 +77,12 @@ public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 							workbenchWindow.getWorkbench().showPerspective(
 									dedicatedPerspectiveId, workbenchWindow);
 						} catch (WorkbenchException e) {
-							log.error(
-									"Could not switch to dedicated perspective "
-											+ dedicatedPerspectiveId + " for "
-											+ part.getClass(), e);
+							DialogUtil.errorDialog(PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow().getShell(),
+									dedicatedPerspectiveId, null, e
+											.getMessage(), e);
 						}
 					}
-
 				});
 			}
 		}
@@ -108,7 +97,9 @@ public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 							.getActivePage().addPartListener(
 									new AutoChangePerspectiveListener());
 				} catch (Exception e) {
-					log.error(e.getMessage(), e);
+					DialogUtil.errorDialog(PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow().getShell(), "", null, e
+							.getMessage(), e);
 				}
 			}
 		});
