@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class NewDDI3FileDialog  extends Dialog {
+public class NewDDI3FileDialog extends Dialog {
 	public String fileName;
 	Text fileNameText = null;
 
@@ -37,10 +37,10 @@ public class NewDDI3FileDialog  extends Dialog {
 		fileNameText.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				Text text = ((Text)e.getSource());
-				
+				Text text = ((Text) e.getSource());
+
 				// do not change text on resource change selection
-				if (!(Boolean)text.getData()) {
+				if (!(Boolean) text.getData()) {
 					text.setData(true);
 					return;
 				}
