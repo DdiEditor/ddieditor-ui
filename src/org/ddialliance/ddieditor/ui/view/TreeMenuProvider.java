@@ -6,6 +6,8 @@ import java.util.List;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
+import org.ddialliance.ddieditor.model.resource.StorageType;
+import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
@@ -241,188 +243,209 @@ public class TreeMenuProvider extends TreeMenu {
 		});
 	}
 
-
-
 	private void deleteItem(EditorModeType mode) {
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		LightXmlObjectType lightXmlObject = (LightXmlObjectType) obj;
-		ElementType entityType = null;
-		try {
-			entityType = ElementType
-					.getElementType(lightXmlObject.getElement());
-		} catch (DDIFtpException e) {
-			// TODO: Use dialogutil for error dialogs
-			DialogUtil
-					.errorDialog(
-							currentView.getSite().getShell(),
-							currentView.ID,
-							Messages.getString("ErrorTitle"),
-							Messages.getString("View.mess.EditorNewError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
-		}
-
-		if (MessageDialog.openConfirm(currentView.getSite().getShell(),
-				Messages.getString("ConfirmTitle"), MessageFormat.format(
-						Messages.getString("View.mess.ConfirmDeletion"),
-						entityType.getTranslatedDisplayMessageEntry(),
-						lightXmlObject.getId()))) {
+		if (obj instanceof DDIResourceType) {
+			// TODO delete DDIResourceType stuff
+			DDIResourceType ddiResource = (DDIResourceType) obj;
 			try {
-				switch (entityType) {
-				case FILE:
-					MessageUtil.currentNotSupported(currentView.getSite()
-							.getShell());
-					break;
-				case CONCEPT_SCHEME:
-					List<LightXmlObjectType> conceptList = new ConceptSchemeDao().getLightXmlObject(lightXmlObject);
-					if (conceptList.size() > 0
-							&& !MessageDialog
-									.openConfirm(
-											currentView.getSite().getShell(),
-											Messages.getString("ConfirmTitle"),
-											MessageFormat
-													.format(
-															Messages
-																	.getString("View.mess.ConfirmDeleteConcepts"),
-															conceptList.size()))) {
-						break;
-					}
-					new ConceptSchemeDao().delete(lightXmlObject.getId(),
-							lightXmlObject.getVersion(), lightXmlObject
-									.getParentId(), lightXmlObject
-									.getParentVersion());
-					break;
-				case CONCEPT:
-					new ConceptDao().delete(lightXmlObject.getId(),
-							lightXmlObject.getVersion(), lightXmlObject
-									.getParentId(), lightXmlObject
-									.getParentVersion());
-
-					break;
-				case CODE_SCHEME:
-					List<LightXmlObjectType> codeList = CodeSchemes
-							.getCodesLight(lightXmlObject.getId(),
-									lightXmlObject.getVersion());
-					if (codeList.size() > 0
-							&& !MessageDialog
-									.openConfirm(
-											currentView.getSite().getShell(),
-											Messages.getString("ConfirmTitle"),
-											MessageFormat
-													.format(
-															Messages
-																	.getString("View.mess.ConfirmDeleteCodes"),
-															codeList.size()))) {
-						break;
-					}
-					CodeSchemes.delete(lightXmlObject.getId(), lightXmlObject
-							.getVersion(), lightXmlObject.getParentId(),
-							lightXmlObject.getParentVersion());
-					break;
-				case CODE:
-					MessageUtil.currentNotSupported(currentView.getSite()
-							.getShell());
-					break;
-				case QUESTION_SCHEME:
-					QuestionSchemeDao dao = new QuestionSchemeDao();
-					List<LightXmlObjectType> questionItemList = new QuestionItemDao()
-							.getLightXmlObject(lightXmlObject);
-
-					// confirm deletions of x number of question items
-					// TODO needs inclusion of refs to instrumentation elements
-					if (questionItemList.size() > 0
-							&& !MessageDialog
-									.openConfirm(
-											currentView.getSite().getShell(),
-											Messages.getString("ConfirmTitle"),
-											MessageFormat
-													.format(
-															Messages
-																	.getString("View.mess.ConfirmDeleteQuestionItem"),
-															questionItemList
-																	.size()))) {
-						break;
-					}
-					dao.delete(lightXmlObject.getId(), lightXmlObject
-							.getVersion(), lightXmlObject.getParentId(),
-							lightXmlObject.getParentVersion());
-					break;
-				case QUESTION_ITEM:
-					new QuestionItemDao().delete(lightXmlObject.getId(),
-							lightXmlObject.getVersion(), lightXmlObject
-									.getParentId(), lightXmlObject
-									.getParentVersion());
-					break;
-				case INSTRUMENT:
-					new InstrumentDao().delete(lightXmlObject.getId(),
-							lightXmlObject.getVersion(), lightXmlObject
-									.getParentId(), lightXmlObject
-									.getParentVersion());
-
-					break;
-				case STATEMENT_ITEM:
-					new StatementItemDao().delete(lightXmlObject.getId(),
-							lightXmlObject.getVersion(), lightXmlObject
-									.getParentId(), lightXmlObject
-									.getParentVersion());
-
-					break;
-
-				case IF_THEN_ELSE:
-					new IfThenElseDao().delete(lightXmlObject.getId(),
-							lightXmlObject.getVersion(), lightXmlObject
-									.getParentId(), lightXmlObject
-									.getParentVersion());
-
-					break;
-				default:
-					DDIFtpException e = new DDIFtpException(
-							"Editor type not supported: " + entityType,
-							new Throwable());
-					DialogUtil.errorDialog(currentView.getSite().getShell(),
-							this.currentView.ID,
-							"Editor type is not supported", e.getMessage(), e);
-					break;
-				}
-			} catch (PartInitException ex) {
-				DialogUtil
-						.errorDialog(
-								currentView.getSite().getShell(),
-								currentView.ID,
-								Messages.getString("ErrorTitle"),
-								Messages
-										.getString("View.mess.EditorUIDeleteError") + "\n" + ex.getMessage(), ex); //$NON-NLS-1$
-			} catch (Exception e) {
-				DialogUtil
-						.errorDialog(
-								currentView.getSite().getShell(),
-								currentView.ID,
-								Messages.getString("ErrorTitle"),
-								Messages
-										.getString("View.mess.EditorDeleteError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
+				StorageType storage = PersistenceManager.getInstance()
+						.getStorageByResourceOrgName(ddiResource.getOrgName());
+				PersistenceManager.getInstance().deleteResource(
+						ddiResource.getOrgName());
+				PersistenceManager.getInstance().deleteStorage(storage.getId());
+				storage = null;
+			} catch (DDIFtpException e) {
+				DialogUtil.errorDialog(currentView.getSite().getShell(),
+						currentView.ID, Messages.getString("ErrorTitle"),
+						Messages.getString("Error deleting resource"), e);
 			}
-			removeItemFromMenu(lightXmlObject);
-			treeViewer.refresh();
-			treeViewer.getControl().setRedraw(true);
-			treeViewer.expandToLevel(2);
-			treeViewer.getTree().setFocus();
 		}
+
+		if (obj instanceof LightXmlObjectType) {
+			LightXmlObjectType lightXmlObject = (LightXmlObjectType) obj;
+			ElementType entityType = null;
+			try {
+				entityType = ElementType.getElementType(lightXmlObject
+						.getElement());
+			} catch (DDIFtpException e) {
+				DialogUtil
+						.errorDialog(
+								currentView.getSite().getShell(),
+								currentView.ID,
+								Messages.getString("ErrorTitle"),
+								Messages.getString("View.mess.EditorNewError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
+			}
+
+			if (MessageDialog.openConfirm(currentView.getSite().getShell(),
+					Messages.getString("ConfirmTitle"), MessageFormat.format(
+							Messages.getString("View.mess.ConfirmDeletion"),
+							entityType.getTranslatedDisplayMessageEntry(),
+							lightXmlObject.getId()))) {
+				try {
+					switch (entityType) {
+					case FILE:
+						MessageUtil.currentNotSupported(currentView.getSite()
+								.getShell());
+						break;
+					case CONCEPT_SCHEME:
+						List<LightXmlObjectType> conceptList = new ConceptSchemeDao()
+								.getLightXmlObject(lightXmlObject);
+						if (conceptList.size() > 0
+								&& !MessageDialog
+										.openConfirm(
+												currentView.getSite()
+														.getShell(),
+												Messages
+														.getString("ConfirmTitle"),
+												MessageFormat
+														.format(
+																Messages
+																		.getString("View.mess.ConfirmDeleteConcepts"),
+																conceptList
+																		.size()))) {
+							break;
+						}
+						new ConceptSchemeDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(), lightXmlObject
+										.getParentId(), lightXmlObject
+										.getParentVersion());
+						break;
+					case CONCEPT:
+						new ConceptDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(), lightXmlObject
+										.getParentId(), lightXmlObject
+										.getParentVersion());
+
+						break;
+					case CODE_SCHEME:
+						List<LightXmlObjectType> codeList = CodeSchemes
+								.getCodesLight(lightXmlObject.getId(),
+										lightXmlObject.getVersion());
+						if (codeList.size() > 0
+								&& !MessageDialog
+										.openConfirm(
+												currentView.getSite()
+														.getShell(),
+												Messages
+														.getString("ConfirmTitle"),
+												MessageFormat
+														.format(
+																Messages
+																		.getString("View.mess.ConfirmDeleteCodes"),
+																codeList.size()))) {
+							break;
+						}
+						CodeSchemes.delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(), lightXmlObject
+										.getParentId(), lightXmlObject
+										.getParentVersion());
+						break;
+					case CODE:
+						MessageUtil.currentNotSupported(currentView.getSite()
+								.getShell());
+						break;
+					case QUESTION_SCHEME:
+						QuestionSchemeDao dao = new QuestionSchemeDao();
+						List<LightXmlObjectType> questionItemList = new QuestionItemDao()
+								.getLightXmlObject(lightXmlObject);
+
+						// confirm deletions of x number of question items
+						// TODO needs inclusion of refs to instrumentation
+						// elements
+						if (questionItemList.size() > 0
+								&& !MessageDialog
+										.openConfirm(
+												currentView.getSite()
+														.getShell(),
+												Messages
+														.getString("ConfirmTitle"),
+												MessageFormat
+														.format(
+																Messages
+																		.getString("View.mess.ConfirmDeleteQuestionItem"),
+																questionItemList
+																		.size()))) {
+							break;
+						}
+						dao.delete(lightXmlObject.getId(), lightXmlObject
+								.getVersion(), lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
+						break;
+					case QUESTION_ITEM:
+						new QuestionItemDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(), lightXmlObject
+										.getParentId(), lightXmlObject
+										.getParentVersion());
+						break;
+					case INSTRUMENT:
+						new InstrumentDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(), lightXmlObject
+										.getParentId(), lightXmlObject
+										.getParentVersion());
+						break;
+					case STATEMENT_ITEM:
+						new StatementItemDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(), lightXmlObject
+										.getParentId(), lightXmlObject
+										.getParentVersion());
+						break;
+					case IF_THEN_ELSE:
+						new IfThenElseDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(), lightXmlObject
+										.getParentId(), lightXmlObject
+										.getParentVersion());
+
+						break;
+					default:
+						DDIFtpException e = new DDIFtpException(
+								"Editor type not supported: " + entityType,
+								new Throwable());
+						DialogUtil.errorDialog(
+								currentView.getSite().getShell(),
+								this.currentView.ID,
+								"Editor type is not supported", e.getMessage(),
+								e);
+						break;
+					}
+				} catch (PartInitException ex) {
+					DialogUtil
+							.errorDialog(
+									currentView.getSite().getShell(),
+									currentView.ID,
+									Messages.getString("ErrorTitle"),
+									Messages
+											.getString("View.mess.EditorUIDeleteError") + "\n" + ex.getMessage(), ex); //$NON-NLS-1$
+				} catch (Exception e) {
+					DialogUtil
+							.errorDialog(
+									currentView.getSite().getShell(),
+									currentView.ID,
+									Messages.getString("ErrorTitle"),
+									Messages
+											.getString("View.mess.EditorDeleteError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
+				}
+				removeItemFromMenu(lightXmlObject);
+			}
+		}
+		treeViewer.refresh();
+		treeViewer.getControl().setRedraw(true);
+		treeViewer.expandToLevel(2);
+		treeViewer.getTree().setFocus();
 	}
 
 	/**
 	 * Removes an element in the tree list
 	 * 
-	 * @param lightXmlObject
+	 * @param element
 	 *            to search for and remove
 	 */
-	private void removeItemFromMenu(LightXmlObjectType lightXmlObject) {
+	private void removeItemFromMenu(Object element) {
 		Object[] expanded = treeViewer.getExpandedElements();
 		for (int i = 0; i < expanded.length; i++) {
 			if (expanded[i] instanceof List<?>) {
-				for (LightXmlObjectType inList : ((List<LightXmlObjectType>) expanded[i])) {
-					if (inList.equals(lightXmlObject)) {
-						treeViewer.remove(inList);
-					}
-				}
+				((List<LightXmlObjectType>) expanded[i]).remove(element);
 			}
 		}
 	}
