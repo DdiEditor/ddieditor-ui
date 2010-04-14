@@ -22,6 +22,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 
+/**
+ * RCP entry point to create a ddi 3 resource
+ */
 public class NewDDI3File extends org.eclipse.core.commands.AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -40,11 +43,9 @@ public class NewDDI3File extends org.eclipse.core.commands.AbstractHandler {
 				file.getName().lastIndexOf("."));
 		String connection = containerName + ".dbxml";
 		try {
-			DbXmlManager.getInstance().openContainer(new File(connection));
-			//DbXmlManager.getInstance().addResource(file);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			DbXmlManager.getInstance().addStorage(new File(connection));
+		} catch (Exception e) {
+
 		}
 
 		// add storage
@@ -52,7 +53,7 @@ public class NewDDI3File extends org.eclipse.core.commands.AbstractHandler {
 		StorageType storage = storageDoc.addNewStorage();
 		storage.setId(containerName);
 		storage.setConnection(connection);
-		storage.setManager(DbXmlManager.class.getName());		
+		storage.setManager(DbXmlManager.class.getName());
 		try {
 			PersistenceManager.getInstance().createStorage(storageDoc);
 		} catch (DDIFtpException e1) {
@@ -63,10 +64,9 @@ public class NewDDI3File extends org.eclipse.core.commands.AbstractHandler {
 		// index storage and add resources
 		DDIResourceDocument ddiResourceDocument = DDIResourceDocument.Factory
 				.newInstance();
-		DDIResourceType ddiResource = ddiResourceDocument
-				.addNewDDIResource();
+		DDIResourceType ddiResource = ddiResourceDocument.addNewDDIResource();
 		ddiResource.setOrgName(file.getName());
-		
+
 		try {
 			PersistenceManager.getInstance().createResource(
 					ddiResourceDocument, containerName);
@@ -76,6 +76,8 @@ public class NewDDI3File extends org.eclipse.core.commands.AbstractHandler {
 		}
 
 		// update info view
+		// TODO refactor boiler plate code to refresh a
+		// view into a rcp command
 		final IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench()
 				.getWorkbenchWindows();
 
