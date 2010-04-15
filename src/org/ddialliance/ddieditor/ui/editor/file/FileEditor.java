@@ -3,7 +3,6 @@ package org.ddialliance.ddieditor.ui.editor.file;
 import java.text.MessageFormat;
 
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.eclipse.swt.layout.GridLayout;
@@ -29,8 +28,7 @@ public class FileEditor extends Editor  implements IAutoChangePerspective {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		setSite(site);
-		this.editorInput = (EditorInput) input;
-		setInput(editorInput);
+		setInput(input);
 	}
 	
 	@Override
@@ -47,7 +45,7 @@ public class FileEditor extends Editor  implements IAutoChangePerspective {
 		
 		Text fileNameTxt = createTextInput(group, Messages
 				.getString("ddi3file.label"),
-				editorInput.getId(), false);
+				getEditorInputImpl().getId(), false);
 		fileNameTxt.setEditable(false);
 	}
 

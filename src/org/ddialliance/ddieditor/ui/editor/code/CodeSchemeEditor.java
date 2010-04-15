@@ -1,22 +1,10 @@
 package org.ddialliance.ddieditor.ui.editor.code;
 
-/**
- * Code Scheme Editor.
- * 
- */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 import java.text.MessageFormat;
 
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
-import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
-import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddieditor.ui.model.code.CodeScheme;
 import org.ddialliance.ddieditor.ui.perspective.CodesPerspective;
 import org.ddialliance.ddieditor.ui.view.Messages;
@@ -34,6 +22,9 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
+/**
+ * Code Scheme Editor
+ */
 public class CodeSchemeEditor extends LabelDescriptionEditor{
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeSchemeEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor";
@@ -84,12 +75,12 @@ public class CodeSchemeEditor extends LabelDescriptionEditor{
 			return;
 		}
 		try {
-			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+			if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
 				CodeSchemes.create(codeScheme);
-				editorInput.setEditorMode(EditorModeType.EDIT);
-			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
+				getEditorInputImpl().setEditorMode(EditorModeType.EDIT);
+			} else if (getEditorInputImpl().getEditorMode().equals(EditorModeType.EDIT)) {
 				CodeSchemes.update(codeScheme);
-			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+			} else if (getEditorInputImpl().getEditorMode().equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
@@ -106,18 +97,18 @@ public class CodeSchemeEditor extends LabelDescriptionEditor{
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		
 		// Initialize Code Scheme Editor Part:
-		this.editorInput = (EditorInput) input;
+		super.setInput(input);
 		if (log.isDebugEnabled()) {
-			log.debug("CodeSchemeEditor.init() - Name: " + editorInput.getName());
-			log.debug("CodeSchemeEditor.init() - ID: " + editorInput.getId());
-			log.debug("CodeSchemeEditor.init() - Parent ID: " + editorInput.getParentId());
-			log.debug("CodeSchemeEditor.init() - Editor Mode: " + editorInput.getEditorMode());
+			log.debug("CodeSchemeEditor.init() - Name: " + getEditorInputImpl().getName());
+			log.debug("CodeSchemeEditor.init() - ID: " + getEditorInputImpl().getId());
+			log.debug("CodeSchemeEditor.init() - Parent ID: " + getEditorInputImpl().getParentId());
+			log.debug("CodeSchemeEditor.init() - Editor Mode: " + getEditorInputImpl().getEditorMode());
 		}
 
-		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+		if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
 			try {
-				codeScheme = CodeSchemes.createCodeScheme(editorInput.getId(), editorInput.getVersion(),
-						editorInput.getParentId(), editorInput.getParentVersion());
+				codeScheme = CodeSchemes.createCodeScheme(getEditorInputImpl().getId(), getEditorInputImpl().getVersion(),
+						getEditorInputImpl().getParentId(), getEditorInputImpl().getParentVersion());
 			} catch (Exception e) {
 				log.error("CodeSchemeEditor.init(): " + e.getMessage());
 				String errMess = Messages.getString("CodeSchemeEditor.mess.ErrorDuringCreateNewCode"); //$NON-NLS-1$
@@ -125,11 +116,11 @@ public class CodeSchemeEditor extends LabelDescriptionEditor{
 						ID, 0, errMess, e));
 				System.exit(0);
 			}
-		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
-				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+		} else if (getEditorInputImpl().getEditorMode().equals(EditorModeType.EDIT)
+				|| getEditorInputImpl().getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
-				codeScheme = CodeSchemes.getCodeScheme(editorInput.getId(), editorInput.getVersion(),
-						editorInput.getParentId(), editorInput.getParentVersion());
+				codeScheme = CodeSchemes.getCodeScheme(getEditorInputImpl().getId(), getEditorInputImpl().getVersion(),
+						getEditorInputImpl().getParentId(), getEditorInputImpl().getParentVersion());
 			} catch (Exception e) {
 				String errMess = Messages.getString("CodeSchemeEditor.mess.GetCodeByIdError"); //$NON-NLS-1$
 				ErrorDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
@@ -138,7 +129,7 @@ public class CodeSchemeEditor extends LabelDescriptionEditor{
 			}
 		} else {
 			String errMess = MessageFormat.format(
-					Messages.getString("CodeSchemeEditor.mess.UnknownEditorMode"), editorInput.getEditorMode()); //$NON-NLS-1$
+					Messages.getString("CodeSchemeEditor.mess.UnknownEditorMode"), getEditorInputImpl().getEditorMode()); //$NON-NLS-1$
 			MessageDialog.openError(site.getShell(), Messages.getString("ErrorTitle"), errMess);
 			System.exit(0);
 		}
@@ -148,9 +139,7 @@ public class CodeSchemeEditor extends LabelDescriptionEditor{
 		
 		this.site = site;
 		setSite(site);
-		setInput(editorInput);
-		setPartName(editorInput.getId());
-
+		setInput(getEditorInputImpl());
+		setPartName(getEditorInputImpl().getId());
 	}
-
 }

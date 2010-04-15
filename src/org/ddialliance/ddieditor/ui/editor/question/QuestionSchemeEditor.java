@@ -1,9 +1,5 @@
 package org.ddialliance.ddieditor.ui.editor.question;
 
-/**
- * Question Scheme Editor.
- * 
- */
 /*
  * $Author$ 
  * $Date$ 
@@ -34,6 +30,9 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
+/**
+ * Question Scheme Editor
+ */
 public class QuestionSchemeEditor extends LabelDescriptionEditor {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionSchemeEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor";
@@ -84,12 +83,12 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 			return;
 		}
 		try {
-			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+			if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
 				dao.create(modelImpl);
-				editorInput.setEditorMode(EditorModeType.EDIT);
-			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
+				getEditorInputImpl().setEditorMode(EditorModeType.EDIT);
+			} else if (getEditorInputImpl().getEditorMode().equals(EditorModeType.EDIT)) {
 				dao.update(modelImpl);
-			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+			} else if (getEditorInputImpl().getEditorMode().equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
@@ -109,5 +108,4 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 		log.debug("QuestionItemEditor.init()");
 		this.modelImpl = (QuestionScheme) model;
 	}
-	
 }

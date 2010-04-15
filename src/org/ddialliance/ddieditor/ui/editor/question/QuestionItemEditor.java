@@ -1,9 +1,5 @@
 package org.ddialliance.ddieditor.ui.editor.question;
 
-/**
- * Question Item Editor.
- * 
- */
 /*
  * $Author$ 
  * $Date$ 
@@ -32,7 +28,6 @@ import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -56,6 +51,9 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
 
+/**
+ * Question Item Editor
+ */
 public class QuestionItemEditor extends Editor implements ISelectionListener {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			QuestionItemEditor.class);
@@ -193,7 +191,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		responseComboViewer.getCombo().setItems(
 				responseTypeDetail.getResponseTypeLabels());
 
-		if (!editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+		if (!getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
 			RESPONSE_TYPES responseType = ResponseTypeDetail
 					.getResponseType(modelImpl.getResponseDomain());
 			responseTypeDetail.setDetails(modelImpl.getResponseDomain());
@@ -201,7 +199,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 
 		// - get Response Domain Reference
 		RepresentationType responseDomainRef = null;
-		if (!editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+		if (!getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
 			try {
 				responseDomainRef = modelImpl.getResponseDomain();
 			} catch (Exception e1) {
@@ -220,7 +218,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 				.getResponseDomainReferenceList();
 		responseComboViewer.setInput(responseDomainReferenceList);
 		int index = 0;
-		if (!editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+		if (!getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
 			for (Iterator iterator = responseDomainReferenceList.iterator(); iterator
 					.hasNext();) {
 				ResponseTypeReference responseDomainReference = (ResponseTypeReference) iterator
