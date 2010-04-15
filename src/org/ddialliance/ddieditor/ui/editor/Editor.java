@@ -71,15 +71,14 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 /**
- * An editor consists of a header with a tab folder. The tab folder contains a
- * set of tab items.
+ * Super class editor defining common initialization and holds widget creation<br><br>
+ * DDI element editors are to extend this super class
  */
 public class Editor extends EditorPart implements IAutoChangePerspective {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
 
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
 	public EditorStatus editorStatus = new EditorStatus();
-	protected EditorInput editorInput;
 	private IEditorSite site;
 
 	private String title = "";
@@ -99,12 +98,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	protected IDao dao;
 
 	/**
-	 * Default constructor. Usage to gain access to create widget methods
-	 * <br>Note: Builds an empty editor input.
+	 * Default constructor. Usage to gain access to create widget methods <br>
+	 * Note: Builds an empty editor input.
 	 */
 	public Editor() {
-		editorInput = new EditorInput(null, null, null, null, null,
-				EditorModeType.EDIT);
+		// editorInput = new EditorInput(null, null, null, null, null,
+		// null);
 	}
 
 	/**
@@ -116,8 +115,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 *            description
 	 */
 	public Editor(String title, String description) {
-		editorInput = new EditorInput(null, null, null, null, null,
-				EditorModeType.EDIT);
 		this.title = title;
 		this.description = description;
 	}
@@ -126,7 +123,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		setSite(site);
-		this.editorInput = (EditorInput) input;
+		EditorInput editorInput = (EditorInput) input;
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
 				model = dao.create("", "", editorInput.getParentId(),
@@ -160,14 +157,14 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 
 		// update input
-		editorInput.setId(model.getId());				
+		editorInput.setId(model.getId());
 		// check for change in getLightElements vs getElement in DDIManager
-		if (!(editorInput.getVersion()!=null&&model.getVersion()==null)) {			
-			editorInput.setVersion(model.getVersion());			
+		if (!(editorInput.getVersion() != null && model.getVersion() == null)) {
+			editorInput.setVersion(model.getVersion());
 		}
 		editorInput.setParentId(model.getParentId());
 		editorInput.setParentVersion(model.getParentVersion());
-		setInput(editorInput);	
+		setInput(editorInput);
 
 		// name
 		setPartName(model.getId());
@@ -222,7 +219,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	/**
-	 * The EditorStatus class keeps track of the Editor status.
+	 * The EditorStatus class keeps track of the Editor status
 	 */
 	public class EditorStatus {
 		private boolean changed = false;
@@ -230,7 +227,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		public void setChanged() {
 			changed = true; // Set 'changed' before fire the property change!
 			firePropertyChange(IEditorPart.PROP_DIRTY);
-
 		}
 
 		public boolean getStatus() {
@@ -253,22 +249,30 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		try {
 			model.validate();
 		} catch (Exception e1) {
-			DialogUtil.errorDialog(site, ID, Messages.getString("ErrorTitle"), Messages
-					.getString("Editor.mess.ValidationErrorDuringSave"), e1);
+			DialogUtil
+					.errorDialog(
+							site,
+							ID,
+							Messages.getString("ErrorTitle"),
+							Messages
+									.getString("Editor.mess.ValidationErrorDuringSave"),
+							e1);
 			return;
 		}
 		try {
-			if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+			if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
 				dao.create(model);
-				editorInput.setEditorMode(EditorModeType.EDIT);
-			} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)) {
+				getEditorInputImpl().setEditorMode(EditorModeType.EDIT);
+			} else if (getEditorInputImpl().getEditorMode().equals(
+					EditorModeType.EDIT)) {
 				dao.update(model);
-			} else if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+			} else if (getEditorInputImpl().getEditorMode().equals(
+					EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
-			DialogUtil.errorDialog(site, ID, Messages.getString("ErrorTitle"), Messages
-					.getString("Editor.mess.ErrorDuringSave"), e);
+			DialogUtil.errorDialog(site, ID, Messages.getString("ErrorTitle"),
+					Messages.getString("Editor.mess.ErrorDuringSave"), e);
 			return;
 		}
 		editorStatus.clearChanged();
@@ -294,6 +298,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		// Set the focus
 	}
 
+	public EditorInput getEditorInputImpl() {
+		return (EditorInput) super.getEditorInput();
+	}
+
 	/**
 	 * Update parent view by firing a property change event
 	 */
@@ -314,7 +322,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public void setControl(Control widget) {
-		if (editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+		if (getEditorInputImpl().getEditorMode().equals(EditorModeType.VIEW)) {
 			widget.setEnabled(false);
 		}
 	}
@@ -805,13 +813,13 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	@Override
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(Messages
-				.getString("perspective.switch.dialogtext"), editorInput
-				.getElementType().getPerspectiveId());
+				.getString("perspective.switch.dialogtext"),
+				getEditorInputImpl().getElementType().getPerspectiveId());
 	}
 
 	@Override
 	public String getPreferredPerspectiveId() {
-		return this.editorInput.getElementType().getPerspectiveId();
+		return getEditorInputImpl().getElementType().getPerspectiveId();
 	}
 
 	public EditorIdentification getEditorIdentification() {
