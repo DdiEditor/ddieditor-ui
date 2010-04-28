@@ -321,8 +321,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return composite;
 	}
 
-	public void setControl(Control widget) {
-		if (getEditorInputImpl().getEditorMode().equals(EditorModeType.VIEW)) {
+	public void setControl(Control widget) {		
+		if (getEditorInputImpl()!=null&&getEditorInputImpl().getEditorMode().equals(EditorModeType.VIEW)) {
 			widget.setEnabled(false);
 		}
 	}
@@ -680,7 +680,11 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		if (structuredString == null) {
 			structuredString = StructuredStringType.Factory.newInstance();
 			structuredString.setTranslatable(true);
-			structuredString.setTranslated(!structuredStringList.isEmpty());
+			if (structuredStringList == null || structuredStringList.isEmpty()) {
+				structuredString.setTranslated(false);
+			} else {
+				structuredString.setTranslated(true);
+			}
 			structuredString.setLang(Translator.getLocale().getISO3Country());
 		}
 		styledText.addModifyListener(new StructuredStringTypeModyfiListener(
