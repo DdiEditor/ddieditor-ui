@@ -45,19 +45,11 @@ public class StudyUnitDao implements IDao {
 	 */
 	public static List<LightXmlObjectType> getStudyUnitLight(String id,
 			String version) throws Exception {
-		log.debug("StudyUnit.getStudyUnitLight(). Id: " + id + " Version: "
-				+ version);
+		LightXmlObjectListDocument listDoc = DdiManager.getInstance()
+				.getStudyUnitLight(id, version, null, null);
 
-		DdiManager ddiManager = DdiManager.getInstance();
-
-		LightXmlObjectListDocument listDoc = ddiManager.getStudyUnitLight(id,
-				version, null, null);
-
-		LightXmlObjectListType lightXmlObjectListType = listDoc
-				.getLightXmlObjectList();
-
-		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType
-				.getLightXmlObjectList();
+		List<LightXmlObjectType> listLightXmlObjectListType = listDoc
+				.getLightXmlObjectList().getLightXmlObjectList();
 
 		return listLightXmlObjectListType;
 	}
@@ -212,7 +204,7 @@ public class StudyUnitDao implements IDao {
 	@Override
 	public void delete(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		
+
 	}
 
 	@Override
