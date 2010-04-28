@@ -117,7 +117,7 @@ public class TranslationDialog extends Dialog {
 		if (obj instanceof InternationalStringType) {
 			return ((InternationalStringType) obj).getStringValue();
 		} else if (obj instanceof StructuredStringType) {
-			return ((StructuredStringType) obj).getDomNode().getTextContent();
+			return XmlBeansUtil.getTextOnMixedElement((StructuredStringType)obj);
 		}
 		throw createTypeException(obj, new Throwable());
 	}
