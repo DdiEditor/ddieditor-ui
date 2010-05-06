@@ -1,8 +1,8 @@
 Installation:
 
 1. Install Oracle Berkeley DB XML (version 2.5.13) from
-   http://www.oracle.com/technology/woftware/products/berkelay-db/xml/index.html
-2. Set an enviroment variable ORACLE_BERKELEY_DB_XML_HOME to the installation directory
+   http://www.oracle.com/technology/software/products/berkeley-db/xml/index.html
+2. Set an environment variable ORACLE_BERKELEY_DB_XML_HOME to the installation directory
    of Oracle Berkeley DB XML e.g. C:\Programmer\Oracle\Berkley DB XML 2.5.13
-3. Unzip the file in your program directory e.g. C:\Programer\ddieditor-ui
+3. Unzip the file in your program directory e.g. C:\Programmer
 4. Run the eclipse.exe program in the root installation directory.
