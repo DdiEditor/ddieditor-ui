@@ -2,7 +2,7 @@
 <?eclipse version="3.2"?>
 <plugin>
       <extension-point id="org.ddialliance.ddieditor.extensionpoints.addattr"
-            name="AdditionalAttributes"
+            name="%extension-point.name"
             schema="schema/org.ddialliance.ddieditor.extensionpoints.addattr.exsd"/>
 
       <extension id="application" point="org.eclipse.core.runtime.applications">
@@ -12,144 +12,204 @@
       </extension>
       <extension point="org.eclipse.ui.perspectives">
             <perspective class="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective"
-                  id="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective" name="Concepts"> </perspective>
+                  id="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective" name="%perspective.name"> </perspective>
             <perspective class="org.ddialliance.ddieditor.ui.perspective.CodesPerspective"
-                  id="org.ddialliance.ddieditor.ui.perspective.CodesPerspective" name="Codes"> </perspective>
+                  id="org.ddialliance.ddieditor.ui.perspective.CodesPerspective" name="%perspective.name.0"> </perspective>
             <perspective class="org.ddialliance.ddieditor.ui.perspective.InfoPerspective"
-                  id="org.ddialliance.ddieditor.ui.perspective.InfoPerspective" name="Overview"> </perspective>
-            <perspective name="Questions"
+                  id="org.ddialliance.ddieditor.ui.perspective.InfoPerspective" name="%perspective.name.1"> </perspective>
+            <perspective name="%perspective.name.2"
                   class="org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective"
                   id="org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective"> </perspective>
-            <perspective name="Instrument"
+            <perspective name="%perspective.name.3"
                   class="org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective"
                   id="org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective"
             > </perspective>
       </extension>
       <extension point="org.eclipse.ui.views">
             <view class="org.ddialliance.ddieditor.ui.view.InfoView" icon="icons/tree.gif"
-                  id="org.ddialliance.ddieditor.ui.view.InfoView" name="OverView"> </view>
+                  id="org.ddialliance.ddieditor.ui.view.InfoView" name="%view.name"> </view>
             <view class="org.ddialliance.ddieditor.ui.view.ConceptView" icon="icons/tree.gif"
-                  id="org.ddialliance.ddieditor.ui.view.ConceptView" name="Concepts"> </view>
+                  id="org.ddialliance.ddieditor.ui.view.ConceptView" name="%view.name.0"> </view>
             <view class="org.ddialliance.ddieditor.ui.view.CodeView" icon="icons/tree.gif"
-                  id="org.ddialliance.ddieditor.ui.view.CodeView" name="Codes" restorable="true"> </view>
+                  id="org.ddialliance.ddieditor.ui.view.CodeView" name="%view.name.1" restorable="true"> </view>
             <view class="org.ddialliance.ddieditor.ui.view.QuestionItemView" icon="icons/tree.gif"
-                  id="org.ddialliance.ddieditor.ui.view.QuestionItemView" name="Questions"> </view>
+                  id="org.ddialliance.ddieditor.ui.view.QuestionItemView" name="%view.name.2"> </view>
             <view class="org.ddialliance.ddieditor.ui.view.InstrumentView" icon="icons/tree.gif"
-                  id="org.ddialliance.ddieditor.ui.view.InstrumentView" name="Instrument"
+                  id="org.ddialliance.ddieditor.ui.view.InstrumentView" name="%view.name.3"
                   restorable="true"> </view>
+      </extension>
+      <extension
+            id="product"
+            point="org.eclipse.core.runtime.products">
+            <product
+                  application="ddieditor-ui.application"
+                  description="DDI Editor application"
+                  name="DDI Editor">
+               <property
+                     name="windowImages"
+                     value="icons/dda_logo_16.ico,icons/dda_logo_32.ico">
+               </property>
+               <property
+                     name="startupForegroundColor"
+                     value="000000">
+               </property>
+               <property
+                     name="startupMessageRect"
+                     value="7,252,445,20">
+               </property>
+               <property
+                     name="startupProgressRect"
+                     value="5,275,445,15">
+               </property>
+               <property
+                     name="preferenceCustomization"
+                     value="plugin_customization.ini">
+               </property>
+	           <property
+					 name="appName"
+                     value="DDI Editor">
+               </property>
+            <property
+                  name="aboutImage"
+                  value="icons/ddalogo.gif">
+            </property>
+            <property
+                  name="aboutText"
+                  value="%Bundle.aboutText">
+            </property>
+               
+      		</product>
       </extension>
       <extension point="org.eclipse.ui.editors">
             <editor class="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
                   default="false" icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
-                  name="QuestionSchemeEditor"> </editor>
+                  name="%editor.name"> </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
                   default="false" icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
-                  name="QuestionItemEditor"> </editor>
+                  name="%editor.name.0"> </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor"
                   default="false" icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor"
-                  name="ConceptEditor"> </editor>
+                  name="%editor.name.1"> </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor"
                   default="false" icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor"
-                  name="ConceptSchemeEditor"> </editor>
+                  name="%editor.name.2"> </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor"
                   default="false" icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor"
-                  name="CodeSchemeEditor"> </editor>
+                  name="%editor.name.3"> </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor"
                   default="false" icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor"
-                  name="StudyUnitEditor"> </editor>
+                  name="%editor.name.4"> </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.InstrumentEditor"
                   default="false"
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.InstrumentEditor"
-                  name="InstrumentEditor">
+                  name="%editor.name.5">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor"
                   default="false"
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor"
-                  name="StatementItemEditor">
+                  name="%editor.name.6">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor"
                   default="false"
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor"
-                  name="IfThenElseEditor">
+                  name="%editor.name.7">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.RepeatUntilEditor"
                   default="false"
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.RepeatUntilEditor"
-                  name="RepeatUntil">
+                  name="%editor.name.8">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.RepeatWhileEditor"
                   default="false"
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.RepeatWhileEditor"
-                  name="RepeatWhileEditor">
+                  name="%editor.name.9">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.ComputationItemEditor"
                   default="false"
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.ComputationItemEditor"
-                  name="ComputationItemEditor">
+                  name="%editor.name.10">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.LoopEditor"
                   default="false"
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.LoopEditor"
-                  name="LoopEditor">
+                  name="%editor.name.11">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.file.FileEditor"
                   default="false"
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.file.FileEditor"
-                  name="DDI 3 File">
+                  name="%editor.name.12">
             </editor>
       </extension>
-      <extension id="org.eclipse.ui.idexportwizard" name="Export Wizard Extension Point"
+      <extension id="org.eclipse.ui.idexportwizard" name="%extension.name"
             point="org.eclipse.ui.exportWizards">
-            <wizard name="ExportDDIXml" icon="icons/properties.gif"
+            <wizard name="%wizard.name" icon="icons/properties.gif"
                   class="org.ddialliance.ddieditor.ui.wizard.export.ExportDdiXmlWizard"
                   id="org.ddialliance.ddieditor.ui.wizard.exportddi.ExportDdiXmlWizard">
                   <description> %Export DDI </description>
             </wizard>
       </extension>
       <extension id="product" point="org.eclipse.core.runtime.products">
-            <product application="DDIEditor.application" name="DDI Editor">
+            <product application="ddieditor-ui.application" name="DDI Editor">
                   <property name="appName" value="DDI Editor"> </property>
-                  <property name="startupForegroundColor" value="000000"> </property>
-                  <property name="startupMessageRect" value="7,252,445,20"> </property>
-                  <property name="startupProgressRect" value="5,275,445,15"> </property>
                   <property name="preferenceCustomization" value="plugin_customization.ini"> </property>
-                  <property name="aboutText"
-                        value="DDI Editor (Beta Version)&#x0A;&#x0A;DDI Editor UI Version: 1.0.0&#x0A;DDI Manager Version: 1.0.0"> </property>
-                  <property name="aboutImage" value="icons/alt_about.gif"> </property>
+                  <property
+                        name="aboutImage"
+                        value="icons/ddalogo.gif">
+                  </property>
+                  <property
+                        name="windowImages"
+                        value="icons/dda_logo_16.ico,icons/dda_logo_32.ico">
+                  </property>
+                  <property
+                        name="startupForegroundColor"
+                        value="000000">
+                  </property>
+                  <property
+                        name="startupMessageRect"
+                        value="7,252,445,20">
+                  </property>
+                  <property
+                        name="startupProgressRect"
+                        value="5,275,445,15">
+                  </property>
+                  <property
+                        name="aboutText"
+                        value="Olsen">
+                  </property>
             </product>
       </extension>
       <extension point="org.eclipse.ui.preferencePages">
             <page class="org.ddialliance.ddieditor.ui.preference.page.DdiPreferencePage"
-                  id="org.ddialliance.ddieditor.ui.preference.page.DdiPreferencePage" name="DDI"> </page>
+                  id="org.ddialliance.ddieditor.ui.preference.page.DdiPreferencePage" name="%page.name"> </page>
             <page
                   class="org.ddialliance.ddieditor.ui.preference.page.DdiEditorBackendPreferencePage"
                   id="org.ddialliance.ddieditor.ui.preference.page.DdiEditorBackendPreferencePage"
-                  name="DDIEditor Backend"> </page>
+                  name="%page.name.0"> </page>
             <page class="org.ddialliance.ddieditor.ui.preference.page.DdiEditorUiPreferencePage"
                   id="org.ddialliance.ddieditor.ui.preference.page.DdiEditorUiPreferencePage"
-                  name="DDIEditor UI"> </page>
+                  name="%page.name.1"> </page>
       </extension>
       <extension point="org.eclipse.core.runtime.preferences">
             <initializer class="org.ddialliance.ddieditor.ui.preference.PreferenceInitializer"
@@ -164,32 +224,32 @@
          <command
                defaultHandler="org.ddialliance.ddieditor.ui.command.OpenDDI3File"
                id="org.ddialliance.ddieditor.ui.command.OpenDDI3File"
-               name="OpenDDI3File">
+               name="%command.name">
          </command>
          <command
                defaultHandler="org.ddialliance.ddieditor.ui.command.ExportDDI3File"
                id="org.ddialliance.ddieditor.ui.command.ExportDDI3File"
-               name="ExportDDI3File">
+               name="%command.name.0">
          </command>
          <command
                defaultHandler="org.ddialliance.ddieditor.ui.command.NewDDI3File"
                id="org.ddialliance.ddieditor.ui.command.NewDDI3File"
-               name="New DDi 3 File">
+               name="%command.name.1">
          </command>
          <command
                defaultHandler="org.ddialliance.ddieditor.ui.command.ExportResourceList"
                id="org.ddialliance.ddieditor.ui.command.ExportResourceList"
-               name="Export resource list">
+               name="%command.name.2">
          </command>
          <command
                defaultHandler="org.ddialliance.ddieditor.ui.command.DeleteSingleDDI3"
                id="org.ddialliance.ddieditor.ui.command.DeleteSingleDDI3"
-               name="Delete Single DDI3 resource">
+               name="%command.name.3">
          </command>
          <command
                defaultHandler="org.ddialliance.ddieditor.ui.command.DeleteAllDDI3"
                id="org.ddialliance.ddieditor.ui.command.DeleteAllDDI3"
-               name="Delete All DDI3 Resources">
+               name="%command.name.4">
          </command>
       </extension>
       <extension
@@ -198,26 +258,26 @@
                locationURI="menu:org.eclipse.ui.main.menu">
             <menu
                   id="labelMenu"
-                  label="File"
-                  mnemonic="F">                  
+                  label="%menu.label"
+                  mnemonic="%menu.mnemonic">                  
                <menu
                      icon="icons/import_wiz.gif"
                      id="filemenu-importmenu"
-                     label="Import"
-                     mnemonic="I">                     
+                     label="%menu.label.0"
+                     mnemonic="%menu.mnemonic.0">                     
                <command
                      commandId="org.ddialliance.ddieditor.ui.command.OpenDDI3File"
                      icon="icons/project_open.gif"
-                     label="Ingest DDI3 File"
-                     mnemonic="O"
+                     label="%command.label"
+                     mnemonic="%command.mnemonic"
                      style="push">
                </command>
                <command
                      commandId="org.ddialliance.ddieditor.ui.command.NewDDI3File"
                      icon="icons/newfile_wiz.gif"
                      id="new-ddi-3-file"
-                     label="New DDI 3 File"
-                     mnemonic="N"
+                     label="%command.label.0"
+                     mnemonic="%command.mnemonic.0"
                      style="push">
                </command>
                </menu>
@@ -227,14 +287,14 @@
                </separator>
                <command
                      commandId="org.eclipse.ui.file.close"
-                     label="Close"
-                     mnemonic="C"
+                     label="%command.label.1"
+                     mnemonic="%command.mnemonic.1"
                      style="push">
                </command>
                <command
                      commandId="org.eclipse.ui.file.closeAll"
                      id="l"
-                     label="Close All"
+                     label="%command.label.2"
                      style="push">
                </command>
                <separator
@@ -244,14 +304,14 @@
                <command
                      commandId="org.eclipse.ui.file.save"
                      id="save"
-                     label="Save"
-                     mnemonic="S"
+                     label="%command.label.3"
+                     mnemonic="%command.mnemonic.2"
                      style="push">
                </command>
                <command
                      commandId="org.eclipse.ui.file.saveAll"
-                     label="Save All"
-                     mnemonic="e"
+                     label="%command.label.4"
+                     mnemonic="%command.mnemonic.3"
                      style="push">
                </command>
                <separator
@@ -260,21 +320,21 @@
                </separator>
                <menu
                      icon="icons/export_wiz.gif"
-                     label="Export"
-                     mnemonic="E">
+                     label="%menu.label.1"
+                     mnemonic="%menu.mnemonic.1">
                   <command
                         commandId="org.ddialliance.ddieditor.ui.command.ExportDDI3File"
                         icon="icons/text.gif"
                         id="ddi-export"
-                        label="DDI3"
-                        mnemonic="D"
+                        label="%command.label.5"
+                        mnemonic="%command.mnemonic.4"
                         style="push">
                   </command>
                   <command
                         commandId="org.ddialliance.ddieditor.ui.command.ExportResourceList"
                         icon="icons/usage.gif"
-                        label="Resource list"
-                        mnemonic="r"
+                        label="%command.label.6"
+                        mnemonic="%command.mnemonic.5"
                         style="push">
                   </command>
                </menu>
@@ -285,15 +345,15 @@
                <command
                      commandId="org.ddialliance.ddieditor.ui.command.DeleteSingleDDI3"
                      icon="icons/delete_obj.gif"
-                     label="Delete"
-                     mnemonic="D"
+                     label="%command.label.7"
+                     mnemonic="%command.mnemonic.6"
                      style="push">
                </command>
                <command
                      commandId="org.ddialliance.ddieditor.ui.command.DeleteAllDDI3"
                      icon="icons/delete_obj.gif"
-                     label="Delete All"
-                     mnemonic="e"
+                     label="%command.label.8"
+                     mnemonic="%command.mnemonic.7"
                      style="push">
                </command>
                <separator
@@ -302,31 +362,31 @@
                <command
                      commandId="org.eclipse.ui.file.exit"
                      id="exit"
-                     label="Exit"
-                     mnemonic="x"
+                     label="%command.label.9"
+                     mnemonic="%command.mnemonic.8"
                      style="push">
                </command>
             </menu>
             <menu
                   id="window"
-                  label="Window"
-                  mnemonic="W">
+                  label="%menu.label.2"
+                  mnemonic="%menu.mnemonic.2">
                <command
                      commandId="org.eclipse.ui.window.preferences"
                      icon="icons/properties.gif"
-                     label="Perefrences"
-                     mnemonic="P"
+                     label="%command.label.10"
+                     mnemonic="%command.mnemonic.9"
                      style="push">
                </command>
             </menu>
             <menu
                   id="hlp"
-                  label="Help"
-                  mnemonic="H">
+                  label="%menu.label.3"
+                  mnemonic="%menu.mnemonic.3">
                <command
                      commandId="org.eclipse.ui.help.aboutAction"
-                     label="About"
-                     mnemonic="A"
+                     label="%command.label.11"
+                     mnemonic="%command.mnemonic.10"
                      style="push">
                </command>
             </menu>
@@ -339,5 +399,16 @@
 				</command>
 			</toolbar>
 		</menuContribution>
-      </extension>      
+      </extension>
+      <extension
+            point="org.eclipse.ui.intro">
+         <intro
+               class="org.ddialliance.ddieditor.ui.IntroPart"
+               id="ddieditor-ui.intro">
+         </intro>
+         <introProductBinding
+               introId="ddieditor-ui.intro"
+               productId="org.ddialliance.ddieditor.ui.product">
+         </introProductBinding>
+      </extension>
 </plugin>
