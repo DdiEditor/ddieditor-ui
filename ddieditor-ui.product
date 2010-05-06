@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?pde version="3.4"?>
+<?pde version="3.5"?>
 
-<product name="DDI Editor" id="DDIEditor.product" application="DDIEditor.application" version="1.0.0" useFeatures="false">
+<product name="DDI Editor" uid="ddieditor-ui.product" id="ddieditor-ui.product" application="ddieditor-ui.application" useFeatures="false" includeLaunchers="false">
 
    <aboutInfo>
-      <image path="/ddieditor-ui/icons/alt_about.gif"/>
+      <image path="/ddieditor-ui/icons/ddalogo.gif"/>
       <text>
-         DDI Editor (Beta Version)
-
-DDI Editor UI Version: 1.0.0
-DDI Manager Version: 1.0.0
+         %Bundle.aboutText
       </text>
    </aboutInfo>
 
@@ -17,19 +14,19 @@ DDI Manager Version: 1.0.0
    </configIni>
 
    <launcherArgs>
-      <programArgs>-Dlog4j.configuration=resources/log.properties
- -clean -console</programArgs>
+      <programArgs>-consoleLog</programArgs>
+      <programArgsWin>-Djava.library.path=%ORACLE_BERKELEY_DB_XML_HOME%\lib</programArgsWin>
+      <vmArgsLin>-Djava.library.path=/tools/dbxml-2.5.13/install/lib</vmArgsLin>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
-   <windowImages/>
+   <windowImages i16="/ddieditor-ui/icons/dda_logo_16.ico" i32="/ddieditor-ui/icons/dda_logo_32.ico"/>
 
    <splash
-      location="DDIEditor"
       startupProgressRect="5,275,445,15"
       startupMessageRect="7,252,445,20"
       startupForegroundColor="000000" />
-   <launcher name="ddieditor">
+   <launcher>
       <solaris/>
       <win useIco="false">
          <bmp/>
@@ -40,73 +37,114 @@ DDI Manager Version: 1.0.0
    </vm>
 
    <plugins>
-      <plugin id="DDIEditor"/>
       <plugin id="com.ibm.icu"/>
-      <plugin id="com.instantiations.assist.eclipse.fragment.swt" fragment="true"/>
-      <plugin id="com.instantiations.assist.eclipse.fragment.ui.workbench" fragment="true"/>
-      <plugin id="com.instantiations.common.core"/>
-      <plugin id="com.instantiations.eclipse.debug"/>
-      <plugin id="com.instantiations.eclipse.util"/>
-      <plugin id="com.windowtester.runtime"/>
-      <plugin id="com.windowtester.swing.runtime"/>
-      <plugin id="com.windowtester.swt.platform.ext"/>
-      <plugin id="com.windowtester.swt.runtime"/>
-      <plugin id="com.windowtester.swt.runtime.win32" fragment="true"/>
-      <plugin id="ddieditor_jar"/>
+      <plugin id="com.instantiations.designer.core.lib"/>
+      <plugin id="ddieditor"/>
+      <plugin id="ddieditor-ui"/>
+      <plugin id="javax.servlet"/>
+      <plugin id="javax.servlet.jsp"/>
+      <plugin id="lib-java"/>
+      <plugin id="org.apache.ant"/>
+      <plugin id="org.apache.commons.el"/>
+      <plugin id="org.apache.commons.logging"/>
+      <plugin id="org.apache.jasper"/>
+      <plugin id="org.apache.lucene"/>
+      <plugin id="org.apache.lucene.analysis"/>
+      <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.databinding.observable"/>
+      <plugin id="org.eclipse.core.databinding.property"/>
       <plugin id="org.eclipse.core.expressions"/>
       <plugin id="org.eclipse.core.filesystem"/>
+      <plugin id="org.eclipse.core.filesystem.aix.ppc" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.hpux.PA_RISC" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.hpux.ia64_32" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.linux.ppc" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.linux.x86" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.linux.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.macosx" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.qnx.x86" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.solaris.sparc" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.net"/>
+      <plugin id="org.eclipse.core.net.linux.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.net.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.net.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.resources"/>
       <plugin id="org.eclipse.core.resources.compatibility" fragment="true"/>
       <plugin id="org.eclipse.core.resources.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.core.runtime"/>
       <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
       <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
+      <plugin id="org.eclipse.core.variables"/>
+      <plugin id="org.eclipse.ecf"/>
+      <plugin id="org.eclipse.ecf.filetransfer"/>
+      <plugin id="org.eclipse.ecf.identity"/>
+      <plugin id="org.eclipse.ecf.provider.filetransfer"/>
+      <plugin id="org.eclipse.ecf.provider.filetransfer.ssl" fragment="true"/>
+      <plugin id="org.eclipse.ecf.ssl" fragment="true"/>
       <plugin id="org.eclipse.equinox.app"/>
       <plugin id="org.eclipse.equinox.common"/>
-      <plugin id="org.eclipse.equinox.launcher"/>
-      <plugin id="org.eclipse.equinox.launcher.carbon.macosx" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.gtk.linux.ppc" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.gtk.linux.x86" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.gtk.linux.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.gtk.solaris.sparc" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.motif.aix.ppc" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.motif.hpux.ia64_32" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.win32.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.win32.win32.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.wpf.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.equinox.concurrent"/>
+      <plugin id="org.eclipse.equinox.http.jetty"/>
+      <plugin id="org.eclipse.equinox.http.servlet"/>
+      <plugin id="org.eclipse.equinox.p2.artifact.repository"/>
+      <plugin id="org.eclipse.equinox.p2.core"/>
+      <plugin id="org.eclipse.equinox.p2.engine"/>
+      <plugin id="org.eclipse.equinox.p2.jarprocessor"/>
+      <plugin id="org.eclipse.equinox.p2.metadata"/>
+      <plugin id="org.eclipse.equinox.p2.metadata.repository"/>
+      <plugin id="org.eclipse.equinox.p2.repository"/>
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.registry"/>
-      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
+      <plugin id="org.eclipse.equinox.security"/>
+      <plugin id="org.eclipse.equinox.security.macosx" fragment="true"/>
+      <plugin id="org.eclipse.equinox.security.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.help"/>
+      <plugin id="org.eclipse.help.base"/>
       <plugin id="org.eclipse.jface"/>
       <plugin id="org.eclipse.jface.databinding"/>
+      <plugin id="org.eclipse.jface.text"/>
       <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.swt"/>
       <plugin id="org.eclipse.swt.carbon.macosx" fragment="true"/>
+      <plugin id="org.eclipse.swt.cocoa.macosx" fragment="true"/>
+      <plugin id="org.eclipse.swt.cocoa.macosx.x86_64" fragment="true"/>
       <plugin id="org.eclipse.swt.gtk.linux.ppc" fragment="true"/>
+      <plugin id="org.eclipse.swt.gtk.linux.s390" fragment="true"/>
+      <plugin id="org.eclipse.swt.gtk.linux.s390x" fragment="true"/>
       <plugin id="org.eclipse.swt.gtk.linux.x86" fragment="true"/>
       <plugin id="org.eclipse.swt.gtk.linux.x86_64" fragment="true"/>
       <plugin id="org.eclipse.swt.gtk.solaris.sparc" fragment="true"/>
+      <plugin id="org.eclipse.swt.gtk.solaris.x86" fragment="true"/>
       <plugin id="org.eclipse.swt.motif.aix.ppc" fragment="true"/>
+      <plugin id="org.eclipse.swt.motif.hpux.PA_RISC" fragment="true"/>
       <plugin id="org.eclipse.swt.motif.hpux.ia64_32" fragment="true"/>
+      <plugin id="org.eclipse.swt.motif.linux.x86" fragment="true"/>
+      <plugin id="org.eclipse.swt.motif.solaris.sparc" fragment="true"/>
+      <plugin id="org.eclipse.swt.photon.qnx.x86" fragment="true"/>
       <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.swt.win32.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.swt.wpf.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.text"/>
       <plugin id="org.eclipse.ui"/>
       <plugin id="org.eclipse.ui.carbon" fragment="true"/>
+      <plugin id="org.eclipse.ui.cocoa" fragment="true"/>
+      <plugin id="org.eclipse.ui.forms"/>
+      <plugin id="org.eclipse.ui.ide"/>
+      <plugin id="org.eclipse.ui.intro"/>
+      <plugin id="org.eclipse.ui.views"/>
+      <plugin id="org.eclipse.ui.win32" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench"/>
-      <plugin id="org.junit"/>
+      <plugin id="org.mortbay.jetty.server"/>
+      <plugin id="org.mortbay.jetty.util"/>
+      <plugin id="util"/>
    </plugins>
+
 
 </product>
