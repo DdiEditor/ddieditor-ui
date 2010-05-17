@@ -20,3 +20,5 @@ Import-Package:
  org.eclipse.nebula.cwt.v,
  org.eclipse.nebula.widgets.cdatetime
 Bundle-ClassPath: bin/
+Bundle-Activator: org.ddialliance.ddieditor.ui.Activator
+Bundle-ActivationPolicy: lazy
