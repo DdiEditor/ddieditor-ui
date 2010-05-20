@@ -47,8 +47,7 @@ public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 		if (currentPerspective == null
 				|| !currentPerspective.getId().equals(dedicatedPerspectiveId)) {
 			// load settings
-			IPreferenceStore store = Activator.getDefault()
-					.getPreferenceStore();
+			IPreferenceStore store = PlatformUI.getPreferenceStore();
 
 			String keyToggle = dedicatedPerspectiveId + "perspective.toggle";
 			boolean propertyToggle = store.getBoolean(keyToggle);
