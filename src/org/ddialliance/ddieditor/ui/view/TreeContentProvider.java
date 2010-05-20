@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.ControlConstructSchemeDocumentImpl;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
@@ -75,8 +78,8 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				return PersistenceManager.getInstance().getResources()
 						.toArray();
 			} else if (contentType.equals(ViewContentType.ConceptContent)) {
-				return new ConceptSchemeDao().getLightXmlObject(null, null, null, null)
-						.toArray();
+				return new ConceptSchemeDao().getLightXmlObject(null, null,
+						null, null).toArray();
 			} else if (contentType.equals(ViewContentType.CodeContent)) {
 				return CodeSchemes.getCodeSchemesLight(null, null).toArray();
 			} else if (contentType.equals(ViewContentType.QuestionContent)) {
@@ -84,10 +87,22 @@ public class TreeContentProvider implements IStructuredContentProvider,
 						.toArray();
 			} else if (contentType
 					.equals(ViewContentType.InstrumentationContent)) {
-				MaintainableLightLabelQueryResult maLightLabelQueryResult = DdiManager
-						.getInstance().getInstrumentLabel(null, null, null,
-								null);
-				return new Object[] { maLightLabelQueryResult };
+				LightXmlObjectListDocument listDoc = DdiManager
+						.getInstance()
+						.getControlConstructSchemesLight(null, null, null, null);
+				Object[] result = new Object[listDoc.getLightXmlObjectList()
+						.getLightXmlObjectList().size()];
+				int count = 0;
+				for (LightXmlObjectType lightXmlObject : listDoc
+						.getLightXmlObjectList().getLightXmlObjectList()) {
+					result[count] = DdiManager.getInstance()
+							.getInstrumentLabel(lightXmlObject.getId(),
+									lightXmlObject.getVersion(),
+									lightXmlObject.getParentId(),
+									lightXmlObject.getParentVersion());
+					count++;
+				}
+				return result;
 			}
 		} catch (Exception e) {
 			String errMess = Messages.getString("View.mess.GetElementError"); //$NON-NLS-1$
@@ -164,8 +179,8 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			try {
 				// concept scheme
 				if (lightXmlTypeLocalname.equals("ConceptScheme")) {
-					contentList = new ConceptDao().getLightXmlObject(lightXmlObjectType)
-							.toArray();
+					contentList = new ConceptDao().getLightXmlObject(
+							lightXmlObjectType).toArray();
 				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
 					contentList = new QuestionItemDao().getLightXmlObject(
 							lightXmlObjectType).toArray();
