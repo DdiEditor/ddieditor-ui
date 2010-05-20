@@ -47,6 +47,10 @@ public enum ElementType {
 			"studyunit__StudyUnit", "", StudyUnitEditor.ID, "stdu",
 			"InfoView.label.studyUnitLabel.StudyUnit", "OPEN"),
 
+	// universe
+	UNIVERSE("Universe", null, null, "univ", "", ""), UNIVERSE_SCHEME(
+			"UniverseScheme", null, null, "unis", "", ""),
+
 	// concept
 	CONCEPT_SCHEME("ConceptScheme", ConceptsPerspective.ID,
 			ConceptSchemeEditor.ID, "cons",
@@ -60,6 +64,10 @@ public enum ElementType {
 			"QuestionItemView.label.questionSchemeLabel.QuesitionScheme", ""), QUESTION_ITEM(
 			"QuestionItem", QuestionsPerspective.ID, QuestionItemEditor.ID,
 			"quei", "QuestionItemView.label.questionItemLabel.QuestionItem", ""),
+
+	// category
+	CATEGORY_SCHEME("CategoryScheme", null, null, "cats", "", ""), CATEGORY(
+			"Category", null, null, "cate", "", ""),
 
 	// instrument
 	INSTRUMENT("Instrument", InstrumentPerspective.ID, InstrumentEditor.ID,
@@ -89,7 +97,10 @@ public enum ElementType {
 	// code
 	CODE_SCHEME("CodeScheme", CodeView.ID, CodeSchemeEditor.ID, "cods",
 			"codeView.label.codeShemeLabel.CodeScheme", ""), CODE("Code",
-			CodeView.ID, CodeEditor.ID, "code", "", "");
+			CodeView.ID, CodeEditor.ID, "code", "", ""),
+	// variable
+	VARIABLE_SCHEME("Variable", null, null, "vars", "", ""), VARIABLE(
+			"Variable", null, null, "vari", "", "");
 
 	private String elementName;
 	private String perspectiveId;
