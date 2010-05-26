@@ -645,7 +645,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public void createNameInput(Group group, String labelText,
-			List<NameType> nameList, String parentLabel) {
+			List<NameType> nameList, String parentLabel) throws DDIFtpException {
 		NameType name = (NameType) XmlBeansUtil.getDefaultLangElement(nameList);
 
 		Text nameTxt = createTextInput(group, labelText, name == null ? ""
@@ -668,7 +668,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public void createStructuredStringInput(Group group, String labelText,
-			List<StructuredStringType> structuredStringList, String parentLabel) {
+			List<StructuredStringType> structuredStringList, String parentLabel) throws DDIFtpException {
 		StructuredStringType structuredString = (StructuredStringType) XmlBeansUtil
 				.getDefaultLangElement(structuredStringList);
 
@@ -688,7 +688,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			structuredString.setLang(Translator.getLocale().getISO3Country());
 		}
 		styledText.addModifyListener(new StructuredStringTypeModyfiListener(
-				structuredString, structuredStringList, editorStatus));
+				structuredString, editorStatus));
 
 		createTranslation(group, Messages.getString("editor.button.translate"),
 				structuredStringList, parentLabel);
