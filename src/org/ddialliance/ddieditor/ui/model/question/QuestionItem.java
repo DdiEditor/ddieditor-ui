@@ -17,6 +17,7 @@ import java.util.List;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.LiteralTextDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.LiteralTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.NumericDomainDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.NumericDomainType;
@@ -33,8 +34,10 @@ import org.ddialliance.ddieditor.ui.editor.question.ResponseTypeDetail.RESPONSE_
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
+import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -53,18 +56,17 @@ public class QuestionItem extends Model {
 	 * @param parentVersion
 	 * @throws Exception
 	 */
-	public QuestionItem(QuestionItemDocument questionItemDocument, String parentId, String parentVersion)
-			throws Exception {
-		
-		super(questionItemDocument.getQuestionItem(), parentId, parentVersion);
-		
-		if (questionItemDocument == null) {
+	public QuestionItem(QuestionItemDocument doc, String parentId, String parentVersion) throws Exception {
+
+		super(doc.getQuestionItem(), parentId, parentVersion);
+
+		if (doc == null) {
 			this.doc = QuestionItemDocument.Factory.newInstance();
 			// add id and version
 			setId("");
 			setVersion("");
 		} else {
-			this.doc = questionItemDocument;
+			this.doc = doc;
 		}
 	}
 
@@ -107,7 +109,7 @@ public class QuestionItem extends Model {
 		}
 		return conceptRef;
 	}
-	
+
 	public ReferenceType getConceptReferenceType() {
 		List<ReferenceType> conceptReferenceList = doc.getQuestionItem().getConceptReferenceList();
 		if (conceptReferenceList.isEmpty()) {
@@ -117,7 +119,7 @@ public class QuestionItem extends Model {
 		}
 		return conceptReferenceList.get(0);
 	}
-	
+
 	/**
 	 * Set Concept reference
 	 * 
@@ -137,50 +139,25 @@ public class QuestionItem extends Model {
 	}
 
 	/**
-	 * Get text of Question Item corresponding to default (original) language.
+	 * Get Question Items
 	 * 
-	 * @return String
+	 * @return list of dynamic texts
 	 * @throws DDIFtpException
 	 */
-	public List<StructuredStringType> getText() {
-
-		boolean found = false;
-		DynamicTextType dynamicText = null;
-		List<DynamicTextType> dynamicTextList = doc.getQuestionItem().getQuestionTextList();
-		for (int i = 0; i < dynamicTextList.size(); i++) {
-			dynamicText = dynamicTextList.get(i);
-			if (dynamicText == null) {
-				return null;
-			}
-			if (XmlBeansUtil.isDefaultLangElement(dynamicText)) {
-				found = true;
-				break;
-			}
+	public List<DynamicTextType> getQuestionText() throws DDIFtpException {
+		if (doc.getQuestionItem().getQuestionTextList().isEmpty() && create) {
+			
+			DynamicTextType dynamicText = doc.getQuestionItem().addNewQuestionText();
+			TextType textType = dynamicText.addNewText();
+			XmlBeansUtil.addTranslationAttributes(dynamicText, Translator
+			.getLocaleLanguage(), false, true);
+			LiteralTextType lTextType = (LiteralTextType) textType.substitute(LiteralTextDocument.type
+					.getDocumentElementName(), LiteralTextType.type);
+			lTextType.addNewText();
 		}
-		if (!found) {
-			return null;
-		}
-
-		List<LiteralTextType> LiteralTextList = new ArrayList<LiteralTextType>();		
-		for (TextType test : dynamicText.getTextList()) {
-			if (test instanceof LiteralTextType) {
-				LiteralTextList.add((LiteralTextType) test);
-			} else {
-				// Conditional Text Type
-				log.debug("Conditional Text Type currently not supported");
-				return null;
-			}
-		}
-
-		List<StructuredStringType> StructuredStringTypeList = new ArrayList<StructuredStringType>();
-		for (LiteralTextType literalTextType : LiteralTextList) {
-			if (literalTextType.getText() != null) {
-				StructuredStringTypeList.add(literalTextType.getText());
-				return StructuredStringTypeList;
-			}
-		}
-		return null;
+		return(doc.getQuestionItem().getQuestionTextList());
 	}
+
 
 	/**
 	 * Get Response Domain of Question Item.
@@ -190,7 +167,7 @@ public class QuestionItem extends Model {
 	public RepresentationType getResponseDomain() {
 		return doc.getQuestionItem().getResponseDomain();
 	}
-	
+
 	/**
 	 * Set Question Item Code Response Domain
 	 * 
@@ -230,8 +207,10 @@ public class QuestionItem extends Model {
 	/**
 	 * Set Question Item Numeric Response Domain
 	 * 
-	 * @param type (integer or float)
-	 * @param decimalPosition (not used if integer)
+	 * @param type
+	 *            (integer or float)
+	 * @param decimalPosition
+	 *            (not used if integer)
 	 * @return RepresentationType
 	 */
 	public RepresentationType setNumericResponseDomain(NumericTypeCodeType.Enum type, BigInteger decimalPosition) {
@@ -240,16 +219,14 @@ public class QuestionItem extends Model {
 			doc.getQuestionItem().unsetResponseDomain();
 		}
 		RepresentationType rt = doc.getQuestionItem().addNewResponseDomain();
-		NumericDomainType ndt = (NumericDomainType) rt.substitute(NumericDomainDocument.type
-				.getDocumentElementName(), NumericDomainType.type);
+		NumericDomainType ndt = (NumericDomainType) rt.substitute(NumericDomainDocument.type.getDocumentElementName(),
+				NumericDomainType.type);
 		ndt.setType(type);
 		if (type == NumericTypeCodeType.FLOAT) {
 			ndt.setDecimalPositions(decimalPosition);
 		}
 		return ndt;
 	}
-
-
 
 	/**
 	 * Set new Question Item Response Domain
@@ -319,7 +296,8 @@ public class QuestionItem extends Model {
 
 		// Check if a Response Domain has been given
 		if (doc.getQuestionItem().getResponseDomain() == null
-				|| doc.getQuestionItem().getResponseDomain().getClass().getSimpleName().equals("RepresentationTypeImpl")) {
+				|| doc.getQuestionItem().getResponseDomain().getClass().getSimpleName()
+						.equals("RepresentationTypeImpl")) {
 			throw new Exception(Messages.getString("QuestionItem.mess.QuestionResponseTypeHasNotBeenSpecified")); //$NON-NLS-1$
 		}
 		// Check if Language has been given for all Question Texts
@@ -336,15 +314,20 @@ public class QuestionItem extends Model {
 		}
 		return; // No error found:
 	}
-	
+
 	@Override
 	public void executeChange(Object value, Class<?> type) throws Exception {
 		// Set Concept reference
 		if (type.equals(ReferenceType.class)) {
 			ReferenceType ref = getConceptReferenceType();
 			ModelAccessor.setReference(ref, ((LightXmlObjectType) value));
+		} else if (type.equals(ModelIdentifingType.Type_A.class)) {
+			DynamicTextType questionText = (DynamicTextType) XmlBeansUtil.getDefaultLangElement(getQuestionText());			
+			LiteralTextType lTextType = (LiteralTextType) questionText.getTextList().get(0).substitute(LiteralTextDocument.type
+					.getDocumentElementName(), LiteralTextType.type);			
+			XmlBeansUtil.setTextOnMixedElement(lTextType.getText(), (String) value);
 		} else {
-			log.debug("******** Class type not supported: "+type+" ********");
+			log.debug("******** Class type not supported: " + type + " ********");
 		}
 	}
 }
