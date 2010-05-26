@@ -119,17 +119,22 @@ public class RepeatUntilEditor extends Editor {
 		Group group2 = createGroup(tabItem2, Messages
 				.getString("editor.label.description"));
 
-		createNameInput(
-				group2,
-				Messages.getString("editor.label.name"),
-				modelImpl.getDocument().getRepeatUntil().getConstructNameList(),
-				modelImpl.getDocument().getRepeatUntil().getId());
+		try {
+			createNameInput(
+					group2,
+					Messages.getString("editor.label.name"),
+					modelImpl.getDocument().getRepeatUntil().getConstructNameList(),
+					modelImpl.getDocument().getRepeatUntil().getId());
 
 		createStructuredStringInput(group2, Messages
 				.getString("editor.label.description"), modelImpl.getDocument()
 				.getRepeatUntil().getDescriptionList(), modelImpl.getDocument()
 				.getRepeatUntil().getId());
-
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// id tab
 		createPropertiesTab(getTabFolder());
 

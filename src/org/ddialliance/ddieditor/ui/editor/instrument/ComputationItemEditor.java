@@ -15,6 +15,7 @@ import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.ComputationItem;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -115,15 +116,20 @@ public class ComputationItemEditor extends Editor {
 		Group group2 = createGroup(tabItem2, Messages
 				.getString("editor.label.description"));
 
-		createNameInput(group2, Messages.getString("editor.label.name"),
-				modelImpl.getDocument().getComputationItem()
-						.getConstructNameList(), modelImpl.getDocument()
-						.getComputationItem().getId());
+		try {
+			createNameInput(group2, Messages.getString("editor.label.name"),
+					modelImpl.getDocument().getComputationItem()
+							.getConstructNameList(), modelImpl.getDocument()
+							.getComputationItem().getId());
 
 		createStructuredStringInput(group2, Messages
 				.getString("editor.label.description"), modelImpl.getDocument()
 				.getComputationItem().getDescriptionList(), modelImpl
 				.getDocument().getComputationItem().getId());
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// id tab
 		createPropertiesTab(getTabFolder());

@@ -21,6 +21,7 @@ import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.Instrument;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -107,16 +108,21 @@ public class InstrumentEditor extends Editor {
 		Group group2 = createGroup(tabItem2, Messages
 				.getString("editor.label.description"));
 
-		createNameInput(
-				group2,
-				Messages.getString("editor.label.name"),
-				modelImpl.getDocument().getInstrument().getInstrumentNameList(),
-				modelImpl.getDocument().getInstrument().getId());
+		try {
+			createNameInput(
+					group2,
+					Messages.getString("editor.label.name"),
+					modelImpl.getDocument().getInstrument().getInstrumentNameList(),
+					modelImpl.getDocument().getInstrument().getId());
 
 		createStructuredStringInput(group2, Messages
 				.getString("editor.label.description"), modelImpl.getDocument()
 				.getInstrument().getDescriptionList(), modelImpl.getDocument()
 				.getInstrument().getId());
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// id - version tab
 		createPropertiesTab(getTabFolder());

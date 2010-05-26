@@ -120,17 +120,23 @@ public class RepeatWhileEditor extends Editor {
 		Group group2 = createGroup(tabItem2, Messages
 				.getString("editor.label.description"));
 
-		createNameInput(
-				group2,
-				Messages.getString("editor.label.name"),
-				modelImpl.getDocument().getRepeatWhile().getConstructNameList(),
-				modelImpl.getDocument().getRepeatWhile().getId());
+		try {
+			createNameInput(
+					group2,
+					Messages.getString("editor.label.name"),
+					modelImpl.getDocument().getRepeatWhile().getConstructNameList(),
+					modelImpl.getDocument().getRepeatWhile().getId());
 
 		createStructuredStringInput(group2, Messages
 				.getString("editor.label.description"), modelImpl.getDocument()
 				.getRepeatWhile().getDescriptionList(), modelImpl.getDocument()
 				.getRepeatWhile().getId());
 
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// id tab
 		createPropertiesTab(getTabFolder());
 

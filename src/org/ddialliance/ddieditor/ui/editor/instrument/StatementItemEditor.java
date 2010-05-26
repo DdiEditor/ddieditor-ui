@@ -143,10 +143,11 @@ public class StatementItemEditor extends Editor implements
 		Group group2 = createGroup(tabItem2, Messages
 				.getString("editor.label.description"));
 
-		createNameInput(group2, Messages.getString("editor.label.name"),
-				modelImpl.getDocument().getStatementItem()
-						.getConstructNameList(), modelImpl.getDocument()
-						.getStatementItem().getId());
+		try {
+			createNameInput(group2, Messages.getString("editor.label.name"),
+					modelImpl.getDocument().getStatementItem()
+							.getConstructNameList(), modelImpl.getDocument()
+							.getStatementItem().getId());
 
 		// description
 		createStructuredStringInput(group2, Messages
@@ -154,6 +155,11 @@ public class StatementItemEditor extends Editor implements
 				.getStatementItem().getDescriptionList(), modelImpl
 				.getDocument().getStatementItem().getId());
 
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// id tab
 		createPropertiesTab(getTabFolder());
 
