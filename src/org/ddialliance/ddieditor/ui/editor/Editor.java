@@ -688,7 +688,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			structuredString.setLang(Translator.getLocale().getISO3Country());
 		}
 		styledText.addModifyListener(new StructuredStringTypeModyfiListener(
-				structuredString, editorStatus));
+				structuredString, structuredStringList, editorStatus));
 
 		createTranslation(group, Messages.getString("editor.button.translate"),
 				structuredStringList, parentLabel);
