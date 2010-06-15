@@ -29,6 +29,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.TextualTypeImpl;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.editor.question.ResponseTypeDetail.RESPONSE_TYPES;
 import org.ddialliance.ddieditor.ui.model.Language;
@@ -295,11 +296,23 @@ public class QuestionItem extends Model {
 		log.debug("Question Item validation performed");
 
 		// Check if a Response Domain has been given
-		if (doc.getQuestionItem().getResponseDomain() == null
-				|| doc.getQuestionItem().getResponseDomain().getClass().getSimpleName()
-						.equals("RepresentationTypeImpl")) {
+		RepresentationType rt = getResponseDomain();
+		if (rt == null) {
 			throw new Exception(Messages.getString("QuestionItem.mess.QuestionResponseTypeHasNotBeenSpecified")); //$NON-NLS-1$
 		}
+		String sn = rt.getClass().getSimpleName();
+		if (sn.equals("CodeDomainTypeImpl")) {
+			try {
+				XmlBeansUtil.getTextOnMixedElement(rt);
+			} catch (Exception e) {
+				throw new Exception(Messages.getString("QuestionItem.mess.QuestionResponseCodeReferenceNotBeenSpecified")); //$NON-NLS-1$
+			}
+		} else if (sn.equals("TextDomainTypeImpl")) {
+			// Nothing to check
+		} else if (sn.equals("NumericDomainTypeImpl")) {
+			// Nothing to check
+		}
+		
 		// Check if Language has been given for all Question Texts
 		DynamicTextType dynamicText = null;
 		List<DynamicTextType> dynamicTextList = doc.getQuestionItem().getQuestionTextList();
