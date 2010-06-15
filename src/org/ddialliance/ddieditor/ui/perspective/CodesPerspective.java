@@ -10,7 +10,8 @@ package org.ddialliance.ddieditor.ui.perspective;
  * $Revision$
  */
 
-import org.ddialliance.ddieditor.ui.view.ConceptView;
+//import org.ddialliance.ddieditor.ui.view.ConceptView;
+import org.ddialliance.ddieditor.ui.view.CodeView;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -23,10 +24,10 @@ public class CodesPerspective implements IPerspectiveFactory {
 
 	public void createInitialLayout(IPageLayout layout) {
 		if (log.isDebugEnabled()) {
-			log.debug("Create");	
+			log.debug("Create +++++++++");	
 		}
 		addViewShortcuts(layout);
-		layout.addView(ConceptView.ID, IPageLayout.LEFT, 0.50f, layout.getEditorArea());
+		layout.addView(CodeView.ID, IPageLayout.LEFT, 0.50f, layout.getEditorArea());
 		addFastViews(layout);
 	}
 
