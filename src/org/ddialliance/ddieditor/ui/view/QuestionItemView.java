@@ -41,11 +41,4 @@ public class QuestionItemView extends View {
 				Arrays.asList(ElementType.QUESTION_ITEM));
 	}
 
-	public void createPartControl(Composite parent) {
-
-		log.debug("");
-
-		super.createPartControl(parent);
-
-	}
 }
