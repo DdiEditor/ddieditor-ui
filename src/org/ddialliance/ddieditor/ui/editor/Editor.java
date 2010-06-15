@@ -79,7 +79,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
 	public EditorStatus editorStatus = new EditorStatus();
-	private IEditorSite site;
 
 	private String title = "";
 	private String description = "";
@@ -251,7 +250,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		} catch (Exception e1) {
 			DialogUtil
 					.errorDialog(
-							site,
+							(IEditorSite )getSite(),
 							ID,
 							Messages.getString("ErrorTitle"),
 							Messages
@@ -271,7 +270,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
-			DialogUtil.errorDialog(site, ID, Messages.getString("ErrorTitle"),
+			DialogUtil.errorDialog((IEditorSite )getSite(), ID, Messages.getString("ErrorTitle"),
 					Messages.getString("Editor.mess.ErrorDuringSave"), e);
 			return;
 		}
@@ -283,7 +282,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public void doSaveAs() {
 		MessageDialog
 				.openError(
-						site.getShell(),
+						getSite().getShell(),
 						Messages.getString("ErrorTitle"), Messages.getString("Editor.mess.SaveAsNotSupported")); //$NON-NLS-1$
 	}
 
@@ -731,7 +730,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			referenceSelectionCombo.createPartControl(labelComposite,
 					composite, "", labelText, referenceList, preIdValue);
 		} catch (Exception e) {
-			ErrorDialog.openError(site.getShell(), Messages
+			ErrorDialog.openError(getSite().getShell(), Messages
 					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, e.getMessage(), e));
 		}
@@ -827,20 +826,17 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public EditorIdentification getEditorIdentification() {
-		return new EditorIdentification(ID, editorStatus, site);
+		return new EditorIdentification(ID, editorStatus);
 	}
 
 	public class EditorIdentification {
 		String ID;
 		EditorStatus editorStatus;
-		IEditorSite site;
 
-		public EditorIdentification(String iD, EditorStatus editorStatus,
-				IEditorSite site) {
+		public EditorIdentification(String iD, EditorStatus editorStatus) {
 			super();
 			ID = iD;
 			this.editorStatus = editorStatus;
-			this.site = site;
 		}
 
 		public String getID() {
@@ -852,7 +848,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 
 		public IEditorSite getSite() {
-			return site;
+			return (IEditorSite )getSite();
 		}
 	}
 
