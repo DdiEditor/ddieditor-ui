@@ -18,7 +18,7 @@
 
       ================================================================================-->
 <?xml-stylesheet type="text/xsl" href="dda_simple.xsl"?>
-<ns1:DDIInstance xsi:schemaLocation="ddi:instance:3_1 http://www.ddialliance.org/schema/ddi3.1/instance.xsd" id="dda-21432" version="1.0.0" agency="dda.dk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="ddi:instance:3_1" xmlns:d="ddi:datacollection:3_1" xmlns:s="ddi:studyunit:3_1" xmlns:r="ddi:reusable:3_1" xmlns:c="ddi:conceptualcomponent:3_1" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:p="ddi:physicaldataproduct:3_1" xmlns:l="ddi:logicalproduct:3_1" xmlns:pi="ddi:physicalinstance:3_0">
+<ns1:DDIInstance xsi:schemaLocation="ddi:instance:3_1 http://www.ddialliance.org/sites/default/files/schema/ddi3.1/instance.xsd" id="dda-21432" version="1.0.0" agency="dda.dk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="ddi:instance:3_1" xmlns:d="ddi:datacollection:3_1" xmlns:s="ddi:studyunit:3_1" xmlns:r="ddi:reusable:3_1" xmlns:c="ddi:conceptualcomponent:3_1" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:p="ddi:physicaldataproduct:3_1" xmlns:l="ddi:logicalproduct:3_1" xmlns:pi="ddi:physicalinstance:3_0">
   <s:StudyUnit id="dda-21432">
     <r:Citation>
       <r:Title xml:lang="da" translated="false" translatable="true">Default Study Unit</r:Title>
