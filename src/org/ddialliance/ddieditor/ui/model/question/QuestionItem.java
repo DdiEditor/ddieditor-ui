@@ -224,7 +224,13 @@ public class QuestionItem extends Model {
 				NumericDomainType.type);
 		ndt.setType(type);
 		if (type == NumericTypeCodeType.FLOAT) {
-			ndt.setDecimalPositions(decimalPosition);
+			if (decimalPosition != null) {
+				ndt.setDecimalPositions(decimalPosition);
+			}
+		} else {
+			if (ndt.getDecimalPositions() != null) {
+				ndt.unsetDecimalPositions();
+			}
 		}
 		return ndt;
 	}
@@ -259,7 +265,6 @@ public class QuestionItem extends Model {
 			NumericDomainType ndt = (NumericDomainType) rt.substitute(NumericDomainDocument.type
 					.getDocumentElementName(), NumericDomainType.type);
 			ndt.setType(null);
-			ndt.setDecimalPositions(null);
 			return ndt;
 		} else if (responseType == RESPONSE_TYPES.DATE) {
 			// TODO Support Date
