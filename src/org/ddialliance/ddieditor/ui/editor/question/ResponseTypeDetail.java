@@ -21,7 +21,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericTypeCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextDomainType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
+import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.FilteredItemsSelection;
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;
@@ -302,15 +302,18 @@ public class ResponseTypeDetail {
 						});
 						decimalPosition.addModifyListener(new ModifyListener() {
 							public void modifyText(final ModifyEvent e) {
-								log.debug(".modifyText(): "
-										+ decimalPosition.getText());
-								questionItem.setNumericResponseDomain(
-										NumericTypeCodeType.FLOAT,
-										new BigInteger(decimalPosition
-												.getText()));
+								log.debug(".modifyText(): " + decimalPosition.getText());
+								BigInteger pos = null;
+								if (decimalPosition.getText().length() > 0) {
+									pos = new BigInteger(decimalPosition.getText());
+								}
+								questionItem.setNumericResponseDomain(NumericTypeCodeType.FLOAT, pos);
 								editorStatus.setChanged();
 							}
 						});
+						questionItem.setNumericResponseDomain(
+								NumericTypeCodeType.FLOAT,
+								null);
 					} else {
 						if (decimalPositionLabel != null) {
 							decimalPositionLabel.dispose();
@@ -320,9 +323,9 @@ public class ResponseTypeDetail {
 						}
 						questionItem.setNumericResponseDomain(
 								NumericTypeCodeType.INTEGER, null);
-						editorStatus.setChanged();
 					}
 					parentLabelComposite.getParent().layout();
+					editorStatus.setChanged();
 				}
 			});
 			if (numericType.equals("Float")) {
@@ -341,6 +344,7 @@ public class ResponseTypeDetail {
 							.setText(((NumericDomainType) representationType)
 									.getDecimalPositions().toString());
 				}
+				editorStatus.setChanged();
 			}
 			parentLabelComposite.getParent().layout();
 			return;
@@ -372,7 +376,7 @@ public class ResponseTypeDetail {
 			// - Get available Code Schemes:
 			List<LightXmlObjectType> codeSchemeReferenceList = new ArrayList();
 			try {
-				codeSchemeReferenceList = CodeSchemes.getCodeSchemesLight("",
+				codeSchemeReferenceList = CodeSchemeDao.getCodeSchemesLight("",
 						"");
 			} catch (Exception e1) {
 				String errMess = MessageFormat
