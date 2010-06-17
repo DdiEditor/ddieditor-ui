@@ -112,20 +112,26 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 						getEditorIdentification()));
 
 		// then ref
-		MaintainableLightLabelQueryResult controlConstructRefListTemp = null;
+//		MaintainableLightLabelQueryResult controlConstructRefListTemp = null;
+//		try {
+//			controlConstructRefListTemp = DdiManager.getInstance()
+//					.getInstrumentLabel(null, null, null, null);
+//		} catch (DDIFtpException e) {
+//			DialogUtil.errorDialog(getSite().getShell(), ID, null, e
+//					.getMessage(), e);
+//		}
+		List<LightXmlObjectType> controlConstructRefList = null;
 		try {
-			controlConstructRefListTemp = DdiManager.getInstance()
-					.getInstrumentLabel(null, null, null, null);
-		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(getSite().getShell(), ID, null, e
-					.getMessage(), e);
-		}
-		List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
-		for (LinkedList<LightXmlObjectType> lightXmlObjectList : controlConstructRefListTemp
-				.getResult().values()) {
-			controlConstructRefList.addAll(lightXmlObjectList);
-		}
-		controlConstructRefListTemp = null;
+			controlConstructRefList = DdiManager.getInstance().getQuestionConstructsLight(null, null, null, null).getLightXmlObjectList().getLightXmlObjectList();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}//new ArrayList<LightXmlObjectType>();
+//		for (LinkedList<LightXmlObjectType> lightXmlObjectList : controlConstructRefListTemp
+//				.getResult().values()) {
+//			controlConstructRefList.addAll(lightXmlObjectList);
+//		}
+//		controlConstructRefListTemp = null;
 
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(group,
 				Messages.getString("IfThenElse.editor.thenref"), Messages

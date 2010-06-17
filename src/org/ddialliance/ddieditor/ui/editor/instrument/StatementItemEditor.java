@@ -95,8 +95,14 @@ public class StatementItemEditor extends Editor implements
 
 		// condition
 		Composite error = createErrorComposite(group, "");
-		ProgrammingLanguageCodeType programmingLanguageCode = modelImpl
-				.getProgrammingLanguageCode();
+		ProgrammingLanguageCodeType programmingLanguageCode = null;
+		try {
+			programmingLanguageCode = modelImpl
+					.getProgrammingLanguageCode();
+		} catch (DDIFtpException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		Text conditionTxt = createTextInput(group, Messages
 				.getString("StatementItem.editor.code"),
 				programmingLanguageCode == null ? "" : programmingLanguageCode
@@ -127,10 +133,16 @@ public class StatementItemEditor extends Editor implements
 			DialogUtil
 					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
-		ReferenceSelectionCombo refSelecCombo = createRefSelection(group,
-				Messages.getString("StatementItem.editor.questionref"),
-				Messages.getString("StatementItem.editor.questionref"),
-				modelImpl.getSourceQuestionReference(), questionRefList, false);
+		ReferenceSelectionCombo refSelecCombo = null;
+		try {
+			refSelecCombo = createRefSelection(group,
+					Messages.getString("StatementItem.editor.questionref"),
+					Messages.getString("StatementItem.editor.questionref"),
+					modelImpl.getSourceQuestionReference(), questionRefList, false);
+		} catch (DDIFtpException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		refSelecCombo.addSelectionListener(Messages
 				.getString("StatementItem.editor.questionref"),
 				questionRefList, new ReferenceSelectionAdapter(refSelecCombo,
