@@ -47,7 +47,7 @@
                   name="DDI Editor">
                <property
                      name="windowImages"
-                     value="icons/dda_logo_16.ico,icons/dda_logo_32.ico">
+                     value="icons/dda_logo_32.ico">
                </property>
                <property
                      name="startupForegroundColor"
@@ -71,7 +71,7 @@
                </property>
             <property
                   name="aboutImage"
-                  value="icons/ddalogo.gif">
+                  value="icons/about.gif">
             </property>
             <property
                   name="aboutText"
