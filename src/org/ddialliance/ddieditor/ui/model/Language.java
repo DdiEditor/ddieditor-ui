@@ -130,11 +130,9 @@ public class Language {
 	}
 
 	/**
-	 * Get language
-	 * 
-	 * @param languageCode
-	 * @return String
+	 * Is deprecated use util.Translator.transLang(iso-639-2 lang code) instead.
 	 */
+	@Deprecated
 	public static String getLanguage(String languageCode) {
 
 		for (int i = 0; i < LANGUAGE_CODES.length; i++) {
