@@ -66,7 +66,7 @@ public class StatementItem extends Model {
 		}
 	}
 
-	public ProgrammingLanguageCodeType getProgrammingLanguageCode() {
+	public ProgrammingLanguageCodeType getProgrammingLanguageCode() throws DDIFtpException {
 		CodeType codeType = getCodeType();
 		if (codeType == null) {
 			return null;
@@ -74,7 +74,7 @@ public class StatementItem extends Model {
 		return getProgrammingLanguageCode(codeType);
 	}
 
-	private CodeType getCodeType() {
+	private CodeType getCodeType() throws DDIFtpException {
 		DynamicTextType dynamicText = getDisplay();
 		if (dynamicText == null) {
 			return null;
@@ -86,12 +86,16 @@ public class StatementItem extends Model {
 		return getExpression(conditionalText);
 	}
 
-	public DynamicTextType getDisplay() {
-		if (doc.getStatementItem().getDisplayTextList().isEmpty()) {
-			return create ? doc.getStatementItem().addNewDisplayText() : null;
+	public DynamicTextType getDisplay() throws DDIFtpException {
+		DynamicTextType dynamicText = null;
+		if (doc.getStatementItem().getDisplayTextList().isEmpty() && create) {
+			dynamicText = doc.getStatementItem().addNewDisplayText();
+			XmlBeansUtil.addTranslationAttributes(dynamicText, Translator
+					.getLocaleLanguage(), false, true);
 		} else {
-			return doc.getStatementItem().getDisplayTextList().get(0);
+			dynamicText = (DynamicTextType)XmlBeansUtil.getDefaultLangElement(doc.getStatementItem().getDisplayTextList());
 		}
+		return dynamicText;
 	}
 
 	public StructuredStringType getText() throws DDIFtpException {
@@ -111,19 +115,16 @@ public class StatementItem extends Model {
 			}
 		}
 		StructuredStringType text = null;
+
+		// literal text
 		for (LiteralTextType literalTextType : result) {
 			if (literalTextType.getText() != null) {
-				if (XmlBeansUtil
-						.isDefaultLangElement(literalTextType.getText())) {
-					return literalTextType.getText();
-				}
+				text = literalTextType.getText();
 			}
 		}
 		if (text == null && create) {
 			LiteralTextType literalText = LiteralTextType.Factory.newInstance();
 			text = literalText.addNewText();
-			XmlBeansUtil.addTranslationAttributes(text, Translator
-					.getLocaleLanguage(), false, true);
 			doc.getStatementItem().getDisplayTextList().get(0).getTextList()
 					.add(literalText);
 		}
@@ -162,7 +163,7 @@ public class StatementItem extends Model {
 		}
 	}
 
-	public ReferenceType getSourceQuestionReference() {
+	public ReferenceType getSourceQuestionReference() throws DDIFtpException {
 		CodeType codeType = getCodeType();
 		if (codeType == null) {
 			return null;
