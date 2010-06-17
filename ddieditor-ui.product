@@ -4,7 +4,7 @@
 <product name="DDI Editor" uid="ddieditor-ui.product" id="ddieditor-ui.product" application="ddieditor-ui.application" version="%Bundle.version" useFeatures="false" includeLaunchers="false">
 
    <aboutInfo>
-      <image path="/ddieditor-ui/icons/ddalogo.gif"/>
+      <image path="/ddieditor-ui/icons/about.gif"/>
       <text>
          %Bundle.aboutText
       </text>
@@ -16,30 +16,29 @@
    <launcherArgs>
       <programArgs>-consoleLog</programArgs>
       <programArgsWin>-Djava.library.path=%ORACLE_BERKELEY_DB_XML_HOME%\lib</programArgsWin>
-      <vmArgsLin>-Djava.library.path=/tools/dbxml-2.5.13/install/lib</vmArgsLin>
+      <vmArgs>-Xms40m -Xmx1024m -Djava.library.path=/tools/dbxml-2.5.13/install/lib</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/ddieditor-ui/icons/dda_logo_16.ico" i32="/ddieditor-ui/icons/dda_logo_32.ico"/>
+   <windowImages i32="/ddieditor-ui/icons/dda_logo_32.ico"/>
 
    <splash
       startupProgressRect="5,275,445,15"
       startupMessageRect="7,252,445,20"
       startupForegroundColor="000000" />
-   <launcher>
+   <launcher name="ddieditor">
+      <linux icon="/ddieditor-ui/icons/dda_logo_32.xpm"/>
       <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
 
-
    <vm>
    </vm>
 
    <plugins>
       <plugin id="com.ibm.icu"/>
-      <plugin id="com.instantiations.designer.core.lib"/>
       <plugin id="ddieditor"/>
       <plugin id="ddieditor-ui"/>
       <plugin id="javax.servlet"/>
@@ -110,6 +109,8 @@
       <plugin id="org.eclipse.jface"/>
       <plugin id="org.eclipse.jface.databinding"/>
       <plugin id="org.eclipse.jface.text"/>
+      <plugin id="org.eclipse.nebula.cwt"/>
+      <plugin id="org.eclipse.nebula.widgets.cdatetime"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.swt"/>
