@@ -16,7 +16,7 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
-import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
+import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
@@ -77,11 +77,31 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			if (contentType.equals(ViewContentType.StudyContent)) {
 				return PersistenceManager.getInstance().getResources()
 						.toArray();
-			} else if (contentType.equals(ViewContentType.ConceptContent)) {
+			}
+			// TODO Support for more meta data containere
+			// Temp. solution: Switch to first non resource-list container
+			if (currentDdiResource.equals("")) {
+				try {
+					List<DDIResourceType> Resources = PersistenceManager.getInstance().getResources();
+					for (DDIResourceType resource : Resources) {
+						if (!resource.getOrgName().equals("resource-list.dbxml")) {
+							currentDdiResource = resource.getOrgName();
+							break;
+						}
+					}
+					PersistenceManager.getInstance().setWorkingResource(currentDdiResource);
+				} catch (DDIFtpException e) {
+					ErrorDialog.openError(site.getShell(), "Error", null, new Status(IStatus.ERROR, ID, 0,
+							"Error while opening meta data container", e));
+
+				}
+			}
+			// end temp. solution
+			if (contentType.equals(ViewContentType.ConceptContent)) {
 				return new ConceptSchemeDao().getLightXmlObject(null, null,
 						null, null).toArray();
 			} else if (contentType.equals(ViewContentType.CodeContent)) {
-				return CodeSchemes.getCodeSchemesLight(null, null).toArray();
+				return CodeSchemeDao.getCodeSchemesLight(null, null).toArray();
 			} else if (contentType.equals(ViewContentType.QuestionContent)) {
 				return new QuestionSchemeDao().getLightXmlObject(null, null)
 						.toArray();
@@ -177,10 +197,17 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			Object[] contentList = null;
 
 			try {
+				// code scheme
+				if (lightXmlTypeLocalname.equals("CodeScheme")) {
+					// TODO Commented out - support for Code Scheme
+//					contentList = new CodeDao().getLightXmlObject(lightXmlObjectType)
+//							.toArray();
+				}
 				// concept scheme
-				if (lightXmlTypeLocalname.equals("ConceptScheme")) {
+				else if (lightXmlTypeLocalname.equals("ConceptScheme")) {
 					contentList = new ConceptDao().getLightXmlObject(
 							lightXmlObjectType).toArray();
+				// question scheme
 				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
 					contentList = new QuestionItemDao().getLightXmlObject(
 							lightXmlObjectType).toArray();
@@ -197,7 +224,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 
 				// guard
 				if (contentList == null) {
-					throw new DDIFtpException("Not surpported type: "
+					throw new DDIFtpException("Not supported type: "
 							+ lightXmlTypeLocalname);
 				}
 				return contentList;
