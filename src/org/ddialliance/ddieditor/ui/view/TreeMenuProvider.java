@@ -9,7 +9,7 @@ import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.Activator;
-import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
+import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.IfThenElseDao;
@@ -320,7 +320,7 @@ public class TreeMenuProvider extends TreeMenu {
 
 						break;
 					case CODE_SCHEME:
-						List<LightXmlObjectType> codeList = CodeSchemes
+						List<LightXmlObjectType> codeList = CodeSchemeDao
 								.getCodesLight(lightXmlObject.getId(),
 										lightXmlObject.getVersion());
 						if (codeList.size() > 0
@@ -337,7 +337,7 @@ public class TreeMenuProvider extends TreeMenu {
 																codeList.size()))) {
 							break;
 						}
-						CodeSchemes.delete(lightXmlObject.getId(),
+						CodeSchemeDao.delete(lightXmlObject.getId(),
 								lightXmlObject.getVersion(), lightXmlObject
 										.getParentId(), lightXmlObject
 										.getParentVersion());
