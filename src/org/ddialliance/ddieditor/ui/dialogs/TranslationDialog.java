@@ -17,6 +17,7 @@ import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -382,14 +383,16 @@ public class TranslationDialog extends Dialog {
 		public String getColumnText(Object element, int columnIndex) {
 			switch (columnIndex) {
 			case 0:
+				// text
 				try {
 					return getXmlText(element);
 				} catch (DDIFtpException e) {
 					showError(e);
 				}
 			case 1:
+				// language name
 				try {
-					return Language.getLanguage(getXmlLang(element));
+					return Translator.transLang(getXmlLang(element));
 				} catch (DDIFtpException e) {
 					showError(e);
 				}
