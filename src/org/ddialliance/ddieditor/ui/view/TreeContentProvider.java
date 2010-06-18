@@ -80,8 +80,13 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			// Temp. solution: Switch to first non resource-list container
 			if (currentDdiResource.equals("")) {
 				try {
-					List<DDIResourceType> Resources = PersistenceManager.getInstance().getResources();
-					for (DDIResourceType resource : Resources) {
+					List<DDIResourceType> resources = PersistenceManager.getInstance().getResources();
+					if (resources.size() == 0) {
+						// No meta data container
+						return (new Object[0]);
+					}
+					
+					for (DDIResourceType resource : resources) {
 						if (!resource.getOrgName().equals("resource-list.dbxml")) {
 							currentDdiResource = resource.getOrgName();
 							break;
