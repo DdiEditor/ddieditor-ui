@@ -2,7 +2,6 @@ package org.ddialliance.ddieditor.ui.util;
 
 import java.text.MessageFormat;
 
-import org.ddialliance.ddieditor.ui.dbxml.DbXml;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.QuestionItemView;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -43,7 +42,7 @@ public class OpenFileAction extends Action implements IWorkbenchAction {
 		log.debug("OpenFileAction.run(): " + fileName);
 		if (fileName != null) {
 			try {
-				DbXml.open(fileName);
+				//DbXml.open(fileName);
 				// DbXml.open();
 				// IViewPart view = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(QuestionItemView.ID);
 				// view.notify();
