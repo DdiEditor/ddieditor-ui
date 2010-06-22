@@ -298,8 +298,6 @@ public class QuestionItem extends Model {
 	 * @throws Exception
 	 */
 	public void validate() throws Exception {
-		log.debug("Question Item validation performed");
-
 		// Check if a Response Domain has been given
 		RepresentationType rt = getResponseDomain();
 		if (rt == null) {
@@ -326,7 +324,7 @@ public class QuestionItem extends Model {
 			if (dynamicText == null) {
 				continue;
 			}
-			if (XmlBeansUtil.getXmlAttributeValue(dynamicText.xmlText(), "lang=\"").equals("")) {
+			if (XmlBeansUtil.getXmlAttributeValue(dynamicText.xmlText(), "lang=\"") == null) {
 				throw new Exception(Messages.getString("QuestionItem.mess.QuestionTextLanguageTypeHasNotBeenSpecified")); //$NON-NLS-1$
 			}
 		}
