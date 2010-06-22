@@ -7,7 +7,6 @@ import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
-import org.ddialliance.ddieditor.ui.dbxml.XmlEntities;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.universe.Universe;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -15,7 +14,7 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class UniverseDao extends XmlEntities implements IDao {
+public class UniverseDao implements IDao {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, UniverseDao.class);
 
 	/**
