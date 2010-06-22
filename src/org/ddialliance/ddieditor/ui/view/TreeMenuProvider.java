@@ -290,7 +290,7 @@ public class TreeMenuProvider extends TreeMenu {
 								.getShell());
 						break;
 					case CONCEPT_SCHEME:
-						List<LightXmlObjectType> conceptList = new ConceptSchemeDao()
+						List<LightXmlObjectType> conceptList = new ConceptDao()
 								.getLightXmlObject(lightXmlObject);
 						if (conceptList.size() > 0
 								&& !MessageDialog
@@ -337,7 +337,7 @@ public class TreeMenuProvider extends TreeMenu {
 																codeList.size()))) {
 							break;
 						}
-						CodeSchemeDao.delete(lightXmlObject.getId(),
+						new CodeSchemeDao().delete(lightXmlObject.getId(),
 								lightXmlObject.getVersion(), lightXmlObject
 										.getParentId(), lightXmlObject
 										.getParentVersion());
