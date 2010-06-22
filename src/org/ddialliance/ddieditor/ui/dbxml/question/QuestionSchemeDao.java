@@ -64,8 +64,10 @@ public class QuestionSchemeDao implements IDao {
 		log.debug("QuestionScheme.getQuestionSchemesLight(). Id: " + id
 				+ " Version: " + version);
 
-		return DdiManager.getInstance().getQuestionSchemesLight(id, version,
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getQuestionSchemesLight(id, version,
 				null, null).getLightXmlObjectList().getLightXmlObjectList();
+		log.debug("+++++++++++++++++++"+lightXmlObjectTypeList);
+		return lightXmlObjectTypeList;
 	}
 
 	/**
