@@ -7,7 +7,6 @@ import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
-import org.ddialliance.ddieditor.ui.dbxml.XmlEntities;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.concept.ConceptScheme;
@@ -16,7 +15,7 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class ConceptSchemeDao extends XmlEntities implements IDao {
+public class ConceptSchemeDao implements IDao {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, ConceptSchemeDao.class);
 
 	/**
@@ -51,7 +50,7 @@ public class ConceptSchemeDao extends XmlEntities implements IDao {
 
 		log.debug("ConceptSchemes.getLightXmlObject()");
 
-		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getConceptSchemeLight(id, version,
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getConceptSchemesLight(id, version,
 				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
 
 		return lightXmlObjectTypeList;
@@ -163,8 +162,6 @@ public class ConceptSchemeDao extends XmlEntities implements IDao {
 			
 			throw new DDIFtpException(e.getMessage());
 		}
-		
-		dumpXml(log);
 	}
 
 	/**
@@ -187,8 +184,6 @@ public class ConceptSchemeDao extends XmlEntities implements IDao {
 			
 			throw new DDIFtpException(e.getMessage());
 		}
-		
-		dumpXml(log);
 	}
 
 	/**
@@ -217,8 +212,6 @@ public class ConceptSchemeDao extends XmlEntities implements IDao {
 			
 			throw new DDIFtpException(e.getMessage());
 		}
-		
-		dumpXml(log);
 	}
 
 	@Override
@@ -226,15 +219,11 @@ public class ConceptSchemeDao extends XmlEntities implements IDao {
 		log.debug("ConceptSchemeDao.create()");
 		DdiManager.getInstance().createElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
 				"ConceptualComponent");
-		
-		dumpXml(log);
 	}
 
 	@Override
 	public void update(IModel model) throws DDIFtpException {
 		DdiManager.getInstance().updateElement(model.getDocument(),
 				model.getId(), model.getVersion());
-
-		dumpXml(log);
 	}
 }
