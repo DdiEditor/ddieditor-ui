@@ -5,15 +5,14 @@ package org.ddialliance.ddieditor.ui.view;
  * 
  */
 import java.util.Arrays;
-import java.util.List;
 
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.eclipse.swt.widgets.Composite;
 
 public class CodeView extends View {
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.CodeView";
-	public static final List<String> newMenuLabelList = Arrays.asList(
-			"Code Scheme", "Code");
+//	public static final List<String> newMenuLabelList = Arrays.asList(
+//			"Code Scheme", "Code");
 
 	public CodeView() {
 		super(
