@@ -10,7 +10,6 @@ package org.ddialliance.ddieditor.ui.dbxml.code;
  * $Revision$
  */
 
-import java.io.File;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
@@ -19,9 +18,8 @@ import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
-import org.ddialliance.ddieditor.ui.dbxml.DbXml;
-import org.ddialliance.ddieditor.ui.dbxml.XmlEntities;
+import org.ddialliance.ddieditor.ui.dbxml.IDao;
+import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.code.CodeScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -29,7 +27,7 @@ import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
 
-public class CodeSchemeDao extends XmlEntities {
+public class CodeSchemeDao implements IDao {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeSchemeDao.class);
 
 	/**
@@ -173,12 +171,6 @@ public class CodeSchemeDao extends XmlEntities {
 			
 			throw new DDIFtpException(e.getMessage());
 		}
-		
-		// TODO When is xml-file updated - when object saved?
-		if (xml_export_filename.length() > 0) {
-			File outFile = new File("resources" + File.separator + xml_export_filename);
-			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
-		}
 	}
 
 	/**
@@ -201,12 +193,6 @@ public class CodeSchemeDao extends XmlEntities {
 			
 			throw new DDIFtpException(e.getMessage());
 		}
-		
-		// TODO When is xml-file updated - when object saved?
-		if (xml_export_filename.length() > 0) {
-			File outFile = new File("resources" + File.separator + xml_export_filename);
-			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
-		}
 	}
 
 	/**
@@ -223,7 +209,7 @@ public class CodeSchemeDao extends XmlEntities {
 	 *            Parent Version
 	 * @throws Exception
 	 */
-	static public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
+	public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
 		log.debug("Delete DBXML Code Scheme");
 		CodeScheme CodeScheme = getCodeScheme(id, version, parentId, parentVersion);
 		try {
@@ -234,11 +220,42 @@ public class CodeSchemeDao extends XmlEntities {
 			
 			throw new DDIFtpException(e.getMessage());
 		}
+	}
+
+	@Override
+	public IModel create(String id, String version, String parentId, String parentVersion) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void create(IModel model) throws DDIFtpException {
+		// TODO Auto-generated method stub
 		
-		// TODO When is xml-file updated - when object saved?
-		if (xml_export_filename.length() > 0) {
-			File outFile = new File("resources" + File.separator + xml_export_filename);
-			PersistenceManager.getInstance().exportResoure(DbXml.FULLY_DECLARED_NS_DOC, outFile);
-		}
+	}
+
+	@Override
+	public List<LightXmlObjectType> getLightXmlObject(LightXmlObjectType lightXmlObject) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<LightXmlObjectType> getLightXmlObject(String id, String version, String parentId, String parentVersion)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IModel getModel(String id, String version, String parentId, String parentVersion) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void update(IModel model) throws DDIFtpException {
+		// TODO Auto-generated method stub
+		
 	}
 }
