@@ -16,6 +16,7 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -62,7 +63,7 @@ public class TreeMenu {
 	public void openEditor(TreeViewer treeViewer, View currentView,
 			EditorModeType mode, ElementType entityType) {
 		Object obj = defineSelection(treeViewer, currentView.ID);
-
+		
 		// define editor input
 		EditorInput input = null;
 
@@ -86,12 +87,28 @@ public class TreeMenu {
 				} catch (DDIFtpException e) {
 					DialogUtil.errorDialog(currentView.getSite().getShell(),
 							currentView.ID, null, e.getMessage(), e);
+					return;
 				}
 			}
-
+			
+			String parentId = "";
+			String parentVersion = "";
+			ElementType selectEntityType = null;
+			try {
+				selectEntityType = ElementType.getElementType(lightXmlObject.getElement());
+			} catch (DDIFtpException e) {
+				DialogUtil.errorDialog(currentView.getSite().getShell(), currentView.ID, null, e.getMessage(), e);
+				return;
+			}
+			if (entityType.equals(selectEntityType)) {
+				parentId = lightXmlObject.getParentId();
+				parentVersion = lightXmlObject.getParentVersion();
+			} else {
+				parentId = lightXmlObject.getId();
+				parentVersion = lightXmlObject.getVersion();
+			}
 			input = new EditorInput(lightXmlObject.getId(), lightXmlObject
-					.getVersion(), lightXmlObject.getParentId(), lightXmlObject
-					.getParentVersion(), entityType, mode);
+					.getVersion(), parentId, parentVersion, entityType, mode);
 		}
 
 		if (log.isDebugEnabled()) {
