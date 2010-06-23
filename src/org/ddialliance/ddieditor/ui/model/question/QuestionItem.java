@@ -11,7 +11,6 @@ package org.ddialliance.ddieditor.ui.model.question;
  */
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainDocument;
@@ -27,12 +26,9 @@ import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericTypeCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextDomainType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.TextualTypeImpl;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.editor.question.ResponseTypeDetail.RESPONSE_TYPES;
-import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
@@ -69,27 +65,6 @@ public class QuestionItem extends Model {
 		} else {
 			this.doc = doc;
 		}
-	}
-
-	/**
-	 * Get Original Language Code
-	 * 
-	 * @return String
-	 */
-	public String getOriginalLanguageCode() {
-		if (originalLanguageCode == null) {
-			return Language.getDefaultLanguageCode();
-		}
-		return originalLanguageCode;
-	}
-
-	/**
-	 * Set Original Language Code
-	 * 
-	 * @param languageCode
-	 */
-	public void setOriginalLanguageCode(String languageCode) {
-		originalLanguageCode = languageCode;
 	}
 
 	/**
