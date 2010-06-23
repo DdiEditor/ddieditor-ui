@@ -29,8 +29,7 @@ public class ControlConstructScheme extends Model {
 
 	@Override
 	public XmlObject getDocument() throws DDIFtpException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.doc;
 	}
 
 }
