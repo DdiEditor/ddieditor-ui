@@ -2,7 +2,7 @@ package org.ddialliance.ddieditor.ui.preference.page;
 
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
-import org.ddialliance.ddieditor.ui.util.LanguageUtil;
+import org.ddialliance.ddiftp.util.LanguageUtil;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
