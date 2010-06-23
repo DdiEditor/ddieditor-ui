@@ -3,6 +3,7 @@ package org.ddialliance.ddieditor.ui.view;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
@@ -12,6 +13,7 @@ import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.instrument.ControlConstructSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.IfThenElseDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
@@ -262,6 +264,11 @@ public class TreeMenuProvider extends TreeMenu {
 						Messages.getString("Error deleting resource"), e);
 			}
 		}
+		
+		if (obj instanceof ConceptualElement) {
+			ConceptualElement ce = (ConceptualElement)obj;
+			obj = ce.getValue();
+		}
 
 		if (obj instanceof LightXmlObjectType) {
 			LightXmlObjectType lightXmlObject = (LightXmlObjectType) obj;
@@ -396,8 +403,14 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getVersion(), lightXmlObject
 										.getParentId(), lightXmlObject
 										.getParentVersion());
-
 						break;
+					case CONTROL_CONSTRUCT_SCHEME:
+						new ControlConstructSchemeDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(), lightXmlObject
+										.getParentId(), lightXmlObject
+										.getParentVersion());
+						break;
+
 					default:
 						DDIFtpException e = new DDIFtpException(
 								"Editor type not supported: " + entityType,
