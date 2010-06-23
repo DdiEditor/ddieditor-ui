@@ -2,7 +2,8 @@ package org.ddialliance.ddieditor.ui.editor.code;
 
 import java.text.MessageFormat;
 
-import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemes;
+
+import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.code.CodeScheme;
@@ -76,10 +77,10 @@ public class CodeSchemeEditor extends LabelDescriptionEditor{
 		}
 		try {
 			if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
-				CodeSchemes.create(codeScheme);
+				CodeSchemeDao.create(codeScheme);
 				getEditorInputImpl().setEditorMode(EditorModeType.EDIT);
 			} else if (getEditorInputImpl().getEditorMode().equals(EditorModeType.EDIT)) {
-				CodeSchemes.update(codeScheme);
+				CodeSchemeDao.update(codeScheme);
 			} else if (getEditorInputImpl().getEditorMode().equals(EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
@@ -107,7 +108,7 @@ public class CodeSchemeEditor extends LabelDescriptionEditor{
 
 		if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
 			try {
-				codeScheme = CodeSchemes.createCodeScheme(getEditorInputImpl().getId(), getEditorInputImpl().getVersion(),
+				codeScheme = CodeSchemeDao.createCodeScheme(getEditorInputImpl().getId(), getEditorInputImpl().getVersion(),
 						getEditorInputImpl().getParentId(), getEditorInputImpl().getParentVersion());
 			} catch (Exception e) {
 				log.error("CodeSchemeEditor.init(): " + e.getMessage());
@@ -119,7 +120,7 @@ public class CodeSchemeEditor extends LabelDescriptionEditor{
 		} else if (getEditorInputImpl().getEditorMode().equals(EditorModeType.EDIT)
 				|| getEditorInputImpl().getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
-				codeScheme = CodeSchemes.getCodeScheme(getEditorInputImpl().getId(), getEditorInputImpl().getVersion(),
+				codeScheme = CodeSchemeDao.getCodeScheme(getEditorInputImpl().getId(), getEditorInputImpl().getVersion(),
 						getEditorInputImpl().getParentId(), getEditorInputImpl().getParentVersion());
 			} catch (Exception e) {
 				String errMess = Messages.getString("CodeSchemeEditor.mess.GetCodeByIdError"); //$NON-NLS-1$
