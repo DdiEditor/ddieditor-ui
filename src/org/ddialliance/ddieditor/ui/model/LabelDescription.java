@@ -14,6 +14,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -163,22 +164,22 @@ public abstract class LabelDescription extends Model implements IModel {
 	 * @param language
 	 * @return String Description string
 	 */
-	public String getDescr(Language language) {
-
-		StructuredStringType descriptionType;
-
-		// Get Description corresponding to language
-		int length = descrs.size();
-		for (int i = 0; i < length; i++) {
-			descriptionType = descrs.get(i);
-			if (descriptionType.getLang().equals(language)) {
-				return descrs.get(i).toString();
-			}
-		}
-		log.error("*** Simple Element Description of given Language <"
-				+ language + "> not found ***");
-		return "";
-	}
+	// public String getDescr(Language language) {
+	//
+	// StructuredStringType descriptionType;
+	//
+	// // Get Description corresponding to language
+	// int length = descrs.size();
+	// for (int i = 0; i < length; i++) {
+	// descriptionType = descrs.get(i);
+	// if (descriptionType.getLang().equals(language)) {
+	// return descrs.get(i).toString();
+	// }
+	// }
+	// log.error("*** Simple Element Description of given Language <"
+	// + language + "> not found ***");
+	// return "";
+	// }
 
 	/**
 	 * Set Description of Simple Element.
@@ -262,9 +263,22 @@ public abstract class LabelDescription extends Model implements IModel {
 		// Original = translated is false
 		descriptionType.setTranslated(false);
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		descriptionType.setLang(store
-				.getString(PreferenceConstants.DDI_LANGUAGE));
+		try {
+			XmlBeansUtil.addTranslationAttributes(descriptionType, store
+					.getString(PreferenceConstants.DDI_LANGUAGE), false, true);
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		XmlBeansUtil.setTextOnMixedElement(descriptionType, string);
 		return descriptionType;
+	}
+
+	public List<LabelType> getLabels() {
+		return labels;
+	}
+
+	public List<StructuredStringType> getDescrs() {
+		return descrs;
 	}
 }
