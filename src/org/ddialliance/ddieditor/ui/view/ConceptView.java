@@ -25,8 +25,4 @@ public class ConceptView extends View {
 						.getString("ConceptView.label.conceptTreeGroup.ConceptStructure"),
 				Arrays.asList(ElementType.CONCEPT));
 	}
-
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
-	}
 }
