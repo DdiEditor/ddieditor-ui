@@ -15,6 +15,7 @@ import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dialogs.TranslationDialog;
+import org.ddialliance.ddieditor.ui.dialogs.TranslationDialogInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
@@ -71,7 +72,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 /**
- * Super class editor defining common initialization and holds widget creation<br><br>
+ * Super class editor defining common initialization and holds widget creation<br>
+ * <br>
  * DDI element editors are to extend this super class
  */
 public class Editor extends EditorPart implements IAutoChangePerspective {
@@ -248,14 +250,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		try {
 			model.validate();
 		} catch (Exception e1) {
-			DialogUtil
-					.errorDialog(
-							(IEditorSite )getSite(),
-							ID,
-							Messages.getString("ErrorTitle"),
-							Messages
-									.getString("Editor.mess.ValidationErrorDuringSave"),
-							e1);
+			DialogUtil.errorDialog((IEditorSite) getSite(), ID, Messages
+					.getString("ErrorTitle"), Messages
+					.getString("Editor.mess.ValidationErrorDuringSave"), e1);
 			return;
 		}
 		try {
@@ -270,8 +267,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
-			DialogUtil.errorDialog((IEditorSite )getSite(), ID, Messages.getString("ErrorTitle"),
-					Messages.getString("Editor.mess.ErrorDuringSave"), e);
+			DialogUtil.errorDialog((IEditorSite) getSite(), ID, Messages
+					.getString("ErrorTitle"), Messages
+					.getString("Editor.mess.ErrorDuringSave"), e);
 			return;
 		}
 		editorStatus.clearChanged();
@@ -320,8 +318,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return composite;
 	}
 
-	public void setControl(Control widget) {		
-		if (getEditorInputImpl()!=null&&getEditorInputImpl().getEditorMode().equals(EditorModeType.VIEW)) {
+	public void setControl(Control widget) {
+		if (getEditorInputImpl() != null
+				&& getEditorInputImpl().getEditorMode().equals(
+						EditorModeType.VIEW)) {
 			widget.setEnabled(false);
 		}
 	}
@@ -625,24 +625,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return actionCombo;
 	}
 
-	public SelectionListener createTranslationSelectionListener(
-			final List items, final String parentLabel) {
-		SelectionListener listener = new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				new TranslationDialog(getEditorSite().getShell(), editorStatus,
-						items, parentLabel).open();
-				// TODO call back to opener to update label
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO
-			}
-		};
-		return listener;
-	}
-
 	public void createNameInput(Group group, String labelText,
 			List<NameType> nameList, String parentLabel) throws DDIFtpException {
 		NameType name = (NameType) XmlBeansUtil.getDefaultLangElement(nameList);
@@ -656,18 +638,20 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					.addNewConstructName();
 			name.setTranslatable(true);
 			name.setTranslated(!nameList.isEmpty());
-			name.setLang(Translator.getLocale().getISO3Country());
+			name.setLang(Translator.getLocaleLanguage());
 		}
 
 		nameTxt.addModifyListener(new NameTypeModyfiListener(name, nameList,
 				editorStatus));
 
-		createTranslation(group, Messages.getString("editor.button.translate"),
-				nameList, parentLabel);
+		// createTranslation(group,
+		// Messages.getString("editor.button.translate"),
+		// nameList, parentLabel);
 	}
 
 	public void createStructuredStringInput(Group group, String labelText,
-			List<StructuredStringType> structuredStringList, String parentLabel) throws DDIFtpException {
+			List<StructuredStringType> structuredStringList, String parentLabel)
+			throws DDIFtpException {
 		StructuredStringType structuredString = (StructuredStringType) XmlBeansUtil
 				.getDefaultLangElement(structuredStringList);
 
@@ -689,16 +673,39 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		styledText.addModifyListener(new StructuredStringTypeModyfiListener(
 				structuredString, structuredStringList, editorStatus));
 
-		createTranslation(group, Messages.getString("editor.button.translate"),
-				structuredStringList, parentLabel);
+		// createTranslation(group,
+		// Messages.getString("editor.button.translate"),
+		// structuredStringList, parentLabel);
 	}
 
 	public Button createTranslation(Group group, String buttonText,
-			final List items, final String parentLabel) {
+			final List items,
+			final TranslationDialogInput translationDialogOption,
+			final String parentLabel) {
 		Button button = createButton(group, buttonText);
 		button.addSelectionListener(createTranslationSelectionListener(items,
-				parentLabel));
+				translationDialogOption, parentLabel));
 		return button;
+	}
+
+	private SelectionListener createTranslationSelectionListener(
+			final List items,
+			final TranslationDialogInput translationDialogOption,
+			final String parentLabel) {
+		SelectionListener listener = new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				new TranslationDialog(getEditorSite().getShell(), editorStatus,
+						items, translationDialogOption, parentLabel).open();
+				// TODO call back to opener to update label
+			}
+	
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO
+			}
+		};
+		return listener;
 	}
 
 	public ReferenceSelectionCombo createRefSelection(Group group,
@@ -848,7 +855,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 
 		public IEditorSite getSite() {
-			return (IEditorSite )getSite();
+			return (IEditorSite) getSite();
 		}
 	}
 
