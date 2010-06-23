@@ -1,15 +1,5 @@
 package org.ddialliance.ddieditor.ui.model;
 
-/**
- * Language utilities.
- * 
- */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +8,10 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
+/**
+ * Language
+ * @deprecated
+ */
 public class Language {
 
 	/**
