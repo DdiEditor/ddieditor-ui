@@ -44,11 +44,12 @@ public class ControlConstructSchemeDao implements IDao {
 	}
 
 	@Override
-	public IfThenElse getModel(String id, String version, String parentId,
+	public ControlConstructScheme getModel(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		IfThenElseDocument doc = DdiManager.getInstance().getIfThenElse(id,
+		
+		ControlConstructSchemeDocument doc = DdiManager.getInstance().getControlConstructScheme(id,
 				version, parentId, parentVersion);
-		IfThenElse model = new IfThenElse(doc, parentId, parentVersion);
+		ControlConstructScheme model = new ControlConstructScheme(doc, parentId, parentVersion);
 		return model;
 	}
 
@@ -56,7 +57,7 @@ public class ControlConstructSchemeDao implements IDao {
 	public void create(IModel model) throws DDIFtpException {
 		DdiManager.getInstance().createElement(model.getDocument(),
 				model.getParentId(), model.getParentVersion(),
-				"ControlConstructScheme");
+				"datacollection__DataCollection");
 	}
 
 	@Override
@@ -69,10 +70,10 @@ public class ControlConstructSchemeDao implements IDao {
 	@Override
 	public void delete(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		IfThenElse model = getModel(id, version, parentId, parentVersion);
+		ControlConstructScheme model = getModel(id, version, parentId, parentVersion);
 		DdiManager.getInstance().deleteElement(model.getDocument(),
 				model.getParentId(), model.getParentVersion(),
-				"ControlConstructScheme");
+				"datacollection__DataCollection");
 	}
 
 }
