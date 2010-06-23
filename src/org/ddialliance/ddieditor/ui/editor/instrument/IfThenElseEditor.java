@@ -1,14 +1,11 @@
 package org.ddialliance.ddieditor.ui.editor.instrument;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.IfThenElseDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
@@ -16,6 +13,8 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.Referen
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.IfThenElse;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
@@ -52,9 +51,9 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		super.init(site, input);
-		this.modelImpl = (IfThenElse)model;
+		this.modelImpl = (IfThenElse) model;
 	}
-	
+
 	@Override
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout());
@@ -75,8 +74,9 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 				.getString("IfThenElse.editor.if"),
 				ifProgrammingLanguageCode == null ? ""
 						: ifProgrammingLanguageCode.getStringValue(), false);
-		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
-				ProgrammingLanguageCodeType.class, getEditorIdentification()));
+		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(
+				modelImpl, ProgrammingLanguageCodeType.class,
+				getEditorIdentification()));
 
 		// if condition lang
 		String programmingLanguage = ifProgrammingLanguageCode == null ? ""
@@ -103,35 +103,38 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 		}
 		ReferenceSelectionCombo questionRefSelectCombo = createRefSelection(
 				group, Messages.getString("IfThenElse.editor.ifquestionref"),
-				Messages.getString("IfThenElse.editor.ifquestionref"), modelImpl
-						.getIfQuestionReference(), questionRefList, false);
+				Messages.getString("IfThenElse.editor.ifquestionref"),
+				modelImpl.getIfQuestionReference(), questionRefList, false);
 		questionRefSelectCombo.addSelectionListener(Messages
 				.getString("IfThenElse.editor.ifquestionref"), questionRefList,
-				new ReferenceSelectionAdapter(questionRefSelectCombo, modelImpl,
-						ModelIdentifingType.Type_B.class,
+				new ReferenceSelectionAdapter(questionRefSelectCombo,
+						modelImpl, ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
 
 		// then ref
-//		MaintainableLightLabelQueryResult controlConstructRefListTemp = null;
-//		try {
-//			controlConstructRefListTemp = DdiManager.getInstance()
-//					.getInstrumentLabel(null, null, null, null);
-//		} catch (DDIFtpException e) {
-//			DialogUtil.errorDialog(getSite().getShell(), ID, null, e
-//					.getMessage(), e);
-//		}
+		// MaintainableLightLabelQueryResult controlConstructRefListTemp = null;
+		// try {
+		// controlConstructRefListTemp = DdiManager.getInstance()
+		// .getInstrumentLabel(null, null, null, null);
+		// } catch (DDIFtpException e) {
+		// DialogUtil.errorDialog(getSite().getShell(), ID, null, e
+		// .getMessage(), e);
+		// }
 		List<LightXmlObjectType> controlConstructRefList = null;
 		try {
-			controlConstructRefList = DdiManager.getInstance().getQuestionConstructsLight(null, null, null, null).getLightXmlObjectList().getLightXmlObjectList();
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}//new ArrayList<LightXmlObjectType>();
-//		for (LinkedList<LightXmlObjectType> lightXmlObjectList : controlConstructRefListTemp
-//				.getResult().values()) {
-//			controlConstructRefList.addAll(lightXmlObjectList);
-//		}
-//		controlConstructRefListTemp = null;
+			controlConstructRefList = DdiManager.getInstance()
+					.getQuestionConstructsLight(null, null, null, null)
+					.getLightXmlObjectList().getLightXmlObjectList();
+		} catch (Exception e) {
+			DialogUtil
+			.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
+		}// new ArrayList<LightXmlObjectType>();
+		// for (LinkedList<LightXmlObjectType> lightXmlObjectList :
+		// controlConstructRefListTemp
+		// .getResult().values()) {
+		// controlConstructRefList.addAll(lightXmlObjectList);
+		// }
+		// controlConstructRefListTemp = null;
 
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(group,
 				Messages.getString("IfThenElse.editor.thenref"), Messages
@@ -164,17 +167,27 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 				.getString("editor.label.description"));
 
 		try {
-			createNameInput(group2, Messages.getString("editor.label.name"), modelImpl
-					.getDocument().getIfThenElse().getConstructNameList(), modelImpl
-					.getDocument().getIfThenElse().getId());
+			createNameInput(group2, Messages.getString("editor.label.name"),
+					modelImpl.getDocument().getIfThenElse()
+							.getConstructNameList(), modelImpl.getDocument()
+							.getIfThenElse().getId());
 
-		createStructuredStringInput(group2, Messages
-				.getString("editor.label.description"), modelImpl.getDocument()
-				.getIfThenElse().getDescriptionList(), modelImpl.getDocument()
-				.getIfThenElse().getId());
+			createTranslation(group2, Messages
+					.getString("editor.button.translate"), modelImpl
+					.getDocument().getIfThenElse().getConstructNameList(),
+					new NameTdI(), "");
+			
+			createStructuredStringInput(group2, Messages
+					.getString("editor.label.description"), modelImpl
+					.getDocument().getIfThenElse().getDescriptionList(),
+					modelImpl.getDocument().getIfThenElse().getId());
+			createTranslation(group2, Messages
+					.getString("editor.button.translate"), modelImpl
+					.getDocument().getIfThenElse().getDescriptionList(),
+					new DescriptionTdI(), "");
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DialogUtil
+			.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
 
 		// id tab

@@ -19,6 +19,8 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.Referen
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.Instrument;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -87,13 +89,15 @@ public class InstrumentEditor extends Editor {
 		}
 
 		ReferenceSelectionCombo sequenceRefSelectCombo = createRefSelection(
-				group, Messages.getString("InstrumentEditor.software.mainsequence"),
-				Messages.getString("InstrumentEditor.software.mainsequence"), null,
-				sequenceRefList, false);
+				group, Messages
+						.getString("InstrumentEditor.software.mainsequence"),
+				Messages.getString("InstrumentEditor.software.mainsequence"),
+				null, sequenceRefList, false);
 		sequenceRefSelectCombo.addSelectionListener(Messages
-				.getString("InstrumentEditor.software.mainsequence"), sequenceRefList,
-				new ReferenceSelectionAdapter(sequenceRefSelectCombo,
-						modelImpl, ModelIdentifingType.Type_B.class,
+				.getString("InstrumentEditor.software.mainsequence"),
+				sequenceRefList, new ReferenceSelectionAdapter(
+						sequenceRefSelectCombo, modelImpl,
+						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
 
 		// software tab
@@ -109,19 +113,26 @@ public class InstrumentEditor extends Editor {
 				.getString("editor.label.description"));
 
 		try {
-			createNameInput(
-					group2,
-					Messages.getString("editor.label.name"),
-					modelImpl.getDocument().getInstrument().getInstrumentNameList(),
+			createNameInput(group2, Messages.getString("editor.label.name"),
+					modelImpl.getDocument().getInstrument()
+							.getInstrumentNameList(), modelImpl.getDocument()
+							.getInstrument().getId());
+			createTranslation(group2, Messages
+					.getString("editor.button.translate"), modelImpl
+					.getDocument().getInstrument().getInstrumentNameList(),
+					new NameTdI(), "");
+			
+			createStructuredStringInput(group2, Messages
+					.getString("editor.label.description"), modelImpl
+					.getDocument().getInstrument().getDescriptionList(),
 					modelImpl.getDocument().getInstrument().getId());
-
-		createStructuredStringInput(group2, Messages
-				.getString("editor.label.description"), modelImpl.getDocument()
-				.getInstrument().getDescriptionList(), modelImpl.getDocument()
-				.getInstrument().getId());
+			createTranslation(group2, Messages
+					.getString("editor.button.translate"), modelImpl
+					.getDocument().getInstrument().getDescriptionList(),
+					new DescriptionTdI(), "");
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DialogUtil
+					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
 
 		// id - version tab

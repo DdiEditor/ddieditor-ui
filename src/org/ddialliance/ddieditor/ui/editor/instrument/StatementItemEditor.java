@@ -16,6 +16,9 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.Referen
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.StatementItem;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.DynamicTextTdI;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
@@ -92,16 +95,20 @@ public class StatementItemEditor extends Editor implements
 				: XmlBeansUtil.getTextOnMixedElement(text), false);
 		statementTxt.addModifyListener(new TextStyledTextModyfiListener(model,
 				TextType.class, getEditorIdentification()));
+		createTranslation(
+				group,
+				Messages.getString("editor.button.translate"),
+				modelImpl.getDocument().getStatementItem().getDisplayTextList(),
+				new DynamicTextTdI(), "");
 
 		// condition
-		Composite error = createErrorComposite(group, "");
+		// Composite error = createErrorComposite(group, "");
 		ProgrammingLanguageCodeType programmingLanguageCode = null;
 		try {
-			programmingLanguageCode = modelImpl
-					.getProgrammingLanguageCode();
-		} catch (DDIFtpException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			programmingLanguageCode = modelImpl.getProgrammingLanguageCode();
+		} catch (DDIFtpException e) {
+			DialogUtil
+					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
 		Text conditionTxt = createTextInput(group, Messages
 				.getString("StatementItem.editor.code"),
@@ -135,13 +142,13 @@ public class StatementItemEditor extends Editor implements
 		}
 		ReferenceSelectionCombo refSelecCombo = null;
 		try {
-			refSelecCombo = createRefSelection(group,
-					Messages.getString("StatementItem.editor.questionref"),
-					Messages.getString("StatementItem.editor.questionref"),
-					modelImpl.getSourceQuestionReference(), questionRefList, false);
-		} catch (DDIFtpException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			refSelecCombo = createRefSelection(group, Messages
+					.getString("StatementItem.editor.questionref"), Messages
+					.getString("StatementItem.editor.questionref"), modelImpl
+					.getSourceQuestionReference(), questionRefList, false);
+		} catch (DDIFtpException e) {
+			DialogUtil
+					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
 		refSelecCombo.addSelectionListener(Messages
 				.getString("StatementItem.editor.questionref"),
@@ -149,29 +156,36 @@ public class StatementItemEditor extends Editor implements
 						model, ReferenceType.class, getEditorIdentification()));
 
 		// description tab
-		// name
 		TabItem tabItem2 = createTabItem(Messages
 				.getString("editor.label.description"));
 		Group group2 = createGroup(tabItem2, Messages
 				.getString("editor.label.description"));
 
 		try {
+			// name
 			createNameInput(group2, Messages.getString("editor.label.name"),
 					modelImpl.getDocument().getStatementItem()
 							.getConstructNameList(), modelImpl.getDocument()
 							.getStatementItem().getId());
+			createTranslation(group2, Messages
+					.getString("editor.button.translate"), modelImpl
+					.getDocument().getStatementItem().getConstructNameList(),
+					new NameTdI(), "");
 
-		// description
-		createStructuredStringInput(group2, Messages
-				.getString("editor.label.description"), modelImpl.getDocument()
-				.getStatementItem().getDescriptionList(), modelImpl
-				.getDocument().getStatementItem().getId());
-
+			// description
+			createStructuredStringInput(group2, Messages
+					.getString("editor.label.description"), modelImpl
+					.getDocument().getStatementItem().getDescriptionList(),
+					modelImpl.getDocument().getStatementItem().getId());
+			createTranslation(group2, Messages
+					.getString("editor.button.translate"), modelImpl
+					.getDocument().getStatementItem().getDescriptionList(),
+					new DescriptionTdI(), "");
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DialogUtil
+					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
-		
+
 		// id tab
 		createPropertiesTab(getTabFolder());
 
