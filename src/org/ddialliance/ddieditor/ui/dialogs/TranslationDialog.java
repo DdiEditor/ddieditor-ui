@@ -1,23 +1,20 @@
 package org.ddialliance.ddieditor.ui.dialogs;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.editor.BooleanCellEditor;
 import org.ddialliance.ddieditor.ui.editor.CellEditorListener;
-import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;
-import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
-import org.ddialliance.ddiftp.util.Translator;
+import org.ddialliance.ddiftp.util.LanguageUtil;
+import org.ddialliance.ddiftp.util.ReflectionUtil;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -53,8 +50,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
-
-
 /**
  * Generic translation dialog
  * <p>
@@ -69,6 +64,7 @@ public class TranslationDialog extends Dialog {
 
 	private final EditorStatus editorStatus;
 	private List items;
+	private TranslationDialogInput translationDialogOption;
 	private String parentLabel;
 	private XmlOptions xmlOptions = new XmlOptions();
 
@@ -78,6 +74,9 @@ public class TranslationDialog extends Dialog {
 	private List<String> langUsed = new ArrayList<String>();
 	private String[] queries = { "translated=\"", "translatable=\"", "lang=\"" };
 	private String enabled, disabled;
+
+	private String[][] availableLanguages = LanguageUtil
+			.getAvailableLanguages();
 
 	/**
 	 * Constructor creating dialog and defining the original language as the
@@ -89,14 +88,18 @@ public class TranslationDialog extends Dialog {
 	 *            editor status to be updated upon change in items
 	 * @param items
 	 *            to edit
+	 * @param translationDialogOption
+	 *            content description
 	 * @param parentLabel
 	 *            label to identify parent, eg. type and id, used in title of
 	 *            dialog box
 	 */
 	public TranslationDialog(Shell parentShell, EditorStatus editorStatus,
-			List<?> items, String parentLabel) {
+			List<?> items, TranslationDialogInput translationDialogOption,
+			String parentLabel) {
 		super(parentShell);
 		this.items = items;
+		this.translationDialogOption = translationDialogOption;
 		this.editorStatus = editorStatus;
 		this.parentLabel = parentLabel;
 		xmlOptions.setSavePrettyPrint();
@@ -105,142 +108,112 @@ public class TranslationDialog extends Dialog {
 		updateLangUsed();
 	}
 
-	private final String getXmlLang(Object obj) throws DDIFtpException {
-		if (obj instanceof InternationalStringType) {
-			return ((InternationalStringType) obj).getLang();
-		} else if (obj instanceof StructuredStringType) {
-			return ((StructuredStringType) obj).getLang();
+	public List<String> updateLangUsed() {
+		langUsed.clear();
+		String lang = null;
+		for (Object xmlObject : items) {
+			lang = queryAttribute(xmlObject, queries[2]);
+			if (lang != null && lang.equals("")) {
+				langUsed.add(lang);
+			}
 		}
-		throw createTypeException(obj, new Throwable());
+		return langUsed;
+	}
+
+	// ------------------------------------------------------------------------
+	// xml beans
+	// ------------------------------------------------------------------------
+	private String queryAttribute(Object item, String query) {
+		String result = null;
+		String xml = ((XmlObject) item).xmlText(xmlOptions);
+		result = XmlBeansUtil.getXmlAttributeValue(xml, query);
+		return result;
+	}
+
+	private final String getXmlLang(Object obj) throws DDIFtpException {
+		return queryAttribute(obj, queries[2]);
 	}
 
 	private final String getXmlText(Object obj) throws DDIFtpException {
-		if (obj instanceof InternationalStringType) {
-			return ((InternationalStringType) obj).getStringValue();
-		} else if (obj instanceof StructuredStringType) {
-			return XmlBeansUtil.getTextOnMixedElement((StructuredStringType)obj);
+		XmlObject xmlObject = XmlBeansUtil.getElementInElementStructure(
+				translationDialogOption.getTextElement(), (XmlObject) obj);
+		if (xmlObject != null) {
+			if (xmlObject instanceof InternationalStringType) {
+				return ((InternationalStringType) xmlObject).getStringValue();
+			} else if (xmlObject instanceof StructuredStringType) {
+				return XmlBeansUtil
+						.getTextOnMixedElement((StructuredStringType) xmlObject);
+			}
+			throw createTypeException(xmlObject, new Throwable());
 		}
-		throw createTypeException(obj, new Throwable());
-	}
-
-	private final void setXmlLang(Object obj, String lang)
-			throws DDIFtpException {
-		if (obj instanceof InternationalStringType) {
-			((InternationalStringType) obj).setLang(lang);
-		} else if (obj instanceof StructuredStringType) {
-			((StructuredStringType) obj).setLang(lang);
-		} else {
-			throw createTypeException(obj, new Throwable());
-		}
+		return "";
 	}
 
 	private final void setXmlText(Object obj, String text)
 			throws DDIFtpException {
-		if (obj instanceof InternationalStringType) {
-			((InternationalStringType) obj).setStringValue(text);
-		} else if (obj instanceof StructuredStringType) {
-			XmlBeansUtil.setTextOnMixedElement(((StructuredStringType) obj),
-					text);
-		} else {
-			throw createTypeException(obj, new Throwable());
+		XmlObject xmlObject = XmlBeansUtil.getElementInElementStructure(
+				translationDialogOption.getTextElement(), (XmlObject) obj);
+		if (xmlObject != null) {
+			if (xmlObject instanceof InternationalStringType) {
+				((InternationalStringType) xmlObject).setStringValue(text);
+			} else if (xmlObject instanceof StructuredStringType) {
+				XmlBeansUtil.setTextOnMixedElement(
+						((StructuredStringType) xmlObject), text);
+			} else {
+				throw createTypeException(xmlObject, new Throwable());
+			}
 		}
 	}
 
 	public Boolean getTranslated(Object obj) throws DDIFtpException {
-		if (obj instanceof InternationalStringType) {
-			return ((InternationalStringType) obj).getTranslated();
-		} else if (obj instanceof StructuredStringType) {
-			return ((StructuredStringType) obj).getTranslated();
-		} else {
-			throw createTypeException(obj, new Throwable());
-		}
-	}
-
-	public void setTranslated(Object obj, boolean translated)
-			throws DDIFtpException {
-		if (obj instanceof InternationalStringType) {
-			((InternationalStringType) obj).setTranslated(translated);
-		} else if (obj instanceof StructuredStringType) {
-			((StructuredStringType) obj).setTranslated(translated);
-		} else {
-			throw createTypeException(obj, new Throwable());
-		}
+		return Boolean.parseBoolean(queryAttribute(obj, queries[0]));
 	}
 
 	public Boolean getTranslateable(Object obj) throws DDIFtpException {
-		if (obj instanceof InternationalStringType) {
-			return ((InternationalStringType) obj).getTranslatable();
-		} else if (obj instanceof StructuredStringType) {
-			return ((StructuredStringType) obj).getTranslatable();
-		} else {
-			throw createTypeException(obj, new Throwable());
-		}
+		return Boolean.parseBoolean(queryAttribute(obj, queries[1]));
+	}
+
+	private final void setXmlLang(Object obj, String lang)
+			throws DDIFtpException, Exception {
+		ReflectionUtil.invokeMethod(obj, "setLang", false, lang);
+	}
+
+	public void setTranslated(Object obj, boolean translated)
+			throws DDIFtpException, Exception {
+		ReflectionUtil.invokeMethod(obj, "setTranslated", false, translated);
 	}
 
 	public void setTranslateable(Object obj, boolean translateable)
-			throws DDIFtpException {
-		if (obj instanceof InternationalStringType) {
-			((InternationalStringType) obj).setTranslatable(translateable);
-		} else if (obj instanceof StructuredStringType) {
-			((StructuredStringType) obj).setTranslatable(translateable);
-		} else {
-			throw createTypeException(obj, new Throwable());
-		}
+			throws DDIFtpException, Exception {
+		ReflectionUtil.invokeMethod(obj, "setTranslatable", false,
+				translateable);
 	}
 
 	private final Object addItem() throws DDIFtpException {
-		// 'instance of' in hierarchy of sub types type first
-		if (items.get(0) instanceof NameType) {
-			NameType newItem = NameType.Factory.newInstance();
-			newItem.setTranslatable(true);
-			newItem.setTranslated(true);
-			newItem.setStringValue("");
-			return newItem;
-		} else if (items.get(0) instanceof InternationalStringType) {
-			InternationalStringType newItem = InternationalStringType.Factory
-					.newInstance();
-			newItem.setTranslatable(true);
-			newItem.setTranslated(true);
-			newItem.setStringValue("");
-			return newItem;
-		} else if (items.get(0) instanceof StructuredStringType) {
-			StructuredStringType newItem = StructuredStringType.Factory
-					.newInstance();
-			newItem.setTranslatable(true);
-			newItem.setTranslated(true);
-			XmlBeansUtil.setTextOnMixedElement(newItem, "");
-			return newItem;
-		} else {
-			throw createTypeException(items.get(0), new Throwable());
-		}
+		return translationDialogOption.getTemplateElement();
 	}
 
 	public List<Object> getItems() {
 		return items;
 	}
 
-	public List<String> updateLangUsed() {
-		langUsed.clear();
-		String lang = null;
-		for (Object xmlObject : items) {
-			String xml = ((XmlObject) xmlObject).xmlText(xmlOptions);
-			lang = XmlBeansUtil.getXmlAttributeValue(xml, queries[2]);
-			langUsed.add(lang);
-		}
-		return langUsed;
-	}
-
+	// ------------------------------------------------------------------------
+	// house keeping
+	// ------------------------------------------------------------------------
 	private DDIFtpException createTypeException(Object obj, Throwable t) {
 		return new DDIFtpException("Element of class: "
 				+ obj.getClass().getName() + " is not supported!", t);
 	}
 
-	private final void showError(DDIFtpException e) {
+	private final void showError(Exception e) {
 		new ErrorDialog(getShell(), ErrorDialog.DLG_IMG_MESSAGE_ERROR, e
 				.getMessage(), new Status(Status.ERROR, "", e.getMessage()), 0)
 				.open();
 	}
 
+	// ------------------------------------------------------------------------
+	// swt
+	// ------------------------------------------------------------------------
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		this.getShell().setText(
@@ -338,6 +311,9 @@ public class TranslationDialog extends Dialog {
 		return topComposite;
 	}
 
+	// ------------------------------------------------------------------------
+	// table support
+	// ------------------------------------------------------------------------
 	/**
 	 * Label provider
 	 */
@@ -392,7 +368,8 @@ public class TranslationDialog extends Dialog {
 			case 1:
 				// language name
 				try {
-					return Translator.transLang(getXmlLang(element));
+					return LanguageUtil.getLanguage(getXmlLang(element),
+							availableLanguages);
 				} catch (DDIFtpException e) {
 					showError(e);
 				}
@@ -432,19 +409,15 @@ public class TranslationDialog extends Dialog {
 
 		@Override
 		public void dispose() {
-			// TODO Auto-generated method stub
+			// noting to do
 		}
 
 		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			// TODO Auto-generated method stub
+			// noting to do
 		}
 	}
 
-	public enum OPEN_DIALOG {
-		YES, NO;
-	}
-	
 	/**
 	 * Column editing
 	 */
@@ -471,8 +444,8 @@ public class TranslationDialog extends Dialog {
 				break;
 			case 1:
 				editor = new ComboBoxCellEditor(((TableViewer) viewer)
-						.getTable(), Language
-						.getLanguageCodesExcludingLanguagesUsed(langUsed));
+						.getTable(), LanguageUtil
+						.getLanguages(availableLanguages));
 				break;
 			case 2:
 				// translated
@@ -508,6 +481,7 @@ public class TranslationDialog extends Dialog {
 		protected Object getValue(Object element) {
 			log.debug("Column: " + this.column);
 			switch (this.column) {
+			// xml text
 			case 0:
 				try {
 					return getXmlText(element);
@@ -515,14 +489,12 @@ public class TranslationDialog extends Dialog {
 					showError(e);
 				}
 			case 1:
+				// language
 				// Convert Language Code to Combo index e.g. 'no' to '1'
 				int i = -1;
 				try {
-					i = Arrays
-							.asList(
-									Language
-											.getLanguageCodesExcludingOrginalLanguage("da"))
-							.indexOf(getXmlLang(element));
+					i = LanguageUtil.getLanguageIndex(getXmlLang(element),
+							availableLanguages);
 				} catch (DDIFtpException e) {
 					showError(e);
 				}
@@ -560,11 +532,8 @@ public class TranslationDialog extends Dialog {
 			case 1:
 				// Convert Combo index to Language Code e.g. '1' to 'no'
 				try {
-					setXmlLang(
-							element,
-							Language
-									.getLanguageCodesExcludingLanguagesUsed(langUsed)[((Integer) value)]);
-				} catch (DDIFtpException e) {
+					setXmlLang(element, availableLanguages[(Integer) value][1]);
+				} catch (Exception e) {
 					showError(e);
 				}
 				updateLangUsed();
@@ -573,7 +542,7 @@ public class TranslationDialog extends Dialog {
 				// translated
 				try {
 					setTranslated(element, (Boolean) value);
-				} catch (DDIFtpException e) {
+				} catch (Exception e) {
 					showError(e);
 				}
 				break;
@@ -581,7 +550,7 @@ public class TranslationDialog extends Dialog {
 				// translatable
 				try {
 					setTranslateable(element, (Boolean) value);
-				} catch (DDIFtpException e) {
+				} catch (Exception e) {
 					showError(e);
 				}
 				break;
