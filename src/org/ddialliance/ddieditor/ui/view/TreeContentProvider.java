@@ -140,6 +140,10 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			DDIResourceType ddiResource) {
 		List<ConceptualElement> result = conceptualElementCache.get(ddiResource
 				.getOrgName());
+		// Cach disabled due to missing sync. between views
+		// TODO Implement sync. between views.
+		result = null;
+		
 		if (result == null) {
 			try {
 				PersistenceManager.getInstance().setWorkingResource(
