@@ -32,12 +32,4 @@ public class InfoView extends View {
 				.getString("InfoView.label.treeGroup.DDIStructure"), 
 				Arrays.asList(ElementType.STUDY_UNIT));
 	}
-
-	public void createPartControl(Composite parent) {
-
-		log.debug("");
-
-		super.createPartControl(parent);
-
-	}
 }
