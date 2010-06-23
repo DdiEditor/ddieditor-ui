@@ -24,6 +24,8 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.PropertyTabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.TabFolderListener;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
@@ -512,22 +514,22 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		labelDescriptionTabItem.setText(editorEntityName);
 
 		// - Simple Group
-		final Group labelDescriptionGroup = new Group(simpleRootComposite,
+		final Group group = new Group(simpleRootComposite,
 				SWT.NONE);
 		final GridData gd_labelDescriptionGroup = new GridData(SWT.FILL,
 				SWT.CENTER, true, true);
 		gd_labelDescriptionGroup.heightHint = 632;
 		gd_labelDescriptionGroup.widthHint = 861;
-		labelDescriptionGroup.setLayoutData(gd_labelDescriptionGroup);
-		labelDescriptionGroup.setBackground(Display.getCurrent()
+		group.setLayoutData(gd_labelDescriptionGroup);
+		group.setBackground(Display.getCurrent()
 				.getSystemColor(SWT.COLOR_WHITE));
 		final GridLayout gridLayout_1 = new GridLayout();
 		gridLayout_1.numColumns = 2;
-		labelDescriptionGroup.setLayout(gridLayout_1);
-		labelDescriptionGroup.setText(editorEntityName);
+		group.setLayout(gridLayout_1);
+		group.setText(editorEntityName);
 
 		// Simple Label:
-		final Label labelLabel = new Label(labelDescriptionGroup, SWT.NONE);
+		final Label labelLabel = new Label(group, SWT.NONE);
 		final GridData gd_conceptLabel = new GridData(SWT.RIGHT, SWT.CENTER,
 				false, false);
 		gd_conceptLabel.horizontalIndent = 5;
@@ -536,7 +538,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				SWT.COLOR_WHITE));
 		labelLabel.setText(Messages.getString("SimpleEditor.label.Label")); //$NON-NLS-1$
 
-		final Text labelText = new Text(labelDescriptionGroup, SWT.BORDER);
+		final Text labelText = new Text(group, SWT.BORDER);
 		final GridData gd_labelText = new GridData(SWT.FILL, SWT.CENTER, true,
 				false);
 		labelText.setLayoutData(gd_labelText);
@@ -548,9 +550,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				editorStatus.setChanged();
 			}
 		});
+		createTranslation(group, Messages
+				.getString("editor.button.translate"), simpleElement.getLabels(),
+				new LabelTdI(), "");
 
 		// Simple Description:
-		final Label simpleDescrLabel = new Label(labelDescriptionGroup,
+		final Label simpleDescrLabel = new Label(group,
 				SWT.NONE);
 		final GridData gd_simpleDescrLabel = new GridData(SWT.RIGHT, SWT.TOP,
 				false, false);
@@ -562,7 +567,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				.getString("SimpleEditor.label.DescriptionText.Label")); //$NON-NLS-1$
 
 		final StyledText simpleDescrStyledText = new StyledText(
-				labelDescriptionGroup, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
+				group, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
 		simpleDescrStyledText.setText(simpleElement.getDescr());
 		final GridData gd_originalConceptTextStyledText = new GridData(
 				SWT.FILL, SWT.CENTER, true, false);
@@ -576,6 +581,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				editorStatus.setChanged();
 			}
 		});
+		createTranslation(group, Messages
+				.getString("editor.button.translate"), simpleElement.getDescrs(),
+				new DescriptionTdI(), "");
 	}
 
 	public TabItem getLabelDescriptionTabItem() {
@@ -668,7 +676,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			} else {
 				structuredString.setTranslated(true);
 			}
-			structuredString.setLang(Translator.getLocale().getISO3Country());
+			structuredString.setLang(Translator.getLocaleLanguage());
 		}
 		styledText.addModifyListener(new StructuredStringTypeModyfiListener(
 				structuredString, structuredStringList, editorStatus));
