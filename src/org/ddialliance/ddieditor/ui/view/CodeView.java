@@ -27,9 +27,4 @@ public class CodeView extends View {
 						.getString("CodeView.lable.codeTreeGroup.CodeStructure"),
 				Arrays.asList(ElementType.CODE));
 	}
-
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
-
-	}
 }
