@@ -16,7 +16,8 @@
    <launcherArgs>
       <programArgs>-consoleLog</programArgs>
       <programArgsWin>-Djava.library.path=%ORACLE_BERKELEY_DB_XML_HOME%\lib</programArgsWin>
-      <vmArgs>-Xms40m -Xmx1024m -Djava.library.path=/tools/dbxml-2.5.13/install/lib</vmArgs>
+      <vmArgs>-Xms40m -Xmx1024m</vmArgs>
+      <vmArgsLin>-Djava.library.path=/tools/dbxml-2.5.13/install/lib</vmArgsLin>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
@@ -34,8 +35,10 @@
       </win>
    </launcher>
 
+
    <vm>
    </vm>
+
 
    <plugins>
       <plugin id="com.ibm.icu"/>
