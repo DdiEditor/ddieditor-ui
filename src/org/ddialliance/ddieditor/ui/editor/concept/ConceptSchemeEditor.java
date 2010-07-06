@@ -38,10 +38,6 @@ import org.eclipse.ui.PartInitException;
 public class ConceptSchemeEditor extends LabelDescriptionEditor {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, ConceptSchemeEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor";
-
-	// Member variables:
-	private ConceptScheme modelImpl;
-	private IEditorSite site;
 	
 	public ConceptSchemeEditor() {
 		super(Messages
@@ -58,26 +54,6 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(Messages.getString("perspective.switch.dialogtext"), Messages
 				.getString("perspective.concepts"));
-	}
-
-	/**
-	 * Create contents of the editor part
-	 * 
-	 * @param parent
-	 */
-	@Override
-	public void createPartControl(Composite parent) {
-		parent.setLayout(new GridLayout());
-		log.debug("ConceptSchemeEditor.createPartControl called");
-		super.createPartControl(parent);
-	}
-	
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		
-		// Initialize the Simple Editor Part with Concept Scheme:
-		super.init(site, input);
-		log.debug("ConceptSchemeEditor.init()");
-		this.modelImpl = (ConceptScheme) model;
 	}
 	
 }
