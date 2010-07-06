@@ -124,8 +124,7 @@ public abstract class LabelDescription extends Model implements IModel {
 				return XmlBeansUtil.getTextOnMixedElement(labelType);
 			}
 		}
-		log
-				.error("*** Simple Element Label of 'Original' Language not found ***");
+		// No label found - not an error
 		return "";
 	}
 
