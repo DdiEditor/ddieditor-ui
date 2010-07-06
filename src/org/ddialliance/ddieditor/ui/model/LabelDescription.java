@@ -233,7 +233,7 @@ public abstract class LabelDescription extends Model implements IModel {
 				return XmlBeansUtil.getTextOnMixedElement(descriptionType);
 			}
 		}
-		log.error("*** Simple Element Description not found ***");
+		// Not mandatory Description - not found
 		return "";
 	}
 
