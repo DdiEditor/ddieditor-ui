@@ -12,15 +12,19 @@ package org.ddialliance.ddieditor.ui.dbxml.code;
 
 import java.util.List;
 
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeType;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.code.CodeScheme;
+import org.ddialliance.ddieditor.ui.model.concept.ConceptScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -104,33 +108,6 @@ public class CodeSchemeDao implements IDao {
 	}
 
 	/**
-	 * Create Code Scheme object
-	 * 
-	 * @param id
-	 * @param version
-	 * @param parentId
-	 * @param parentVersion
-	 * @return CodeScheme
-	 * @throws Exception
-	 */
-	static public CodeScheme createCodeScheme(String id, String version, String parentId, String parentVersion)
-			throws Exception {
-		log.debug("CodeSchemes.createCodeScheme()");
-		
-		CodeSchemeDocument codeSchemeDocument = CodeSchemeDocument.Factory.newInstance();
-
-		CodeSchemeType CodeSchemeType = codeSchemeDocument.addNewCodeScheme();
-		CodeSchemeType.setId(id);
-		if (version != null) {
-			CodeSchemeType.setVersion(version);
-		}
-
-		CodeScheme codeScheme = new CodeScheme(codeSchemeDocument, parentId, parentVersion);
-
-		return codeScheme;
-	}
-
-	/**
 	 * 
 	 * @param id
 	 * @param version
@@ -149,28 +126,6 @@ public class CodeSchemeDao implements IDao {
 		CodeScheme CodeScheme = new CodeScheme(CodeSchemeDocument, parentId, parentVersion);
 
 		return CodeScheme;
-	}
-
-	/**
-	 * Create new DBXML Code Scheme
-	 * 
-	 * @param CodeScheme
-	 *            Code scheme instance
-	 * @param parentId
-	 *            Id. of Logical Product
-	 * @param parentVersion
-	 *            Version of Logical Product
-	 * @throws DDIFtpException
-	 */
-	static public void create(CodeScheme CodeScheme) throws DDIFtpException {
-		try {
-			DdiManager.getInstance().createElement(CodeScheme.getCodeSchemeDocument(),
-					CodeScheme.getParentId(), CodeScheme.getParentVersion(), "logicalproduct__LogicalProduct");
-		} catch (DDIFtpException e) {
-			log.error("Create DBXML Code Scheme error: " + e.getMessage());
-			
-			throw new DDIFtpException(e.getMessage());
-		}
 	}
 
 	/**
@@ -224,14 +179,23 @@ public class CodeSchemeDao implements IDao {
 
 	@Override
 	public IModel create(String id, String version, String parentId, String parentVersion) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		log.debug("CodeSchemeDao.create()");
+
+		CodeSchemeDocument doc = CodeSchemeDocument.Factory.newInstance();
+		IdentificationManager.getInstance().addIdentification(
+				doc.addNewCodeScheme(),
+				ElementType.getElementType("CodeScheme").getIdPrefix(), null);
+		IdentificationManager.getInstance().addVersionInformation(
+				doc.getCodeScheme(), null, null);
+		CodeScheme codeScheme = new CodeScheme(doc, parentId, parentVersion);
+		return codeScheme;
 	}
 
 	@Override
 	public void create(IModel model) throws DDIFtpException {
-		// TODO Auto-generated method stub
-		
+		log.debug("CodeSchemeDao.create()");
+		DdiManager.getInstance().createElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
+				"logicalproduct__LogicalProduct");
 	}
 
 	@Override
