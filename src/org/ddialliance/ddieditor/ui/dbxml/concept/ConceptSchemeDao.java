@@ -32,7 +32,7 @@ public class ConceptSchemeDao implements IDao {
 
 		return getLightXmlObject("", "", parentConceptComponent.getId(), parentConceptComponent.getVersion());
 	}
-
+ 
 	/**
 	 * 
 	 * Get Light version of Concept Schemes
@@ -108,7 +108,7 @@ public class ConceptSchemeDao implements IDao {
 	@Override
 	public ConceptScheme create(String id, String version, String parentId, String parentVersion)
 			throws Exception {
-		log.debug("ConceptSchemes.createConceptScheme()");
+		log.debug("ConceptSchemes.create()");
 
 		ConceptSchemeDocument doc = ConceptSchemeDocument.Factory.newInstance();
 		IdentificationManager.getInstance().addIdentification(
@@ -140,28 +140,6 @@ public class ConceptSchemeDao implements IDao {
 		ConceptScheme conceptScheme = new ConceptScheme(conceptSchemeDocument, parentId, parentVersion);
 
 		return conceptScheme;
-	}
-
-	/**
-	 * Create new DBXML Concept Scheme
-	 * 
-	 * @param conceptScheme
-	 *            concept scheme instance
-	 * @param parentId
-	 *            Id. of Conceptual Component
-	 * @param parentVersion
-	 *            Version of Conceptual Component
-	 * @throws DDIFtpException
-	 */
-	public void create(ConceptScheme model) throws DDIFtpException {
-		try {
-			DdiManager.getInstance().createElement(model.getConceptSchemeDocument(),
-					model.getParentId(), model.getParentVersion(), "ConceptualComponent");
-		} catch (DDIFtpException e) {
-			log.error("Create DBXML Concept Scheme error: " + e.getMessage());
-			
-			throw new DDIFtpException(e.getMessage());
-		}
 	}
 
 	/**
