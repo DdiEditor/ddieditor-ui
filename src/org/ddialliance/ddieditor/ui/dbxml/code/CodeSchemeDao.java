@@ -235,27 +235,42 @@ public class CodeSchemeDao implements IDao {
 	}
 
 	@Override
-	public List<LightXmlObjectType> getLightXmlObject(LightXmlObjectType lightXmlObject) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<LightXmlObjectType> getLightXmlObject(LightXmlObjectType parentCodeScheme) throws Exception {
+
+		log.debug("CodeSchemes.getLightXmlObject()");
+
+		return getLightXmlObject("", "", parentCodeScheme.getId(), parentCodeScheme.getVersion());
 	}
 
 	@Override
 	public List<LightXmlObjectType> getLightXmlObject(String id, String version, String parentId, String parentVersion)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+
+		log.debug("CodeSchemes.getLightXmlObject()");
+
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getCodeSchemesLight(id, version,
+				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
+
+		return lightXmlObjectTypeList;
 	}
 
 	@Override
 	public IModel getModel(String id, String version, String parentId, String parentVersion) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+
+		log.debug("CodeSchemeDao.getModel()");
+
+		CodeSchemeDocument codeSchemeDocument = DdiManager.getInstance().getCodeScheme(id, version,
+				parentId, parentVersion);
+
+		CodeScheme codeScheme = new CodeScheme(codeSchemeDocument, parentId, parentVersion);
+
+		return codeScheme;
 	}
 
 	@Override
 	public void update(IModel model) throws DDIFtpException {
-		// TODO Auto-generated method stub
-		
+
+		DdiManager.getInstance().updateElement(model.getDocument(),
+				model.getId(), model.getVersion());
 	}
 }
