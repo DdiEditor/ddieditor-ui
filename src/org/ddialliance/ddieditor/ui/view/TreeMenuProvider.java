@@ -207,6 +207,9 @@ public class TreeMenuProvider extends TreeMenu {
 					if (type.equals(rootElement)) {
 						createNewMenuItem(type, true);
 						for (ElementType subType : subElements) {
+							if (subType.equals(rootElement)) {
+								continue;
+							}
 							createNewMenuItem(subType, false);
 						}
 					} else {
@@ -327,31 +330,10 @@ public class TreeMenuProvider extends TreeMenu {
 
 						break;
 					case CODE_SCHEME:
-						List<LightXmlObjectType> codeList = CodeSchemeDao
-								.getCodesLight(lightXmlObject.getId(),
-										lightXmlObject.getVersion());
-						if (codeList.size() > 0
-								&& !MessageDialog
-										.openConfirm(
-												currentView.getSite()
-														.getShell(),
-												Messages
-														.getString("ConfirmTitle"),
-												MessageFormat
-														.format(
-																Messages
-																		.getString("View.mess.ConfirmDeleteCodes"),
-																codeList.size()))) {
-							break;
-						}
 						new CodeSchemeDao().delete(lightXmlObject.getId(),
 								lightXmlObject.getVersion(), lightXmlObject
 										.getParentId(), lightXmlObject
 										.getParentVersion());
-						break;
-					case CODE:
-						MessageUtil.currentNotSupported(currentView.getSite()
-								.getShell());
 						break;
 					case QUESTION_SCHEME:
 						QuestionSchemeDao dao = new QuestionSchemeDao();
