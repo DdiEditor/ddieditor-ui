@@ -206,9 +206,8 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			try {
 				// code scheme
 				if (lightXmlTypeLocalname.equals("CodeScheme")) {
-					// TODO Commented out - support for Code Scheme
-//					contentList = new CodeDao().getLightXmlObject(lightXmlObjectType)
-//							.toArray();
+					// Codes are supported by the Code Scheme Editor
+					return (new Object[0]);
 				}
 				// concept scheme
 				else if (lightXmlTypeLocalname.equals("ConceptScheme")) {
