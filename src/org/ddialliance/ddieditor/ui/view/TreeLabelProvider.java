@@ -13,6 +13,7 @@ package org.ddialliance.ddieditor.ui.view;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -20,6 +21,7 @@ import org.ddialliance.ddieditor.model.lightxmlobject.impl.LightXmlObjectTypeImp
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -32,21 +34,19 @@ class TreeLabelProvider extends LabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		// TODO Get Label of default language - not just the first one
 		if (element instanceof LightXmlObjectTypeImpl) {
 			LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) element;
 			if (lightXmlObjectType.getLabelList().size() > 0) {
-				XmlCursor xmlCursor = lightXmlObjectType.getLabelList().get(0)
-						.newCursor();
-				xmlCursor.toLastAttribute();
-				xmlCursor.toNextToken();
-				String result = xmlCursor.getChars();
-				xmlCursor.dispose();
-				return (result);
+				try {
+					Object obj = XmlBeansUtil.getDefaultLangElement(lightXmlObjectType.getLabelList());
+					return XmlBeansUtil.getTextOnMixedElement((XmlObject) obj);
+				} catch (DDIFtpException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
 				// No label specified - use ID instead:
-				return lightXmlObjectType.getElement() + ": "
-						+ lightXmlObjectType.getId();
+				return lightXmlObjectType.getElement() + ": " + lightXmlObjectType.getId();
 			}
 		} else if (element instanceof DDIResourceType) {
 			return ((DDIResourceType) element).getOrgName();
@@ -58,25 +58,23 @@ class TreeLabelProvider extends LabelProvider {
 			List<org.ddialliance.ddieditor.model.lightxmlobject.LabelType> labels = ((ConceptualElement) element)
 					.getValue().getLabelList();
 			if (!labels.isEmpty()) {
-				return XmlBeansUtil
-						.getTextOnMixedElement(((ConceptualElement) element)
-								.getValue().getLabelList().get(0));
+				return XmlBeansUtil.getTextOnMixedElement(((ConceptualElement) element).getValue().getLabelList()
+						.get(0));
 			} else {
 				return ((ConceptualElement) element).getValue().getId();
 			}
 		} else if (element instanceof MaintainableLightLabelQueryResult) {
-			return ((MaintainableLightLabelQueryResult) element)
-					.getMaintainableTarget();
-		} 
+			return ((MaintainableLightLabelQueryResult) element).getMaintainableTarget();
+		}
 		// java.util.List
 		else if (element instanceof List<?>) {
-			if (!((List<?>)element).isEmpty()) {
-				Object obj = ((List<?>)element).get(0);
+			if (!((List<?>) element).isEmpty()) {
+				Object obj = ((List<?>) element).get(0);
 				// light xml objects
 				if (obj instanceof LightXmlObjectType) {
-					String label = ((LightXmlObjectType)obj).getElement(); 
+					String label = ((LightXmlObjectType) obj).getElement();
 					return label;
-				}				
+				}
 			} else {
 				// System.out.println("Empty list");
 			}
@@ -85,8 +83,7 @@ class TreeLabelProvider extends LabelProvider {
 		// guard
 		else {
 			if (log.isWarnEnabled()) {
-				log.warn(element.getClass().getName() + "is not supported",
-						new Throwable());
+				log.warn(element.getClass().getName() + "is not supported", new Throwable());
 			}
 		}
 		return new String();
