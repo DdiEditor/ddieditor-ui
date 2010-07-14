@@ -24,6 +24,11 @@
                   class="org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective"
                   id="org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective"
             > </perspective>
+            <perspective
+                  class="org.ddialliance.ddieditor.ui.perspective.CategoryPerspective"
+                  id="org.ddialliance.ddieditor.ui.perspective.CategoryPerspective"
+                  name="%perspective.name.4">
+            </perspective>
       </extension>
       <extension point="org.eclipse.ui.views">
             <view class="org.ddialliance.ddieditor.ui.view.InfoView" icon="icons/tree.gif"
@@ -37,6 +42,13 @@
             <view class="org.ddialliance.ddieditor.ui.view.InstrumentView" icon="icons/tree.gif"
                   id="org.ddialliance.ddieditor.ui.view.InstrumentView" name="%view.name.3"
                   restorable="true"> </view>
+            <view
+                  class="org.ddialliance.ddieditor.ui.view.CategoryView"
+                  icon="icons/tree.gif"
+                  id="org.ddialliance.ddieditor.ui.view.CategoryView"
+                  name="%view.name.4"
+                  restorable="true">
+            </view>
       </extension>
       <extension
             id="product"
@@ -160,6 +172,20 @@
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.file.FileEditor"
                   name="%editor.name.12">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.category.CategorySchemeEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.category.CategorySchemeEditor"
+                  name="%editor.name.13">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.category.CategoryEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.category.CategoryEditor"
+                  name="%editor.name.14">
             </editor>
       </extension>
       <extension id="org.eclipse.ui.idexportwizard" name="%extension.name"
