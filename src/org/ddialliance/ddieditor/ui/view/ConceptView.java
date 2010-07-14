@@ -7,7 +7,6 @@ package org.ddialliance.ddieditor.ui.view;
 import java.util.Arrays;
 
 import org.ddialliance.ddieditor.ui.model.ElementType;
-import org.eclipse.swt.widgets.Composite;
 
 public class ConceptView extends View {
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.ConceptView";
