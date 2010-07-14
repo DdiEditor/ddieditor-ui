@@ -49,7 +49,7 @@ public class View extends ViewPart implements IPropertyListener {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, View.class);
 
 	public enum ViewContentType {
-		StudyContent, UniverseContent, ConceptContent, CodeContent, QuestionContent, InstrumentationContent;
+		StudyContent, UniverseContent, ConceptContent, CodeContent, CategoryContent, QuestionContent, InstrumentationContent;
 	}
 
 	private ViewContentType viewContentType;
