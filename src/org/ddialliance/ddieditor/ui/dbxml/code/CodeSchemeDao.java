@@ -30,19 +30,11 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
+import sun.security.action.GetLongAction;
+
 
 public class CodeSchemeDao implements IDao {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeSchemeDao.class);
-
-	/**
-	 * Get Light Code Scheme List
-	 * 
-	 * @return List<LightXmlObjectType>
-	 * @throws Exception
-	 */
-	public static List<LightXmlObjectType> getCodeSchemesLight() throws Exception {
-		return getCodeSchemesLight("", "");
-	}
 
 	/**
 	 * 
@@ -54,44 +46,14 @@ public class CodeSchemeDao implements IDao {
 	 * @throws Exception
 	 */
 	public static List<LightXmlObjectType> getCodeSchemesLight(String id, String version) throws Exception {
+
 		log.debug("CodeScheme.getCodeSchemesLight(). Id: "+id+" Version: "+version);
 
-		DdiManager ddiManager = DdiManager.getInstance();
-
-		LightXmlObjectListDocument listDoc = ddiManager.getCodeSchemesLight(id, version, null, null);
-
-		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
-
-		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
-
-		return listLightXmlObjectListType;
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getCodeSchemesLight(id, version,
+				null, null).getLightXmlObjectList().getLightXmlObjectList();
+		return lightXmlObjectTypeList;
 	}
 
-	/**
-	 * 
-	 * Get Light Code List
-	 * 
-	 * - get children (Codes) of given Code Scheme
-	 * 
-	 * @param id
-	 * @param version
-	 * @return List<LightXmlObjectType>
-	 * @throws Exception
-	 */
-	public static List<LightXmlObjectType> getCodesLight(String id, String version) throws Exception {
-		log.debug("CodeScheme.getCodesLight(). Id: "+id+" Version: "+version);
-
-//		DdiManager ddiManager = DdiManager.getInstance();
-//
-//		LightXmlObjectListDocument listDoc = ddiManager.getCodeLight("", "", id, version);
-//
-//		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
-//
-//		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
-//
-//		return listLightXmlObjectListType;
-		return null;
-	}
 
 
 	/**
@@ -103,29 +65,9 @@ public class CodeSchemeDao implements IDao {
 	 * @throws Exception
 	 */
 	public CodeSchemeType getCodeSchemeById(String id, String parentId) throws Exception {
+
 		log.debug("CodeScheme.getCodeSchemeById()");
 		return DdiManager.getInstance().getCodeScheme(id, null, parentId, null).getCodeScheme();
-	}
-
-	/**
-	 * 
-	 * @param id
-	 * @param version
-	 * @param parentId
-	 * @param parentVersion
-	 * @return CodeScheme
-	 * @throws Exception
-	 */
-	static public CodeScheme getCodeScheme(String id, String version, String parentId, String parentVersion)
-			throws Exception {
-		log.debug("CodeSchemes.getCodeScheme()");
-
-		CodeSchemeDocument CodeSchemeDocument = DdiManager.getInstance().getCodeScheme(id, version,
-				parentId, parentVersion);
-
-		CodeScheme CodeScheme = new CodeScheme(CodeSchemeDocument, parentId, parentVersion);
-
-		return CodeScheme;
 	}
 
 	/**
@@ -138,6 +80,7 @@ public class CodeSchemeDao implements IDao {
 	 * @throws DDIFtpException
 	 */
 	static public void update(CodeScheme CodeScheme) throws DDIFtpException {
+
 		// TODO Version Control - not supported
 		log.debug("Update DBXML Code Scheme:\n" + CodeScheme.getCodeSchemeDocument());
 		try {
@@ -165,22 +108,18 @@ public class CodeSchemeDao implements IDao {
 	 * @throws Exception
 	 */
 	public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
+
 		log.debug("Delete DBXML Code Scheme");
-		CodeScheme CodeScheme = getCodeScheme(id, version, parentId, parentVersion);
-		try {
-			DdiManager.getInstance().deleteElement(CodeScheme.getCodeSchemeDocument(), CodeScheme.getParentId(),
-					CodeScheme.getParentVersion(), "logicalproduct__LogicalProduct");
-		} catch (DDIFtpException e) {
-			log.error("Delete DBXML Code Scheme error: " + e.getMessage());
-			
-			throw new DDIFtpException(e.getMessage());
-		}
+		IModel  model = getModel(id, version, parentId, parentVersion);
+		DdiManager.getInstance()
+				.deleteElement(model.getDocument(), model.getParentId(),
+						model.getParentVersion(), "logicalproduct__LogicalProduct");
 	}
 
 	@Override
 	public IModel create(String id, String version, String parentId, String parentVersion) throws Exception {
-		log.debug("CodeSchemeDao.create()");
 
+		log.debug("CodeSchemeDao.create()");
 		CodeSchemeDocument doc = CodeSchemeDocument.Factory.newInstance();
 		IdentificationManager.getInstance().addIdentification(
 				doc.addNewCodeScheme(),
@@ -193,6 +132,7 @@ public class CodeSchemeDao implements IDao {
 
 	@Override
 	public void create(IModel model) throws DDIFtpException {
+
 		log.debug("CodeSchemeDao.create()");
 		DdiManager.getInstance().createElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
 				"logicalproduct__LogicalProduct");
@@ -202,7 +142,6 @@ public class CodeSchemeDao implements IDao {
 	public List<LightXmlObjectType> getLightXmlObject(LightXmlObjectType parentCodeScheme) throws Exception {
 
 		log.debug("CodeSchemes.getLightXmlObject()");
-
 		return getLightXmlObject("", "", parentCodeScheme.getId(), parentCodeScheme.getVersion());
 	}
 
@@ -211,10 +150,8 @@ public class CodeSchemeDao implements IDao {
 			throws Exception {
 
 		log.debug("CodeSchemes.getLightXmlObject()");
-
 		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getCodeSchemesLight(id, version,
 				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
-
 		return lightXmlObjectTypeList;
 	}
 
@@ -222,12 +159,9 @@ public class CodeSchemeDao implements IDao {
 	public IModel getModel(String id, String version, String parentId, String parentVersion) throws Exception {
 
 		log.debug("CodeSchemeDao.getModel()");
-
 		CodeSchemeDocument codeSchemeDocument = DdiManager.getInstance().getCodeScheme(id, version,
 				parentId, parentVersion);
-
 		CodeScheme codeScheme = new CodeScheme(codeSchemeDocument, parentId, parentVersion);
-
 		return codeScheme;
 	}
 
