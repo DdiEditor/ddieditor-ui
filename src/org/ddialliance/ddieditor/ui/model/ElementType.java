@@ -1,5 +1,7 @@
 package org.ddialliance.ddieditor.ui.model;
 
+import org.ddialliance.ddieditor.ui.editor.category.CategoryEditor;
+import org.ddialliance.ddieditor.ui.editor.category.CategorySchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor;
 import org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor;
@@ -17,6 +19,7 @@ import org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor;
+import org.ddialliance.ddieditor.ui.perspective.CategoryPerspective;
 import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
@@ -60,7 +63,9 @@ public enum ElementType {
 			"QuestionItemView.label.questionItemLabel.QuestionItem", ""),
 
 	// category
-	CATEGORY_SCHEME("CategoryScheme", null, null, "cats", "", ""), CATEGORY("Category", null, null, "cate", "", ""),
+	CATEGORY_SCHEME("CategoryScheme", CategoryPerspective.ID, CategorySchemeEditor.ID, "cats",
+			"CategoryView.label.categorySchemeLabel.CategoryScheme", ""), CATEGORY("Category", CategoryPerspective.ID,
+			CategoryEditor.ID, "cat", "CategoryView.label.categoryLabel.Category", ""),
 
 	// instrument
 	INSTRUMENT("Instrument", InstrumentPerspective.ID, InstrumentEditor.ID, "inst",
