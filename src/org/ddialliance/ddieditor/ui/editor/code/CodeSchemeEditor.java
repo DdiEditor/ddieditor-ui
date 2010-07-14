@@ -21,7 +21,7 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class CodeSchemeEditor extends LabelDescriptionEditor{
+public class CodeSchemeEditor extends LabelDescriptionEditor {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeSchemeEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor";
 
