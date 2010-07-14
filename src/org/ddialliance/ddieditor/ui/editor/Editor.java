@@ -99,6 +99,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	protected IModel model;
 	protected IDao dao;
+	
+	protected Group labelDescriptionTabGroup; // May be used for expanding Label Description Tab content
 
 	/**
 	 * Default constructor. Usage to gain access to create widget methods <br>
@@ -527,6 +529,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		gridLayout_1.numColumns = 2;
 		group.setLayout(gridLayout_1);
 		group.setText(editorEntityName);
+		labelDescriptionTabGroup = group;
 
 		// Simple Label:
 		final Label labelLabel = new Label(group, SWT.NONE);
