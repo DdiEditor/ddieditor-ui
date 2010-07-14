@@ -19,6 +19,8 @@ import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.category.CategoryDao;
+import org.ddialliance.ddieditor.ui.dbxml.category.CategorySchemeDao;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -102,6 +104,9 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			// end temp. solution
 			if (contentType.equals(ViewContentType.ConceptContent)) {
 				return new ConceptSchemeDao().getLightXmlObject(null, null,
+						null, null).toArray();
+			} else if (contentType.equals(ViewContentType.CategoryContent)) {
+				return new CategorySchemeDao().getLightXmlObject(null, null,
 						null, null).toArray();
 			} else if (contentType.equals(ViewContentType.CodeContent)) {
 				return CodeSchemeDao.getCodeSchemesLight(null, null).toArray();
@@ -208,6 +213,11 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				if (lightXmlTypeLocalname.equals("CodeScheme")) {
 					// Codes are supported by the Code Scheme Editor
 					return (new Object[0]);
+				}	
+				// category scheme
+				else if (lightXmlTypeLocalname.equals("CategoryScheme")) {
+					contentList = new CategoryDao().getLightXmlObject(
+							lightXmlObjectType).toArray();
 				}
 				// concept scheme
 				else if (lightXmlTypeLocalname.equals("ConceptScheme")) {
