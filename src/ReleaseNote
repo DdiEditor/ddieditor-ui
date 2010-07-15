@@ -1,0 +1,23 @@
+DDI 3 Release Notes:
+
+Product Version: 0.1.1
+Release Data: 2010-06-24
+
+What's New
+----------
+1. Translation pop-up now works.
+2. Bug fixed: If initial view was different from Overview and Instruction, an error occurred.
+3. Bug fixed: It was not possible to create child object if more parents exists.
+
+Installing
+----------
+See http://192.168.99.102:8080/devwiki/en/Installation
+
+Uninstalling
+------------
+Remove installation directory e.g. C:\Programmer\ddieditor-ui
+
+Known Issue
+-----------
+N/A
+
