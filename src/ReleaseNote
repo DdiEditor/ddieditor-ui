@@ -5,9 +5,10 @@ Release Data: 2010-06-24
 
 What's New
 ----------
-1. Translation pop-up now works.
-2. Bug fixed: If initial view was different from Overview and Instruction, an error occurred.
-3. Bug fixed: It was not possible to create child object if more parents exists.
+Item ID:	Description:
+None.		Translation pop-up now works.
+None.		Bug fixed: If initial view was different from Overview and Instruction, an error occurred.
+None.		Bug fixed: It was not possible to create child object if more parents exists.
 
 Installing
 ----------
