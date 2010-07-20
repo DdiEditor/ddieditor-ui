@@ -27,12 +27,14 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -113,23 +115,23 @@ public class InstrumentEditor extends Editor {
 				.getString("editor.label.description"));
 
 		try {
-			createNameInput(group2, Messages.getString("editor.label.name"),
+			Text txt = createNameInput(group2, Messages.getString("editor.label.name"),
 					modelImpl.getDocument().getInstrument()
 							.getInstrumentNameList(), modelImpl.getDocument()
 							.getInstrument().getId());
 			createTranslation(group2, Messages
 					.getString("editor.button.translate"), modelImpl
 					.getDocument().getInstrument().getInstrumentNameList(),
-					new NameTdI(), "");
+					new NameTdI(), "", txt);
 			
-			createStructuredStringInput(group2, Messages
+			StyledText styledText = createStructuredStringInput(group2, Messages
 					.getString("editor.label.description"), modelImpl
 					.getDocument().getInstrument().getDescriptionList(),
 					modelImpl.getDocument().getInstrument().getId());
 			createTranslation(group2, Messages
 					.getString("editor.button.translate"), modelImpl
 					.getDocument().getInstrument().getDescriptionList(),
-					new DescriptionTdI(), "");
+					new DescriptionTdI(), "", styledText);
 		} catch (DDIFtpException e) {
 			DialogUtil
 					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
@@ -65,6 +66,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TypedListener;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -555,7 +557,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		});
 		createTranslation(group, Messages
 				.getString("editor.button.translate"), simpleElement.getLabels(),
-				new LabelTdI(), "");
+				new LabelTdI(), "", labelText);
 
 		// Simple Description:
 		final Label simpleDescrLabel = new Label(group,
@@ -586,7 +588,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		});
 		createTranslation(group, Messages
 				.getString("editor.button.translate"), simpleElement.getDescrs(),
-				new DescriptionTdI(), "");
+				new DescriptionTdI(), "", simpleDescrStyledText);
 	}
 
 	public TabItem getLabelDescriptionTabItem() {
@@ -636,7 +638,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return actionCombo;
 	}
 
-	public void createNameInput(Group group, String labelText,
+	public Text createNameInput(Group group, String labelText,
 			List<NameType> nameList, String parentLabel) throws DDIFtpException {
 		NameType name = (NameType) XmlBeansUtil.getDefaultLangElement(nameList);
 
@@ -658,9 +660,11 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		// createTranslation(group,
 		// Messages.getString("editor.button.translate"),
 		// nameList, parentLabel);
+		
+		return nameTxt;
 	}
 
-	public void createStructuredStringInput(Group group, String labelText,
+	public StyledText createStructuredStringInput(Group group, String labelText,
 			List<StructuredStringType> structuredStringList, String parentLabel)
 			throws DDIFtpException {
 		StructuredStringType structuredString = (StructuredStringType) XmlBeansUtil
@@ -687,28 +691,62 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		// createTranslation(group,
 		// Messages.getString("editor.button.translate"),
 		// structuredStringList, parentLabel);
+		return styledText;
 	}
 
+	/**
+	 * 
+	 * @param group
+	 * @param buttonText
+	 * @param items
+	 * @param translationDialogOption
+	 * @param parentLabel
+	 * @param editor Editor implementing IEditor interface
+	 * @return
+	 */
 	public Button createTranslation(Group group, String buttonText,
 			final List items,
 			final TranslationDialogInput translationDialogOption,
-			final String parentLabel) {
+			final String parentLabel,
+			Widget parentWidget) {
 		Button button = createButton(group, buttonText);
-		button.addSelectionListener(createTranslationSelectionListener(items,
-				translationDialogOption, parentLabel));
+		button.addSelectionListener(createTranslationSelectionListener(items, translationDialogOption, parentLabel,
+				parentWidget));
 		return button;
+	}
+
+	public void updateparentWidget(TranslationDialog translationDialog) {
+
+		try {
+			XmlObject xObj = (XmlObject) XmlBeansUtil.getDefaultLangElement(translationDialog.getItems());
+			String text = XmlBeansUtil.getTextOnMixedElement(xObj);
+			Widget widget = translationDialog.getParentWidget();
+			if (widget instanceof Text) {
+				((Text) widget).setText(text);
+			} else if (widget instanceof StyledText) {
+				((StyledText) widget).setText(text);
+			} else {
+				log.debug("Unsupported");
+			}
+		} catch (DDIFtpException e) {
+			ErrorDialog.openError(getSite().getShell(), Messages
+					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, e.getMessage(), e));
+		}
 	}
 
 	private SelectionListener createTranslationSelectionListener(
 			final List items,
 			final TranslationDialogInput translationDialogOption,
-			final String parentLabel) {
+			final String parentLabel,
+			final Widget parentWidget) {
 		SelectionListener listener = new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new TranslationDialog(getEditorSite().getShell(), editorStatus,
-						items, translationDialogOption, parentLabel).open();
-				// TODO call back to opener to update label
+				TranslationDialog translationDialog = new TranslationDialog(getEditorSite().getShell(), editorStatus,
+						items, translationDialogOption, parentLabel, parentWidget);
+				translationDialog.open();
+				updateparentWidget(translationDialog);
 			}
 	
 			@Override

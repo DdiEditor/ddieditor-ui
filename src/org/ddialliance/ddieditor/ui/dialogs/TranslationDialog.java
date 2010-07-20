@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * Generic translation dialog
@@ -77,6 +78,7 @@ public class TranslationDialog extends Dialog {
 
 	private String[][] availableLanguages = LanguageUtil
 			.getAvailableLanguages();
+	private Widget parentWidget;
 
 	/**
 	 * Constructor creating dialog and defining the original language as the
@@ -96,12 +98,13 @@ public class TranslationDialog extends Dialog {
 	 */
 	public TranslationDialog(Shell parentShell, EditorStatus editorStatus,
 			List<?> items, TranslationDialogInput translationDialogOption,
-			String parentLabel) {
+			String parentLabel, Widget parentWidget) {
 		super(parentShell);
 		this.items = items;
 		this.translationDialogOption = translationDialogOption;
 		this.editorStatus = editorStatus;
 		this.parentLabel = parentLabel;
+		this.parentWidget = parentWidget;
 		xmlOptions.setSavePrettyPrint();
 		enabled = Messages.getString("enabled");
 		disabled = Messages.getString("disabled");
@@ -195,6 +198,10 @@ public class TranslationDialog extends Dialog {
 
 	public List<Object> getItems() {
 		return items;
+	}
+	
+	public Widget getParentWidget() {
+		return parentWidget;
 	}
 
 	// ------------------------------------------------------------------------

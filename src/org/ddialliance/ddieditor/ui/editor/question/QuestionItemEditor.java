@@ -144,6 +144,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 						refSelecCombo, model, ReferenceType.class,
 						getEditorIdentification()));
 
+		// - Question Text
 		DynamicTextType questionText = null;
 		try {
 			if (modelImpl.getQuestionText() != null) {
@@ -170,7 +171,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		try {
 			createTranslation(questionGroup, Messages
 					.getString("editor.button.translate"), modelImpl
-					.getQuestionText(), new DynamicTextTdI(), "");
+					.getQuestionText(), new DynamicTextTdI(), "", questionTxt);
 		} catch (DDIFtpException e) {
 			DialogUtil
 					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);

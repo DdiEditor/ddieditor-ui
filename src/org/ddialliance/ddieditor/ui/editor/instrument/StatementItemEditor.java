@@ -99,7 +99,7 @@ public class StatementItemEditor extends Editor implements
 				group,
 				Messages.getString("editor.button.translate"),
 				modelImpl.getDocument().getStatementItem().getDisplayTextList(),
-				new DynamicTextTdI(), "");
+				new DynamicTextTdI(), "", statementTxt);
 
 		// condition
 		// Composite error = createErrorComposite(group, "");
@@ -163,24 +163,17 @@ public class StatementItemEditor extends Editor implements
 
 		try {
 			// name
-			createNameInput(group2, Messages.getString("editor.label.name"),
-					modelImpl.getDocument().getStatementItem()
-							.getConstructNameList(), modelImpl.getDocument()
-							.getStatementItem().getId());
-			createTranslation(group2, Messages
-					.getString("editor.button.translate"), modelImpl
-					.getDocument().getStatementItem().getConstructNameList(),
-					new NameTdI(), "");
+			Text txt = createNameInput(group2, Messages.getString("editor.label.name"), modelImpl.getDocument()
+					.getStatementItem().getConstructNameList(), modelImpl.getDocument().getStatementItem().getId());
+			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
+					.getStatementItem().getConstructNameList(), new NameTdI(), "", txt);
 
 			// description
-			createStructuredStringInput(group2, Messages
-					.getString("editor.label.description"), modelImpl
-					.getDocument().getStatementItem().getDescriptionList(),
-					modelImpl.getDocument().getStatementItem().getId());
-			createTranslation(group2, Messages
-					.getString("editor.button.translate"), modelImpl
-					.getDocument().getStatementItem().getDescriptionList(),
-					new DescriptionTdI(), "");
+			StyledText styledText = createStructuredStringInput(group2, Messages.getString("editor.label.description"),
+					modelImpl.getDocument().getStatementItem().getDescriptionList(), modelImpl.getDocument()
+							.getStatementItem().getId());
+			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
+					.getStatementItem().getDescriptionList(), new DescriptionTdI(), "", styledText);
 		} catch (DDIFtpException e) {
 			DialogUtil
 					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);

@@ -22,6 +22,7 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -167,24 +168,17 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 				.getString("editor.label.description"));
 
 		try {
-			createNameInput(group2, Messages.getString("editor.label.name"),
-					modelImpl.getDocument().getIfThenElse()
-							.getConstructNameList(), modelImpl.getDocument()
-							.getIfThenElse().getId());
+			Text txt = createNameInput(group2, Messages.getString("editor.label.name"), modelImpl.getDocument()
+					.getIfThenElse().getConstructNameList(), modelImpl.getDocument().getIfThenElse().getId());
 
-			createTranslation(group2, Messages
-					.getString("editor.button.translate"), modelImpl
-					.getDocument().getIfThenElse().getConstructNameList(),
-					new NameTdI(), "");
-			
-			createStructuredStringInput(group2, Messages
-					.getString("editor.label.description"), modelImpl
-					.getDocument().getIfThenElse().getDescriptionList(),
-					modelImpl.getDocument().getIfThenElse().getId());
-			createTranslation(group2, Messages
-					.getString("editor.button.translate"), modelImpl
-					.getDocument().getIfThenElse().getDescriptionList(),
-					new DescriptionTdI(), "");
+			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
+					.getIfThenElse().getConstructNameList(), new NameTdI(), "", txt);
+
+			StyledText styledText = createStructuredStringInput(group2, Messages.getString("editor.label.description"),
+					modelImpl.getDocument().getIfThenElse().getDescriptionList(), modelImpl.getDocument()
+							.getIfThenElse().getId());
+			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
+					.getIfThenElse().getDescriptionList(), new DescriptionTdI(), "", styledText);
 		} catch (DDIFtpException e) {
 			DialogUtil
 			.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
