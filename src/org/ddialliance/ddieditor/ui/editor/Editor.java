@@ -41,6 +41,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -746,7 +747,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				TranslationDialog translationDialog = new TranslationDialog(getEditorSite().getShell(), editorStatus,
 						items, translationDialogOption, parentLabel, parentWidget);
 				translationDialog.open();
-				updateparentWidget(translationDialog);
+				if (translationDialog.getReturnCode() == IDialogConstants.OK_ID) {
+					updateparentWidget(translationDialog);
+				}
 			}
 	
 			@Override
