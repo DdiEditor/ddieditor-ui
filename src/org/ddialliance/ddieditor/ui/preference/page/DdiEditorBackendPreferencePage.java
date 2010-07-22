@@ -21,7 +21,7 @@ public class DdiEditorBackendPreferencePage  extends FieldEditorPreferencePage i
 		addField(new DirectoryFieldEditor(PreferenceConstants.DDIEDITOR_DBXML_HOME,  
 				"&Directory of Oracle &Berkley XML instalation:", getFieldEditorParent()));
 		addField(new DirectoryFieldEditor(PreferenceConstants.DDIEDITOR_DBXML_HOME,  
-				"Directory of DDIEdiotr XML &enviroment:", getFieldEditorParent()));
+				"Directory of DDIEditor XML &enviroment:", getFieldEditorParent()));
 	}
 	
 	@Override
