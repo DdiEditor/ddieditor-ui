@@ -22,6 +22,7 @@ import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -36,6 +37,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -152,7 +154,7 @@ public class TranslationDialog extends Dialog {
 		return "";
 	}
 
-	private final void setXmlText(Object obj, String text)
+	public final void setXmlText(Object obj, String text)
 			throws DDIFtpException {
 		XmlObject xmlObject = XmlBeansUtil.getElementInElementStructure(
 				translationDialogOption.getTextElement(), (XmlObject) obj);
@@ -176,7 +178,7 @@ public class TranslationDialog extends Dialog {
 		return Boolean.parseBoolean(queryAttribute(obj, queries[1]));
 	}
 
-	private final void setXmlLang(Object obj, String lang)
+	public final void setXmlLang(Object obj, String lang)
 			throws DDIFtpException, Exception {
 		ReflectionUtil.invokeMethod(obj, "setLang", false, lang);
 	}
@@ -447,12 +449,12 @@ public class TranslationDialog extends Dialog {
 			switch (column) {
 			case 0:
 				editor = new TextCellEditor(((TableViewer) viewer).getTable(),
-						SWT.MULTI | SWT.V_SCROLL);
+						SWT.SINGLE | SWT.V_SCROLL);
 				break;
 			case 1:
 				editor = new ComboBoxCellEditor(((TableViewer) viewer)
 						.getTable(), LanguageUtil
-						.getLanguages(availableLanguages));
+						.getLanguages(availableLanguages), SWT.READ_ONLY);
 				break;
 			case 2:
 				// translated
@@ -527,7 +529,8 @@ public class TranslationDialog extends Dialog {
 		}
 
 		@Override
-		protected void setValue(Object element, Object value) {
+		public void setValue(Object element, Object value) {
+			
 			switch (this.column) {
 			case 0:
 				try {
