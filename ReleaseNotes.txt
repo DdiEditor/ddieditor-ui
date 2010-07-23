@@ -7,3 +7,7 @@ New features:
 1. New views: Category and Code viewes has been added.
 2. New Editors: Category Scheme, Category and Code Scheme editors has been added.
 3. Translation pop-up now updates master field.
+
+Known bugs:
+1. Do only load one XML file at a time (delete before a new is loaded).
+2. Do not use the functions releated to Instruments.
