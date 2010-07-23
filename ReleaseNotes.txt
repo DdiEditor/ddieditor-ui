@@ -1,0 +1,9 @@
+DDI Editor 0.2.0
+
+Version 0.2.0 released July 23, 2010
+
+New features:
+
+1. New views: Category and Code viewes has been added.
+2. New Editors: Category Scheme, Category and Code Scheme editors has been added.
+3. Translation pop-up now updates master field.
