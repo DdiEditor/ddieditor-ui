@@ -19,6 +19,8 @@ import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseDao;
+import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
@@ -331,6 +333,18 @@ public class TreeMenuProvider extends TreeMenu {
 						break;
 					case CODE_SCHEME:
 						new CodeSchemeDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(), lightXmlObject
+										.getParentId(), lightXmlObject
+										.getParentVersion());
+						break;
+					case UNIVERSE_SCHEME:
+						new UniverseSchemeDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(), lightXmlObject
+										.getParentId(), lightXmlObject
+										.getParentVersion());
+						break;
+					case UNIVERSE:
+						new UniverseDao().delete(lightXmlObject.getId(),
 								lightXmlObject.getVersion(), lightXmlObject
 										.getParentId(), lightXmlObject
 										.getParentVersion());

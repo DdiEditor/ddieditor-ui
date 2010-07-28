@@ -19,6 +19,7 @@ import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.category.CategoryDao;
 import org.ddialliance.ddieditor.ui.dbxml.category.CategorySchemeDao;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
@@ -131,6 +132,9 @@ public class TreeContentProvider implements IStructuredContentProvider,
 					count++;
 				}
 				return result;
+			}  else	if (contentType.equals(ViewContentType.UniverseContent)) {
+				return new UniverseSchemeDao().getLightXmlObject(null, null,
+						null, null).toArray();
 			}
 		} catch (Exception e) {
 			String errMess = Messages.getString("View.mess.GetElementError"); //$NON-NLS-1$
@@ -236,6 +240,12 @@ public class TreeContentProvider implements IStructuredContentProvider,
 									lightXmlObjectType.getVersion())
 							.getLightXmlObjectList().getLightXmlObjectList()
 							.toArray();
+				}
+				// universe scheme
+				else if (lightXmlTypeLocalname.equals("UniverseScheme")) {
+					contentList = DdiManager.getInstance().getUniversesLight(null, null,
+							lightXmlObjectType.getId(), lightXmlObjectType.getVersion()).getLightXmlObjectList()
+							.getLightXmlObjectList().toArray();
 				}
 
 				// guard
