@@ -5,8 +5,10 @@ Version 0.2.0 released XXXX xx, 2010
 New features:
 
 1. New views: Category and Code viewes has been added.
-2. New Editors: Category Scheme, Category and Code Scheme editors has been added.
+2. New editors: Category Scheme, Category and Code Scheme editors has been added.
 3. Translation pop-up now updates master field.
+4. New view: Universe
+5. New editors: Universe Scheme and Unicerse (sub-universe currently not supported).
 
 Known bugs:
 1. Do only load one XML file at a time (delete before a new is loaded).
