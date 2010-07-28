@@ -19,11 +19,14 @@ import org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor;
+import org.ddialliance.ddieditor.ui.editor.universe.UniverseEditor;
+import org.ddialliance.ddieditor.ui.editor.universe.UniverseSchemeEditor;
 import org.ddialliance.ddieditor.ui.perspective.CategoryPerspective;
 import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
+import org.ddialliance.ddieditor.ui.perspective.UniversePerspective;
 import org.ddialliance.ddieditor.ui.view.CodeView;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -49,7 +52,9 @@ public enum ElementType {
 			StudyUnitEditor.ID, "stdu", "InfoView.label.studyUnitLabel.StudyUnit", "OPEN"),
 
 	// universe
-	UNIVERSE("Universe", null, null, "univ", "", ""), UNIVERSE_SCHEME("UniverseScheme", null, null, "unis", "", ""),
+	UNIVERSE_SCHEME("UniverseScheme", UniversePerspective.ID, UniverseSchemeEditor.ID, "unis", 
+			"UniverseView.label.universeSchemeLabel.UniverseScheme", ""), UNIVERSE("Universe", UniversePerspective.ID,
+			UniverseEditor.ID, "univ", "UniverseView.label.universeLabel.Universe", ""),
 
 	// concept
 	CONCEPT_SCHEME("ConceptScheme", ConceptsPerspective.ID, ConceptSchemeEditor.ID, "cons",
