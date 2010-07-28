@@ -124,8 +124,7 @@ public abstract class Model implements IModel {
 
 	@Override
 	public void validate() throws Exception {
-		// TODO, current no error found
-		return;
+		return; // No error found
 	}
 
 	public void applyChange(Object value, Class<?> type) throws Exception {
