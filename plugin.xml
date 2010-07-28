@@ -11,12 +11,12 @@
             </application>
       </extension>
       <extension point="org.eclipse.ui.perspectives">
+            <perspective class="org.ddialliance.ddieditor.ui.perspective.InfoPerspective"
+                  id="org.ddialliance.ddieditor.ui.perspective.InfoPerspective" name="%perspective.name.1"> </perspective>
             <perspective class="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective"
                   id="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective" name="%perspective.name"> </perspective>
             <perspective class="org.ddialliance.ddieditor.ui.perspective.CodesPerspective"
                   id="org.ddialliance.ddieditor.ui.perspective.CodesPerspective" name="%perspective.name.0"> </perspective>
-            <perspective class="org.ddialliance.ddieditor.ui.perspective.InfoPerspective"
-                  id="org.ddialliance.ddieditor.ui.perspective.InfoPerspective" name="%perspective.name.1"> </perspective>
             <perspective name="%perspective.name.2"
                   class="org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective"
                   id="org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective"> </perspective>
@@ -28,6 +28,11 @@
                   class="org.ddialliance.ddieditor.ui.perspective.CategoryPerspective"
                   id="org.ddialliance.ddieditor.ui.perspective.CategoryPerspective"
                   name="%perspective.name.4">
+            </perspective>
+            <perspective
+                  class="org.ddialliance.ddieditor.ui.perspective.UniversePerspective"
+                  id="org.ddialliance.ddieditor.ui.perspective.UniversePerspective"
+                  name="%perspective.name.5">
             </perspective>
       </extension>
       <extension point="org.eclipse.ui.views">
@@ -47,6 +52,13 @@
                   icon="icons/tree.gif"
                   id="org.ddialliance.ddieditor.ui.view.CategoryView"
                   name="%view.name.4"
+                  restorable="true">
+            </view>
+            <view
+                  class="org.ddialliance.ddieditor.ui.view.UniverseView"
+                  icon="icons/tree.gif"
+                  id="org.ddialliance.ddieditor.ui.view.UniverseView"
+                  name="%view.name.5"
                   restorable="true">
             </view>
       </extension>
@@ -186,6 +198,20 @@
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.category.CategoryEditor"
                   name="%editor.name.14">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.universe.UniverseSchemeEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.universe.UniverseSchemeEditor"
+                  name="%editor.name.15">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.universe.UniverseEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.universe.UniverseEditor"
+                  name="%editor.name.16">
             </editor>
       </extension>
       <extension id="org.eclipse.ui.idexportwizard" name="%extension.name"
