@@ -12,9 +12,8 @@ public class Universe extends LabelDescription implements IModel {
 
 	public Universe(UniverseDocument doc, String parentId, String parentVersion)
 			throws Exception {
-		super(doc.getUniverse().getId(), doc.getUniverse().getVersion(),
-				parentId, parentVersion, FixedIn31.getLabelList(), FixedIn31
-						.getDesrcList());
+		super(doc.getUniverse().getId(), doc.getUniverse().getVersion(), parentId, parentVersion, doc.getUniverse()
+				.getLabelList(), doc.getUniverse().getHumanReadableList());
 
 		if (doc == null) {
 			this.doc = UniverseDocument.Factory.newInstance();
