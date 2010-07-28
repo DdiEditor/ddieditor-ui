@@ -178,9 +178,10 @@ public class TranslationDialog extends Dialog {
 		return Boolean.parseBoolean(queryAttribute(obj, queries[1]));
 	}
 
-	public final void setXmlLang(Object obj, String lang)
-			throws DDIFtpException, Exception {
-		ReflectionUtil.invokeMethod(obj, "setLang", false, lang);
+	public final void setXmlLang(Object obj, String lang) throws DDIFtpException, Exception {
+		if (lang != null) {
+			ReflectionUtil.invokeMethod(obj, "setLang", false, lang);
+		}
 	}
 
 	public void setTranslated(Object obj, boolean translated)
