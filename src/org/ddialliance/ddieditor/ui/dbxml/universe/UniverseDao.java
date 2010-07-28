@@ -107,7 +107,7 @@ public class UniverseDao implements IDao {
 	 */
 	public void create(IModel model) throws DDIFtpException {
 		DdiManager.getInstance().createElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
-				"datacollection__DataCollection");
+				"ConceptualComponent");
 	}
 
 	/**
@@ -140,6 +140,6 @@ public class UniverseDao implements IDao {
 		log.debug("UniverseDao.delete: Delete DBXML");
 		IModel model = getModel(id, version, parentId, parentVersion);
 		DdiManager.getInstance().deleteElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
-				"datacollection__DataCollection");
+				"ConceptualComponent");
 	}
 }
