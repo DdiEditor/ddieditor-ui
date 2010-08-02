@@ -2,9 +2,7 @@ package org.ddialliance.ddieditor.ui.dbxml.instrument;
 
 import java.util.List;
 
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ControlConstructDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ControlConstructSchemeDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.IfThenElseDocument;
 import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -12,7 +10,6 @@ import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.instrument.ControlConstructScheme;
-import org.ddialliance.ddieditor.ui.model.instrument.IfThenElse;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 
 public class ControlConstructSchemeDao implements IDao {
