@@ -8,12 +8,14 @@ package org.ddialliance.ddieditor.ui.model;
  */
 import java.util.List;
 
+import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DescriptionDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
+import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -88,48 +90,55 @@ public abstract class LabelDescription extends Model implements IModel {
 	public LabelType setLabel(String string, Language language) {
 		LabelType labelType;
 
-		// Remove label corresponding to language
 		int length = labels.size();
 		for (int i = 0; i < length; i++) {
 			labelType = labels.get(i);
 			if (labelType.getLang().equals(language)) {
-				XmlBeansUtil.setTextOnMixedElement(labelType, string);
+				if (string.length() > 0) {
+					XmlBeansUtil.setTextOnMixedElement(labelType, string);
+				} else {
+					labels.remove(i);
+				}
 				return null;
 			}
 		}
-		labelType = org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelDocument.Factory
-				.newInstance().addNewLabel();
+		
+		if (string.length() == 0) {
+			return null;
+		}
+		labelType = LabelDocument.Factory.newInstance().addNewLabel();
 		labelType.setTranslated(false);
 		labelType.setTranslatable(true);
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		labelType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
+		labelType.setLang(LanguageUtil.getOriginalLanguage());
 		XmlBeansUtil.setTextOnMixedElement(labelType, string);
 		return labelType;
 	}
 
 	/**
-	 * Get Original Label of Simple Element. 'Original' means not translated.
+	 * Get Display Label of Simple Element.
 	 * 
 	 * @return String Label string
 	 * @throws Exception
 	 */
-	public String getLabel() {
-		LabelType labelType;
+	public String getDisplayLabel() {
+//		LabelType labelType;
 
-		// Get Label corresponding to language
-		int length = labels.size();
-		for (int i = 0; i < length; i++) {
-			labelType = labels.get(i);
-			if (!labelType.getTranslated()) {
-				return XmlBeansUtil.getTextOnMixedElement(labelType);
+		if (labels.size() > 0) {
+			String displayLang = LanguageUtil.getDisplayLanguage();
+			try {
+				return XmlBeansUtil.getTextOnMixedElement((XmlObject) XmlBeansUtil.getLangElement(displayLang, labels));
+			} catch (DDIFtpException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
+
 		// No label found - not an error
 		return "";
 	}
 
 	/**
-	 * Set Original Label of Simple Element. 'Original' means not translated.
+	 * Set Label of Display Language.
 	 * 
 	 * @param string
 	 * @return LabelType null - if label updated (no label is added) LabelType
@@ -138,21 +147,26 @@ public abstract class LabelDescription extends Model implements IModel {
 	public LabelType setLabel(String string) {
 		LabelType labelType;
 
-		// Remove label corresponding to language
 		int length = labels.size();
 		for (int i = 0; i < length; i++) {
 			labelType = labels.get(i);
-			if (!labelType.getTranslated()) {
-				XmlBeansUtil.setTextOnMixedElement(labelType, string);
+			if (labelType.getLang().equals(LanguageUtil.getDisplayLanguage())) {
+				if (string.length() > 0) {
+					XmlBeansUtil.setTextOnMixedElement(labelType, string);
+				} else {
+					labels.remove(i);
+				}
 				return null;
 			}
 		}
-
+		
+		if (string.length() == 0) {
+			return null;
+		}
 		labelType = LabelDocument.Factory.newInstance().addNewLabel();
 		labelType.setTranslated(false);
 		labelType.setTranslatable(true);
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		labelType.setLang(store.getString(PreferenceConstants.DDI_LANGUAGE));
+		labelType.setLang(LanguageUtil.getDisplayLanguage());
 		XmlBeansUtil.setTextOnMixedElement(labelType, string);
 		return labelType;
 	}
@@ -193,23 +207,30 @@ public abstract class LabelDescription extends Model implements IModel {
 	public StructuredStringType setDescr(String string, Language language) {
 		StructuredStringType descriptionType;
 
-		// Remove description corresponding to language
 		int length = descrs.size();
 		for (int i = 0; i < length; i++) {
 			descriptionType = descrs.get(i);
 			if (descriptionType.getLang().equals(language)) {
-				XmlBeansUtil.setTextOnMixedElement(descriptionType, string);
+				if (string.length() > 0) {
+					XmlBeansUtil.setTextOnMixedElement(descriptionType, string);
+				} else {
+					descrs.remove(i);
+				}
 				return null;
 			}
 		}
 
+		if (string.length() == 0) {
+			return null;
+		}
 		descriptionType = DescriptionDocument.Factory.newInstance()
 				.addNewDescription();
-		descriptionType.setTranslated(false);
-		descriptionType.setTranslatable(true);
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		descriptionType.setLang(store
-				.getString(PreferenceConstants.DDI_LANGUAGE));
+		try {
+			XmlBeansUtil.addTranslationAttributes(descriptionType, LanguageUtil.getOriginalLanguage(), false, true);
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		XmlBeansUtil.setTextOnMixedElement(descriptionType, string);
 		return descriptionType;
 	}
@@ -237,8 +258,7 @@ public abstract class LabelDescription extends Model implements IModel {
 	}
 
 	/**
-	 * Set Original Description of Simple Element. Original means not
-	 * translated.
+	 * Set Description of Simple Element for Display Language.
 	 * 
 	 * @param string
 	 * @return StructuredStringType null - if description updated (no new
@@ -251,20 +271,23 @@ public abstract class LabelDescription extends Model implements IModel {
 		int length = descrs.size();
 		for (int i = 0; i < length; i++) {
 			descriptionType = descrs.get(i);
-			if (!descriptionType.getTranslated()) {
-				XmlBeansUtil.setTextOnMixedElement(descriptionType, string);
+			if (descriptionType.getLang().equals(LanguageUtil.getDisplayLanguage())) {
+				if (string.length() > 0) {
+					XmlBeansUtil.setTextOnMixedElement(descriptionType, string);
+				} else {
+					descrs.remove(i);
+				}
 				return null;
 			}
 		}
 
+		if (string.length() == 0) {
+			return null;
+		}
 		descriptionType = DescriptionDocument.Factory.newInstance()
 				.addNewDescription();
-		// Original = translated is false
-		descriptionType.setTranslated(false);
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		try {
-			XmlBeansUtil.addTranslationAttributes(descriptionType, store
-					.getString(PreferenceConstants.DDI_LANGUAGE), false, true);
+			XmlBeansUtil.addTranslationAttributes(descriptionType, LanguageUtil.getOriginalLanguage(), false, true);
 		} catch (DDIFtpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -280,4 +303,41 @@ public abstract class LabelDescription extends Model implements IModel {
 	public List<StructuredStringType> getDescrs() {
 		return descrs;
 	}
+	
+	/**
+	 * Validates the element before it is saved.
+	 * 
+	 * @throws Exception
+	 */
+	public void validate() throws Exception {
+		log.debug("LabelDescription validation performed");
+		boolean found;
+		
+		// Check if more labels without lang attribute
+		found = false;
+		List<LabelType> labelList = getLabels();
+		for (LabelType labelType : labelList) {
+			if (labelType.getLang() == null && found) {
+				throw new Exception("More Labels do not have a 'lang' attribute");
+			} else {
+				found = true;
+			}
+		}
+		
+		// Check if more Descriptions without lang attribute
+		found = false;
+		List<StructuredStringType> descrs = getDescrs();
+		for (StructuredStringType descr : descrs) {
+			if (descr.getLang() == null && found) {
+				throw new Exception("More Descriptions do not have a 'lang' attribute");
+			} else {
+				found = true;
+			}
+		}
+		
+		// No error found:
+		return;
+	}
+
+
 }
