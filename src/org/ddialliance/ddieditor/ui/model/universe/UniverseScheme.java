@@ -1,5 +1,7 @@
 package org.ddialliance.ddieditor.ui.model.universe;
 
+import java.util.List;
+
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseSchemeDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.impl.UniverseSchemeTypeImpl;
@@ -108,19 +110,6 @@ public class UniverseScheme extends LabelDescription {
 			universeSchemeTypeImpl.getDescriptionList().add(descriptionType);
 		}
 		return null;
-	}
-
-	/**
-	 * Validates the Universe Scheme before it is saved. It e.g. checks if all
-	 * mandatory attributes has been given.
-	 * 
-	 * @throws Exception
-	 */
-	public void validate() throws Exception {
-		log.debug("UniverseScheme validation performed");
-
-		// No error found:
-		return;
 	}
 
 	@Override
