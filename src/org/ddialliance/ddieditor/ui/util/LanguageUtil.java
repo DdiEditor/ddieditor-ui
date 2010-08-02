@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.ddialliance.ddieditor.ui.Activator;
+import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
+import org.eclipse.jface.preference.IPreferenceStore;
+
 public class LanguageUtil {
 	public static String[][] getAvailableLanguages() {
 		Locale[] availLocales = Locale.getAvailableLocales();
@@ -32,5 +36,15 @@ public class LanguageUtil {
 			index++;
 		}
 		return entryNamesAndValues;
+	}
+	
+	public static String getOriginalLanguage() {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		return store.getString(PreferenceConstants.DDI_LANGUAGE);
+	}
+	
+	public static String getDisplayLanguage() {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		return store.getString(PreferenceConstants.DDIEDITORUI_LANGUAGE);
 	}
 }
