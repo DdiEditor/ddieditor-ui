@@ -3,8 +3,6 @@ package org.ddialliance.ddieditor.ui.editor;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +16,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.VersionRationaleDocument;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dialogs.TranslationDialog;
 import org.ddialliance.ddieditor.ui.dialogs.TranslationDialogInput;
@@ -33,6 +32,7 @@ import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
+import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -98,7 +99,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	private Composite composite;
 	private TabFolder tabFolder;
 	private TabItem labelDescriptionTabItem;
-
+	
 	public static String NEW_ITEM = "new_item";
 	public static String CONTROL_ID = "control_id";
 	public static String TAB_ID = "id";
@@ -118,6 +119,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public Editor() {
 		// editorInput = new EditorInput(null, null, null, null, null,
 		// null);
+		
 	}
 
 	/**
@@ -131,6 +133,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public Editor(String title, String description) {
 		this.title = title;
 		this.description = description;
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 	}
 
 	@Override
@@ -502,7 +505,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		final Text labelText = new Text(group, SWT.BORDER);
 		final GridData gd_labelText = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		labelText.setLayoutData(gd_labelText);
-		labelText.setText(simpleElement.getLabel());
+		labelText.setText(simpleElement.getDisplayLabel());
 		labelText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				log.debug("Label changed");
@@ -582,7 +585,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	public Text createNameInput(Group group, String labelText, List<NameType> nameList, String parentLabel)
 			throws DDIFtpException {
-		NameType name = (NameType) XmlBeansUtil.getDefaultLangElement(nameList);
+		NameType name = (NameType) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), nameList);
 
 		Text nameTxt = createTextInput(group, labelText, name == null ? "" : name.getStringValue(),
 				name == null ? Boolean.TRUE : Boolean.FALSE);
@@ -591,7 +594,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			name = ConstructNameDocument.Factory.newInstance().addNewConstructName();
 			name.setTranslatable(true);
 			name.setTranslated(!nameList.isEmpty());
-			name.setLang(Translator.getLocaleLanguage());
+			name.setLang(LanguageUtil.getOriginalLanguage());
 		}
 
 		nameTxt.addModifyListener(new NameTypeModyfiListener(name, nameList, editorStatus));
@@ -606,7 +609,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public StyledText createStructuredStringInput(Group group, String labelText,
 			List<StructuredStringType> structuredStringList, String parentLabel) throws DDIFtpException {
 		StructuredStringType structuredString = (StructuredStringType) XmlBeansUtil
-				.getDefaultLangElement(structuredStringList);
+				.getLangElement(LanguageUtil.getDisplayLanguage(), structuredStringList);
 
 		StyledText styledText = createTextAreaInput(group, labelText, structuredString == null ? "" : XmlBeansUtil
 				.getTextOnMixedElement(structuredString), structuredString == null ? Boolean.TRUE : Boolean.FALSE);
@@ -619,7 +622,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			} else {
 				structuredString.setTranslated(true);
 			}
-			structuredString.setLang(Translator.getLocaleLanguage());
+			structuredString.setLang(LanguageUtil.getOriginalLanguage());
 		}
 		styledText.addModifyListener(new StructuredStringTypeModyfiListener(structuredString, structuredStringList,
 				editorStatus));
@@ -649,11 +652,20 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return button;
 	}
 
+	/**
+	 * Update parent widget with display element
+	 * 
+	 * @param translationDialog
+	 */
 	public void updateParentWidget(TranslationDialog translationDialog) {
 
 		try {
-			XmlObject xObj = (XmlObject) XmlBeansUtil.getDefaultLangElement(translationDialog.getItems());
-			String text = XmlBeansUtil.getTextOnMixedElement(xObj);
+			XmlObject xObj = (XmlObject) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), translationDialog.getItems());
+			String text = "";
+			if (xObj != null) {
+				text = XmlBeansUtil.getTextOnMixedElement(xObj);
+			}
+			
 			Widget widget = translationDialog.getParentWidget();
 			if (widget instanceof Text) {
 				((Text) widget).setText(text);
