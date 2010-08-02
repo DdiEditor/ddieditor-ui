@@ -35,7 +35,7 @@ public class UniverseSchemeDao implements IDao {
 
 		log.debug("UniverseSchemeDao.create()");
 		DdiManager.getInstance().createElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
-				"UniverseComponent");
+				"ConceptualComponent");
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class UniverseSchemeDao implements IDao {
 		log.debug("Delete DBXML Universe Scheme");
 		IModel model = getModel(id, version, parentId, parentVersion);
 		DdiManager.getInstance().deleteElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
-				"logicalproduct__LogicalProduct");
+				"ConceptualComponent");
 	}
 
 	@Override
