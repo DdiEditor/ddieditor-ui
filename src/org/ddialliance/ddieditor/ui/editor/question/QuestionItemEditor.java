@@ -28,6 +28,7 @@ import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
 import org.ddialliance.ddieditor.ui.model.reference.ResponseTypeReference;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DynamicTextTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
+import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -149,7 +150,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		try {
 			if (modelImpl.getQuestionText() != null) {
 				questionText = (DynamicTextType) XmlBeansUtil
-						.getDefaultLangElement(modelImpl.getQuestionText());
+						.getLangElement(LanguageUtil.getDisplayLanguage(), modelImpl.getQuestionText());
 			}
 		} catch (DDIFtpException e) {
 			DialogUtil
