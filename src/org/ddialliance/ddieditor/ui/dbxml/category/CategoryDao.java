@@ -1,6 +1,5 @@
 package org.ddialliance.ddieditor.ui.dbxml.category;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CategoryDocument;
