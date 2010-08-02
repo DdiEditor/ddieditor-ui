@@ -3,10 +3,11 @@ package org.ddialliance.ddieditor.ui.dbxml.universe;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseType;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.universe.Universe;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -63,13 +64,13 @@ public class UniverseDao implements IDao {
 	 * @throws Exception
 	 */
 	public Universe create(String id, String version, String parentId, String parentVersion) throws Exception {
-		UniverseDocument doc = UniverseDocument.Factory.newInstance();
-		UniverseType type = doc.addNewUniverse();
-		type.setId(id);
-		if (version != null) {
-			type.setVersion(version);
-		}
 
+		UniverseDocument doc = UniverseDocument.Factory.newInstance();
+		IdentificationManager.getInstance().addIdentification(
+				doc.addNewUniverse(),
+				ElementType.getElementType("Universe").getIdPrefix(), null);
+		IdentificationManager.getInstance().addVersionInformation(
+				doc.getUniverse(), null, null);
 		Universe model = new Universe(doc, parentId, parentVersion);
 		return model;
 	}
@@ -90,7 +91,6 @@ public class UniverseDao implements IDao {
 		 UniverseDocument doc = DdiManager.getInstance().getUniverse(id,
 		 version, parentId, parentVersion);
 		 Universe model = new Universe(doc, parentId, parentVersion);
-		
 		 return model;
 	}
 
@@ -107,7 +107,7 @@ public class UniverseDao implements IDao {
 	 */
 	public void create(IModel model) throws DDIFtpException {
 		DdiManager.getInstance().createElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
-				"ConceptualComponent");
+				"UniverseScheme");
 	}
 
 	/**
@@ -140,6 +140,6 @@ public class UniverseDao implements IDao {
 		log.debug("UniverseDao.delete: Delete DBXML");
 		IModel model = getModel(id, version, parentId, parentVersion);
 		DdiManager.getInstance().deleteElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
-				"ConceptualComponent");
+				"UniverseScheme");
 	}
 }
