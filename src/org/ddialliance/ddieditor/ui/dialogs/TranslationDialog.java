@@ -22,7 +22,6 @@ import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -37,7 +36,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -181,6 +179,7 @@ public class TranslationDialog extends Dialog {
 	public final void setXmlLang(Object obj, String lang) throws DDIFtpException, Exception {
 		if (lang != null) {
 			ReflectionUtil.invokeMethod(obj, "setLang", false, lang);
+			
 		}
 	}
 
@@ -195,8 +194,29 @@ public class TranslationDialog extends Dialog {
 				translateable);
 	}
 
-	private final Object addItem() throws DDIFtpException {
-		return translationDialogOption.getTemplateElement();
+	/**
+	 * Add new element item to table
+	 * 
+	 * @param tableCount - number of already existing table items.
+	 * @return
+	 * @throws DDIFtpException
+	 */
+	private final Object addItem(int tableItemCount) throws DDIFtpException {
+		XmlObject xml = translationDialogOption.getTemplateElement();
+		try {
+			if (tableItemCount == 0) {
+				setTranslated(xml, false);
+				setTranslateable(xml, true);
+				setXmlLang(xml, org.ddialliance.ddieditor.ui.util.LanguageUtil.getOriginalLanguage());
+			} else {
+				setTranslated(xml, true);
+				setTranslateable(xml, false);
+				setXmlLang(xml, "");
+			}
+		} catch (Exception e) {
+			throw new DDIFtpException(e.getMessage());
+		}
+		return xml;
 	}
 
 	public List<Object> getItems() {
@@ -275,7 +295,7 @@ public class TranslationDialog extends Dialog {
 			public void widgetSelected(SelectionEvent event) {
 				Object newItem = null;
 				try {
-					newItem = addItem();
+					newItem = addItem(table.getItemCount());
 				} catch (DDIFtpException e) {
 					showError(e);
 					return;
