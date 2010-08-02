@@ -21,6 +21,7 @@ import org.ddialliance.ddieditor.model.lightxmlobject.impl.LightXmlObjectTypeImp
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
+import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -38,7 +39,8 @@ class TreeLabelProvider extends LabelProvider {
 			LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) element;
 			if (lightXmlObjectType.getLabelList().size() > 0) {
 				try {
-					Object obj = XmlBeansUtil.getDefaultLangElement(lightXmlObjectType.getLabelList());
+					Object obj = XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), lightXmlObjectType
+							.getLabelList());
 					return XmlBeansUtil.getTextOnMixedElement((XmlObject) obj);
 				} catch (DDIFtpException e) {
 					// TODO Auto-generated catch block
