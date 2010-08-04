@@ -22,6 +22,7 @@ import org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor;
 import org.ddialliance.ddieditor.ui.editor.universe.UniverseEditor;
 import org.ddialliance.ddieditor.ui.editor.universe.UniverseSchemeEditor;
 import org.ddialliance.ddieditor.ui.perspective.CategoryPerspective;
+import org.ddialliance.ddieditor.ui.perspective.CodesPerspective;
 import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
@@ -72,6 +73,10 @@ public enum ElementType {
 			"CategoryView.label.categorySchemeLabel.CategoryScheme", ""), CATEGORY("Category", CategoryPerspective.ID,
 			CategoryEditor.ID, "cat", "CategoryView.label.categoryLabel.Category", ""),
 
+	// code
+	CODE_SCHEME("CodeScheme", CodesPerspective.ID, CodeSchemeEditor.ID, "cods",
+			"codeView.label.codeSchemeLabel.CodeScheme", ""),
+
 	// instrument
 	INSTRUMENT("Instrument", InstrumentPerspective.ID, InstrumentEditor.ID, "inst",
 			"InstrumentItemView.label.instrumentItemLabel.Instrument", ""), CONTROL_CONSTRUCT_SCHEME(
@@ -87,9 +92,6 @@ public enum ElementType {
 			""), SEQUENCE("Sequence", InstrumentPerspective.ID, SequenceEditor.ID, "seqc",
 			"InstrumentView.Sequence.label", ""), COMPUTATION_ITEM("ComputationItem", InstrumentPerspective.ID,
 			ComputationItemEditor.ID, "copi", "InstrumentView.ComputationItem.label", ""),
-
-	// code
-	CODE_SCHEME("CodeScheme", CodeView.ID, CodeSchemeEditor.ID, "cods", "codeView.label.codeSchemeLabel.CodeScheme", ""),
 
 	// variable
 	VARIABLE_SCHEME("Variable", null, null, "vars", "", ""), VARIABLE("Variable", null, null, "vari", "", "");
