@@ -157,7 +157,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			try {
 				PersistenceManager.getInstance().setWorkingResource(
 						ddiResource.getOrgName());
-
+				
 				result = DdiManager.getInstance().getConceptualOverview();
 				conceptualElementCache.put(ddiResource.getOrgName(), result);
 			} catch (Exception e) {
