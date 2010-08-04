@@ -16,7 +16,6 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -199,10 +198,16 @@ public class TreeMenu {
 				lightXmlObject.setElement(ElementType.STUDY_UNIT
 						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_Universe)) {
-				// TODO implementation of universes
-				lightXmlObject.setElement("TODO implementation!!!");
+				lightXmlObject.setElement(ElementType.UNIVERSE_SCHEME
+						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_concepts)) {
 				lightXmlObject.setElement(ElementType.CONCEPT_SCHEME
+						.getElementName());
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_category)) {
+				lightXmlObject.setElement(ElementType.CATEGORY_SCHEME
+						.getElementName());
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_code)) {
+				lightXmlObject.setElement(ElementType.CODE_SCHEME
 						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_questions)) {
 				lightXmlObject.setElement(ElementType.QUESTION_SCHEME
