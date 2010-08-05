@@ -2,7 +2,9 @@ package org.ddialliance.ddieditor.ui.dbxml.instrument;
 
 import java.util.List;
 
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ControlConstructDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ControlConstructSchemeDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.IfThenElseDocument;
 import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -10,6 +12,7 @@ import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.instrument.ControlConstructScheme;
+import org.ddialliance.ddieditor.ui.model.instrument.IfThenElse;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 
 public class ControlConstructSchemeDao implements IDao {
@@ -41,12 +44,11 @@ public class ControlConstructSchemeDao implements IDao {
 	}
 
 	@Override
-	public ControlConstructScheme getModel(String id, String version, String parentId,
+	public IfThenElse getModel(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		
-		ControlConstructSchemeDocument doc = DdiManager.getInstance().getControlConstructScheme(id,
+		IfThenElseDocument doc = DdiManager.getInstance().getIfThenElse(id,
 				version, parentId, parentVersion);
-		ControlConstructScheme model = new ControlConstructScheme(doc, parentId, parentVersion);
+		IfThenElse model = new IfThenElse(doc, parentId, parentVersion);
 		return model;
 	}
 
@@ -54,7 +56,7 @@ public class ControlConstructSchemeDao implements IDao {
 	public void create(IModel model) throws DDIFtpException {
 		DdiManager.getInstance().createElement(model.getDocument(),
 				model.getParentId(), model.getParentVersion(),
-				"datacollection__DataCollection");
+				"ControlConstructScheme");
 	}
 
 	@Override
@@ -67,10 +69,10 @@ public class ControlConstructSchemeDao implements IDao {
 	@Override
 	public void delete(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		ControlConstructScheme model = getModel(id, version, parentId, parentVersion);
+		IfThenElse model = getModel(id, version, parentId, parentVersion);
 		DdiManager.getInstance().deleteElement(model.getDocument(),
 				model.getParentId(), model.getParentVersion(),
-				"datacollection__DataCollection");
+				"ControlConstructScheme");
 	}
 
 }
