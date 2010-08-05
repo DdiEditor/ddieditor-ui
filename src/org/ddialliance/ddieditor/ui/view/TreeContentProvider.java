@@ -12,6 +12,7 @@ import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
+import org.ddialliance.ddieditor.model.resource.impl.DDIResourceTypeImpl;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
@@ -323,9 +324,22 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				return true;
 			}
 		}
+		
+		else if (element instanceof ConceptualType) {
+			return true;
+		}
+		
+		else if (element instanceof ConceptualElement) {
+			return true;
+		}
+		
+		else if (element instanceof DDIResourceTypeImpl) {
+			return true;
+		}
 
 		// guard
 		// TODO - subject to change
+		log.debug("***** TreeContentProvider.hasChildren() - save guard activated! *****");
 		return getChildren(element).length > 0;
 	}
 
