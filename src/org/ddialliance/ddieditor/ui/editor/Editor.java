@@ -34,7 +34,9 @@ import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
+import org.ddialliance.ddieditor.ui.view.InfoView;
 import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddieditor.ui.view.View;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.ReflectionUtil;
 import org.ddialliance.ddiftp.util.Translator;
@@ -78,8 +80,12 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 /**
@@ -270,6 +276,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 		editorStatus.clearChanged();
 		updateParentView();
+		updateInfoView();
 	}
 
 	@Override
@@ -291,6 +298,22 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	public EditorInput getEditorInputImpl() {
 		return (EditorInput) super.getEditorInput();
+	}
+	
+	/**
+	 * Update Info View - if it exists in active page - else ignore update
+	 */
+	private void updateInfoView() {
+
+		IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		IWorkbenchPage[] iPages = workbenchWindows[0].getPages();
+		if (iPages.length > 1) {
+			log.error("Nbr. pages per window (only one is expected): "+iPages.length);
+		}
+		IViewPart iViewPart = iPages[0].findView(InfoView.ID);
+		if (iViewPart != null) {
+			((View) iViewPart).refreshView();
+		}
 	}
 
 	/**
