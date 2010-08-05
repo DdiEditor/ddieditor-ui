@@ -1011,9 +1011,14 @@ public class StudyUnit extends Model {
 		List<ReferenceType> agencyRef = ((FundingInformationDocumentImpl) fundings[0])
 				.getFundingInformation().getAgencyOrganizationReferenceList();
 		if (agencyRef.size() != 1) {
-			throw new DDIFtpException(
-					Messages
-							.getString("StudyUnitEditor.mess.OnlyOneFundingInformationAgencyOrganizationReferenceCurrentlySupported"));
+			log
+					.warn(
+							Messages
+									.getString("StudyUnitEditor.mess.OnlyOneFundingInformationAgencyOrganizationReferenceCurrentlySupported"),
+							new Throwable());
+			// throw new DDIFtpException(
+			// Messages
+			// .getString("StudyUnitEditor.mess.OnlyOneFundingInformationAgencyOrganizationReferenceCurrentlySupported"));
 		}
 		ReferenceType agencyReferenceType = agencyRef.get(0);
 		return agencyReferenceType;
