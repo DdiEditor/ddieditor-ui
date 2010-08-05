@@ -1,18 +1,23 @@
 package org.ddialliance.ddieditor.ui.command;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 
-import org.ddialliance.ddieditor.model.resource.DDIResourceDocument;
-import org.ddialliance.ddieditor.model.resource.DDIResourceType;
-import org.ddialliance.ddieditor.model.resource.StorageDocument;
-import org.ddialliance.ddieditor.model.resource.StorageType;
-import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
-import org.ddialliance.ddieditor.persistenceaccess.dbxml.DbXmlManager;
+import org.apache.xmlbeans.XmlOptions;
+import org.ddialliance.ddi3.xml.xmlbeans.instance.DDIInstanceDocument;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
+import org.ddialliance.ddieditor.model.DdiManager;
+import org.ddialliance.ddieditor.persistenceaccess.filesystem.FilesystemManager;
 import org.ddialliance.ddieditor.ui.dialogs.NewDDI3FileDialog;
 import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.view.InfoView;
 import org.ddialliance.ddieditor.ui.view.View;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.log.Log;
+import org.ddialliance.ddiftp.util.log.LogFactory;
+import org.ddialliance.ddiftp.util.log.LogType;
+import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IViewPart;
@@ -26,53 +31,54 @@ import org.eclipse.ui.WorkbenchException;
  * RCP entry point to create a ddi 3 resource
  */
 public class NewDDI3File extends org.eclipse.core.commands.AbstractHandler {
+	private Log log = LogFactory.getLog(LogType.EXCEPTION, NewDDI3File.class);
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// input file name
 		NewDDI3FileDialog dialog = new NewDDI3FileDialog(PlatformUI
 				.getWorkbench().getDisplay().getActiveShell());
 		dialog.open();
-		// TODO check for empty file name
 		if (dialog.fileName == null && dialog.fileName.equals("")) {
 			new DDIFtpException("file name null", new Throwable());
 		}
+
 		File file = new File(dialog.fileName);
-		
-		// create dbxml container
-		String containerName = file.getName().substring(0,
-				file.getName().lastIndexOf("."));
-		String connection = containerName + ".dbxml";
 		try {
-			DbXmlManager.getInstance().addStorage(new File(connection));
+			// new instance
+			DDIInstanceDocument ddiInstanceDoc = DDIInstanceDocument.Factory
+					.newInstance();
+			ddiInstanceDoc.addNewDDIInstance();
+			IdentificationManager.getInstance().addIdentification(
+					ddiInstanceDoc.getDDIInstance(), null, null);
+			IdentificationManager.getInstance().addVersionInformation(
+					ddiInstanceDoc.getDDIInstance(), null, null);
+			XmlBeansUtil.addXsiAttributes(ddiInstanceDoc);
+
+			// prepare output
+			XmlOptions xmlOptions = new XmlOptions();
+			xmlOptions.setSaveOuter();
+			xmlOptions.setSavePrettyPrint();
+			String node = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+					+ DdiManager.getInstance().getDdi3NamespaceHelper()
+							.substitutePrefixesFromElementsKeepXsiDefs(
+									ddiInstanceDoc.getDDIInstance().xmlText(
+											xmlOptions));
+
+			// create file
+			FileWriter fstream = new FileWriter(file);
+			BufferedWriter out = new BufferedWriter(fstream);
+			out.write(node);
+			out.close();
+
+			// import file
+			FilesystemManager.getInstance().addResource(file);
 		} catch (Exception e) {
-
-		}
-
-		// add storage
-		StorageDocument storageDoc = StorageDocument.Factory.newInstance();
-		StorageType storage = storageDoc.addNewStorage();
-		storage.setId(containerName);
-		storage.setConnection(connection);
-		storage.setManager(DbXmlManager.class.getName());
-		try {
-			PersistenceManager.getInstance().createStorage(storageDoc);
-		} catch (DDIFtpException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		// index storage and add resources
-		DDIResourceDocument ddiResourceDocument = DDIResourceDocument.Factory
-				.newInstance();
-		DDIResourceType ddiResource = ddiResourceDocument.addNewDDIResource();
-		ddiResource.setOrgName(file.getName());
-
-		try {
-			PersistenceManager.getInstance().createResource(
-					ddiResourceDocument, containerName);
-		} catch (DDIFtpException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			log.error(e);
+			throw new ExecutionException(e.getMessage(), e);
+		} finally {
+			// cleanup ;- )
+			file.delete();
 		}
 
 		// update info view
@@ -100,8 +106,7 @@ public class NewDDI3File extends org.eclipse.core.commands.AbstractHandler {
 			try {
 				iViewPart = workbenchPage.showView(InfoView.ID);
 			} catch (PartInitException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new ExecutionException(e.getMessage(), e);
 			}
 		}
 
