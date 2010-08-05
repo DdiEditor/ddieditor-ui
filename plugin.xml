@@ -303,6 +303,11 @@
                id="org.ddialliance.ddieditor.ui.command.DeleteAllDDI3"
                name="%command.name.4">
          </command>
+         <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.DisplayNote"
+               id="org.ddialliance.ddieditor.ui.command.DisplayNote"
+               name="Release Note">
+         </command>
       </extension>
       <extension
             point="org.eclipse.ui.menus">
@@ -439,6 +444,13 @@
                      commandId="org.eclipse.ui.help.aboutAction"
                      label="%command.label.11"
                      mnemonic="%command.mnemonic.10"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.ddialliance.ddieditor.ui.command.DisplayNote"
+                     icon="icons/dates.gif"
+                     label="Release Note"
+                     mnemonic="N"
                      style="push">
                </command>
             </menu>
