@@ -591,4 +591,15 @@ public class TranslationDialog extends Dialog {
 			getViewer().update(element, null);
 		}
 	}
+	
+	@Override
+	protected void okPressed() {
+		// do validation
+//		System.out.println("***** Items: "+items);
+//		List<XmlObject> xList = items;
+//		for (XmlObject xmlObject : xList) {
+//		}
+		// if validate
+		super.okPressed();
+	}
 }
