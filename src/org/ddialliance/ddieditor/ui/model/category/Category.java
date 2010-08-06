@@ -52,14 +52,14 @@ public class Category extends LabelDescription {
 	}
 
 	/**
-	 * Set label of Category.
+	 * Set Display Label of Category.
 	 * 
 	 * @param string
 	 * @return LabelType (always null)
 	 */
-	public LabelType setLabel(String string, Language language) {
+	public LabelType setDisplayLabel(String string) {
 
-		LabelType labelType = super.setLabel(string, language);
+		LabelType labelType = super.setDisplayLabel(string);
 		if (labelType != null) {
 			categoryTypeImpl.getLabelList().add(labelType);
 		}
@@ -67,43 +67,14 @@ public class Category extends LabelDescription {
 	}
 
 	/**
-	 * Set Original Label of Category. 'Original' means not translated.
-	 * 
-	 * @param string
-	 * @return LabelType (always null)
-	 */
-	public LabelType setLabel(String string) {
-
-		LabelType labelType = super.setLabel(string);
-		if (labelType != null) {
-			categoryTypeImpl.getLabelList().add(labelType);
-		}
-		return null;
-	}
-
-	/**
-	 * Set Description of Category.
+	 * Set Display Description of Category.
 	 * 
 	 * @param string
 	 * @return StructuredStringType (always null)
 	 */
-	public StructuredStringType setDescr(String string, Language language) {
-		StructuredStringType descriptionType = super.setDescr(string, language);
-		if (descriptionType != null) {
-			categoryTypeImpl.getDescriptionList().add(descriptionType);
-		}
-		return null;
-	}
+	public StructuredStringType setDisplayDescr(String string) {
 
-	/**
-	 * Set Original Description of Category. Original means not translated.
-	 * 
-	 * @param string
-	 * @return StructuredStringType (always null)
-	 */
-	public StructuredStringType setDescr(String string) {
-
-		StructuredStringType descriptionType = super.setDescr(string);
+		StructuredStringType descriptionType = super.setDisplayDescr(string);
 		if (descriptionType != null) {
 			categoryTypeImpl.getDescriptionList().add(descriptionType);
 		}
