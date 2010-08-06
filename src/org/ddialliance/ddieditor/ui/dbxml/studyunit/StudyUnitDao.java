@@ -46,7 +46,7 @@ public class StudyUnitDao implements IDao {
 	public static List<LightXmlObjectType> getStudyUnitLight(String id,
 			String version) throws Exception {
 		LightXmlObjectListDocument listDoc = DdiManager.getInstance()
-				.getStudyUnitLight(id, version, null, null);
+				.getStudyUnitsLight(id, version, null, null);
 
 		List<LightXmlObjectType> listLightXmlObjectListType = listDoc
 				.getLightXmlObjectList().getLightXmlObjectList();
