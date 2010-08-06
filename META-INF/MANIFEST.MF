@@ -1,31 +1,28 @@
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Manifest-Version: 1.0
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
- org.eclipse.ui;bundle-version="3.5.1",
+Require-Bundle: org.eclipse.ui;bundle-version="3.5.2",
+ org.eclipse.core.runtime;bundle-version="3.5.0",
  lib-java;bundle-version="0.1.0",
  util;bundle-version="0.7.0",
  ddieditor;bundle-version="0.3.0",
- org.eclipse.ui.ide;bundle-version="3.5.1",
  org.eclipse.core.resources,
- org.eclipse.ui.intro
-Bundle-Version: 0.1.1
+ org.eclipse.nebula.cwt;bundle-version="0.9.0",
+ org.eclipse.nebula.widgets.cdatetime;bundle-version="0.14.0"
+Bundle-Version: 0.1.0
 Bundle-SymbolicName: ddieditor-ui;singleton:=true
 Bundle-Name: %Bundle-Name
 Import-Package: 
  org.apache.xmlbeans,
  org.ddialliance.ddiftp.util,
  org.ddialliance.ddiftp.util.log,
- org.ddialliance.ddiftp.util.xml,
- org.eclipse.nebula.cwt.animation,
- org.eclipse.nebula.cwt.animation.effects,
- org.eclipse.nebula.cwt.animation.movement,
- org.eclipse.nebula.cwt.base,
- org.eclipse.nebula.cwt.svg,
- org.eclipse.nebula.cwt.v,
- org.eclipse.nebula.widgets.cdatetime
-Bundle-ClassPath: bin/
+ org.ddialliance.ddiftp.util.xml
+Bundle-ClassPath: ., bin/
 Bundle-Activator: org.ddialliance.ddieditor.ui.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Danish Data Archive
 Bundle-Copyright: LGLP
+Export-Package: org.ddialliance.ddieditor.ui.editor,
+ org.ddialliance.ddieditor.ui.perspective,
+ org.ddialliance.ddieditor.ui.util,
+ org.ddialliance.ddieditor.ui.view
