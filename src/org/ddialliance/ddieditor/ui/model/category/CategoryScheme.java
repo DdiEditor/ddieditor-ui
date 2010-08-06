@@ -54,60 +54,15 @@ public class CategoryScheme extends LabelDescription {
 	}
 
 	/**
-	 * Set label of Category Scheme.
-	 * 
+	 * Set Display Label of Category Scheme.	 * 
 	 * @param string
 	 * @return LabelType (always null)
 	 */
-	public LabelType setLabel(String string, Language language) {
+	public LabelType setDisplayLabel(String string) {
 
-		LabelType labelType = super.setLabel(string, language);
+		LabelType labelType = super.setDisplayLabel(string);
 		if (labelType != null) {
 			categorySchemeTypeImpl.getLabelList().add(labelType);
-		}
-		return null;
-	}
-
-	/**
-	 * Set Original Label of Category Scheme. 'Original' means not translated.
-	 * 
-	 * @param string
-	 * @return LabelType (always null)
-	 */
-	public LabelType setLabel(String string) {
-
-		LabelType labelType = super.setLabel(string);
-		if (labelType != null) {
-			categorySchemeTypeImpl.getLabelList().add(labelType);
-		}
-		return null;
-	}
-
-	/**
-	 * Set Description of Category Scheme.
-	 * 
-	 * @param string
-	 * @return StructuredStringType (always null)
-	 */
-	public StructuredStringType setDescr(String string, Language language) {
-		StructuredStringType descriptionType = super.setDescr(string, language);
-		if (descriptionType != null) {
-			categorySchemeTypeImpl.getDescriptionList().add(descriptionType);
-		}
-		return null;
-	}
-
-	/**
-	 * Set Original Description of Category Scheme. Original means not translated.
-	 * 
-	 * @param string
-	 * @return StructuredStringType (always null)
-	 */
-	public StructuredStringType setDescr(String string) {
-
-		StructuredStringType descriptionType = super.setDescr(string);
-		if (descriptionType != null) {
-			categorySchemeTypeImpl.getDescriptionList().add(descriptionType);
 		}
 		return null;
 	}
