@@ -49,15 +49,14 @@ public class QuestionScheme extends LabelDescription {
 	}
 
 	/**
-	 * Set label of Question Scheme.
+	 * Set Display Label of Question Scheme.
 	 * 
 	 * @param string
 	 * @return LabelType
 	 */
-	@Override
-	public LabelType setLabel(String string, Language language) {
+	public LabelType setDisplayLabel(String string) {
 
-		LabelType labelType = super.setLabel(string, language);
+		LabelType labelType = super.setDisplayLabel(string);
 		if (labelType != null) {
 			questionSchemeTypeImpl.getLabelList().add(labelType);
 		}
@@ -65,44 +64,13 @@ public class QuestionScheme extends LabelDescription {
 	}
 
 	/**
-	 * Set Original Label of Question Scheme. 'Original' means not translated.
-	 * 
-	 * @param string
-	 * @return LabelType
-	 */
-	public LabelType setLabel(String string) {
-
-		LabelType labelType = super.setLabel(string);
-		if (labelType != null) {
-			questionSchemeTypeImpl.getLabelList().add(labelType);
-		}
-		return null;
-	}
-
-	/**
-	 * Set Description of Question Scheme.
+	 * Set Display Description of Question Scheme.
 	 * 
 	 * @param string
 	 * @return StructuredStringType
 	 */
-	public StructuredStringType setDescr(String string, Language language) {
-
-		StructuredStringType descriptionType = super.setDescr(string);
-		if (descriptionType != null) {
-			questionSchemeTypeImpl.getDescriptionList().add(descriptionType);
-		}
-		return null;
-	}
-
-	/**
-	 * Set Original Description of Question Scheme. Original means not
-	 * translated.
-	 * 
-	 * @param string
-	 * @return StructuredStringType
-	 */
-	public StructuredStringType setDescr(String string) {
-		StructuredStringType descriptionType = super.setDescr(string);
+	public StructuredStringType setDisplayDescr(String string) {
+		StructuredStringType descriptionType = super.setDisplayDescr(string);
 		if (descriptionType != null) {
 			questionSchemeTypeImpl.getDescriptionList().add(descriptionType);
 		}

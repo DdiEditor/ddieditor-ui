@@ -65,29 +65,14 @@ public class ConceptScheme extends LabelDescription {
 	}
 
 	/**
-	 * Set label of Concept Scheme.
-	 * 
-	 * @param string
-	 * @return LabelType (always null)
-	 */
-	public LabelType setLabel(String string, Language language) {
-
-		LabelType labelType = super.setLabel(string, language);
-		if (labelType != null) {
-			conceptSchemeTypeImpl.getLabelList().add(labelType);
-		}
-		return null;
-	}
-
-	/**
-	 * Set Original Label of Concept Scheme. 'Original' means not translated.
+	 * Set Display Label of Concept Scheme.
 	 * 
 	 * @param string
 	 * @return LabelType
 	 */
-	public LabelType setLabel(String string) {
+	public LabelType setDisplayLabel(String string) {
 
-		LabelType labelType = super.setLabel(string);
+		LabelType labelType = super.setDisplayLabel(string);
 		if (labelType != null) {
 			conceptSchemeTypeImpl.getLabelList().add(labelType);
 		}
@@ -95,29 +80,14 @@ public class ConceptScheme extends LabelDescription {
 	}
 
 	/**
-	 * Set Description of Concept Scheme.
+	 * Set Display Description of Concept Scheme.
 	 * 
 	 * @param string
 	 * @return StructuredStringType
 	 */
-	public StructuredStringType setDescr(String string, Language language) {
-		StructuredStringType descriptionType = super.setDescr(string, language);
-		if (descriptionType != null) {
-			conceptSchemeTypeImpl.getDescriptionList().add(descriptionType);
-		}
-		return null;
-	}
+	public StructuredStringType setDisplayDescr(String string) {
 
-	/**
-	 * Set Original Description of Concept Scheme. Original means not
-	 * translated.
-	 * 
-	 * @param string
-	 * @return StructuredStringType
-	 */
-	public StructuredStringType setDescr(String string) {
-
-		StructuredStringType descriptionType = super.setDescr(string);
+		StructuredStringType descriptionType = super.setDisplayDescr(string);
 		if (descriptionType != null) {
 			conceptSchemeTypeImpl.getDescriptionList().add(descriptionType);
 		}
