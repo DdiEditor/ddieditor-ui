@@ -3,6 +3,7 @@ package org.ddialliance.ddieditor.ui.model.universe;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
 
@@ -28,6 +29,14 @@ public class Universe extends LabelDescription implements IModel {
 		LabelType labelType = super.setDisplayLabel(string);
 		if (labelType != null) {
 			type.getLabelList().add(labelType);
+		}
+		return null;
+	}
+	
+	public LabelType setDisplayDescr(String string) {
+		StructuredStringType descr = super.setDisplayDescr(string);
+		if (descr != null) {
+			type.getHumanReadableList().add(descr);
 		}
 		return null;
 	}
