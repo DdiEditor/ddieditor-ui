@@ -58,6 +58,7 @@ public class UniverseScheme extends LabelDescription {
 	 * @param string
 	 * @return LabelType (always null)
 	 */
+	@Override
 	public LabelType setDisplayLabel(String string) {
 
 		LabelType labelType = super.setDisplayLabel(string);

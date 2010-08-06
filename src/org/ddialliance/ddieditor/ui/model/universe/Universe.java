@@ -2,9 +2,9 @@ package org.ddialliance.ddieditor.ui.model.universe;
 
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
-import org.ddialliance.ddieditor.ui.util.FixedIn31;
 
 public class Universe extends LabelDescription implements IModel {
 	private UniverseDocument doc;
@@ -24,6 +24,14 @@ public class Universe extends LabelDescription implements IModel {
 		this.type = doc.getUniverse();
 	}
 
+	public LabelType setDisplayLabel(String string) {
+		LabelType labelType = super.setDisplayLabel(string);
+		if (labelType != null) {
+			type.getLabelList().add(labelType);
+		}
+		return null;
+	}
+	
 	public UniverseDocument getDocument() {
 		return doc;
 	}
