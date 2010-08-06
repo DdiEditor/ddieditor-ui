@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -31,6 +32,9 @@ public class LabelDescriptionEditor extends Editor {
 	private LabelDescription simpleElement;
 	private IEditorSite site;
 	private TableViewer tableViewer;
+	
+	protected Group labelDescriptionTabGroup; // May be used for expanding Label
+	// Description Tab content
 
 	public LabelDescriptionEditor(String headerEditorTitle, String headerEditorDescr,
 			String editorEntityName) {
