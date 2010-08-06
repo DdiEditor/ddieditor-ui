@@ -105,7 +105,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	private Composite composite;
 	private TabFolder tabFolder;
 	private TabItem labelDescriptionTabItem;
-	
+
 	public static String NEW_ITEM = "new_item";
 	public static String CONTROL_ID = "control_id";
 	public static String TAB_ID = "id";
@@ -116,7 +116,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	protected IDao dao;
 
 	protected Group labelDescriptionTabGroup; // May be used for expanding Label
-												// Description Tab content
+
+	// Description Tab content
 
 	/**
 	 * Default constructor. Usage to gain access to create widget methods <br>
@@ -125,7 +126,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public Editor() {
 		// editorInput = new EditorInput(null, null, null, null, null,
 		// null);
-		
+
 	}
 
 	/**
@@ -143,29 +144,39 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
 		setSite(site);
 		EditorInput editorInput = (EditorInput) input;
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
-				model = dao.create("", "", editorInput.getParentId(), editorInput.getParentVersion());
+				model = dao.create("", "", editorInput.getParentId(),
+						editorInput.getParentVersion());
 			} catch (Exception e) {
-				throw new PartInitException(Messages.getString("editor.init.error.create"), new DDIFtpException(e));
+				throw new PartInitException(Messages
+						.getString("editor.init.error.create"),
+						new DDIFtpException(e));
 			} catch (Throwable t) {
-				DDIFtpException e = new DDIFtpException(Messages.getString("editor.init.error.create"));
+				DDIFtpException e = new DDIFtpException(Messages
+						.getString("editor.init.error.create"));
 				e.setRealThrowable(t);
-				throw new PartInitException(Messages.getString("editor.init.error.create"), e);
+				throw new PartInitException(Messages
+						.getString("editor.init.error.create"), e);
 			}
 		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
-				model = dao.getModel(editorInput.getId(), editorInput.getVersion(), editorInput.getParentId(),
-						editorInput.getParentVersion());
+				model = dao.getModel(editorInput.getId(), editorInput
+						.getVersion(), editorInput.getParentId(), editorInput
+						.getParentVersion());
 			} catch (Exception e) {
-				throw new PartInitException(Messages.getString("editor.init.error.retrieval"), new DDIFtpException(e));
+				throw new PartInitException(Messages
+						.getString("editor.init.error.retrieval"),
+						new DDIFtpException(e));
 			}
 		} else {
-			throw new PartInitException(Messages.getString("editor.init.error.editmodeunsupported"),
+			throw new PartInitException(Messages
+					.getString("editor.init.error.editmodeunsupported"),
 					new DDIFtpException());
 		}
 
@@ -181,8 +192,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 		// name
 		setPartName(model.getId());
-		setTitleToolTip(Messages.getString(editorInput.getElementType().getDisplayMessageEntry())); // TODO
-																									// i18n
+		setTitleToolTip(Messages.getString(editorInput.getElementType()
+				.getDisplayMessageEntry())); // TODO
+		// i18n
 	}
 
 	@Override
@@ -194,20 +206,24 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		composite.setLayout(new GridLayout());
 		composite.setRedraw(true);
 
-		final GridData gd_composite_1 = new GridData(SWT.FILL, SWT.FILL, true, true);
+		final GridData gd_composite_1 = new GridData(SWT.FILL, SWT.FILL, true,
+				true);
 		gd_composite_1.widthHint = 539;
 		gd_composite_1.heightHint = 573;
 		composite.setLayoutData(gd_composite_1);
-		composite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		composite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
 
 		final Composite composite_2 = new Composite(composite, SWT.NONE);
-		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		composite_2.setBackground(SWTResourceManager.getColor(230, 230, 250));
 		composite_2.setLayout(new GridLayout());
 
 		// title
 		final Label titleLabel = new Label(composite_2, SWT.WRAP);
-		titleLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		titleLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		titleLabel.setFont(SWTResourceManager.getFont("Sans", 14, SWT.BOLD));
 
 		titleLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
@@ -215,10 +231,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 		// description
 		final Label descriptionLabel = new Label(composite_2, SWT.WRAP);
-		final GridData gd_descriptionLabel = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		final GridData gd_descriptionLabel = new GridData(SWT.FILL, SWT.CENTER,
+				true, false);
 		gd_descriptionLabel.widthHint = 471;
 		descriptionLabel.setLayoutData(gd_descriptionLabel);
-		descriptionLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
+		descriptionLabel.setBackground(SWTResourceManager.getColor(230, 230,
+				250));
 		descriptionLabel.setText(description);
 
 		// clean dirt from initialization
@@ -256,7 +274,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		try {
 			model.validate();
 		} catch (Exception e1) {
-			DialogUtil.errorDialog((IEditorSite) getSite(), ID, Messages.getString("ErrorTitle"), Messages
+			DialogUtil.errorDialog((IEditorSite) getSite(), ID, Messages
+					.getString("ErrorTitle"), Messages
 					.getString("Editor.mess.ValidationErrorDuringSave"), e1);
 			return;
 		}
@@ -264,13 +283,16 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
 				dao.create(model);
 				getEditorInputImpl().setEditorMode(EditorModeType.EDIT);
-			} else if (getEditorInputImpl().getEditorMode().equals(EditorModeType.EDIT)) {
+			} else if (getEditorInputImpl().getEditorMode().equals(
+					EditorModeType.EDIT)) {
 				dao.update(model);
-			} else if (getEditorInputImpl().getEditorMode().equals(EditorModeType.VIEW)) {
+			} else if (getEditorInputImpl().getEditorMode().equals(
+					EditorModeType.VIEW)) {
 				log.debug("*** Saved ignored! ***");
 			}
 		} catch (Exception e) {
-			DialogUtil.errorDialog((IEditorSite) getSite(), ID, Messages.getString("ErrorTitle"), Messages
+			DialogUtil.errorDialog((IEditorSite) getSite(), ID, Messages
+					.getString("ErrorTitle"), Messages
 					.getString("Editor.mess.ErrorDuringSave"), e);
 			return;
 		}
@@ -281,8 +303,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	@Override
 	public void doSaveAs() {
-		MessageDialog.openError(getSite().getShell(),
-				Messages.getString("ErrorTitle"), Messages.getString("Editor.mess.SaveAsNotSupported")); //$NON-NLS-1$
+		MessageDialog
+				.openError(
+						getSite().getShell(),
+						Messages.getString("ErrorTitle"), Messages.getString("Editor.mess.SaveAsNotSupported")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -299,16 +323,18 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public EditorInput getEditorInputImpl() {
 		return (EditorInput) super.getEditorInput();
 	}
-	
+
 	/**
 	 * Update Info View - if it exists in active page - else ignore update
 	 */
 	private void updateInfoView() {
 
-		IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench()
+				.getWorkbenchWindows();
 		IWorkbenchPage[] iPages = workbenchWindows[0].getPages();
 		if (iPages.length > 1) {
-			log.error("Nbr. pages per window (only one is expected): "+iPages.length);
+			log.error("Nbr. pages per window (only one is expected): "
+					+ iPages.length);
 		}
 		IViewPart iViewPart = iPages[0].findView(InfoView.ID);
 		if (iViewPart != null) {
@@ -336,7 +362,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public void setControl(Control widget) {
-		if (getEditorInputImpl() != null && getEditorInputImpl().getEditorMode().equals(EditorModeType.VIEW)) {
+		if (getEditorInputImpl() != null
+				&& getEditorInputImpl().getEditorMode().equals(
+						EditorModeType.VIEW)) {
 			widget.setEnabled(false);
 		}
 	}
@@ -344,7 +372,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public TabFolder createTabFolder(Composite parent) {
 		tabFolder = new TabFolder(parent, SWT.BOTTOM);
 		tabFolder.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
 		tabFolder.addSelectionListener(new TabFolderListener());
 		return tabFolder;
 	}
@@ -385,14 +414,18 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public void createPropertiesTab(TabFolder tabFolder) {
-		TabItem tabItem = createTabItem(Messages.getString("Editor.label.propertiesTabItem.Properties"));
-		Group group = createGroup(tabItem, Messages.getString("Editor.label.propertiesGroup.Properties"));
+		TabItem tabItem = createTabItem(Messages
+				.getString("Editor.label.propertiesTabItem.Properties"));
+		Group group = createGroup(tabItem, Messages
+				.getString("Editor.label.propertiesGroup.Properties"));
 
 		boolean isMaintainable = false;
 		try {
-			isMaintainable = DdiManager.getInstance().getDdi3NamespaceHelper().isMaintainable(model.getDocument());
+			isMaintainable = DdiManager.getInstance().getDdi3NamespaceHelper()
+					.isMaintainable(model.getDocument());
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(group.getShell(), ID, "Maintainable check error", e.getMessage(), e);
+			DialogUtil.errorDialog(group.getShell(), ID,
+					"Maintainable check error", e.getMessage(), e);
 		}
 
 		// action
@@ -400,13 +433,15 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		Combo actionCombo = createCombo(group, new String[] { "1", "2", "3" });
 
 		// urn
-		StyledText urnText = createTextAreaInput(group, Messages.getString("Editor.label.urnLabel.URN"), "", null);
+		StyledText urnText = createTextAreaInput(group, Messages
+				.getString("Editor.label.urnLabel.URN"), "", null);
 		urnText.setEditable(false);
 
 		// agency
 		Text agencyText = null;
 		if (isMaintainable) {
-			createLabel(group, Messages.getString("Editor.label.agencyLabel.agency"));
+			createLabel(group, Messages
+					.getString("Editor.label.agencyLabel.agency"));
 			agencyText = createText(group, "", null);
 			agencyText.setEditable(false);
 		}
@@ -419,9 +454,11 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		// version
 		boolean isVersionable = false;
 		try {
-			isVersionable = DdiManager.getInstance().getDdi3NamespaceHelper().isVersionable(model.getDocument());
+			isVersionable = DdiManager.getInstance().getDdi3NamespaceHelper()
+					.isVersionable(model.getDocument());
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(group.getShell(), ID, "Versionable check error", e.getMessage(), e);
+			DialogUtil.errorDialog(group.getShell(), ID,
+					"Versionable check error", e.getMessage(), e);
 		}
 
 		Text versionText = null;
@@ -430,38 +467,46 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		StyledText versionRationaleText = null;
 		if (isVersionable) {
 			// version
-			createLabel(group, Messages.getString("Editor.label.versionGroup.Version"));
+			createLabel(group, Messages
+					.getString("Editor.label.versionGroup.Version"));
 			versionText = createText(group, "", null);
 			versionText.setEditable(false);
 
 			// version responsibility
-			createLabel(group, Messages.getString("Editor.label.responsibelLabel.Responsibel"));
+			createLabel(group, Messages
+					.getString("Editor.label.responsibelLabel.Responsibel"));
 			versionResponsibilityText = createText(group, "", null);
 			versionResponsibilityText.setEditable(false);
 
 			// version date
-			createLabel(group, Messages.getString("Editor.label.versionDateLabel.Date"));
+			createLabel(group, Messages
+					.getString("Editor.label.versionDateLabel.Date"));
 			versionDate = createText(group, "", null);
 			versionDate.setEditable(false);
 
 			// version rationale
-			versionRationaleText = createTextAreaInput(group, Messages.getString("Editor.label.versionrationale"), "",
-					null);
-			versionRationaleText.addModifyListener(new TextStyledTextModyfiListener(model,
-					VersionRationaleDocument.class, getEditorIdentification()));
+			versionRationaleText = createTextAreaInput(group, Messages
+					.getString("Editor.label.versionrationale"), "", null);
+			versionRationaleText
+					.addModifyListener(new TextStyledTextModyfiListener(model,
+							VersionRationaleDocument.class,
+							getEditorIdentification()));
 		}
 
 		// update on tab item click
 		tabItem.setData(TAB_ID, PROPERTY_TAB_ID);
-		PropertyTabItemAction action = new PropertyTabItemAction(ID, model, group.getShell(), actionCombo, urnText,
-				agencyText, idText, versionText, versionResponsibilityText, versionDate, versionRationaleText);
+		PropertyTabItemAction action = new PropertyTabItemAction(ID, model,
+				group.getShell(), actionCombo, urnText, agencyText, idText,
+				versionText, versionResponsibilityText, versionDate,
+				versionRationaleText);
 		Listener[] list = getTabFolder().getListeners(SWT.Selection);
 		Object obj = null;
 		for (int i = 0; i < list.length; i++) {
 			if (list[i] instanceof TypedListener) {
 				obj = ((TypedListener) list[i]).getEventListener();
 				if (obj instanceof TabFolderListener) {
-					((TabFolderListener) obj).actionMap.put(PROPERTY_TAB_ID, action);
+					((TabFolderListener) obj).actionMap.put(PROPERTY_TAB_ID,
+							action);
 				}
 				break;
 			}
@@ -469,15 +514,19 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public StyledText createXmlTab(IModel model) {
-		TabItem tabItem = createTabItem(Messages.getString("editor.tabitem.ddi"));
-		Group group = createGroup(tabItem, Messages.getString("editor.group.ddi"));
-		StyledText styledText = createTextAreaInput(group, Messages.getString("editor.label.ddi"), "", false);
+		TabItem tabItem = createTabItem(Messages
+				.getString("editor.tabitem.ddi"));
+		Group group = createGroup(tabItem, Messages
+				.getString("editor.group.ddi"));
+		StyledText styledText = createTextAreaInput(group, Messages
+				.getString("editor.label.ddi"), "", false);
 		// styledText.addModifyListener(new TextStyledTextModyfiListener(model,
 		// sometype.class, getEditorIdentification()));
 
 		// update on tab item click
 		tabItem.setData(TAB_ID, DDI_TAB_ID);
-		DDITabItemAction action = new DDITabItemAction(DDI_TAB_ID, model, styledText);
+		DDITabItemAction action = new DDITabItemAction(DDI_TAB_ID, model,
+				styledText);
 		Listener[] list = getTabFolder().getListeners(SWT.Selection);
 		Object obj = null;
 		for (int i = 0; i < list.length; i++) {
@@ -492,10 +541,11 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return styledText;
 	}
 
-	public void createLabelDescriptionTab(Composite parent, String editorEntityName,
-			final LabelDescription simpleElement) {
+	public void createLabelDescriptionTab(Composite parent,
+			String editorEntityName, final LabelDescription simpleElement) {
 		Composite simpleRootComposite = new Composite(parent, SWT.NONE);
-		simpleRootComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		simpleRootComposite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
 		final GridLayout gridLayout = new GridLayout();
 		simpleRootComposite.setLayout(gridLayout);
 
@@ -506,11 +556,13 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 		// - Simple Group
 		final Group group = new Group(simpleRootComposite, SWT.NONE);
-		final GridData gd_labelDescriptionGroup = new GridData(SWT.FILL, SWT.CENTER, true, true);
+		final GridData gd_labelDescriptionGroup = new GridData(SWT.FILL,
+				SWT.CENTER, true, true);
 		gd_labelDescriptionGroup.heightHint = 632;
 		gd_labelDescriptionGroup.widthHint = 861;
 		group.setLayoutData(gd_labelDescriptionGroup);
-		group.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		group.setBackground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_WHITE));
 		final GridLayout gridLayout_1 = new GridLayout();
 		gridLayout_1.numColumns = 2;
 		group.setLayout(gridLayout_1);
@@ -519,39 +571,48 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 		// Simple Label:
 		final Label labelLabel = new Label(group, SWT.NONE);
-		final GridData gd_conceptLabel = new GridData(SWT.RIGHT, SWT.CENTER, false, false);
+		final GridData gd_conceptLabel = new GridData(SWT.RIGHT, SWT.CENTER,
+				false, false);
 		gd_conceptLabel.horizontalIndent = 5;
 		labelLabel.setLayoutData(gd_conceptLabel);
-		labelLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		labelLabel.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
 		labelLabel.setText(Messages.getString("SimpleEditor.label.Label")); //$NON-NLS-1$
 
 		final Text labelText = new Text(group, SWT.BORDER);
-		final GridData gd_labelText = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		final GridData gd_labelText = new GridData(SWT.FILL, SWT.CENTER, true,
+				false);
 		labelText.setLayoutData(gd_labelText);
 		labelText.setText(simpleElement.getDisplayLabel());
 		labelText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				if (log.isDebugEnabled()) {
-					log.debug("SimpleElement: "+simpleElement.getClass().getName());
+					log.debug("SimpleElement: "
+							+ simpleElement.getClass().getName());
 				}
 				simpleElement.setDisplayLabel(labelText.getText());
 				editorStatus.setChanged();
 			}
 		});
-		createTranslation(group, Messages.getString("editor.button.translate"), simpleElement.getLabels(),
-				new LabelTdI(), "", labelText);
+		createTranslation(group, Messages.getString("editor.button.translate"),
+				simpleElement.getLabels(), new LabelTdI(), "", labelText);
 
 		// Simple Description:
 		final Label simpleDescrLabel = new Label(group, SWT.NONE);
-		final GridData gd_simpleDescrLabel = new GridData(SWT.RIGHT, SWT.TOP, false, false);
+		final GridData gd_simpleDescrLabel = new GridData(SWT.RIGHT, SWT.TOP,
+				false, false);
 		gd_simpleDescrLabel.horizontalIndent = 5;
 		simpleDescrLabel.setLayoutData(gd_simpleDescrLabel);
-		simpleDescrLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		simpleDescrLabel.setText(Messages.getString("SimpleEditor.label.DescriptionText.Label")); //$NON-NLS-1$
+		simpleDescrLabel.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+		simpleDescrLabel.setText(Messages
+				.getString("SimpleEditor.label.DescriptionText.Label")); //$NON-NLS-1$
 
-		final StyledText simpleDescrStyledText = new StyledText(group, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
+		final StyledText simpleDescrStyledText = new StyledText(group, SWT.WRAP
+				| SWT.V_SCROLL | SWT.BORDER);
 		simpleDescrStyledText.setText(simpleElement.getDescr());
-		final GridData gd_originalConceptTextStyledText = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		final GridData gd_originalConceptTextStyledText = new GridData(
+				SWT.FILL, SWT.CENTER, true, false);
 		gd_originalConceptTextStyledText.heightHint = 154;
 		gd_originalConceptTextStyledText.widthHint = 308;
 		simpleDescrStyledText.setLayoutData(gd_originalConceptTextStyledText);
@@ -562,8 +623,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				editorStatus.setChanged();
 			}
 		});
-		createTranslation(group, Messages.getString("editor.button.translate"), simpleElement.getDescrs(),
-				new DescriptionTdI(), "", simpleDescrStyledText);
+		createTranslation(group, Messages.getString("editor.button.translate"),
+				simpleElement.getDescrs(), new DescriptionTdI(), "",
+				simpleDescrStyledText);
 	}
 
 	public TabItem getLabelDescriptionTabItem() {
@@ -580,49 +642,68 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public Label createLabel(Group group, String labelText) {
 		Label label = new Label(group, SWT.NONE);
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				1, 1));
 		label.setText(labelText);
 		return label;
 	}
 
 	public Text createText(Group group, String initText, Boolean isNew) {
 		Text text = new Text(group, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		text
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+						1, 1));
 		text.setText(initText);
 		text.setData(NEW_ITEM, isNew);
 		setControl(text);
 		return text;
 	}
 
+	public Text createText(Composite composite, String initText) {
+		Text text = new Text(composite, SWT.BORDER);
+		text
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+						1, 1));
+		text.setText(initText);
+		setControl(text);
+		return text;
+	}
+
 	public Button createButton(Composite composite, String buttonText) {
 		Button button = new Button(composite, 0);
-		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 2, 1));
+		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				2, 1));
 		button.setText(buttonText);
 		return button;
 	}
 
 	public Combo createCombo(Group group, String[] options) {
 		final Combo actionCombo = new Combo(group, SWT.READ_ONLY);
-		actionCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		actionCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		actionCombo.setItems(options);
 		return actionCombo;
 	}
 
-	public Text createNameInput(Group group, String labelText, List<NameType> nameList, String parentLabel)
-			throws DDIFtpException {
-		NameType name = (NameType) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), nameList);
+	public Text createNameInput(Group group, String labelText,
+			List<NameType> nameList, String parentLabel) throws DDIFtpException {
+		NameType name = (NameType) XmlBeansUtil.getLangElement(LanguageUtil
+				.getDisplayLanguage(), nameList);
 
-		Text nameTxt = createTextInput(group, labelText, name == null ? "" : name.getStringValue(),
-				name == null ? Boolean.TRUE : Boolean.FALSE);
+		Text nameTxt = createTextInput(group, labelText, name == null ? ""
+				: name.getStringValue(), name == null ? Boolean.TRUE
+				: Boolean.FALSE);
 
 		if (name == null) {
-			name = ConstructNameDocument.Factory.newInstance().addNewConstructName();
+			name = ConstructNameDocument.Factory.newInstance()
+					.addNewConstructName();
 			name.setTranslatable(true);
 			name.setTranslated(!nameList.isEmpty());
 			name.setLang(LanguageUtil.getOriginalLanguage());
 		}
 
-		nameTxt.addModifyListener(new NameTypeModyfiListener(name, nameList, editorStatus));
+		nameTxt.addModifyListener(new NameTypeModyfiListener(name, nameList,
+				editorStatus));
 
 		// createTranslation(group,
 		// Messages.getString("editor.button.translate"),
@@ -631,13 +712,17 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return nameTxt;
 	}
 
-	public StyledText createStructuredStringInput(Group group, String labelText,
-			List<StructuredStringType> structuredStringList, String parentLabel) throws DDIFtpException {
+	public StyledText createStructuredStringInput(Group group,
+			String labelText, List<StructuredStringType> structuredStringList,
+			String parentLabel) throws DDIFtpException {
 		StructuredStringType structuredString = (StructuredStringType) XmlBeansUtil
-				.getLangElement(LanguageUtil.getDisplayLanguage(), structuredStringList);
+				.getLangElement(LanguageUtil.getDisplayLanguage(),
+						structuredStringList);
 
-		StyledText styledText = createTextAreaInput(group, labelText, structuredString == null ? "" : XmlBeansUtil
-				.getTextOnMixedElement(structuredString), structuredString == null ? Boolean.TRUE : Boolean.FALSE);
+		StyledText styledText = createTextAreaInput(group, labelText,
+				structuredString == null ? "" : XmlBeansUtil
+						.getTextOnMixedElement(structuredString),
+				structuredString == null ? Boolean.TRUE : Boolean.FALSE);
 
 		if (structuredString == null) {
 			structuredString = StructuredStringType.Factory.newInstance();
@@ -649,8 +734,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			}
 			structuredString.setLang(LanguageUtil.getOriginalLanguage());
 		}
-		styledText.addModifyListener(new StructuredStringTypeModyfiListener(structuredString, structuredStringList,
-				editorStatus));
+		styledText.addModifyListener(new StructuredStringTypeModyfiListener(
+				structuredString, structuredStringList, editorStatus));
 
 		// createTranslation(group,
 		// Messages.getString("editor.button.translate"),
@@ -669,11 +754,13 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 *            Editor implementing IEditor interface
 	 * @return
 	 */
-	public Button createTranslation(Group group, String buttonText, final List items,
-			final TranslationDialogInput translationDialogOption, final String parentLabel, Widget parentWidget) {
+	public Button createTranslation(Group group, String buttonText,
+			final List items,
+			final TranslationDialogInput translationDialogOption,
+			final String parentLabel, Widget parentWidget) {
 		Button button = createButton(group, buttonText);
-		button.addSelectionListener(createTranslationSelectionListener(items, translationDialogOption, parentLabel,
-				parentWidget));
+		button.addSelectionListener(createTranslationSelectionListener(items,
+				translationDialogOption, parentLabel, parentWidget));
 		return button;
 	}
 
@@ -685,34 +772,42 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public void updateParentWidget(TranslationDialog translationDialog) {
 
 		try {
-			XmlObject xObj = (XmlObject) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), translationDialog.getItems());
+			XmlObject xObj = (XmlObject) XmlBeansUtil.getLangElement(
+					LanguageUtil.getDisplayLanguage(), translationDialog
+							.getItems());
 			String text = "";
 			if (xObj != null) {
 				text = XmlBeansUtil.getTextOnMixedElement(xObj);
 			}
-			
+
 			Widget widget = translationDialog.getParentWidget();
 			if (widget instanceof Text) {
 				((Text) widget).setText(text);
 			} else if (widget instanceof StyledText) {
 				((StyledText) widget).setText(text);
 			} else {
-				DialogUtil.errorDialog((IEditorSite) getSite(), ID, Messages.getString("ErrorTitle"), Messages
-						.getString("Editor.mess.InternalError"), new DDIFtpException(Messages
-						.getString("Editor.mess.UnsupportedWidgetType")));
+				DialogUtil
+						.errorDialog(
+								(IEditorSite) getSite(),
+								ID,
+								Messages.getString("ErrorTitle"),
+								Messages.getString("Editor.mess.InternalError"),
+								new DDIFtpException(
+										Messages
+												.getString("Editor.mess.UnsupportedWidgetType")));
 				return;
 			}
 		} catch (DDIFtpException e) {
-			ErrorDialog.openError(getSite().getShell(), Messages.getString("ErrorTitle"), null, new Status(
-					IStatus.ERROR, ID, 0, e.getMessage(), e));
+			ErrorDialog.openError(getSite().getShell(), Messages
+					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, e.getMessage(), e));
 		}
 	}
 
 	private SelectionListener createTranslationSelectionListener(
 			final List items,
 			final TranslationDialogInput translationDialogOption,
-			final String parentLabel,
-			final Widget parentWidget) {
+			final String parentLabel, final Widget parentWidget) {
 		SelectionListener listener = new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
@@ -720,53 +815,78 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				List<CacheHolder> cache = new ArrayList<CacheHolder>();
 				for (Object object : items) {
 					try {
-						cache.add(new CacheHolder(XmlBeansUtil.getTextOnMixedElement((XmlObject) object), 
-								(String)ReflectionUtil.invokeMethod(object, "getLang", false, null), 
-								(Boolean)ReflectionUtil.invokeMethod(object, "getTranslated", false, null), 
-								(Boolean)ReflectionUtil.invokeMethod(object, "getTranslatable", false, null)));
+						cache.add(new CacheHolder(XmlBeansUtil
+								.getTextOnMixedElement((XmlObject) object),
+								(String) ReflectionUtil.invokeMethod(object,
+										"getLang", false, null),
+								(Boolean) ReflectionUtil.invokeMethod(object,
+										"getTranslated", false, null),
+								(Boolean) ReflectionUtil.invokeMethod(object,
+										"getTranslatable", false, null)));
 					} catch (Exception e1) {
-						DialogUtil.errorDialog((IEditorSite) getSite(), ID, Messages.getString("ErrorTitle"), Messages
-								.getString("Editor.mess.InternalError"), e1);
+						DialogUtil
+								.errorDialog(
+										(IEditorSite) getSite(),
+										ID,
+										Messages.getString("ErrorTitle"),
+										Messages
+												.getString("Editor.mess.InternalError"),
+										e1);
 						return;
 					}
 				}
-				
-				TranslationDialog translationDialog = new TranslationDialog(getEditorSite().getShell(), editorStatus,
-						items, translationDialogOption, parentLabel, parentWidget);
+
+				TranslationDialog translationDialog = new TranslationDialog(
+						getEditorSite().getShell(), editorStatus, items,
+						translationDialogOption, parentLabel, parentWidget);
 				translationDialog.open();
 				if (translationDialog.getReturnCode() == Window.OK) {
 					updateParentWidget(translationDialog);
 				} else {
 					// Restore original items:
-					for (Iterator iteratorItems = items.iterator(), iteratorCache = cache.iterator(); iteratorItems.hasNext();) {
+					for (Iterator iteratorItems = items.iterator(), iteratorCache = cache
+							.iterator(); iteratorItems.hasNext();) {
 						Object object = (Object) iteratorItems.next();
-						CacheHolder cacheHolder = (CacheHolder)iteratorCache.next();
+						CacheHolder cacheHolder = (CacheHolder) iteratorCache
+								.next();
 						try {
 							// restore
-							translationDialog.setXmlText(object, cacheHolder.text);
-							translationDialog.setXmlLang(object, cacheHolder.lang);
-							translationDialog.setTranslateable(object, cacheHolder.translated);
-							translationDialog.setTranslated(object, cacheHolder.translateable);
+							translationDialog.setXmlText(object,
+									cacheHolder.text);
+							translationDialog.setXmlLang(object,
+									cacheHolder.lang);
+							translationDialog.setTranslateable(object,
+									cacheHolder.translated);
+							translationDialog.setTranslated(object,
+									cacheHolder.translateable);
 						} catch (Exception e) {
-							DialogUtil.errorDialog((IEditorSite) getSite(), ID, Messages.getString("ErrorTitle"), Messages
-									.getString("Editor.mess.InternalError"), e);
+							DialogUtil
+									.errorDialog(
+											(IEditorSite) getSite(),
+											ID,
+											Messages.getString("ErrorTitle"),
+											Messages
+													.getString("Editor.mess.InternalError"),
+											e);
 							return;
-						} 
+						}
 					}
 				}
 			}
-	
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// TODO
 			}
-			
+
 			class CacheHolder {
 				public String text;
 				public String lang;
 				public boolean translateable;
 				public boolean translated;
-				public CacheHolder(String text, String lang, boolean translated, boolean translateable) {
+
+				public CacheHolder(String text, String lang,
+						boolean translated, boolean translateable) {
 					super();
 					this.text = text;
 					this.lang = lang;
@@ -778,39 +898,49 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return listener;
 	}
 
-	public ReferenceSelectionCombo createRefSelection(Group group, String labelText, String searchTittle,
-			final ReferenceType reference, List<LightXmlObjectType> referenceList, boolean isNew) {
+	public ReferenceSelectionCombo createRefSelection(Group group,
+			String labelText, String searchTittle,
+			final ReferenceType reference,
+			List<LightXmlObjectType> referenceList, boolean isNew) {
 		Composite labelComposite = new Composite(group, SWT.NONE);
-		labelComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		labelComposite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
 
-		labelComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		labelComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false));
 		labelComposite.setLayout(new GridLayout());
 
 		Composite composite = new Composite(group, SWT.NONE);
-		composite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		composite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+		composite
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		composite.setLayout(new GridLayout());
 
-		final ReferenceSelectionCombo referenceSelectionCombo = new ReferenceSelectionCombo(isNew);
+		final ReferenceSelectionCombo referenceSelectionCombo = new ReferenceSelectionCombo(
+				isNew);
 		String preIdValue = "";
 		if (reference != null && !reference.getIDList().isEmpty()) {
 			preIdValue = reference.getIDList().get(0).getStringValue();
 		}
 		try {
-			referenceSelectionCombo.createPartControl(labelComposite, composite, "", labelText, referenceList,
-					preIdValue);
+			referenceSelectionCombo.createPartControl(labelComposite,
+					composite, "", labelText, referenceList, preIdValue);
 		} catch (Exception e) {
-			ErrorDialog.openError(getSite().getShell(), Messages.getString("ErrorTitle"), null, new Status(
-					IStatus.ERROR, ID, 0, e.getMessage(), e));
+			ErrorDialog.openError(getSite().getShell(), Messages
+					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, e.getMessage(), e));
 		}
 		return referenceSelectionCombo;
 	}
 
-	public Text createTextInput(Group group, String labelText, String initText, Boolean isNew) {
+	public Text createTextInput(Group group, String labelText, String initText,
+			Boolean isNew) {
 		// label
 		Label label = new Label(group, SWT.NONE);
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				1, 1));
 		label.setText(labelText);
 
 		// input
@@ -819,12 +949,14 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return text;
 	}
 
-	public Composite createErrorComposite(Composite parent, String controlIdentification) {
+	public Composite createErrorComposite(Composite parent,
+			String controlIdentification) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setVisible(false);
 		composite.setEnabled(false);
 		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
-		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 2, 0));
+		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 2, 0));
 		composite.setData("", controlIdentification);
 
 		Label label = new Label(composite, SWT.RIGHT);
@@ -834,14 +966,17 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return composite;
 	}
 
-	public StyledText createTextAreaInput(Group group, String labelText, String initText, Boolean isNew) {
+	public StyledText createTextAreaInput(Group group, String labelText,
+			String initText, Boolean isNew) {
 		final Label label = new Label(group, SWT.NONE);
 		final GridData gd_Label = new GridData(SWT.RIGHT, SWT.TOP, false, false);
 		label.setLayoutData(gd_Label);
-		label.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		label.setBackground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_WHITE));
 		label.setText(labelText);
 
-		StyledText styledText = new StyledText(group, SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
+		StyledText styledText = new StyledText(group, SWT.WRAP | SWT.V_SCROLL
+				| SWT.BORDER);
 		styledText.setText(initText);
 		styledText.setData(NEW_ITEM, isNew);
 		final GridData gd_Text = new GridData(GridData.FILL_BOTH);
@@ -850,11 +985,13 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return styledText;
 	}
 
-	public void createDateInput(Group group, String labelText, String initDate, DateTimeWidget dateTimeWidget,
-			SelectionAdapter selectionAdapter) throws DDIFtpException {
+	public void createDateInput(Group group, String labelText, String initDate,
+			DateTimeWidget dateTimeWidget, SelectionAdapter selectionAdapter)
+			throws DDIFtpException {
 		Label label = new Label(group, SWT.NONE);
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				1, 1));
 		label.setText(labelText);
 
 		dateTimeWidget = new DateTimeWidget(group);
@@ -875,8 +1012,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	@Override
 	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages.getString("perspective.switch.dialogtext"), getEditorInputImpl()
-				.getElementType().getPerspectiveId());
+		return MessageFormat.format(Messages
+				.getString("perspective.switch.dialogtext"),
+				getEditorInputImpl().getElementType().getPerspectiveId());
 	}
 
 	@Override
@@ -925,7 +1063,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 * @param currentSite
 	 *            Current Site
 	 */
-	public static void verifyField(FIELD_TYPE ft, VerifyEvent e, IEditorSite currentSite) {
+	public static void verifyField(FIELD_TYPE ft, VerifyEvent e,
+			IEditorSite currentSite) {
 		char myChar;
 
 		// Assume we don't allow it
@@ -946,7 +1085,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				e.doit = true;
 				bars.getStatusLineManager().setMessage("");
 			} else {
-				bars.getStatusLineManager().setMessage(Messages.getString("Editor.mess.UseOnlyDigits")); //$NON-NLS-1$
+				bars.getStatusLineManager().setMessage(
+						Messages.getString("Editor.mess.UseOnlyDigits")); //$NON-NLS-1$
 			}
 			break;
 		case LETTER:
@@ -955,7 +1095,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				e.doit = true;
 				bars.getStatusLineManager().setMessage("");
 			} else {
-				bars.getStatusLineManager().setMessage(Messages.getString("Editor.mess.UseOnlyLetters")); //$NON-NLS-1$
+				bars.getStatusLineManager().setMessage(
+						Messages.getString("Editor.mess.UseOnlyLetters")); //$NON-NLS-1$
 			}
 			break;
 		case LETTER_DIGIT:
@@ -964,7 +1105,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				e.doit = true;
 				bars.getStatusLineManager().setMessage("");
 			} else {
-				bars.getStatusLineManager().setMessage(Messages.getString("Editor.mess.UseOnlyLettersDigits")); //$NON-NLS-1$
+				bars.getStatusLineManager().setMessage(
+						Messages.getString("Editor.mess.UseOnlyLettersDigits")); //$NON-NLS-1$
 			}
 			break;
 		}
