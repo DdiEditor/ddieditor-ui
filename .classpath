@@ -3,13 +3,18 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="testsource"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ddieditor"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/lib-java"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
+	<classpathentry kind="lib" path="/home/dak/Desktop/Downloads/tmp/eclipse/plugins/org.eclipse.nebula.widgets.cdatetime_0.14.0.HEAD.jar"/>
+	<classpathentry kind="lib" path="/home/dak/Desktop/Downloads/tmp/eclipse/plugins/org.eclipse.nebula.cwt_0.9.0.HEAD.jar"/>
 	<classpathentry kind="lib" path="/lib-java/generated/ddi-3-xmlbeans.jar"/>
 	<classpathentry kind="lib" path="/lib-java/generated/org.ddialliance.ddieditor.model.xmlbeans.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.nebula.cwt_0.9.0.HEAD.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.nebula.widgets.cdatetime_0.14.0.HEAD.jar"/>
+	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.5.0/jsr173_1.0_api.jar"/>
+	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.5.0/resolver.jar"/>
+	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.5.0/xbean_xpath.jar"/>
+	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.5.0/xbean.jar"/>
+	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.5.0/xmlbeans-qname.jar"/>
+	<classpathentry kind="lib" path="/lib-java/xmlbeans/2.5.0/xmlpublic.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
