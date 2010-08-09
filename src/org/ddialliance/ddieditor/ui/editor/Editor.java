@@ -583,7 +583,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		final GridData gd_labelText = new GridData(SWT.FILL, SWT.CENTER, true,
 				false);
 		labelText.setLayoutData(gd_labelText);
-		labelText.setText(simpleElement.getDisplayLabel());
+		try {
+			labelText.setText(simpleElement.getDisplayLabel());
+		} catch (DDIFtpException e) {
+			DialogUtil.errorDialog(group.getShell(), ID,
+					"Error on get display lable", e.getMessage(), e);
+		}
 		labelText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				if (log.isDebugEnabled()) {
