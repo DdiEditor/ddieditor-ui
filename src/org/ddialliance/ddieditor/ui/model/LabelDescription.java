@@ -60,15 +60,18 @@ public abstract class LabelDescription extends Model implements IModel {
 	 * Get Display Label of Simple Element.
 	 * 
 	 * @return String Label string
+	 * @throws DDIFtpException 
 	 */
-	public String getDisplayLabel() {
+	public String getDisplayLabel() throws DDIFtpException {
 
 		if (labels.size() > 0) {
 			String displayLang = LanguageUtil.getDisplayLanguage();
 			try {
 				return XmlBeansUtil.getTextOnMixedElement((XmlObject) XmlBeansUtil.getLangElement(displayLang, labels));
 			} catch (DDIFtpException e) {
+				// TODO - error handling
 				e.printStackTrace();
+				throw e;
 			}
 		}
 
@@ -82,43 +85,49 @@ public abstract class LabelDescription extends Model implements IModel {
 	 * @param string
 	 * @return LabelType null - if label updated (no label is added) LabelType
 	 *         is new label added
+	 * @throws DDIFtpException 
 	 */
 	public LabelType setDisplayLabel(String string) {
 		XmlObject label = null;
 		
+		// Show label in Display language
 		if (labels.size() > 0) {
 			try {
 				label = (XmlObject) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), labels);
 			} catch (DDIFtpException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			if (string.length() > 0) {
-				// update label:
-				XmlBeansUtil.setTextOnMixedElement(label, string);
 				return null;
-			} else {
-				// remove label:
-				for (int i = 0; i < labels.size(); i++) {
-					if (label == labels.get(i)) {
-						labels.remove(i);
-						return null;
+			}
+			if (label != null) {
+				// Label in Display language found
+				if (string.length() > 0) {
+					// update label:
+					XmlBeansUtil.setTextOnMixedElement(label, string);
+					return null;
+				} else {
+					// remove label:
+					for (int i = 0; i < labels.size(); i++) {
+						if (label == labels.get(i)) {
+							labels.remove(i);
+							return null;
+						}
 					}
 				}
 			}
 		}
 		
 		if (string.length() == 0) {
-			// label does not exists but string is empty - ignore requestion
+			// label does not exists and string is empty - ignore requestion
 			return null;
 		}
 
-		// add new label:
+		// Create new label - in Original language:
 		LabelType labelType = (LabelType )label;
 		labelType = LabelDocument.Factory.newInstance().addNewLabel();
 		labelType.setTranslated(false);
 		labelType.setTranslatable(true);
-		labelType.setLang(LanguageUtil.getDisplayLanguage());
+		labelType.setLang(LanguageUtil.getOriginalLanguage());
 		XmlBeansUtil.setTextOnMixedElement(labelType, string);
 		return labelType;
 	}
@@ -153,31 +162,46 @@ public abstract class LabelDescription extends Model implements IModel {
 	 *         added
 	 */
 	public StructuredStringType setDisplayDescr(String string) {
-		StructuredStringType descriptionType;
-
-		int length = descrs.size();
-		for (int i = 0; i < length; i++) {
-			descriptionType = descrs.get(i);
-			if (descriptionType.getLang().equals(LanguageUtil.getDisplayLanguage())) {
-				if (string.length() > 0) {
-					XmlBeansUtil.setTextOnMixedElement(descriptionType, string);
-				} else {
-					descrs.remove(i);
-				}
+		XmlObject descr = null;
+		
+		// Show Description in Display language
+		if (descrs.size() > 0) {
+			try {
+				descr = (XmlObject) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), descrs);
+			} catch (DDIFtpException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 				return null;
 			}
+			if (descr != null) {
+				// Description in Display language found
+				if (string.length() > 0) {
+					// update description:
+					XmlBeansUtil.setTextOnMixedElement(descr, string);
+					return null;
+				} else {
+					// remove Description:
+					for (int i = 0; i < descrs.size(); i++) {
+						if (descr == descrs.get(i)) {
+							descrs.remove(i);
+							return null;
+						}
+					}
+				}
+			}
 		}
-
+		
 		if (string.length() == 0) {
+			// Description does not exists and string is empty - ignore requestion
 			return null;
 		}
-		descriptionType = DescriptionDocument.Factory.newInstance()
-				.addNewDescription();
-		try {
-			XmlBeansUtil.addTranslationAttributes(descriptionType, LanguageUtil.getDisplayLanguage(), false, true);
-		} catch (DDIFtpException e) {
-			e.printStackTrace();
-		}
+
+		// Create new Description - in Original language:
+		StructuredStringType descriptionType = (StructuredStringType )descr;
+		descriptionType = LabelDocument.Factory.newInstance().addNewLabel();
+		descriptionType.setTranslated(false);
+		descriptionType.setTranslatable(true);
+		descriptionType.setLang(LanguageUtil.getOriginalLanguage());
 		XmlBeansUtil.setTextOnMixedElement(descriptionType, string);
 		return descriptionType;
 	}
@@ -198,30 +222,7 @@ public abstract class LabelDescription extends Model implements IModel {
 	public void validate() throws Exception {
 		log.debug("LabelDescription validation performed");
 		boolean found;
-		
-		// TODO Remove check of attributes to Translation popup module.
-//		// Check if more labels without lang attribute
-//		found = false;
-//		List<LabelType> labelList = getLabels();
-//		for (LabelType labelType : labelList) {
-//			if (labelType.getLang() == null && found) {
-//				throw new Exception("More Labels do not have a 'lang' attribute");
-//			} else {
-//				found = true;
-//			}
-//		}
-//		
-//		// Check if more Descriptions without lang attribute
-//		found = false;
-//		List<StructuredStringType> descrs = getDescrs();
-//		for (StructuredStringType descr : descrs) {
-//			if (descr.getLang() == null && found) {
-//				throw new Exception("More Descriptions do not have a 'lang' attribute");
-//			} else {
-//				found = true;
-//			}
-//		}
-		
+				
 		// No error found:
 		return;
 	}
