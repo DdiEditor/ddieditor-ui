@@ -24,7 +24,7 @@ public class DisplayNoteDialog extends Dialog {
 		// group
 		Editor editor = new Editor();
 		Group group = editor.createGroup(parent, "Release note");
-		group.setLayoutData(new GridData(700, 400));
+		group.setLayoutData(new GridData(800, 400));
 
 		editor.createTextAreaInput(group, "Release note", note, null);
 		return null;
