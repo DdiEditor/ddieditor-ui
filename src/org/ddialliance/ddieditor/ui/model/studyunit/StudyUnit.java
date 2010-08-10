@@ -16,7 +16,6 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.UniverseReferenceDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.CitationDocumentImpl;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.FundingInformationDocumentImpl;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.NameDocumentImpl;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.UniverseReferenceDocumentImpl;
 import org.ddialliance.ddi3.xml.xmlbeans.studyunit.AbstractDocument;
@@ -28,7 +27,6 @@ import org.ddialliance.ddi3.xml.xmlbeans.studyunit.impl.PurposeDocumentImpl;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelUpdateElement;
 import org.ddialliance.ddieditor.ui.model.Model;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -88,8 +86,6 @@ public class StudyUnit extends Model {
 	 * Clear changed status for sub elements
 	 */
 	public void clearChanged() {
-		// TODO add is debug enabled
-		log.debug("StudyUnit.clearChanged()");
 		citationSubElements.changed(false);
 		abstractSubElements.changed(false);
 		universeRefSubElements.changed(false);
@@ -314,7 +310,7 @@ public class StudyUnit extends Model {
 		return abstracts;
 	}
 
-	private UniverseReferenceDocumentImpl[] getUniverseReferences(
+	private UniverseReferenceDocument[] getUniverseReferences(
 			XmlObject[] xmlObjects) {
 		UniverseReferenceDocumentImpl[] universeRerencences = new UniverseReferenceDocumentImpl[xmlObjects.length];
 
@@ -326,7 +322,7 @@ public class StudyUnit extends Model {
 		return universeRerencences;
 	}
 
-	private PurposeDocumentImpl[] getPurposes(XmlObject[] xmlObjects) {
+	private PurposeDocument[] getPurposes(XmlObject[] xmlObjects) {
 		PurposeDocumentImpl[] purposes = new PurposeDocumentImpl[xmlObjects.length];
 
 		for (int i = 0; i < xmlObjects.length; i++) {
@@ -350,11 +346,13 @@ public class StudyUnit extends Model {
 				return true;
 			}
 		}
-		// TODO add is debug enabled
-		log
-				.debug("No matching International String found! International Strings: "
-						+ internationalStringTypes.toString()
-						+ " Language Code: " + languageCode);
+
+		if (log.isDebugEnabled()) {
+			log
+					.debug("No matching International String found! International Strings: "
+							+ internationalStringTypes.toString()
+							+ " Language Code: " + languageCode);
+		}
 		return false;
 	}
 
@@ -370,8 +368,10 @@ public class StudyUnit extends Model {
 				return internationalStringType.getStringValue();
 			}
 		}
-		// TODO add is debug enabled
-		log.debug("*** No matching International String ***");
+		
+		if (log.isDebugEnabled()) {
+			log.debug("*** No matching International String ***");
+		}
 		return "";
 	}
 
@@ -682,8 +682,6 @@ public class StudyUnit extends Model {
 	 */
 
 	public void setCitationPublisher(String publisher, String languageCode) {
-		// TODO add is debug enabled
-		log.debug("StudyUnit.setCitationPublisher()");
 		XmlObject[] citations = citationSubElements.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
 			CitationType citation = ((CitationDocumentImpl) citations[i])
@@ -714,8 +712,6 @@ public class StudyUnit extends Model {
 	 */
 
 	public String getCitationPublisher(String languageCode) {
-		// TODO add is debug enabled
-		log.debug("StudyUnit.getCitationSubTitle()");
 		XmlObject[] citations = citationSubElements.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
 			CitationType citation = ((CitationDocumentImpl) citations[i])
@@ -738,8 +734,6 @@ public class StudyUnit extends Model {
 	 */
 
 	public void setCitationContributor(String contributor, String languageCode) {
-		// TODO add is debug enabled
-		log.debug("StudyUnit.setCitationContributor()");
 		XmlObject[] citations = citationSubElements.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
 			CitationType citation = ((CitationDocumentImpl) citations[i])
@@ -769,8 +763,6 @@ public class StudyUnit extends Model {
 	 * @param languageCode
 	 */
 	public String getCitationContributor(String languageCode) {
-		// TODO add is debug enabled
-		log.debug("StudyUnit.getCitationContributor()");
 		XmlObject[] citations = citationSubElements.getXmlObjects();
 		for (int i = 0; i < citations.length; i++) {
 			CitationType citation = ((CitationDocumentImpl) citations[i])
@@ -791,10 +783,7 @@ public class StudyUnit extends Model {
 	 * @param publicationDate
 	 */
 	public void setCitationPublicationDate(String publicationDate) {
-		// TODO add is debug enabled
-		log.debug("StudyUnit.setCitationPublicationDate()");
 		XmlObject[] citations = citationSubElements.getXmlObjects();
-		// TODO add is debug enabled
 		if (citations.length > 1) {
 			log
 					.error("*** More Study Unit Citations - 'Publication Date' of first one set! ***");
@@ -817,11 +806,12 @@ public class StudyUnit extends Model {
 	 * 
 	 */
 	public String getCitationPublicationDate() throws Exception {
-		// TODO add is debug enabled
-		log.debug("StudyUnit.getCitationContributor()");
 		XmlObject[] citations = citationSubElements.getXmlObjects();
 		if (citations.length > 1) {
 			throw new Exception("More Study Unit Citations!");
+		}
+		if (citations.length == 0) {
+			return "";
 		}
 		CitationType citation = ((CitationDocumentImpl) citations[0])
 				.getCitation();
@@ -841,10 +831,7 @@ public class StudyUnit extends Model {
 	 * @param publicationDate
 	 */
 	public void setCitationLanguage(String language) {
-		// TODO add is debug enabled
-		log.debug("StudyUnit.setCitationLanguage()");
 		XmlObject[] citations = citationSubElements.getXmlObjects();
-		// TODO add is debug enabled
 		if (citations.length > 1) {
 			log
 					.error("*** More Study Unit Citations - 'Language' of first one used! ***");
@@ -862,8 +849,6 @@ public class StudyUnit extends Model {
 	 * 
 	 */
 	public String getCitationLanguage() {
-		// TODO add is debug enabled
-		log.debug("StudyUnit.getCitationLanguage()");
 		XmlObject[] citations = citationSubElements.getXmlObjects();
 		// TODO add is debug enabled
 		if (citations.length > 1) {
@@ -886,8 +871,6 @@ public class StudyUnit extends Model {
 	 * @param LanguageCode
 	 */
 	public void setAbstractContent(String contentVal, String languageCode) {
-
-		log.debug("StudyUnit.setAbstractContent()");
 		XmlObject[] abstracts = abstractSubElements.getXmlObjects();
 		for (int i = 0; i < abstracts.length; i++) {
 			StructuredStringType content = ((AbstractDocumentImpl) abstracts[i])
@@ -908,8 +891,6 @@ public class StudyUnit extends Model {
 	 * @return
 	 */
 	public String getAbstractContent(String languageCode) {
-
-		log.debug("StudyUnit.getAbstractContent()");
 		XmlObject[] abstracts = abstractSubElements.getXmlObjects();
 		if (abstracts != null) {
 			for (int i = 0; i < abstracts.length; i++) {
@@ -931,8 +912,6 @@ public class StudyUnit extends Model {
 	 * @param id
 	 */
 	public void setUniverseRefId(String contentVal) {
-
-		log.debug("StudyUnit.setUniverseRefId()");
 		XmlObject[] universeRefs = universeRefSubElements.getXmlObjects();
 		IDType id = ((UniverseReferenceDocumentImpl) universeRefs[0])
 				.getUniverseReference().getIDArray(0);
@@ -945,17 +924,17 @@ public class StudyUnit extends Model {
 	}
 
 	/**
-	 * Get Study Unit Univerce Reference ID
+	 * Get Study Unit universe Reference ID
 	 * 
 	 * @return
 	 */
-	public String getUniverseRefId() throws DDIFtpException {
-
-		log.debug("StudyUnit.getUniverseRefId()");
+	public String[] getUniverseRefId() throws DDIFtpException {
 		XmlObject[] universeRefs = universeRefSubElements.getXmlObjects();
+		
+		// TODO check up on this
 		if (universeRefs.length == 0) {
 			log
-					.debug("No Universe Reference element found - create new element");
+					.debug("No Universe Reference element found - creating new element");
 			UniverseReferenceDocument universeReferenceDocument = UniverseReferenceDocument.Factory
 					.newInstance();
 			universeRefSubElements
@@ -966,147 +945,26 @@ public class StudyUnit extends Model {
 					.addNewUniverseReference();
 			referenceType.addNewID().setStringValue("");
 			referenceType.addIdentifyingAgency("");
-			return "";
+			return new String[] { "" };
 		}
-		if (universeRefs.length > 1) {
-			throw new DDIFtpException(
-					"Only one Universe Reference element currently supported");
+		
+		String[] result = new String[universeRefs.length];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = ((UniverseReferenceDocument) universeRefs[i])
+					.getUniverseReference().getIDArray(0).getStringValue();
 		}
-		List<IDType> universeRef = ((UniverseReferenceDocumentImpl) universeRefs[0])
-				.getUniverseReference().getIDList();
-		if (universeRef.size() != 1) {
-			throw new DDIFtpException(
-					"Only one Universe Reference ID currently supported");
-		}
-		IDType universeRefType = universeRef.get(0);
-		return universeRefType.getStringValue();
+		return result;
 	}
 
-	private ReferenceType getFundingAgencyOrganizationReference()
+	public List<ReferenceType> getFundingAgencyOrganizationReferences()
 			throws DDIFtpException {
-
-		log.debug("StudyUnit.getFundingAgencyOrganizationReference()");
-		XmlObject[] fundings = fundingSubElements.getXmlObjects();
-		if (fundings.length == 0) {
-			log
-					.debug("No Funding Information element found - create new element");
-			FundingInformationDocument fundingInformationDocument = FundingInformationDocument.Factory
-					.newInstance();
-			fundingSubElements
-					.addXmlObject((XmlObject) fundingInformationDocument);
-			fundingSubElements.changed(true);
-			fundingSubElements.setCrudValue(0); // New
-			ReferenceType agencyReferenceType = fundingInformationDocument
-					.addNewFundingInformation()
-					.addNewAgencyOrganizationReference();
-			agencyReferenceType.addNewID().setStringValue("");
-			agencyReferenceType.addIdentifyingAgency("");
-			return agencyReferenceType;
+		List<ReferenceType> result = new ArrayList<ReferenceType>();
+		for (int i = 0; i < fundingSubElements.getXmlObjects().length; i++) {
+			result.add(((FundingInformationDocument) fundingSubElements
+					.getXmlObjects()[i]).getFundingInformation()
+					.getAgencyOrganizationReferenceArray(0));
 		}
-		if (fundings.length > 1) {
-			throw new DDIFtpException(
-					Messages
-							.getString("StudyUnitEditor.mess.OnlyOneFundingInformationEntityCurrentlySupported"));
-		}
-		List<ReferenceType> agencyRef = ((FundingInformationDocumentImpl) fundings[0])
-				.getFundingInformation().getAgencyOrganizationReferenceList();
-		if (agencyRef.size() != 1) {
-			log
-					.warn(
-							Messages
-									.getString("StudyUnitEditor.mess.OnlyOneFundingInformationAgencyOrganizationReferenceCurrentlySupported"),
-							new Throwable());
-			// throw new DDIFtpException(
-			// Messages
-			// .getString("StudyUnitEditor.mess.OnlyOneFundingInformationAgencyOrganizationReferenceCurrentlySupported"));
-		}
-		ReferenceType agencyReferenceType = agencyRef.get(0);
-		return agencyReferenceType;
-	}
-
-	/**
-	 * Set Funding Agency ID
-	 * 
-	 * Note: Only one-to-on relation between FundingInformation,
-	 * AgencyOrganisationReference and ID/IdentifyingAgency is supported.
-	 * 
-	 * @param ID
-	 *            - identifies the agency inside the organisation
-	 */
-	public void setFundingAgencyID(String agencyID) throws DDIFtpException {
-
-		log.debug("StudyUnit.setFundingAgencyID()");
-		ReferenceType referenceType = getFundingAgencyOrganizationReference();
-		if (referenceType == null) {
-			return;
-		} else {
-			referenceType.removeID(0);
-		}
-		referenceType.addNewID().setStringValue(agencyID);
-		fundingSubElements.changed(true);
-		if (fundingSubElements.getCrudValue() == 0) {
-			return; // New
-		}
-		fundingSubElements.setCrudValue(0 + 1); // update - starts by '1'
-	}
-
-	/**
-	 * Set Funding Identifying Agency
-	 * 
-	 * Note: Only one-to-on relation between FundingInformation,
-	 * AgencyOrganisationReference and ID/IdentifyingAgency is supported.
-	 * 
-	 * @param agencyOrganisation
-	 *            -defines the organisation
-	 */
-	public void setFundingIdentifyingAgency(String agencyOrganisation)
-			throws DDIFtpException {
-
-		log.debug("StudyUnit.setFundingIdentifyingAgency()");
-		ReferenceType referenceType = getFundingAgencyOrganizationReference();
-		if (referenceType == null) {
-			return;
-		} else {
-			referenceType.removeIdentifyingAgency(0);
-		}
-		referenceType.addIdentifyingAgency(agencyOrganisation);
-		fundingSubElements.changed(true);
-		if (fundingSubElements.getCrudValue() == 0) {
-			return; // New
-		}
-		fundingSubElements.setCrudValue(0 + 1); // update - starts by '1'
-	}
-
-	/**
-	 * Get Funding Agency ID
-	 * 
-	 * Note: Only one-to-on relation between FundingInformation,
-	 * AgencyOrganisationReference and ID/IdentifyingAgency is supported.
-	 * 
-	 */
-	public String getFundingAgencyID() throws DDIFtpException {
-
-		log.debug("StudyUnit.getFundingAgencyID()");
-		ReferenceType referenceType = getFundingAgencyOrganizationReference();
-		return referenceType == null ? "" : referenceType.getIDArray(0)
-				.getStringValue();
-	}
-
-	/**
-	 * Get Funding Identifying Agency
-	 * 
-	 * Note: Only one-to-on relation between FundingInformation,
-	 * AgencyOrganisationReference and ID/IdentifyingAgency is supported.
-	 * 
-	 */
-	public String getFundingIdentifyingAgency() throws DDIFtpException {
-		log.debug("StudyUnit.getFundingIdentifyingAgency()");
-		ReferenceType referenceType = getFundingAgencyOrganizationReference();
-		if (referenceType == null) {
-			return "";
-		}
-		return referenceType.getIdentifyingAgencyList().size() == 0 ? ""
-				: referenceType.getIdentifyingAgencyList().get(0);
+		return result;
 	}
 
 	/**
@@ -1116,8 +974,6 @@ public class StudyUnit extends Model {
 	 * @param LanguageCode
 	 */
 	public void setPurposeContent(String contentVal, String languageCode) {
-
-		log.debug("StudyUnit.setPurposeContent()");
 		XmlObject[] purposes = purposeSubElements.getXmlObjects();
 		for (int i = 0; i < purposes.length; i++) {
 			StructuredStringType content = ((PurposeDocumentImpl) purposes[i])
@@ -1138,8 +994,6 @@ public class StudyUnit extends Model {
 	 * @return
 	 */
 	public String getPurposeContent(String languageCode) {
-
-		log.debug("StudyUnit.getPurposeContent()");
 		XmlObject[] purposes = purposeSubElements.getXmlObjects();
 		if (purposes != null) {
 			for (int i = 0; i < purposes.length; i++) {
