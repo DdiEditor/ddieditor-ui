@@ -2,7 +2,11 @@ package org.ddialliance.ddieditor.ui.model;
 
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.IDType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
+import org.ddialliance.ddieditor.model.DdiManager;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.ReflectionUtil;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 
 public class ModelAccessor {
@@ -15,7 +19,26 @@ public class ModelAccessor {
 			id = reference.getIDList().get(0);
 		}
 		XmlBeansUtil.setTextOnMixedElement(id, refered.getId());
-		
+
 		return reference;
+	}
+
+	public static LightXmlObjectListDocument resolveReference(
+			ReferenceType reference, String localName) throws DDIFtpException {
+		StringBuilder operation = new StringBuilder("get");
+		operation.append(localName);
+		operation.append("sLight");
+
+		LightXmlObjectListDocument lightXmlObjectList = null;
+		try {
+			lightXmlObjectList = (LightXmlObjectListDocument) ReflectionUtil
+					.invokeMethod(DdiManager.getInstance(), operation
+							.toString(), false, new Object[] {
+							XmlBeansUtil.getTextOnMixedElement(reference.getIDArray(0)), "", "",
+							"" });
+		} catch (Exception e) {
+			throw new DDIFtpException(e);
+		}
+		return lightXmlObjectList;
 	}
 }
