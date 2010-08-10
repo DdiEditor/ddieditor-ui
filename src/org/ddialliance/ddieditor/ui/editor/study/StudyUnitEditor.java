@@ -1,7 +1,6 @@
 package org.ddialliance.ddieditor.ui.editor.study;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -9,19 +8,15 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.DdiManager;
-import org.ddialliance.ddieditor.model.lightxmlobject.LabelType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.studyunit.StudyUnitDao;
-import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseDao;
 import org.ddialliance.ddieditor.ui.editor.DateTimeWidget;
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.editor.FilteredItemsSelection;
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.studyunit.StudyUnit;
 import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
-import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.TableColumnSort;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
@@ -33,7 +28,6 @@ import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
@@ -367,8 +361,6 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 
 		// Study Unit Universe Reference Tab Item
 		// --------------------------------------
-		// Note: Currently references to Universe Scheme is not supported.
-		//
 		// - Universe Reference Tab Item
 		TabItem tbtmUniverseReference = createTabItem(Messages
 				.getString("StudyUnitEditor.label.UniverseReference"));
@@ -378,57 +370,6 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 				tbtmUniverseReference,
 				Messages
 						.getString("StudyUnitEditor.label.StudyUniverseReference"));
-
-		// - Get available Universes:
-		// List<LightXmlObjectType> universeReferenceList = new ArrayList();
-		// try {
-		// universeReferenceList = new UniverseDao().getLightXmlObject("", "",
-		// "", "");
-		// } catch (Exception e1) {
-		// String errMess = Messages
-		//					.getString("StudyUnitEditor.mess.UniverseRetrievalError"); //$NON-NLS-1$
-		// ErrorDialog.openError(site.getShell(), Messages
-		// .getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-		// ID, 0, errMess, e1));
-		// }
-
-		// - Create Universe selection composite:
-		// final FilteredItemsSelection filteredItemsSelection = new
-		// FilteredItemsSelection();
-		// try {
-		// filteredItemsSelection.createPartControl(uniRefComposite,
-		// codeComposite, "", "Universe", universeReferenceList,
-		// modelImpl.getUniverseRefId());
-		// } catch (Exception e) {
-		// String errMess = Messages
-		//					.getString("StudyUnitEditor.mess.CreateFilteredItemSelectionError"); //$NON-NLS-1$
-		// DialogUtil.errorDialog(site.getShell(), ID, Messages
-		// .getString("ErrorTitle"), errMess, e);
-		// }
-		// filteredItemsSelection.addSelectionListener(Messages
-		// .getString("StudyUnitEditor.label.SelectUniverseReference"),
-		// universeReferenceList, new SelectionAdapter() {
-		// public void widgetSelected(SelectionEvent e) {
-		// LightXmlObjectType result = (LightXmlObjectType)
-		// filteredItemsSelection
-		// .getResult();
-		// if (result != null) {
-		// try {
-		// modelImpl.setUniverseRefId(result.getId());
-		// } catch (Exception e1) {
-		// String errMess = MessageFormat
-		// .format(
-		// Messages
-		//														.getString("StudyUnitEditor.mess.SetUniverseRefError"), e1.getMessage()); //$NON-NLS-1$
-		// ErrorDialog.openError(site.getShell(), Messages
-		// .getString("ErrorTitle"), null,
-		// new Status(IStatus.ERROR, ID, 0,
-		// errMess, e1));
-		// }
-		// editorStatus.setChanged();
-		// }
-		// }
-		// });
 
 		createLabel(grpStudyUniverseReference, "Universes");
 		uniRefTable = new Table(grpStudyUniverseReference, SWT.VIRTUAL
@@ -517,84 +458,6 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 					ID, 0, errMess, e));
 		}
 		fundingTable.addSelectionListener(new TableListener());
-
-		// Label lblAgency = new Label(grpFunding, SWT.NONE);
-		// lblAgency.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		// lblAgency.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
-		// false, 1, 1));
-		// lblAgency.setText(Messages.getString("StudyUnitEditor.label.Agency"));
-		//
-		// agencyText = new Text(grpFunding, SWT.BORDER);
-		// agencyText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-		// false, 1, 1));
-		// try {
-		// agencyText.setText(modelImpl.getFundingAgencyID());
-		// } catch (DDIFtpException e) {
-		// String errMess = Messages
-		//					.getString("StudyUnitEditor.mess.GetFundingTextError"); //$NON-NLS-1$
-		// ErrorDialog.openError(site.getShell(), Messages
-		// .getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-		// ID, 0, errMess, e));
-		// }
-		// agencyText.addModifyListener(new ModifyListener() {
-		// public void modifyText(final ModifyEvent event) {
-		// try {
-		// modelImpl.setFundingAgencyID(agencyText.getText());
-		// modelImpl.setFundingIdentifyingAgency(identifyingAgencyText
-		// .getText());
-		// } catch (DDIFtpException e) {
-		// String errMess = Messages
-		//							.getString("StudyUnitEditor.mess.SetFundingInfoError"); //$NON-NLS-1$
-		// ErrorDialog.openError(site.getShell(), Messages
-		// .getString("ErrorTitle"), null, new Status(
-		// IStatus.ERROR, ID, 0, errMess, e));
-		// }
-		// editorStatus.setChanged();
-		// }
-		// });
-		// super.setControl(agencyText);
-		//
-		// Label lblIdentifyingAgency = new Label(grpFunding, SWT.NONE);
-		// lblIdentifyingAgency.setBackground(SWTResourceManager
-		// .getColor(SWT.COLOR_WHITE));
-		// lblIdentifyingAgency.setLayoutData(new GridData(SWT.RIGHT,
-		// SWT.CENTER,
-		// false, false, 1, 1));
-		// lblIdentifyingAgency.setText(Messages
-		// .getString("StudyUnitEditor.label.IdentifyingAgency"));
-		//
-		// identifyingAgencyText = new Text(grpFunding, SWT.BORDER);
-		// identifyingAgencyText.setLayoutData(new GridData(SWT.FILL,
-		// SWT.CENTER,
-		// true, false, 1, 1));
-		// try {
-		// identifyingAgencyText.setText(modelImpl
-		// .getFundingIdentifyingAgency());
-		// } catch (DDIFtpException e) {
-		// String errMess = Messages
-		//					.getString("StudyUnitEditor.mess.GetFundingIdentifyingAgencyError"); //$NON-NLS-1$
-		// ErrorDialog.openError(site.getShell(), Messages
-		// .getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-		// ID, 0, errMess, e));
-		// }
-		// identifyingAgencyText.addModifyListener(new ModifyListener() {
-		// public void modifyText(final ModifyEvent e) {
-		// log.debug("Identifying Agency changed");
-		// try {
-		// modelImpl.setFundingAgencyID(agencyText.getText());
-		// modelImpl.setFundingIdentifyingAgency(identifyingAgencyText
-		// .getText());
-		// } catch (DDIFtpException e1) {
-		// String errMess = Messages
-		//							.getString("StudyUnitEditor.mess.SetFundingAgencyInfoError"); //$NON-NLS-1$
-		// ErrorDialog.openError(site.getShell(), Messages
-		// .getString("ErrorTitle"), null, new Status(
-		// IStatus.ERROR, ID, 0, errMess, e1));
-		// }
-		// editorStatus.setChanged();
-		// }
-		// });
-		// super.setControl(identifyingAgencyText);
 
 		// Study Unit Purpose Tab Item:
 		// -----------------------------
@@ -744,6 +607,7 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 		}
 	}
 
+	// currently not used as edit is not supported, yet!
 	class TableListener implements SelectionListener {
 		public TableListener() {
 
@@ -762,7 +626,6 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 			if (selections.length == 0) {
 				return;
 			}
-			// selected = (Study) selections[0].getData();
 		}
 	}
 }
