@@ -553,11 +553,10 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 			TableItem item = new TableItem(uniRefTable, SWT.NONE);
 			item.setText(0, "" + lightXmlObject.getId());
 			try {
-				item.setText(1, XmlBeansUtil
-						.getTextOnMixedElement((XmlObject) XmlBeansUtil
-								.getLangElement(LanguageUtil
-										.getDisplayLanguage(), lightXmlObject
-										.getLabelList())));
+				if (lightXmlObject.getLabelList().size() > 0) {
+					item.setText(1, XmlBeansUtil.getTextOnMixedElement((XmlObject) XmlBeansUtil.getLangElement(
+							LanguageUtil.getDisplayLanguage(), lightXmlObject.getLabelList())));
+				}
 			} catch (DDIFtpException e) {
 				e.printStackTrace();
 			}
