@@ -1,26 +1,28 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 0.2.0
-Release Data: 2010-06-24
+Product Version: 0.3.0
+Release Data: 2010-
 
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 Item ID:    Description:
- -              Translation pop-up now works.
-
- -              Bug fixed: If initial view was different from Overview and Instruction, an error occurred.
-
- -              Bug fixed: It was not possible to create child object if more parents exists.
-
- -              Changed new DDI3 file action to create an empty DDIInstance instead of an empty XMl document. 
-  
- -              Added support for importing study level information from the DDA db.
+ -              Confirmation popup on termination of ingested/ new ddi3 
+ resources
  
- -              Added support for xsi namespaces and xsi elements
+ -              Closing of editors in pretermination of resources
+   
+ -              Views, added support for listings of resources as top item
  
- -				Rework of DDI3NamespaceHelper.substituteNamespaces method
+ -              Fix of loading items from different resources
+ 
+ -              Removal of VDT binary XML indexing, a GLP project 
+
+-------------------------------------------------------------------------------
+Change Log previous releases
+-------------------------------------------------------------------------------
+See http://192.168.99.102:8080/devwiki/en/Change_Log
 
 -------------------------------------------------------------------------------
 Installing
