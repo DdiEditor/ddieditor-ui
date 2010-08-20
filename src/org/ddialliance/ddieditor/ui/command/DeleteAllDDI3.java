@@ -40,7 +40,7 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		}
 		
 		// yes - no dialog
-		if(!CommandHelper.confirmDeletion(resources)) {
+		if(!CommandHelper.confirmResourceDeletion(resources)) {
 			return null;
 		}
 		

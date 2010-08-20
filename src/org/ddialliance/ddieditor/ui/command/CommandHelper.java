@@ -17,6 +17,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 
+/**
+ * Helper convenience utility for commands
+ */
 public class CommandHelper {
 	public static String DELIMTER = "__";
 
@@ -60,7 +63,7 @@ public class CommandHelper {
 		}
 	}
 
-	public static boolean confirmDeletion(List<DDIResourceType> resources) {
+	public static boolean confirmResourceDeletion(List<DDIResourceType> resources) {
 		StringBuilder deletion = new StringBuilder();
 		for (Iterator<DDIResourceType> iterator = resources.iterator(); iterator
 				.hasNext();) {
