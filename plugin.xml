@@ -308,6 +308,17 @@
                id="org.ddialliance.ddieditor.ui.command.DisplayNote"
                name="Release Note">
          </command>
+         <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.CloseOpenEditors"
+               id="org.ddialliance.ddieditor.ui.command.CloseOpenEditors"
+               name="CloseOpenEditors">
+            <commandParameter
+                  id="org.ddialliance.ddieditor.ui.command.CloseOpenEditors.resourceId"
+                  name="resourceId"
+                  optional="true"
+                  values="java.lang.Object">
+            </commandParameter>
+         </command>
       </extension>
       <extension
             point="org.eclipse.ui.menus">
