@@ -10,23 +10,30 @@ import org.eclipse.swt.widgets.Shell;
 
 public class DisplayNoteDialog extends Dialog {
 	String note;
+	String title;
+	String group;
+	String label;
 
-	public DisplayNoteDialog(Shell parentShell, String note) {
+	public DisplayNoteDialog(Shell parentShell, String title, String group,
+			String label, String note) {
 		super(parentShell);
 		this.note = note;
+		this.title = title;
+		this.group = group;
+		this.label = label;
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		// dialog setup
-		this.getShell().setText("Release note");
+		this.getShell().setText(title);
 
 		// group
 		Editor editor = new Editor();
-		Group group = editor.createGroup(parent, "Release note");
-		group.setLayoutData(new GridData(800, 400));
+		Group swtGroup = editor.createGroup(parent, group);
+		swtGroup.setLayoutData(new GridData(800, 400));
 
-		editor.createTextAreaInput(group, "Release note", note, null);
+		editor.createTextAreaInput(swtGroup, label, note, null);
 		return null;
 	}
 }
