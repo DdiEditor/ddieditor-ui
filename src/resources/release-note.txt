@@ -37,4 +37,5 @@ Remove installation directory e.g. C:\Programmer\ddieditor-ui
 -------------------------------------------------------------------------------
 Known Issue
 -------------------------------------------------------------------------------
- - Importing study level information only fully works for XML, containing an empty DDIInstance.
+ - Importing study level information only fully works for XML, containing an 
+ empty DDIInstance.
