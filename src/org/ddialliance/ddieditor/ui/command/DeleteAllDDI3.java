@@ -38,7 +38,15 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 					.getActiveShell(), Messages.getString("ErrorTitle"), e
 					.getMessage());
 		}
-
+		
+		// yes - no dialog
+		if(!CommandHelper.confirmDeletion(resources)) {
+			return null;
+		}
+		
+		// close open editors belonging to resources
+		CommandHelper.closeEditors(resources);
+		
 		try {
 			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
 					new IRunnableWithProgress() {

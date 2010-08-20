@@ -2,6 +2,8 @@ package org.ddialliance.ddieditor.ui.command;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
@@ -17,6 +19,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -33,6 +36,22 @@ public class DeleteSingleDDI3 extends org.eclipse.core.commands.AbstractHandler 
 				.getWorkbench().getDisplay().getActiveShell());
 		dialog.open();
 		DDIResourceType ddiResource = dialog.getResult();
+		if (dialog.getReturnCode() == Window.CANCEL) {
+			return null;
+		}
+
+		List<DDIResourceType> resources = new ArrayList<DDIResourceType>();
+
+		// yes - no dialog
+		if(!CommandHelper.confirmDeletion(resources)) {
+			return null;
+		}
+		
+		// close open editors belonging to resource
+		resources.add(ddiResource);
+		CommandHelper.closeEditors(resources);
+
+		// terminate resource
 		try {
 			StorageType storage = PersistenceManager.getInstance()
 					.getStorageByResourceOrgName(ddiResource.getOrgName());
@@ -46,6 +65,7 @@ public class DeleteSingleDDI3 extends org.eclipse.core.commands.AbstractHandler 
 					.getMessage());
 		}
 
+		// refresh view
 		try {
 			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
 					new IRunnableWithProgress() {
@@ -56,7 +76,6 @@ public class DeleteSingleDDI3 extends org.eclipse.core.commands.AbstractHandler 
 							try {
 								monitor.beginTask("Deleting DDI3 resource", 2);
 
-								// refresh view
 								// TODO refactor boiler plate code to refresh a
 								// view into a rcp command
 								final IWorkbenchWindow[] workbenchWindows = PlatformUI
