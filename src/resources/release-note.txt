@@ -21,7 +21,8 @@ Item ID:    Description:
  
  -              Added better handling of new ddi3 file creation regarding
  file names. A file name can now be any character value without '*.xml' 
- extension 
+ extension. Note if whitespace exists in file name they are substituted with 
+ '_' 
 
 -------------------------------------------------------------------------------
 Change Log previous releases
