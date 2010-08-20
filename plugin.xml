@@ -319,6 +319,11 @@
                   values="java.lang.Object">
             </commandParameter>
          </command>
+         <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.DisplayDebugInfo"
+               id="org.ddialliance.ddieditor.ui.command.DisplayDebugInfo"
+               name="DisplayDebugInfo">
+         </command>
       </extension>
       <extension
             point="org.eclipse.ui.menus">
@@ -452,16 +457,24 @@
                   label="%menu.label.3"
                   mnemonic="%menu.mnemonic.3">
                <command
-                     commandId="org.eclipse.ui.help.aboutAction"
-                     label="%command.label.11"
-                     mnemonic="%command.mnemonic.10"
-                     style="push">
-               </command>
-               <command
                      commandId="org.ddialliance.ddieditor.ui.command.DisplayNote"
                      icon="icons/dates.gif"
                      label="Release Note"
                      mnemonic="N"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.ddialliance.ddieditor.ui.command.DisplayDebugInfo"
+                     icon="icons/properties.gif"
+                     label="Display Debug Info"
+                     mnemonic="D"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.eclipse.ui.help.aboutAction"
+                     icon="icons/customize.gif"
+                     label="%command.label.11"
+                     mnemonic="%command.mnemonic.10"
                      style="push">
                </command>
             </menu>
