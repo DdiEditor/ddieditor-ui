@@ -16,6 +16,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.VersionRationaleDocument;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dialogs.TranslationDialog;
@@ -148,6 +149,17 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			throws PartInitException {
 		setSite(site);
 		EditorInput editorInput = (EditorInput) input;
+		
+		// working resource
+		try {
+			PersistenceManager.getInstance().setWorkingResource(
+					editorInput.getResourceId());
+		} catch (DDIFtpException e) {
+			throw new PartInitException(Messages
+					.getString("editor.init.error.create"), e);
+		}
+
+		// edit mode
 		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
 			try {
 				model = dao.create("", "", editorInput.getParentId(),
@@ -273,10 +285,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public void doSave(IProgressMonitor monitor) {
 		try {
 			model.validate();
-		} catch (Exception e1) {
+		} catch (Exception e) {
 			DialogUtil.errorDialog((IEditorSite) getSite(), ID, Messages
 					.getString("ErrorTitle"), Messages
-					.getString("Editor.mess.ValidationErrorDuringSave"), e1);
+					.getString("Editor.mess.ValidationErrorDuringSave"), e);
 			return;
 		}
 		try {
@@ -317,9 +329,27 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	@Override
 	public void setFocus() {
-		// Set the focus
+		// for tracking change who is calling who ... 
+		// TODO hmm a lot ...
+		if (log.isDebugEnabled()) {
+			Throwable t = new Throwable();
+			for (int i = 0; i < t.getStackTrace().length; i++) {
+				log.debug(t.getStackTrace()[i].getClassName()+"."+t.getStackTrace()[i].getMethodName());	
+			}
+		}
+
+		// working resource
+		try {
+			PersistenceManager.getInstance().setWorkingResource(
+					getEditorInputImpl().getResourceId());
+		} catch (DDIFtpException e) {
+			DialogUtil.errorDialog((IEditorSite) getSite(), ID, Messages
+					.getString("ErrorTitle"), Messages
+					.getString("editor.init.error.create"), e);
+		}		
 	}
 
+	
 	public EditorInput getEditorInputImpl() {
 		return (EditorInput) super.getEditorInput();
 	}

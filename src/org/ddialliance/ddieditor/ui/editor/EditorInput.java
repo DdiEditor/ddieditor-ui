@@ -37,6 +37,7 @@ public class EditorInput implements IEditorInput {
 	private String parentId;
 	private String parentVersion;
 	private ElementType elementType;
+	private String resourceId;
 
 	/**
 	 * State of editor based on persistence and access
@@ -55,6 +56,8 @@ public class EditorInput implements IEditorInput {
 	/**
 	 * Constructor
 	 * 
+	 * @param resourceId
+	 *            id of resource of the input
 	 * @param id
 	 *            of DDI identifiable
 	 * @param version
@@ -68,9 +71,10 @@ public class EditorInput implements IEditorInput {
 	 * @param mode
 	 * @see {@link EditorModeType}
 	 */
-	public EditorInput(String id, String version, String parentId,
-			String parentVersion, ElementType elementType, EditorModeType mode) {
-
+	public EditorInput(String resourceId, String id, String version,
+			String parentId, String parentVersion, ElementType elementType,
+			EditorModeType mode) {
+		this.resourceId = resourceId;
 		if (mode.equals(EditorModeType.NEW)) {
 			// id and version generation handled by model
 			this.id = null;
@@ -204,24 +208,35 @@ public class EditorInput implements IEditorInput {
 	public String getName() {
 		String name = elementType.getTranslatedDisplayMessageEntry();
 		if (name == null) {
-			new DDIFtpException("Name null, check up on: "+elementType.getTranslatedDisplayMessageEntry());
+			new DDIFtpException("Name null, check up on: "
+					+ elementType.getTranslatedDisplayMessageEntry());
 		}
 		return name;
 	}
 
+	public String getResourceId() {
+		return resourceId;
+	}
+
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
+	}
+
 	@Override
 	public String toString() {
-		StringBuilder b = new StringBuilder();
-		b.append("Id: ");
-		b.append(id);
-		b.append(", version: ");
-		b.append(version);
-		b.append(", parentId: ");
-		b.append(parentId);
-		b.append(", parentVersion: ");
-		b.append(parentVersion);
-		b.append(", elementType: ");
-		b.append(elementType.getElementName());
-		return b.toString();
+		StringBuilder result = new StringBuilder();
+		result.append("ResourceId: ");
+		result.append(resourceId);
+		result.append(", id: ");
+		result.append(id);
+		result.append(", version: ");
+		result.append(version);
+		result.append(", parentId: ");
+		result.append(parentId);
+		result.append(", parentVersion: ");
+		result.append(parentVersion);
+		result.append(", elementType: ");
+		result.append(elementType.getElementName());
+		return result.toString();
 	}
 }
