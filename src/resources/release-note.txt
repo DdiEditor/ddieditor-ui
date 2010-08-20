@@ -17,7 +17,11 @@ Item ID:    Description:
  
  -              Fix of loading items from different resources
  
- -              Removal of VDT binary XML indexing, a GLP project 
+ -              Removal of VDT binary XML indexing, a GLP project
+ 
+ -              Added better handling of new ddi3 file creation regarding
+ file names. A file name can now be any character value without '*.xml' 
+ extension 
 
 -------------------------------------------------------------------------------
 Change Log previous releases
