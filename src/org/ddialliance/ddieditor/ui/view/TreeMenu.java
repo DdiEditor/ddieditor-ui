@@ -16,10 +16,9 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
@@ -33,7 +32,9 @@ public class TreeMenu {
 			TreeMenuProvider.class);
 
 	public void openPerspective(TreeViewer treeViewer, View currentView) {
-		Object obj = defineSelection(treeViewer, currentView.ID);
+		InputSelection inputSelection = defineSelection(treeViewer,
+				currentView.ID);
+		Object obj = inputSelection.getSelection();
 		if (!(obj instanceof LightXmlObjectType)) {
 			return;
 		}
@@ -44,11 +45,13 @@ public class TreeMenu {
 			if (perspectiveId.equals("")) {
 				return;
 			}
-			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getActivePage()
-					.getWorkbenchWindow();
-			workbenchWindow.getWorkbench().showPerspective(perspectiveId,
-					workbenchWindow);
+
+			// open perspective
+			PlatformUI.getWorkbench().showPerspective(
+					perspectiveId,
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getActivePage().getWorkbenchWindow());
+
 		} catch (DDIFtpException e) {
 			DialogUtil.errorDialog(currentView.getSite().getShell(),
 					currentView.ID, "Error", e.getMessage(), e);
@@ -61,22 +64,25 @@ public class TreeMenu {
 
 	public void openEditor(TreeViewer treeViewer, View currentView,
 			EditorModeType mode, ElementType entityType) {
-		Object obj = defineSelection(treeViewer, currentView.ID);
-		
+		InputSelection inputSelection = defineSelection(treeViewer,
+				currentView.ID);
+		// Object obj = inputSelection.getSelection();
+
 		// define editor input
 		EditorInput input = null;
 
 		// ddi resource type
-		if (obj instanceof DDIResourceType) {
-			DDIResourceType ddiResource = (DDIResourceType) obj;
+		if (inputSelection.getSelection() instanceof DDIResourceType) {
 			entityType = ElementType.FILE;
-			input = new EditorInput(ddiResource.getOrgName(), null, null, null,
-					entityType, mode);
+			input = new EditorInput(inputSelection.getResourceId(),
+					((DDIResourceType) inputSelection.getSelection())
+							.getOrgName(), null, null, null, entityType, mode);
 		}
 
 		// light xml object
-		if (obj instanceof LightXmlObjectType) {
-			LightXmlObjectType lightXmlObject = (LightXmlObjectType) obj;
+		if (inputSelection.getSelection() instanceof LightXmlObjectType) {
+			LightXmlObjectType lightXmlObject = (LightXmlObjectType) inputSelection
+					.getSelection();
 
 			// guard
 			if (entityType == null) {
@@ -89,14 +95,16 @@ public class TreeMenu {
 					return;
 				}
 			}
-			
+
 			String parentId = "";
 			String parentVersion = "";
 			ElementType selectEntityType = null;
 			try {
-				selectEntityType = ElementType.getElementType(lightXmlObject.getElement());
+				selectEntityType = ElementType.getElementType(lightXmlObject
+						.getElement());
 			} catch (DDIFtpException e) {
-				DialogUtil.errorDialog(currentView.getSite().getShell(), currentView.ID, null, e.getMessage(), e);
+				DialogUtil.errorDialog(currentView.getSite().getShell(),
+						currentView.ID, null, e.getMessage(), e);
 				return;
 			}
 			if (entityType.equals(selectEntityType)) {
@@ -106,20 +114,21 @@ public class TreeMenu {
 				parentId = lightXmlObject.getId();
 				parentVersion = lightXmlObject.getVersion();
 			}
-			input = new EditorInput(lightXmlObject.getId(), lightXmlObject
-					.getVersion(), parentId, parentVersion, entityType, mode);
+			input = new EditorInput(inputSelection.getResourceId(),
+					lightXmlObject.getId(), lightXmlObject.getVersion(),
+					parentId, parentVersion, entityType, mode);
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("EditorMode:" + mode + ", elementType: " + entityType
-					+ ", selection: " + obj);
+			log.debug("EditorMode:" + mode + ", elementType: " + entityType);
 		}
 
 		// open editor
 		if (input == null) {
 			DDIFtpException e = new DDIFtpException(
-					"editor.editelement.notimplemented", new Object[] { obj
-							.getClass().getName() }, new Throwable());
+					"editor.editelement.notimplemented",
+					new Object[] { inputSelection.getSelection().getClass()
+							.getName() }, new Throwable());
 			DialogUtil.errorDialog(currentView.getSite().getShell(),
 					currentView.ID, "Error", e.getMessage(), e);
 			return;
@@ -147,18 +156,22 @@ public class TreeMenu {
 		treeViewer.setSelection(treeViewer.getSelection());
 	}
 
-	public Object defineSelection(TreeViewer treeViewer, String ID) {
-		ISelection selection = treeViewer.getSelection();
+	public InputSelection defineSelection(TreeViewer treeViewer, String ID) {
+		TreeSelection selection = (TreeSelection) treeViewer.getSelection();
+		InputSelection inputSelection = new InputSelection();
+		// resource id
+		if (selection.getPaths()[0].getFirstSegment() instanceof DDIResourceType) {
+			inputSelection.setResourceId(((DDIResourceType) selection
+					.getPaths()[0].getFirstSegment()).getOrgName());
+		}
+
+		// selection obj
 		Object obj = null;
 		try {
 			obj = ((IStructuredSelection) selection).getFirstElement();
 		} catch (Exception e) {
 			DialogUtil.errorDialog(treeViewer.getTree().getShell(), ID,
 					"Error", e.getMessage(), e);
-		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("Class: " + obj.getClass().getName() + ", value: " + obj);
 		}
 
 		// light xml object resolvement
@@ -218,21 +231,31 @@ public class TreeMenu {
 			}
 		}
 		if (lightXmlObject != null) {
-			return lightXmlObject;
+			inputSelection.setSelection(lightXmlObject);
 		}
 
 		// ddi resource type DDIResourceTypeImpl
 		if (obj instanceof DDIResourceType) {
-			return (DDIResourceType) obj;
+			inputSelection.setSelection(obj);
+		}
+
+		// log values
+		if (log.isDebugEnabled()) {
+			log.debug("Top selection: class: "
+					+ selection.getPaths()[0].getFirstSegment().getClass()
+							.getName() + ", value: "
+					+ selection.getPaths()[0].getFirstSegment());
+			log.debug(inputSelection);
 		}
 
 		// not recognized!
-		else {
+		if (inputSelection.getSelection() == null) {
 			DDIFtpException e = new DDIFtpException("Not recognized: "
 					+ obj.getClass() + " , value: " + obj, new Throwable());
 			DialogUtil.errorDialog(treeViewer.getTree().getShell(), ID,
 					"Error", e.getMessage(), e);
 			return null;
 		}
+		return inputSelection;
 	}
 }

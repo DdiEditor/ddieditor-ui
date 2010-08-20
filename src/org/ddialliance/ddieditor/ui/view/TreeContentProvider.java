@@ -15,14 +15,14 @@ import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.impl.DDIResourceTypeImpl;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
+import org.ddialliance.ddieditor.ui.dbxml.category.CategoryDao;
+import org.ddialliance.ddieditor.ui.dbxml.category.CategorySchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseSchemeDao;
-import org.ddialliance.ddieditor.ui.dbxml.category.CategoryDao;
-import org.ddialliance.ddieditor.ui.dbxml.category.CategorySchemeDao;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -64,6 +64,8 @@ public class TreeContentProvider implements IStructuredContentProvider,
 		// do nothing
 	}
 
+	ViewContentType contentType = null;
+
 	/**
 	 * Based on the input an array of containing ddi elements is provided as
 	 * content
@@ -74,74 +76,13 @@ public class TreeContentProvider implements IStructuredContentProvider,
 	 */
 	@Override
 	public Object[] getElements(Object inputElement) {
-		ViewContentType contentType = (ViewContentType) inputElement;
+		contentType = (ViewContentType) inputElement;
 		try {
-			if (contentType.equals(ViewContentType.StudyContent)) {
-				return PersistenceManager.getInstance().getResources()
-						.toArray();
-			}
-			// TODO Support for more meta data containere
-			// Temp. solution: Switch to first non resource-list container
-			if (currentDdiResource.equals("")) {
-				try {
-					List<DDIResourceType> resources = PersistenceManager.getInstance().getResources();
-					if (resources.size() == 0) {
-						// No meta data container
-						return (new Object[0]);
-					}
-					
-					for (DDIResourceType resource : resources) {
-						if (!resource.getOrgName().equals("resource-list.dbxml")) {
-							currentDdiResource = resource.getOrgName();
-							break;
-						}
-					}
-					PersistenceManager.getInstance().setWorkingResource(currentDdiResource);
-				} catch (DDIFtpException e) {
-					ErrorDialog.openError(site.getShell(), "Error", null, new Status(IStatus.ERROR, ID, 0,
-							"Error while opening meta data container", e));
-
-				}
-			}
-			// end temp. solution
-			if (contentType.equals(ViewContentType.ConceptContent)) {
-				return new ConceptSchemeDao().getLightXmlObject(null, null,
-						null, null).toArray();
-			} else if (contentType.equals(ViewContentType.CategoryContent)) {
-				return new CategorySchemeDao().getLightXmlObject(null, null,
-						null, null).toArray();
-			} else if (contentType.equals(ViewContentType.CodeContent)) {
-				return CodeSchemeDao.getCodeSchemesLight(null, null).toArray();
-			} else if (contentType.equals(ViewContentType.QuestionContent)) {
-				return new QuestionSchemeDao().getLightXmlObject(null, null)
-						.toArray();
-			} else if (contentType
-					.equals(ViewContentType.InstrumentationContent)) {
-				LightXmlObjectListDocument listDoc = DdiManager
-						.getInstance()
-						.getControlConstructSchemesLight(null, null, null, null);
-				Object[] result = new Object[listDoc.getLightXmlObjectList()
-						.getLightXmlObjectList().size()];
-				int count = 0;
-				for (LightXmlObjectType lightXmlObject : listDoc
-						.getLightXmlObjectList().getLightXmlObjectList()) {
-					result[count] = DdiManager.getInstance()
-							.getInstrumentLabel(lightXmlObject.getId(),
-									lightXmlObject.getVersion(),
-									lightXmlObject.getParentId(),
-									lightXmlObject.getParentVersion());
-					count++;
-				}
-				return result;
-			}  else	if (contentType.equals(ViewContentType.UniverseContent)) {
-				return new UniverseSchemeDao().getLightXmlObject(null, null,
-						null, null).toArray();
-			}
-		} catch (Exception e) {
-			String errMess = Messages.getString("View.mess.GetElementError"); //$NON-NLS-1$
-			ErrorDialog.openError(site.getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, errMess, e));
+			return PersistenceManager.getInstance().getResources().toArray();
+		} catch (DDIFtpException e) {
+			ErrorDialog.openError(site.getShell(), "Error", null, new Status(
+					IStatus.ERROR, ID, 0,
+					"Error while opening meta data container", e));
 		}
 		return null;
 	}
@@ -153,12 +94,12 @@ public class TreeContentProvider implements IStructuredContentProvider,
 		// Cach disabled due to missing sync. between views
 		// TODO Implement sync. between views.
 		result = null;
-		
+
 		if (result == null) {
 			try {
 				PersistenceManager.getInstance().setWorkingResource(
 						ddiResource.getOrgName());
-				
+
 				result = DdiManager.getInstance().getConceptualOverview();
 				conceptualElementCache.put(ddiResource.getOrgName(), result);
 			} catch (Exception e) {
@@ -179,18 +120,70 @@ public class TreeContentProvider implements IStructuredContentProvider,
 		// ddi resource type
 		if (parentElement instanceof DDIResourceType) {
 			currentDdiResource = ((DDIResourceType) parentElement).getOrgName();
-			List<ConceptualElement> conceptualList = getConceptualList((DDIResourceType) parentElement);
-			List<ConceptualType> list = new ArrayList<ConceptualType>();
-			for (ConceptualElement conceptualElement : conceptualList) {
-				if (!list.contains(conceptualElement.getType())) {
-					list.add(conceptualElement.getType());
+
+			// view content types
+			try {
+				PersistenceManager.getInstance().setWorkingResource(
+						currentDdiResource);
+
+				if (contentType.equals(ViewContentType.StudyContent)) {
+					List<ConceptualElement> conceptualList = getConceptualList((DDIResourceType) parentElement);
+					List<ConceptualType> list = new ArrayList<ConceptualType>();
+					for (ConceptualElement conceptualElement : conceptualList) {
+						if (!list.contains(conceptualElement.getType())) {
+							list.add(conceptualElement.getType());
+						}
+					}
+					ConceptualType[] result = new ConceptualType[list.size()];
+					return list.toArray(result);
 				}
+				if (contentType.equals(ViewContentType.ConceptContent)) {
+					return new ConceptSchemeDao().getLightXmlObject(null, null,
+							null, null).toArray();
+				} else if (contentType.equals(ViewContentType.CategoryContent)) {
+					return new CategorySchemeDao().getLightXmlObject(null,
+							null, null, null).toArray();
+				} else if (contentType.equals(ViewContentType.CodeContent)) {
+					return CodeSchemeDao.getCodeSchemesLight(null, null)
+							.toArray();
+				} else if (contentType.equals(ViewContentType.QuestionContent)) {
+					return new QuestionSchemeDao()
+							.getLightXmlObject(null, null).toArray();
+				} else if (contentType
+						.equals(ViewContentType.InstrumentationContent)) {
+					LightXmlObjectListDocument listDoc = DdiManager
+							.getInstance().getControlConstructSchemesLight(
+									null, null, null, null);
+					Object[] result = new Object[listDoc
+							.getLightXmlObjectList().getLightXmlObjectList()
+							.size()];
+					int count = 0;
+					for (LightXmlObjectType lightXmlObject : listDoc
+							.getLightXmlObjectList().getLightXmlObjectList()) {
+						result[count] = DdiManager.getInstance()
+								.getInstrumentLabel(lightXmlObject.getId(),
+										lightXmlObject.getVersion(),
+										lightXmlObject.getParentId(),
+										lightXmlObject.getParentVersion());
+						count++;
+					}
+					return result;
+				} else if (contentType.equals(ViewContentType.UniverseContent)) {
+					return new UniverseSchemeDao().getLightXmlObject(null,
+							null, null, null).toArray();
+				}
+			} catch (Exception e) {
+				String errMess = Messages
+						.getString("View.mess.GetElementError"); //$NON-NLS-1$
+				ErrorDialog.openError(site.getShell(), Messages
+						.getString("ErrorTitle"), null, new Status(
+						IStatus.ERROR, ID, 0, errMess, e));
 			}
-			ConceptualType[] result = new ConceptualType[list.size()];
-			return list.toArray(result);
 		}
+
 		// conceptual type
-		else if (parentElement instanceof ConceptualType) {
+		// TODO Is this double ? Is used ?
+		if (parentElement instanceof ConceptualType) {
 			try {
 				PersistenceManager.getInstance().setWorkingResource(
 						currentDdiResource);
@@ -207,6 +200,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			}
 			return (new Object[0]);
 		}
+
 		// light xml objects
 		else if (parentElement instanceof LightXmlObjectType) {
 			LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) parentElement;
@@ -218,7 +212,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				if (lightXmlTypeLocalname.equals("CodeScheme")) {
 					// Codes are supported by the Code Scheme Editor
 					return (new Object[0]);
-				}	
+				}
 				// category scheme
 				else if (lightXmlTypeLocalname.equals("CategoryScheme")) {
 					contentList = new CategoryDao().getLightXmlObject(
@@ -228,7 +222,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				else if (lightXmlTypeLocalname.equals("ConceptScheme")) {
 					contentList = new ConceptDao().getLightXmlObject(
 							lightXmlObjectType).toArray();
-				// question scheme
+					// question scheme
 				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
 					contentList = new QuestionItemDao().getLightXmlObject(
 							lightXmlObjectType).toArray();
@@ -244,9 +238,11 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				}
 				// universe scheme
 				else if (lightXmlTypeLocalname.equals("UniverseScheme")) {
-					contentList = DdiManager.getInstance().getUniversesLight(null, null,
-							lightXmlObjectType.getId(), lightXmlObjectType.getVersion()).getLightXmlObjectList()
-							.getLightXmlObjectList().toArray();
+					contentList = DdiManager.getInstance().getUniversesLight(
+							null, null, lightXmlObjectType.getId(),
+							lightXmlObjectType.getVersion())
+							.getLightXmlObjectList().getLightXmlObjectList()
+							.toArray();
 				}
 
 				// guard
@@ -324,22 +320,23 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				return true;
 			}
 		}
-		
+
 		else if (element instanceof ConceptualType) {
 			return true;
 		}
-		
+
 		else if (element instanceof ConceptualElement) {
 			return true;
 		}
-		
+
 		else if (element instanceof DDIResourceTypeImpl) {
 			return true;
 		}
 
 		// guard
 		// TODO - subject to change
-		log.debug("***** TreeContentProvider.hasChildren() - save guard activated! *****");
+		log
+				.debug("***** TreeContentProvider.hasChildren() - save guard activated! *****");
 		return getChildren(element).length > 0;
 	}
 
