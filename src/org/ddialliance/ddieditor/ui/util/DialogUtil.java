@@ -2,11 +2,14 @@ package org.ddialliance.ddieditor.ui.util;
 
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.PlatformUI;
 
 public class DialogUtil {
 	/**
@@ -55,5 +58,10 @@ public class DialogUtil {
 			// construct a ddi ftp exception for logging purposes
 			new DDIFtpException(new Exception(e));
 		}
+	}
+	
+	public static boolean yesNoDialog(String title, String message) {
+		return MessageDialog.openConfirm(PlatformUI.getWorkbench()
+				.getDisplay().getActiveShell(), title, message);
 	}
 }
