@@ -35,10 +35,10 @@ public class DisplayNote extends org.eclipse.core.commands.AbstractHandler {
 				// do nothing
 			}
 		}
-
+		String txt = "Release Note";
 		DisplayNoteDialog dialog = new DisplayNoteDialog(PlatformUI
-				.getWorkbench().getDisplay().getActiveShell(), fileData
-				.toString());
+				.getWorkbench().getDisplay().getActiveShell(), txt, txt, txt,
+				fileData.toString());
 		dialog.open();
 
 		return null;
