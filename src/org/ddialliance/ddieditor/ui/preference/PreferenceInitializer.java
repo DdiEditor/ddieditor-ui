@@ -35,5 +35,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// ddieditor
 		store.setDefault(PreferenceConstants.DDIEDITOR_DBXML_HOME, "");
 		store.setDefault(PreferenceConstants.DDIEDITOR_DBXML_ENVIROMENT, ".");
+		
+		// auto change perspective
+		store.setDefault(PreferenceConstants.AUTO_CHANGE_PERSPECTIVE, "true");
 	}
 }

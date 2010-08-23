@@ -2,14 +2,7 @@ package org.ddialliance.ddieditor.ui.preference;
 
 /**
  * Constant definitions for plug-in preferences.
- * 
  */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 public class PreferenceConstants {
 	// ddi
 	public static final String DDI_AGENCY = "ddi.agency";
@@ -17,6 +10,7 @@ public class PreferenceConstants {
 
 	// ddieditor-ui
 	public static final String DDIEDITORUI_LANGUAGE = "ddieditorui.language";
+	public static final String AUTO_CHANGE_PERSPECTIVE = "auto.change.perspective";
 
 	// ddieditor
 	public static final String DDIEDITOR_DBXML_HOME = "ddieditor.dbxml.home";
