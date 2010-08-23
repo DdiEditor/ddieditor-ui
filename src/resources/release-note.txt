@@ -24,7 +24,10 @@ Item ID:    Description:
  extension. Note if whitespace exists in file name they are substituted with 
  '_'
  
- -             Added menu Help->Debug Info 
+ -              Added menu See file menu: Help->Debug Info
+ 
+ -              Added perspective auto change toggle in preferences. See file 
+ menu: Window->Preferences->DDI EditorUI 
 
 -------------------------------------------------------------------------------
 Change Log Previous Releases
