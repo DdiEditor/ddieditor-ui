@@ -1,6 +1,7 @@
 package org.ddialliance.ddieditor.ui.perspective;
 
 import org.ddialliance.ddieditor.ui.Activator;
+import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -27,28 +28,33 @@ public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 
 	@Override
 	public void partActivated(IWorkbenchPart part) {
-		// log.debug(this);
+		// guard
 		if (!(part instanceof IAutoChangePerspective)) {
 			return;
 		}
 
+		// check preferences
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		if (!store.getBoolean(PreferenceConstants.AUTO_CHANGE_PERSPECTIVE)) {
+			return;
+		}
+
+		// current perspective
 		final IWorkbenchWindow workbenchWindow = part.getSite().getPage()
 				.getWorkbenchWindow();
-
 		IPerspectiveDescriptor currentPerspective = workbenchWindow
 				.getActivePage().getPerspective();
 		final String dedicatedPerspectiveId = ((IAutoChangePerspective) part)
 				.getPreferredPerspectiveId();
-
+		// guard
 		if (dedicatedPerspectiveId == null) {
 			return;
 		}
 
+		// change
 		if (currentPerspective == null
 				|| !currentPerspective.getId().equals(dedicatedPerspectiveId)) {
 			// load settings
-			IPreferenceStore store = PlatformUI.getPreferenceStore();
-
 			String keyToggle = dedicatedPerspectiveId + "perspective.toggle";
 			boolean propertyToggle = store.getBoolean(keyToggle);
 			String keyYesNo = dedicatedPerspectiveId + "perspective.open";
