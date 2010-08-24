@@ -25,7 +25,9 @@ import org.eclipse.ui.WorkbenchException;
 public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 	private static final Log log = LogFactory.getLog(LogType.SYSTEM,
 			AutoChangePerspectiveListener.class);
-
+	final String KEY_TOGGLE = "perspective.toggle";
+	final String KEY_YES_NO = "perspective.open";
+	
 	@Override
 	public void partActivated(IWorkbenchPart part) {
 		// guard
@@ -55,9 +57,9 @@ public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 		if (currentPerspective == null
 				|| !currentPerspective.getId().equals(dedicatedPerspectiveId)) {
 			// load settings
-			String keyToggle = dedicatedPerspectiveId + "perspective.toggle";
+			String keyToggle = dedicatedPerspectiveId + KEY_TOGGLE;
 			boolean propertyToggle = store.getBoolean(keyToggle);
-			String keyYesNo = dedicatedPerspectiveId + "perspective.open";
+			String keyYesNo = dedicatedPerspectiveId + KEY_YES_NO;
 			Integer propertyYesNo = -1;
 
 			// always ask
