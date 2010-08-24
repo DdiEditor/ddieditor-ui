@@ -141,7 +141,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public Editor(String title, String description) {
 		this.title = title;
 		this.description = description;
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 	}
 
 	@Override
