@@ -2,14 +2,17 @@ package org.ddialliance.ddieditor.ui.editor;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseSchemeDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
@@ -617,6 +620,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		} catch (DDIFtpException e) {
 			DialogUtil.errorDialog(group.getShell(), ID,
 					"Error on get display lable", e.getMessage(), e);
+			return;
 		}
 		labelText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
@@ -624,12 +628,18 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					log.debug("SimpleElement: "
 							+ simpleElement.getClass().getName());
 				}
-				simpleElement.setDisplayLabel(labelText.getText());
+				try {
+					simpleElement.setDisplayLabel(labelText.getText());
+				} catch (DDIFtpException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				editorStatus.setChanged();
 			}
 		});
+		
 		createTranslation(group, Messages.getString("editor.button.translate"),
-				simpleElement.getLabels(), new LabelTdI(), "", labelText);
+				simpleElement.getLabelList(), new LabelTdI(), "", labelText);
 
 		// Simple Description:
 		final Label simpleDescrLabel = new Label(group, SWT.NONE);
@@ -644,7 +654,13 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 		final StyledText simpleDescrStyledText = new StyledText(group, SWT.WRAP
 				| SWT.V_SCROLL | SWT.BORDER);
-		simpleDescrStyledText.setText(simpleElement.getDescr());
+		try {
+			simpleDescrStyledText.setText(simpleElement.getDisplayDescr());
+		} catch (DDIFtpException e1) {
+			DialogUtil.errorDialog(group.getShell(), ID,
+					"Error on get display description", e1.getMessage(), e1);
+			return;
+		}
 		final GridData gd_originalConceptTextStyledText = new GridData(
 				SWT.FILL, SWT.CENTER, true, false);
 		gd_originalConceptTextStyledText.heightHint = 154;
@@ -658,7 +674,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			}
 		});
 		createTranslation(group, Messages.getString("editor.button.translate"),
-				simpleElement.getDescrs(), new DescriptionTdI(), "",
+				simpleElement.getDescrList(), new DescriptionTdI(), "",
 				simpleDescrStyledText);
 	}
 
@@ -849,14 +865,34 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				List<CacheHolder> cache = new ArrayList<CacheHolder>();
 				for (Object object : items) {
 					try {
-						cache.add(new CacheHolder(XmlBeansUtil
-								.getTextOnMixedElement((XmlObject) object),
-								(String) ReflectionUtil.invokeMethod(object,
-										"getLang", false, null),
-								(Boolean) ReflectionUtil.invokeMethod(object,
-										"getTranslated", false, null),
-								(Boolean) ReflectionUtil.invokeMethod(object,
-										"getTranslatable", false, null)));
+//						cache.add(new CacheHolder(XmlBeansUtil
+//								.getTextOnMixedElement((XmlObject) object),
+//								(String) ReflectionUtil.invokeMethod(object,
+//										"getLang", false, null),
+//								(Boolean) ReflectionUtil.invokeMethod(object,
+//										"getTranslated", false, null),
+//								(Boolean) ReflectionUtil.invokeMethod(object,
+//										"getTranslatable", false, null)));
+						
+						String lang = XmlBeansUtil.getXmlAttributeValue(((XmlObject) object).xmlText(), "lang=\"");
+						if (lang == null) {
+							lang = "";
+						}
+						String translatable = XmlBeansUtil.getXmlAttributeValue(((XmlObject) object).xmlText()
+								.toString(), "translatable=\"");
+						if (translatable == null) {
+							translatable = "true";
+						}
+						String translated = XmlBeansUtil.getXmlAttributeValue(
+								((XmlObject) object).xmlText().toString(), "translated=\"");
+						if (translated == null) {
+							translated = "false";
+						}
+						
+						System.out.println(XmlBeansUtil.getTextOnMixedElement((XmlObject) object));
+
+						cache.add(new CacheHolder(XmlBeansUtil.getTextOnMixedElement((XmlObject) object), lang,
+								translatable.equals("true") ? true : false, translated.equals("true") ? true : false));
 					} catch (Exception e1) {
 						DialogUtil
 								.errorDialog(
@@ -869,7 +905,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						return;
 					}
 				}
-
+				
 				TranslationDialog translationDialog = new TranslationDialog(
 						getEditorSite().getShell(), editorStatus, items,
 						translationDialogOption, parentLabel, parentWidget);
