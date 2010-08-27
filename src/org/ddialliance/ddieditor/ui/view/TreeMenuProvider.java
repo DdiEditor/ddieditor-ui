@@ -164,12 +164,6 @@ public class TreeMenuProvider extends TreeMenu {
 				.getDefault(), "icons/delete_obj.gif"));
 		deleteMenuItem.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
-				// TreeItem[] t = treeViewer.getTree().getSelection();
-				// for (int i = 0; i < t.length; i++) {
-				// log.debug(t[i].getText() + ", ");
-				// log.debug(t[i].getData("parentId"));
-				// }
-				// TODO Distinguish between Schemes and Items
 				deleteItem(EditorModeType.EDIT);
 			}
 		});
@@ -187,11 +181,20 @@ public class TreeMenuProvider extends TreeMenu {
 
 		newMenuItem.addArmListener(new ArmListener() {
 			public void widgetArmed(final ArmEvent event) {
-				Object obj = defineSelection(treeViewer, "na");
+				InputSelection inputSelection = defineSelection(treeViewer,
+						"na");
+				// remember breakpoints in this code freezes xorg
+				// if (log.isDebugEnabled()) {
+				// log.debug("Selection: "
+				// + inputSelection.getSelection().getClass()
+				// .getSimpleName() + ", value: "
+				// + inputSelection.getSelection());
+				// }
 
 				// light xml object
-				if (obj instanceof LightXmlObjectType) {
-					LightXmlObjectType lightXmlObject = (LightXmlObjectType) obj;
+				if (inputSelection.getSelection() instanceof LightXmlObjectType) {
+					LightXmlObjectType lightXmlObject = (LightXmlObjectType) inputSelection
+							.getSelection();
 
 					ElementType type = null;
 					try {
@@ -202,8 +205,10 @@ public class TreeMenuProvider extends TreeMenu {
 								currentView.getSite().getShell(),
 								currentView.ID, "Error", e.getMessage(), e);
 					}
-
 					cleanPreviousMenuItems();
+					// if (log.isDebugEnabled()) {
+					// log.debug("ElementType: " + type.toString());
+					// }
 
 					// create menu
 					if (type.equals(rootElement)) {
@@ -220,9 +225,13 @@ public class TreeMenuProvider extends TreeMenu {
 				}
 
 				// ddi resource
-				else if (obj instanceof DDIResourceType) {
+				else if (inputSelection.getSelection() instanceof DDIResourceType) {
 					cleanPreviousMenuItems();
 					createNewMenuItem(ElementType.FILE, true);
+				}
+				// log guard
+				else if (log.isDebugEnabled()) {
+					log.debug("No match found > no menuitems > do fix");
 				}
 			}
 
@@ -269,9 +278,9 @@ public class TreeMenuProvider extends TreeMenu {
 						Messages.getString("Error deleting resource"), e);
 			}
 		}
-		
+
 		if (obj instanceof ConceptualElement) {
-			ConceptualElement ce = (ConceptualElement)obj;
+			ConceptualElement ce = (ConceptualElement) obj;
 			obj = ce.getValue();
 		}
 
@@ -401,9 +410,9 @@ public class TreeMenuProvider extends TreeMenu {
 										.getParentVersion());
 						break;
 					case CONTROL_CONSTRUCT_SCHEME:
-						new ControlConstructSchemeDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
+						new ControlConstructSchemeDao().delete(lightXmlObject
+								.getId(), lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(), lightXmlObject
 										.getParentVersion());
 						break;
 
