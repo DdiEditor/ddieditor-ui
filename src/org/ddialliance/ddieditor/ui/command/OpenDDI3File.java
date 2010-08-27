@@ -52,7 +52,7 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 											+ fileName, 5);
 
 									PersistenceManager.getInstance();
-									DdiManager.getInstance();
+									DdiManager ddiManager = DdiManager.getInstance();
 									monitor.worked(1);
 
 									// add resources
