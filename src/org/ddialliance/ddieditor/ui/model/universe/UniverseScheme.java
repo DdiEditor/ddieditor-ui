@@ -1,14 +1,10 @@
 package org.ddialliance.ddieditor.ui.model.universe;
 
-import java.util.List;
-
-import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlException;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseSchemeDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.impl.UniverseSchemeTypeImpl;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseSchemeType;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
-import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -17,76 +13,48 @@ import org.ddialliance.ddiftp.util.log.LogType;
 public class UniverseScheme extends LabelDescription {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, UniverseScheme.class);
 
-	private UniverseSchemeDocument universeSchemeDocument;
-	private UniverseSchemeTypeImpl universeSchemeTypeImpl;
+	private MaintainableLabelQueryResult maintainableLabelQueryResult;
 
 	/**
-	 * Constructor of Universe Scheme
+	 * Constructor
 	 * 
-	 * @param universeSchemeDocument
+	 * @param id
+	 * @param version
 	 * @param parentId
 	 * @param parentVersion
-	 * @throws Exception
+	 * @param maintainableLabelQueryResult
+	 * @throws XmlException
+	 * @throws DDIFtpException
 	 */
-	public UniverseScheme(UniverseSchemeDocument universeSchemeDocument, String parentId, String parentVersion)
-			throws Exception {
-
-		super(universeSchemeDocument.getUniverseScheme().getId(), universeSchemeDocument.getUniverseScheme()
-				.getVersion(), parentId, parentVersion, universeSchemeDocument.getUniverseScheme().getLabelList(),
-				universeSchemeDocument.getUniverseScheme().getDescriptionList());
-
-		if (universeSchemeDocument == null) {
-			// TODO Create new UniverseScheme
-			this.universeSchemeDocument = null;
-		}
-		this.universeSchemeDocument = universeSchemeDocument;
-		this.universeSchemeTypeImpl = (UniverseSchemeTypeImpl) universeSchemeDocument.getUniverseScheme();
+	public UniverseScheme(String id, String version, String parentId,
+			String parentVersion, String agency,
+			MaintainableLabelQueryResult maintainableLabelQueryResult)
+			throws DDIFtpException {
+		
+		super(id, version, parentId, parentVersion, "TODO", maintainableLabelQueryResult);
+		this.maintainableLabelQueryResult = maintainableLabelQueryResult;
 	}
-
-	/**
-	 * Get Universe Scheme Document of Universe Scheme.
-	 * 
-	 * @return UniverseSchemeDocument
-	 */
-	public UniverseSchemeDocument getUniverseSchemeDocument() {
-		return universeSchemeDocument;
+	
+	public MaintainableLabelQueryResult getMaintainableLabelQueryResult() {
+		return maintainableLabelQueryResult;
 	}
-
+	
 	/**
-	 * Set Display Label of Universe Scheme.
-	 * 
-	 * @param string
-	 * @return LabelType (always null)
+	 * Provides the Universe Scheme Document.
 	 */
 	@Override
-	public LabelType setDisplayLabel(String string) {
+	public UniverseSchemeDocument getDocument() throws DDIFtpException {
 
-		LabelType labelType = super.setDisplayLabel(string);
-		if (labelType != null) {
-			universeSchemeTypeImpl.getLabelList().add(labelType);
-		}
-		return null;
+		UniverseSchemeDocument doc = UniverseSchemeDocument.Factory.newInstance();
+		UniverseSchemeType type = doc.addNewUniverseScheme();
+
+		super.getDocument(maintainableLabelQueryResult, type);
+		
+		type.setLabelArray(super.getLabels());
+		type.setDescriptionArray(super.getDescrs());
+		return doc;
 	}
-
-	/**
-	 * Set Display Description of Universe Scheme.
-	 * 
-	 * @param string
-	 * @return StructuredStringType (always null)
-	 */
-	public StructuredStringType setDisplayDescr(String string) {
-		StructuredStringType descriptionType = super.setDisplayDescr(string);
-		if (descriptionType != null) {
-			universeSchemeTypeImpl.getDescriptionList().add(descriptionType);
-		}
-		return null;
-	}
-
-	@Override
-	public XmlObject getDocument() throws DDIFtpException {
-		return universeSchemeDocument;
-	}
-
+	
 	@Override
 	public void executeChange(Object value, Class<?> type) throws Exception {
 		// TODO Auto-generated method stub

@@ -10,11 +10,16 @@ package org.ddialliance.ddieditor.ui.model.code;
  * $Revision$
  */
 
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CategorySchemeDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CategorySchemeType;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeType;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.impl.CodeSchemeTypeImpl;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -26,71 +31,26 @@ public class CodeScheme extends LabelDescription {
 	private static Log log = LogFactory
 			.getLog(LogType.SYSTEM, CodeScheme.class);
 
-	private CodeSchemeDocument codeSchemeDocument;
-	private CodeSchemeTypeImpl codeSchemeTypeImpl;
+	private MaintainableLabelQueryResult maintainableLabelQueryResult;
 
 	/**
-	 * Constructor of Code Scheme
+	 * Constructor
 	 * 
-	 * @param codeSchemeDocument
+	 * @param id
+	 * @param version
 	 * @param parentId
 	 * @param parentVersion
-	 * @throws Exception
+	 * @param maintainableLabelQueryResult
+	 * @throws XmlException
+	 * @throws DDIFtpException
 	 */
-	public CodeScheme(CodeSchemeDocument codeSchemeDocument, String parentId,
-			String parentVersion) throws Exception {
-
-		super(codeSchemeDocument.getCodeScheme().getId(), codeSchemeDocument
-				.getCodeScheme().getVersion(), parentId, parentVersion,
-				codeSchemeDocument.getCodeScheme().getLabelList(),
-				codeSchemeDocument.getCodeScheme().getDescriptionList());
-
-		if (codeSchemeDocument == null) {
-			// TODO Create new CodeScheme
-			this.codeSchemeDocument = null;
-		}
-		this.codeSchemeDocument = codeSchemeDocument;
-		this.codeSchemeTypeImpl = (CodeSchemeTypeImpl) codeSchemeDocument
-				.getCodeScheme();
-	}
-
-	/**
-	 * Get Code Scheme Document of Code Scheme.
-	 * 
-	 * @return CodeSchemeDocument
-	 */
-	public CodeSchemeDocument getCodeSchemeDocument() {
-		return codeSchemeDocument;
-	}
-
-	/**
-	 * Set Original Label of Code Scheme. 'Original' means not translated.
-	 * 
-	 * @param string
-	 * @return LabelType (always null)
-	 */
-	public LabelType setLabel(String string) {
-
-		LabelType labelType = super.setDisplayLabel(string);
-		if (labelType != null) {
-			codeSchemeTypeImpl.getLabelList().add(labelType);
-		}
-		return null;
-	}
-
-	/**
-	 * Set Display Description of Code Scheme.
-	 * 
-	 * @param string
-	 * @return StructuredStringType (always null)
-	 */
-	public StructuredStringType setDisplayDescr(String string) {
-
-		StructuredStringType descriptionType = super.setDisplayDescr(string);
-		if (descriptionType != null) {
-			codeSchemeTypeImpl.getDescriptionList().add(descriptionType);
-		}
-		return null;
+	public CodeScheme(String id, String version, String parentId,
+			String parentVersion, String agency,
+			MaintainableLabelQueryResult maintainableLabelQueryResult)
+			throws DDIFtpException {
+		
+		super(id, version, parentId, parentVersion, "TODO", maintainableLabelQueryResult);
+		this.maintainableLabelQueryResult = maintainableLabelQueryResult;
 	}
 
 	/**
@@ -106,9 +66,20 @@ public class CodeScheme extends LabelDescription {
 		return;
 	}
 
+	/**
+	 * Provides the Code Scheme Document.
+	 */
 	@Override
-	public XmlObject getDocument() throws DDIFtpException {
-		return codeSchemeDocument;
+	public CodeSchemeDocument getDocument() throws DDIFtpException {
+
+		CodeSchemeDocument doc = CodeSchemeDocument.Factory.newInstance();
+		CodeSchemeType type = doc.addNewCodeScheme();
+
+		super.getDocument(maintainableLabelQueryResult, type);
+		
+		type.setLabelArray(super.getLabels());
+		type.setDescriptionArray(super.getDescrs());
+		return doc;
 	}
 
 	@Override

@@ -10,13 +10,11 @@ package org.ddialliance.ddieditor.ui.model.concept;
  * $Revision$
  */
 
-import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlException;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.impl.ConceptSchemeTypeImpl;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeType;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
-import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -26,73 +24,30 @@ public class ConceptScheme extends LabelDescription {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			ConceptScheme.class);
 
-	private ConceptSchemeDocument conceptSchemeDocument;
-	private ConceptSchemeTypeImpl conceptSchemeTypeImpl;
+	private MaintainableLabelQueryResult maintainableLabelQueryResult;
 
+	
 	/**
-	 * Constructor of Concept Scheme
+	 * Constructor
 	 * 
-	 * @param conceptSchemeDocument
+	 * @param id
+	 * @param version
 	 * @param parentId
 	 * @param parentVersion
-	 * @throws Exception
+	 * @param maintainableLabelQueryResult
+	 * @throws XmlException
+	 * @throws DDIFtpException
 	 */
-	public ConceptScheme(ConceptSchemeDocument conceptSchemeDocument,
-			String parentId, String parentVersion) throws Exception {
-
-		super(conceptSchemeDocument.getConceptScheme().getId(),
-				conceptSchemeDocument.getConceptScheme().getVersion(),
-				parentId, parentVersion, conceptSchemeDocument
-						.getConceptScheme().getLabelList(),
-				conceptSchemeDocument.getConceptScheme().getDescriptionList());
-
-		if (conceptSchemeDocument == null) {
-			// TODO Create new Concept Scheme
-			this.conceptSchemeDocument = null;
-		}
-		this.conceptSchemeDocument = conceptSchemeDocument;
-		this.conceptSchemeTypeImpl = (ConceptSchemeTypeImpl) conceptSchemeDocument
-				.getConceptScheme();
+	public ConceptScheme(String id, String version, String parentId,
+			String parentVersion, String agency,
+			MaintainableLabelQueryResult maintainableLabelQueryResult)
+			throws DDIFtpException {
+		
+		super(id, version, parentId, parentVersion, "TODO", maintainableLabelQueryResult);
+		this.maintainableLabelQueryResult = maintainableLabelQueryResult;
 	}
 
-	/**
-	 * Get Concept Scheme Document of Concept Scheme.
-	 * 
-	 * @return ConceptSchemeDocument
-	 */
-	public ConceptSchemeDocument getConceptSchemeDocument() {
-		return conceptSchemeDocument;
-	}
 
-	/**
-	 * Set Display Label of Concept Scheme.
-	 * 
-	 * @param string
-	 * @return LabelType
-	 */
-	public LabelType setDisplayLabel(String string) {
-
-		LabelType labelType = super.setDisplayLabel(string);
-		if (labelType != null) {
-			conceptSchemeTypeImpl.getLabelList().add(labelType);
-		}
-		return null;
-	}
-
-	/**
-	 * Set Display Description of Concept Scheme.
-	 * 
-	 * @param string
-	 * @return StructuredStringType
-	 */
-	public StructuredStringType setDisplayDescr(String string) {
-
-		StructuredStringType descriptionType = super.setDisplayDescr(string);
-		if (descriptionType != null) {
-			conceptSchemeTypeImpl.getDescriptionList().add(descriptionType);
-		}
-		return null;
-	}
 
 	/**
 	 * Validates the Concept Scheme before it is saved. It e.g. checks if all
@@ -107,9 +62,20 @@ public class ConceptScheme extends LabelDescription {
 		return;
 	}
 
+	/**
+	 * Provides the Concept Scheme Document.
+	 */
 	@Override
-	public XmlObject getDocument() throws DDIFtpException {
-		return this.conceptSchemeDocument;
+	public ConceptSchemeDocument getDocument() throws DDIFtpException {
+
+		ConceptSchemeDocument doc = ConceptSchemeDocument.Factory.newInstance();
+		ConceptSchemeType type = doc.addNewConceptScheme();
+
+		super.getDocument(maintainableLabelQueryResult, type);
+		
+		type.setLabelArray(super.getLabels());
+		type.setDescriptionArray(super.getDescrs());
+		return doc;
 	}
 
 	@Override

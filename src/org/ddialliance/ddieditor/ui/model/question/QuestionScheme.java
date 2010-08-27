@@ -4,13 +4,11 @@ package org.ddialliance.ddieditor.ui.model.question;
  * Question Scheme model.
  * 
  */
-import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlException;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionSchemeDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.QuestionSchemeTypeImpl;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionSchemeType;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
-import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -20,61 +18,26 @@ public class QuestionScheme extends LabelDescription {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			QuestionScheme.class);
 
-	private QuestionSchemeDocument questionSchemeDocument;
-	private QuestionSchemeTypeImpl questionSchemeTypeImpl;
-
+	private MaintainableLabelQueryResult maintainableLabelQueryResult;
+	
 	/**
 	 * Constructor
 	 * 
-	 * @param questionSchemeDocument
+	 * @param id
+	 * @param version
 	 * @param parentId
 	 * @param parentVersion
-	 * @throws Exception
+	 * @param maintainableLabelQueryResult
+	 * @throws XmlException
+	 * @throws DDIFtpException
 	 */
-	public QuestionScheme(QuestionSchemeDocument questionSchemeDocument,
-			String parentId, String parentVersion) throws Exception {
-		super(questionSchemeDocument.getQuestionScheme().getId(),
-				questionSchemeDocument.getQuestionScheme().getVersion(),
-				parentId, parentVersion, questionSchemeDocument
-						.getQuestionScheme().getLabelList(),
-				questionSchemeDocument.getQuestionScheme().getDescriptionList());
-
-		if (questionSchemeDocument == null) {
-			// TODO Create new Question Scheme
-			this.questionSchemeDocument = null;
-		}
-		this.questionSchemeDocument = questionSchemeDocument;
-		this.questionSchemeTypeImpl = (QuestionSchemeTypeImpl) questionSchemeDocument
-				.getQuestionScheme();
-	}
-
-	/**
-	 * Set Display Label of Question Scheme.
-	 * 
-	 * @param string
-	 * @return LabelType
-	 */
-	public LabelType setDisplayLabel(String string) {
-
-		LabelType labelType = super.setDisplayLabel(string);
-		if (labelType != null) {
-			questionSchemeTypeImpl.getLabelList().add(labelType);
-		}
-		return null;
-	}
-
-	/**
-	 * Set Display Description of Question Scheme.
-	 * 
-	 * @param string
-	 * @return StructuredStringType
-	 */
-	public StructuredStringType setDisplayDescr(String string) {
-		StructuredStringType descriptionType = super.setDisplayDescr(string);
-		if (descriptionType != null) {
-			questionSchemeTypeImpl.getDescriptionList().add(descriptionType);
-		}
-		return null;
+	public QuestionScheme(String id, String version, String parentId,
+			String parentVersion, String agency,
+			MaintainableLabelQueryResult maintainableLabelQueryResult)
+			throws DDIFtpException {
+		
+		super(id, version, parentId, parentVersion, "TODO", maintainableLabelQueryResult);
+		this.maintainableLabelQueryResult = maintainableLabelQueryResult;
 	}
 
 	/**
@@ -91,9 +54,20 @@ public class QuestionScheme extends LabelDescription {
 		return;
 	}
 
+	/**
+	 * Provides the Question Scheme Document.
+	 */
 	@Override
-	public XmlObject getDocument() throws DDIFtpException {
-		return questionSchemeDocument;
+	public QuestionSchemeDocument getDocument() throws DDIFtpException {
+
+		QuestionSchemeDocument doc = QuestionSchemeDocument.Factory.newInstance();
+		QuestionSchemeType type = doc.addNewQuestionScheme();
+
+		super.getDocument(maintainableLabelQueryResult, type);
+		
+		type.setLabelArray(super.getLabels());
+		type.setDescriptionArray(super.getDescrs());
+		return doc;
 	}
 
 	@Override

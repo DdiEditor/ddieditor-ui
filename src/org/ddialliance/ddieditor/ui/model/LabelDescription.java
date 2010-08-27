@@ -6,56 +6,178 @@ package org.ddialliance.ddieditor.ui.model;
  *  sub-elements.
  * 
  */
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.DescriptionDocument;
+import org.apache.xmlbeans.XmlTokenSource;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.AbstractMaintainableType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
-import org.ddialliance.ddieditor.ui.Activator;
-import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.DescriptionDocumentImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.LabelDocumentImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.LabelTypeImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.StructuredStringTypeImpl;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelUpdateElement;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
-import org.eclipse.jface.preference.IPreferenceStore;
 
 public abstract class LabelDescription extends Model implements IModel {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			LabelDescription.class);
 
-	private List<LabelType> labels;
-	private List<StructuredStringType> descrs;
+	private MaintainableLabelQueryResult maintainableLabelQueryResult;
+	private List<MaintainableLabelUpdateElement> labelUpd = new ArrayList<MaintainableLabelUpdateElement>();
+	private List<MaintainableLabelUpdateElement> descrUpd = new ArrayList<MaintainableLabelUpdateElement>();
+
+	private List<LabelType> labelObj;
+	private List<StructuredStringType> descrObj;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param id
-	 *            Identification
 	 * @param version
-	 *            Version
 	 * @param parentId
-	 *            Parent identification
 	 * @param parentVersion
-	 *            Parent version
-	 * @param labels
-	 *            List of Label Types
-	 * @param descrs
-	 *            List of Structured String Types
+	 * @param maintainableLabelQueryResult
+	 * @throws XmlException
+	 * @throws DDIFtpException
 	 */
-
 	public LabelDescription(String id, String version, String parentId,
-			String parentVersion, List<LabelType> labels,
-			List<StructuredStringType> descrs) {
+			String parentVersion, String agency,
+			MaintainableLabelQueryResult maintainableLabelQueryResult)
+			throws DDIFtpException {
+		
 		super(id, version, parentId, parentVersion, "TODO");
-
-		this.labels = labels;
-		this.descrs = descrs;
+		this.maintainableLabelQueryResult = maintainableLabelQueryResult;
+		if (maintainableLabelQueryResult != null) {
+			XmlObject[] xml = maintainableLabelQueryResult.getSubElement("Label");
+			for (int i = 0; i < xml.length; i++) {
+				labelUpd.add(new MaintainableLabelUpdateElement((LabelType) ((LabelDocumentImpl) xml[i]).getLabel(), null /* NOP */));
+			}
+			
+			xml = maintainableLabelQueryResult.getSubElement("Description");
+			for (int i = 0; i < xml.length; i++) {
+				descrUpd.add(new MaintainableLabelUpdateElement((StructuredStringType) ((DescriptionDocumentImpl) xml[i]).getDescription(), null /* NOP */));
+			}
+		}
 	}
+	
+	/**
+	 * Get all not deleted XML objects from list of maintainable update elements
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	private List<XmlObject> getXmlObjects(List<MaintainableLabelUpdateElement> elements) {
 
+		List<XmlObject> objects = new ArrayList<XmlObject>();
+		for (Iterator<MaintainableLabelUpdateElement> iterator = elements.iterator(); iterator.hasNext();) {
+			MaintainableLabelUpdateElement maintainableLabelUpdateElement = (MaintainableLabelUpdateElement) iterator
+					.next();
+			if (maintainableLabelUpdateElement.getCrudValue() == null || maintainableLabelUpdateElement.getCrudValue() > -1) {
+				objects.add(maintainableLabelUpdateElement.getXmlObject());
+			}
+		}
+		return objects;
+	}
+	
+	private int findXmlObject(List<MaintainableLabelUpdateElement> elements, XmlObject xmlObject) {
+		
+		for (int i = 0; i < elements.size(); i++) {
+			if (elements.get(i).getXmlObject() == xmlObject) {
+				return i;
+			}
+		}
+		return -1;
+	}
+		
+	private List<MaintainableLabelUpdateElement> getDirtyUpdateElements(List<MaintainableLabelUpdateElement> elements) {
+		List<MaintainableLabelUpdateElement> dirtyElements = new ArrayList<MaintainableLabelUpdateElement>();
+		for (Iterator<MaintainableLabelUpdateElement> iterator = elements.iterator(); iterator.hasNext();) {
+			MaintainableLabelUpdateElement maintainableLabelUpdateElement = (MaintainableLabelUpdateElement) iterator
+					.next();
+			if (maintainableLabelUpdateElement.getCrudValue() != null) {
+				dirtyElements.add(maintainableLabelUpdateElement);
+			}
+		}
+		return dirtyElements;
+	}
+	
+	/**
+	 * Sync. MaintainableLabelUpdateElement with item elements (update by Tranlation pop-up)
+	 * 
+	 * Note: Do not find new items
+	 * @throws DDIFtpException 
+	 */
+	private void syncUpdWithObj(String string, List<MaintainableLabelUpdateElement> upd, List<?> obj) throws DDIFtpException {
+
+		// loop over all MaintainableLabelUpdateElements
+		for (int i = 0; i < upd.size(); i++) {
+			boolean found = false;
+			// find corresponding objects
+			for (int j = 0; j < obj.size(); j++) {
+				if (obj.get(j) == upd.get(i).getXmlObject()) {
+					found = true;
+					break;
+				}
+			}
+			if (found && string.length() > 0) {
+				// mark update element as updated
+				upd.get(i).setCrudValue(i + 1);
+				if (obj.get(i) instanceof LabelType) {
+					upd.get(i).setValue(((LabelType) obj.get(i)).xmlText());					
+				} else if (obj.get(i) instanceof StructuredStringType) {
+					upd.get(i).setValue(((StructuredStringType) obj.get(i)).xmlText());					
+				} else {
+					throw new DDIFtpException("Unsupported object type.");
+				}
+			} else {
+				// mark update element as deleted
+				upd.get(i).setCrudValue((i+1)*-1);
+			}
+		}
+		return;
+	}
+	
+	private void syncObjWithUpd(List<?> obj, List<MaintainableLabelUpdateElement> upds) throws DDIFtpException {
+
+		// loop over list of items
+		for (int i = 0; i < obj.size(); i++) {
+			// find corresponding update element
+			boolean found = false;
+			for (int j = 0; j < upds.size(); j++) {
+				if (obj.get(i) == upds.get(j).getXmlObject()) {
+					found = true;
+					continue;
+				}
+			}
+			if (!found) {
+				if (obj.get(i) instanceof LabelType) {
+				upds
+				.add(new MaintainableLabelUpdateElement((LabelType) obj.get(i), MaintainableLabelUpdateElement.NEW));
+				} else if (obj.get(i) instanceof StructuredStringType) {
+					upds
+					.add(new MaintainableLabelUpdateElement((StructuredStringType) obj.get(i), MaintainableLabelUpdateElement.NEW));
+
+				} else {
+					throw new DDIFtpException("Unsupported object type.");
+				}
+			}
+		}
+		return;
+
+	}
+	
 	/**
 	 * Get Display Label of Simple Element.
 	 * 
@@ -64,21 +186,21 @@ public abstract class LabelDescription extends Model implements IModel {
 	 */
 	public String getDisplayLabel() throws DDIFtpException {
 
-		if (labels.size() > 0) {
-			String displayLang = LanguageUtil.getDisplayLanguage();
+		if (labelUpd.size() > 0) {
 			try {
-				return XmlBeansUtil.getTextOnMixedElement((XmlObject) XmlBeansUtil.getLangElement(displayLang, labels));
+				return XmlBeansUtil.getTextOnMixedElement((XmlObject) XmlBeansUtil.getLangElement(LanguageUtil
+						.getDisplayLanguage(), getXmlObjects(labelUpd)));
 			} catch (DDIFtpException e) {
 				// TODO - error handling
 				e.printStackTrace();
 				throw e;
 			}
-		}
-
+		}		
+		
 		// No label found - not an error
 		return "";
 	}
-
+	
 	/**
 	 * Set Label of Display Language.
 	 * 
@@ -87,32 +209,30 @@ public abstract class LabelDescription extends Model implements IModel {
 	 *         is new label added
 	 * @throws DDIFtpException 
 	 */
-	public LabelType setDisplayLabel(String string) {
+	public LabelType setDisplayLabel(String string) throws DDIFtpException {
 		XmlObject label = null;
 		
-		// Show label in Display language
-		if (labels.size() > 0) {
+		// Sync. update elements with label type list
+		syncUpdWithObj(string, labelUpd, labelObj);
+		
+		// Sync label type list with update elements
+		syncObjWithUpd(labelObj, labelUpd);
+		
+		// Sync. label type list with update elements
+		if (labelObj.size() > 0) {
 			try {
-				label = (XmlObject) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), labels);
+				label = (XmlObject) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), labelObj);
 			} catch (DDIFtpException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return null;
 			}
 			if (label != null) {
-				// Label in Display language found
+				// Label in Display language - found
 				if (string.length() > 0) {
-					// update label:
-					XmlBeansUtil.setTextOnMixedElement(label, string);
+					// replace Label:
+					XmlBeansUtil.setTextOnMixedElement(((LabelTypeImpl) label), string);
 					return null;
-				} else {
-					// remove label:
-					for (int i = 0; i < labels.size(); i++) {
-						if (label == labels.get(i)) {
-							labels.remove(i);
-							return null;
-						}
-					}
 				}
 			}
 		}
@@ -129,30 +249,34 @@ public abstract class LabelDescription extends Model implements IModel {
 		labelType.setTranslatable(true);
 		labelType.setLang(LanguageUtil.getOriginalLanguage());
 		XmlBeansUtil.setTextOnMixedElement(labelType, string);
+		labelObj.add(labelType);
+		labelUpd.add(new MaintainableLabelUpdateElement(labelType, MaintainableLabelUpdateElement.NEW));
+
 		return labelType;
 	}
 
 	/**
-	 * Get Original Description of Simple Element. Original means not
-	 * translated.
+	 * Get Display Description of Simple Element.
 	 * 
 	 * @return String
 	 */
-	public String getDescr() {
-		StructuredStringType descriptionType;
-
-		// Get Description corresponding to language
-		int length = descrs.size();
-		for (int i = 0; i < length; i++) {
-			descriptionType = descrs.get(i);
-			if (!descriptionType.getTranslated()) {
-				return XmlBeansUtil.getTextOnMixedElement(descriptionType);
+	public String getDisplayDescr()  throws DDIFtpException {
+		
+		if (descrUpd.size() > 0) {
+			try {
+				return XmlBeansUtil.getTextOnMixedElement((XmlObject) XmlBeansUtil.getLangElement(LanguageUtil
+						.getDisplayLanguage(), getXmlObjects(descrUpd)));
+			} catch (DDIFtpException e) {
+				// TODO - error handling
+				e.printStackTrace();
+				throw e;
 			}
-		}
-		// Not mandatory Description - not found
+		}		
+		
+		// No description found - not an error
 		return "";
-	}
-
+	}	
+	
 	/**
 	 * Set Display Description.
 	 * 
@@ -162,31 +286,41 @@ public abstract class LabelDescription extends Model implements IModel {
 	 *         added
 	 */
 	public StructuredStringType setDisplayDescr(String string) {
-		XmlObject descr = null;
+
+		// Sync. update elements with description object list
+		try {
+			syncUpdWithObj(string, descrUpd, descrObj);
+		} catch (DDIFtpException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return null;
+		}
 		
-		// Show Description in Display language
-		if (descrs.size() > 0) {
+		// Sync description object list with update elements
+		try {
+			syncObjWithUpd(descrObj, descrUpd);
+		} catch (DDIFtpException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return null;
+		}
+
+		XmlObject descr = null;
+
+		if (descrObj.size() > 0) {
 			try {
-				descr = (XmlObject) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), descrs);
+				descr = (XmlObject) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), descrObj);
 			} catch (DDIFtpException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return null;
 			}
 			if (descr != null) {
-				// Description in Display language found
+				// Description in Display language - found
 				if (string.length() > 0) {
-					// update description:
+					// update Description:
 					XmlBeansUtil.setTextOnMixedElement(descr, string);
 					return null;
-				} else {
-					// remove Description:
-					for (int i = 0; i < descrs.size(); i++) {
-						if (descr == descrs.get(i)) {
-							descrs.remove(i);
-							return null;
-						}
-					}
 				}
 			}
 		}
@@ -203,17 +337,93 @@ public abstract class LabelDescription extends Model implements IModel {
 		descriptionType.setTranslatable(true);
 		descriptionType.setLang(LanguageUtil.getOriginalLanguage());
 		XmlBeansUtil.setTextOnMixedElement(descriptionType, string);
+		descrObj.add(descriptionType);
+		descrUpd.add(new MaintainableLabelUpdateElement(descriptionType, MaintainableLabelUpdateElement.NEW));
 		return descriptionType;
 	}
 
-	public List<LabelType> getLabels() {
-		return labels;
-	}
-
-	public List<StructuredStringType> getDescrs() {
-		return descrs;
+	public List<LabelType> getLabelList() {
+		
+		List<XmlObject> xmls = getXmlObjects(labelUpd);
+		List<LabelType> result = new ArrayList<LabelType>();
+		for (Iterator<XmlObject> iterator = xmls.iterator(); iterator.hasNext();) {
+			XmlObject xmlObject = (XmlObject) iterator.next();
+			result.add((LabelType) xmlObject);
+		}
+		
+		// store label list for later use
+		this.labelObj = result;
+		
+		return result;
 	}
 	
+	public LabelType[] getLabels() {
+		
+		List<XmlObject> xmls = getXmlObjects(labelUpd);
+		LabelType[] result = new LabelType[xmls.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = (LabelType) xmls.get(i);
+		}
+		return result;
+	}
+
+	public List<StructuredStringType> getDescrList() {
+		
+		List<XmlObject> xmls = getXmlObjects(descrUpd);
+		List<StructuredStringType> result = new ArrayList<StructuredStringType>();
+		for (Iterator<XmlObject> iterator = xmls.iterator(); iterator.hasNext();) {
+			XmlObject xmlObject = (XmlObject) iterator.next();
+			result.add((StructuredStringType) xmlObject);
+		}
+		
+		// save description list for later use:
+		this.descrObj = result;
+		
+		return result;
+	}
+
+	public StructuredStringType[] getDescrs() {
+		
+		List<XmlObject> xmls = getXmlObjects(descrUpd);
+		StructuredStringType[] result = new StructuredStringType[xmls.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = (StructuredStringType) xmls.get(i);
+		}
+		return result;
+	}
+	
+	
+	public void getDocument(MaintainableLabelQueryResult maintainableLabelQueryResult,
+			AbstractMaintainableType abstractMaintainable) throws DDIFtpException {
+
+		abstractMaintainable.setId(maintainableLabelQueryResult.getId());
+
+		if (maintainableLabelQueryResult.getAgency() != null && (!maintainableLabelQueryResult.getAgency().equals(""))) {
+			abstractMaintainable.setAgency(maintainableLabelQueryResult.getAgency());
+		}
+
+		if (maintainableLabelQueryResult.getVersion() != null
+				&& (!maintainableLabelQueryResult.getVersion().equals(""))) {
+			abstractMaintainable.setVersion(maintainableLabelQueryResult.getVersion());
+		}
+		
+		return;
+	}
+	
+	/**
+	 * Return list of UpdateElements
+	 * 
+	 * @return List<MaintainableLabelUpdateElement>
+	 */
+	public List<MaintainableLabelUpdateElement> getUpdateElements() {
+		List<MaintainableLabelUpdateElement> elements = new ArrayList<MaintainableLabelUpdateElement>();
+		
+		elements.addAll(getDirtyUpdateElements(labelUpd));
+		elements.addAll(getDirtyUpdateElements(descrUpd));
+		
+		return elements;
+	}
+
 	/**
 	 * Validates the element before it is saved.
 	 * 
@@ -221,11 +431,9 @@ public abstract class LabelDescription extends Model implements IModel {
 	 */
 	public void validate() throws Exception {
 		log.debug("LabelDescription validation performed");
-		boolean found;
 				
 		// No error found:
 		return;
 	}
-
 
 }

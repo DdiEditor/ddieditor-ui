@@ -6,8 +6,9 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
+import org.ddialliance.ddieditor.ui.model.Model;
 
-public class Universe extends LabelDescription implements IModel {
+public class Universe extends Model implements IModel {
 	private UniverseDocument doc;
 	private UniverseType type;
 
