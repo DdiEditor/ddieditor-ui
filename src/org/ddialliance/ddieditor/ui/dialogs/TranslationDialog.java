@@ -8,6 +8,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.LabelDocumentImpl;
 import org.ddialliance.ddieditor.ui.editor.BooleanCellEditor;
 import org.ddialliance.ddieditor.ui.editor.CellEditorListener;
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;
@@ -144,8 +145,9 @@ public class TranslationDialog extends Dialog {
 			if (xmlObject instanceof InternationalStringType) {
 				return ((InternationalStringType) xmlObject).getStringValue();
 			} else if (xmlObject instanceof StructuredStringType) {
-				return XmlBeansUtil
-						.getTextOnMixedElement((StructuredStringType) xmlObject);
+				return XmlBeansUtil.getTextOnMixedElement((StructuredStringType) xmlObject);
+			} else if (xmlObject instanceof LabelDocumentImpl) {
+				return XmlBeansUtil.getTextOnMixedElement((LabelDocumentImpl) xmlObject);
 			}
 			throw createTypeException(xmlObject, new Throwable());
 		}
