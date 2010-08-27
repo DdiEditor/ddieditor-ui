@@ -66,7 +66,6 @@ public class TreeMenu {
 			EditorModeType mode, ElementType entityType) {
 		InputSelection inputSelection = defineSelection(treeViewer,
 				currentView.ID);
-		// Object obj = inputSelection.getSelection();
 
 		// define editor input
 		EditorInput input = null;
@@ -186,8 +185,6 @@ public class TreeMenu {
 			lightXmlObject.setElement(result.getMaintainableTarget());
 			lightXmlObject.setId(result.getId());
 			lightXmlObject.setVersion(result.getVersion());
-			// lightXmlObject.setParentId(result.getParentId());
-			// lightXmlObject.setParentVersion(result.getParentVersion());
 		}
 		// list
 		else if (obj instanceof List) {
