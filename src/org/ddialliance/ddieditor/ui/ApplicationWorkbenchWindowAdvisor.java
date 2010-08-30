@@ -54,7 +54,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setTitle("DDI Editor");
 		configurer.setShowPerspectiveBar(true);
 		configurer.setShowFastViewBars(true);
-		
-		PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.DOCK_PERSPECTIVE_BAR, IWorkbenchPreferenceConstants.TOP_RIGHT);
+
+		PlatformUI.getPreferenceStore().setValue(
+				IWorkbenchPreferenceConstants.DOCK_PERSPECTIVE_BAR,
+				IWorkbenchPreferenceConstants.TOP_RIGHT);
 	}
 }
