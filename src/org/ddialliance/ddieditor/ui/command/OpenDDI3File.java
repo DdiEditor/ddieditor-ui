@@ -7,24 +7,18 @@ import java.text.MessageFormat;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.filesystem.FilesystemManager;
-import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
-import org.ddialliance.ddieditor.ui.view.InfoView;
 import org.ddialliance.ddieditor.ui.view.Messages;
-import org.ddialliance.ddieditor.ui.view.View;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
 
 /**
- * RCP entry point to open ddi xml
+ * RCP entry point to open DDI XML
  */
 public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 	@Override
@@ -48,11 +42,13 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 									InterruptedException {
 								try {
 									// import ddi file into dbxml
-									monitor.beginTask("Importing file: "
-											+ fileName, 5);
+									monitor.beginTask(Translator.trans(
+											"OpenFileAction.importingfile",
+											fileName), 4);
 
 									PersistenceManager.getInstance();
-									DdiManager ddiManager = DdiManager.getInstance();
+									DdiManager ddiManager = DdiManager
+											.getInstance();
 									monitor.worked(1);
 
 									// add resources
@@ -67,48 +63,9 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 									monitor.worked(1);
 
 									// refresh view
-									monitor
-											.setTaskName("Refreshing info view ...");
-
-									final IWorkbenchWindow[] workbenchWindows = PlatformUI
-											.getWorkbench()
-											.getWorkbenchWindows();
-
-									IWorkbenchPage workbenchPage = null;
-									PlatformUI.getWorkbench().getDisplay()
-											.asyncExec(new Runnable() {
-												@Override
-												public void run() {
-													try {
-														PlatformUI
-																.getWorkbench()
-																.showPerspective(
-																		InfoPerspective.ID,
-																		workbenchWindows[0]);
-													} catch (WorkbenchException e) {
-														// TODO Auto-generated catch block
-														e.printStackTrace();
-													}
-												}
-											});
-									IViewPart iViewPart = workbenchWindows[0].getActivePage()
-											.findView(InfoView.ID);
-									if (iViewPart == null) {
-										iViewPart = workbenchPage
-												.showView(InfoView.ID);
-									}
-									monitor.worked(1);
-
-									// refresh in async to avoid swt thread
-									// violation
-									final View view = (View) iViewPart;
-									PlatformUI.getWorkbench().getDisplay()
-											.asyncExec(new Runnable() {
-												@Override
-												public void run() {
-													view.refreshView();
-												}
-											});
+									monitor.setTaskName(Translator
+											.trans("OpenFileAction.refresh"));
+									CommandHelper.refreshViews();
 									monitor.worked(1);
 								} catch (Exception e) {
 									throw new InvocationTargetException(e);
@@ -118,10 +75,17 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 							}
 						});
 			} catch (Exception e) {
+				Throwable throwable = null;
+				if (e instanceof InvocationTargetException
+						&& e.getCause() != null) {
+					throwable = e.getCause();
+				} else {
+					throwable = e;
+				}
 				String errMess = MessageFormat
 						.format(
 								Messages
-										.getString("OpenFileAction.mess.OpenFileError"), e.getMessage()); //$NON-NLS-1$
+										.getString("OpenFileAction.mess.OpenFileError"), throwable.getMessage()); //$NON-NLS-1$
 				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
 						.getActiveShell(), Messages.getString("ErrorTitle"),
 						errMess);
