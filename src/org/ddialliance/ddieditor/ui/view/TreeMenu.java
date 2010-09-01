@@ -19,7 +19,9 @@ import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PerspectiveAdapter;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 
@@ -47,11 +49,12 @@ public class TreeMenu {
 			}
 
 			// open perspective
-			PlatformUI.getWorkbench().showPerspective(
+			IWorkbenchPage page = PlatformUI.getWorkbench().showPerspective(
 					perspectiveId,
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.getActivePage().getWorkbenchWindow());
-
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+			if (log.isDebugEnabled()) {
+				log.debug("Opened page ID: " + page.getLabel());
+			}
 		} catch (DDIFtpException e) {
 			DialogUtil.errorDialog(currentView.getSite().getShell(),
 					currentView.ID, "Error", e.getMessage(), e);
