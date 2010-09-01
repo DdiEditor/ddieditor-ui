@@ -1,5 +1,6 @@
 package org.ddialliance.ddieditor.ui.view;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ import org.eclipse.ui.PlatformUI;
 public class AutoUpdateView implements IPartListener, IStartup {
 	private static final Log log = LogFactory.getLog(LogType.SYSTEM,
 			AutoUpdateView.class);
-	Map<String, Integer> resourceViewMap = new HashMap<String, Integer>();
+	Map<String, Integer> resourceViewMap = Collections.synchronizedMap(new HashMap<String, Integer>());
 	String currentViewId = null;
 	Integer count = -1;
 
@@ -53,6 +54,7 @@ public class AutoUpdateView implements IPartListener, IStartup {
 	@Override
 	public void partOpened(IWorkbenchPart part) {
 		// do nothing
+		log.debug(part);
 	}
 
 	@Override
@@ -72,7 +74,7 @@ public class AutoUpdateView implements IPartListener, IStartup {
 		});
 	}
 
-	private void checkRefresh(IWorkbenchPart part) {
+	private synchronized void checkRefresh(IWorkbenchPart part) {
 		if (!(part instanceof View)) {
 			return;
 		}
@@ -88,8 +90,9 @@ public class AutoUpdateView implements IPartListener, IStartup {
 			tmpResourceCount = PersistenceManager.getInstance().getResources()
 					.size();
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DialogUtil.errorDialog(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getShell(), currentViewId,
+					null, e.getMessage(), e);
 		}
 
 		if (log.isDebugEnabled()) {
@@ -109,13 +112,14 @@ public class AutoUpdateView implements IPartListener, IStartup {
 			count = PersistenceManager.getInstance().getResources().size();
 			resourceViewMap.put(id, count);
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DialogUtil.errorDialog(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getShell(), id, null, e
+					.getMessage(), e);
 		}
 	}
 
 	/**
-	 * Thread wrapping view refresh to enable rcp busy indicator
+	 * Runnable wrapping view refresh to enable RCP busy indicator
 	 */
 	class RefreshRunnable implements Runnable {
 		IWorkbenchPart part;
