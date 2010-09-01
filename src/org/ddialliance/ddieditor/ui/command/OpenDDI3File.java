@@ -44,7 +44,7 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 									// import ddi file into dbxml
 									monitor.beginTask(Translator.trans(
 											"OpenFileAction.importingfile",
-											fileName), 4);
+											fileName), 3);
 
 									PersistenceManager.getInstance();
 									DdiManager ddiManager = DdiManager
@@ -60,12 +60,6 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 									// set working resource
 									PersistenceManager.getInstance()
 											.setWorkingResource(file.getName());
-									monitor.worked(1);
-
-									// refresh view
-									monitor.setTaskName(Translator
-											.trans("OpenFileAction.refresh"));
-									CommandHelper.refreshViews();
 									monitor.worked(1);
 								} catch (Exception e) {
 									throw new InvocationTargetException(e);
@@ -91,6 +85,9 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 						errMess);
 			}
 		}
+		
+		// refresh view
+		CommandHelper.refreshViews();
 		return null;
 	}
 }
