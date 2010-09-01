@@ -65,7 +65,7 @@ public class CommandHelper {
 
 	public static void refreshViews() throws ExecutionException {
 		IHandlerService handlerService = (IHandlerService) PlatformUI
-				.getWorkbench().getActiveWorkbenchWindow().getService(
+				.getWorkbench().getService(
 						IHandlerService.class);
 		try {
 			handlerService.executeCommand(RefreshViews.class.getName(), null);
