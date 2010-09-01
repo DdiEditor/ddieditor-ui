@@ -9,6 +9,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -24,21 +26,40 @@ public class RefreshViews extends org.eclipse.core.commands.AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IViewReference[] viewRefs = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage().getViewReferences();
-		IWorkbenchPage page = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
+				.getWorkbenchWindows();
+		IWorkbenchPage page = null;
+		for (int i = 0; i < windows.length; i++) {
+			page = windows[i].getActivePage();
+		}
 
+		// guard
+		if (page == null) {
+			LogFactory.getLog(LogType.EXCEPTION,
+					RefreshViews.class).error("Refresh error", new Throwable());
+		}
+		
+		IViewReference[] viewRefs = page.getViewReferences();
 		for (int j = 0; j < viewRefs.length; j++) {
 			IViewPart viewPart = page.findView(viewRefs[j].getId());
 			if (viewPart != null && viewPart instanceof View) {
-				((View) viewPart).refreshView();
-				log.debug(viewPart.getClass().getName());
+				// ((View) viewPart).refreshView();
+
+				// deactivate - activate - to hook into auto refresh view
+				try {
+					page.hideView(viewPart);
+					page.showView(viewRefs[j].getId());
+				} catch (Exception e) {
+					LogFactory.getLog(LogType.EXCEPTION,
+							RefreshViews.class).error("Refresh error", e);
+				}
+				if (log.isDebugEnabled()) {
+					log.debug(viewPart.getClass().getName());
+				}
 			}
 		}
 		return null;
 	}
-
 	// dev code to be deleted when used execute method is found valid 20100901
 
 	// public Object executeDev(ExecutionEvent event) throws ExecutionException
