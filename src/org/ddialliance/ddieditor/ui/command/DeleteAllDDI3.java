@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
+import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * RCP entry point to remove all loaded ddi 3 resource
@@ -48,40 +49,14 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		CommandHelper.closeEditors(resources);
 
 		try {
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
-					new IRunnableWithProgress() {
-						@Override
-						public void run(IProgressMonitor monitor)
-								throws InvocationTargetException,
-								InterruptedException {
-							try {
-								int tasks = resources.size() + 1;
-								monitor.beginTask("Deleting DDI3 resources",
-										tasks);
-								for (DDIResourceType ddiResource : resources) {
-									StorageType storage = PersistenceManager
-											.getInstance()
-											.getStorageByResourceOrgName(
-													ddiResource.getOrgName());
-									PersistenceManager.getInstance()
-											.deleteResource(
-													ddiResource.getOrgName());
-									PersistenceManager.getInstance()
-											.deleteStorage(storage.getId());
-									storage = null;
-									monitor.worked(1);
-								}
-
-								// refresh view
-								CommandHelper.refreshViews();
-								monitor.worked(1);
-							} catch (Exception e) {
-								throw new InvocationTargetException(e);
-							} finally {
-								monitor.done();
-							}
-						}
-					});
+			for (DDIResourceType ddiResource : resources) {
+				StorageType storage = PersistenceManager.getInstance()
+						.getStorageByResourceOrgName(ddiResource.getOrgName());
+				PersistenceManager.getInstance().deleteResource(
+						ddiResource.getOrgName());
+				PersistenceManager.getInstance().deleteStorage(storage.getId());
+				storage = null;
+			}
 		} catch (Exception e) {
 			String errMess = MessageFormat
 					.format(
@@ -91,6 +66,31 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 					.getActiveShell(), Messages.getString("ErrorTitle"),
 					errMess);
 		}
+
+		// refresh view
+		CommandHelper.refreshViews();
+
+		// comment out as refresh view can not run in non ui thread :- (  
+		
+		// PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
+		// new IRunnableWithProgress() {
+		// @Override
+		// public void run(IProgressMonitor monitor)
+		// throws InvocationTargetException,
+		// InterruptedException {
+		// try {
+		// int tasks = resources.size() + 1;
+		// monitor.beginTask("Deleting DDI3 resources", tasks);
+		//
+		// monitor.worked(1);
+		// } catch (Exception e) {
+		// throw new InvocationTargetException(e);
+		// } finally {
+		// monitor.done();
+		// }
+		// }
+		// });
+
 		return null;
 	}
 }
