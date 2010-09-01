@@ -9,11 +9,9 @@ import org.ddialliance.ddieditor.logic.identification.VersionInformation;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 
 /**
- * Model. - provides 'get' and 'set' methods for accessing Id and Version.
- * 
+ * Model - provides accssors for: id, version and agency
  */
 public abstract class Model implements IModel {
-
 	private String id;
 	private String version;
 	private String parentId;
@@ -31,12 +29,14 @@ public abstract class Model implements IModel {
 	 */
 	public Model(String id, String version, String parentId,
 			String parentVersion, String agency) {
-
 		this.id = id;
 		this.version = version;
 		this.parentId = parentId;
 		this.parentVersion = parentVersion;
 		this.agency = agency;
+		if (this.agency == null) {
+			this.agency = "";
+		}
 	}
 
 	public Model(XmlObject xmlObject, String parentId, String parentVersion) {
@@ -49,11 +49,6 @@ public abstract class Model implements IModel {
 		this.parentVersion = parentVersion;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.ddialliance.ddieditor.ui.model.IModel#getId()
-	 */
 	public String getId() {
 		return id;
 	}
@@ -66,11 +61,6 @@ public abstract class Model implements IModel {
 		this.version = version;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.ddialliance.ddieditor.ui.model.IModel#getVersion()
-	 */
 	public String getVersion() {
 		return version;
 	}
@@ -83,41 +73,18 @@ public abstract class Model implements IModel {
 		this.agency = agency;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.ddialliance.ddieditor.ui.model.IModel#setParentId(java.lang.String)
-	 */
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.ddialliance.ddieditor.ui.model.IModel#getParentId()
-	 */
 	public String getParentId() {
 		return this.parentId;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.ddialliance.ddieditor.ui.model.IModel#setParentVersion(java.lang.
-	 * String)
-	 */
 	public void setParentVersion(String parentVersion) {
 		this.parentVersion = parentVersion;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.ddialliance.ddieditor.ui.model.IModel#getParentVersion()
-	 */
 	public String getParentVersion() {
 		return this.parentVersion;
 	}
@@ -127,6 +94,7 @@ public abstract class Model implements IModel {
 		return; // No error found
 	}
 
+	@Override
 	public void applyChange(Object value, Class<?> type) throws Exception {
 		this.create = true;
 		executeGeneralChange(value, type);
@@ -158,6 +126,15 @@ public abstract class Model implements IModel {
 		}
 	}
 
+	/**
+	 * Change the model
+	 * 
+	 * @param value
+	 *            to change to
+	 * @param type
+	 *            identifier on model
+	 * @throws Exception
+	 */
 	public abstract void executeChange(Object value, Class<?> type)
 			throws Exception;
 }
