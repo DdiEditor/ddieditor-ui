@@ -38,15 +38,15 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 					.getActiveShell(), Messages.getString("ErrorTitle"), e
 					.getMessage());
 		}
-		
+
 		// yes - no dialog
-		if(!CommandHelper.confirmResourceDeletion(resources)) {
+		if (!CommandHelper.confirmResourceDeletion(resources)) {
 			return null;
 		}
-		
+
 		// close open editors belonging to resources
 		CommandHelper.closeEditors(resources);
-		
+
 		try {
 			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
 					new IRunnableWithProgress() {
@@ -55,7 +55,7 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 								throws InvocationTargetException,
 								InterruptedException {
 							try {
-								int tasks = resources.size() + 2;
+								int tasks = resources.size() + 1;
 								monitor.beginTask("Deleting DDI3 resources",
 										tasks);
 								for (DDIResourceType ddiResource : resources) {
@@ -73,47 +73,7 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 								}
 
 								// refresh view
-								// TODO refactor boiler plate code to refresh a
-								// view into a rcp command
-								final IWorkbenchWindow[] workbenchWindows = PlatformUI
-										.getWorkbench().getWorkbenchWindows();
-
-								IWorkbenchPage workbenchPage = null;
-								PlatformUI.getWorkbench().getDisplay()
-										.asyncExec(new Runnable() {
-											@Override
-											public void run() {
-												try {
-													PlatformUI
-															.getWorkbench()
-															.showPerspective(
-																	InfoPerspective.ID,
-																	workbenchWindows[0]);
-												} catch (WorkbenchException e) {
-													// TODO Auto-generated catch
-													// block
-													e.printStackTrace();
-												}
-											}
-										});
-								IViewPart iViewPart = workbenchWindows[0]
-										.getActivePage().findView(InfoView.ID);
-								if (iViewPart == null) {
-									iViewPart = workbenchPage
-											.showView(InfoView.ID);
-								}
-								monitor.worked(1);
-
-								// refresh in async to avoid swt thread
-								// violation
-								final View view = (View) iViewPart;
-								PlatformUI.getWorkbench().getDisplay()
-										.asyncExec(new Runnable() {
-											@Override
-											public void run() {
-												view.refreshView();
-											}
-										});
+								CommandHelper.refreshViews();
 								monitor.worked(1);
 							} catch (Exception e) {
 								throw new InvocationTargetException(e);

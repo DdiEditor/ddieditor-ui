@@ -82,43 +82,7 @@ public class NewDDI3File extends org.eclipse.core.commands.AbstractHandler {
 		}
 
 		// update info view
-		// TODO refactor boiler plate code to refresh a
-		// view into a rcp command
-		final IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench()
-				.getWorkbenchWindows();
-
-		IWorkbenchPage workbenchPage = workbenchWindows[0].getActivePage();
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					PlatformUI.getWorkbench().showPerspective(
-							InfoPerspective.ID, workbenchWindows[0]);
-				} catch (WorkbenchException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		IViewPart iViewPart = workbenchWindows[0].getActivePage().findView(
-				InfoView.ID);
-		if (iViewPart == null) {
-			try {
-				iViewPart = workbenchPage.showView(InfoView.ID);
-			} catch (PartInitException e) {
-				throw new ExecutionException(e.getMessage(), e);
-			}
-		}
-
-		// refresh in async to avoid swt thread
-		// violation
-		final View view = (View) iViewPart;
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				view.refreshView();
-			}
-		});
+		CommandHelper.refreshViews();
 		return null;
 	}
 }

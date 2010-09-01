@@ -63,7 +63,19 @@ public class CommandHelper {
 		}
 	}
 
-	public static boolean confirmResourceDeletion(List<DDIResourceType> resources) {
+	public static void refreshViews() throws ExecutionException {
+		IHandlerService handlerService = (IHandlerService) PlatformUI
+				.getWorkbench().getActiveWorkbenchWindow().getService(
+						IHandlerService.class);
+		try {
+			handlerService.executeCommand(RefreshViews.class.getName(), null);
+		} catch (Exception e) {
+			throw new ExecutionException(e.getMessage(), e);
+		}
+	}
+
+	public static boolean confirmResourceDeletion(
+			List<DDIResourceType> resources) {
 		StringBuilder deletion = new StringBuilder();
 		for (Iterator<DDIResourceType> iterator = resources.iterator(); iterator
 				.hasNext();) {
