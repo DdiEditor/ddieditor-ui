@@ -1,15 +1,5 @@
 package org.ddialliance.ddieditor.ui.view;
 
-/**
- * Generic View.
- * 
- */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 import java.util.List;
 
 import org.ddialliance.ddieditor.ui.Activator;
@@ -41,10 +31,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
-import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.dialogs.PatternFilter; 
 import org.eclipse.ui.internal.actions.HelpContentsAction;
 import org.eclipse.ui.part.ViewPart;
 
+/**
+ * Generic View
+ */
 public class View extends ViewPart implements IPropertyListener {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, View.class);
 
@@ -69,7 +62,7 @@ public class View extends ViewPart implements IPropertyListener {
 	private Tree tree;
 	private Text filterText;
 	final PatternFilter nameFilter = new PatternFilter();
-	public static final String ID = "org.ddialliance.ddieditor.ui.view.View";
+	public String ID = "org.ddialliance.ddieditor.ui.view.View";
 
 	/**
 	 * Constructor
@@ -326,6 +319,7 @@ public class View extends ViewPart implements IPropertyListener {
 	@Override
 	public void setFocus() {
 		// Set the focus
+		log.debug("SetFocus: " + getClass().getSimpleName());
 	}
 
 	@Override
