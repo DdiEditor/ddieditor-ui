@@ -4,7 +4,6 @@ package org.ddialliance.ddieditor.ui.model;
  * Label and description model 
  * - provides 'get' and 'set' methods for accessing Labels and Descriptions
  *  sub-elements.
- * 
  */
 import java.util.ArrayList;
 import java.util.Iterator;
