@@ -270,6 +270,8 @@
       <extension point="org.eclipse.ui.startup">
             <startup class="org.ddialliance.ddieditor.ui.perspective.AutoChangePerspectiveListener"
             />
+            <startup class="org.ddialliance.ddieditor.ui.view.AutoUpdateView"
+            />
       </extension>
       <extension
             point="org.eclipse.ui.commands">
@@ -323,6 +325,11 @@
                defaultHandler="org.ddialliance.ddieditor.ui.command.DisplayDebugInfo"
                id="org.ddialliance.ddieditor.ui.command.DisplayDebugInfo"
                name="DisplayDebugInfo">
+         </command>
+         <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.RefreshViews"
+               id="org.ddialliance.ddieditor.ui.command.RefreshViews"
+               name="RefreshViews">
          </command>
       </extension>
       <extension
@@ -475,6 +482,13 @@
                      icon="icons/customize.gif"
                      label="%command.label.11"
                      mnemonic="%command.mnemonic.10"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.ddialliance.ddieditor.ui.command.RefreshViews"
+                     icon="icons/merge.gif"
+                     label="Refresh All Views"
+                     mnemonic="R"
                      style="push">
                </command>
             </menu>
