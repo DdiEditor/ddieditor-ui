@@ -6,16 +6,16 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
-import org.ddialliance.ddieditor.ui.model.Model;
 
-public class Universe extends Model implements IModel {
+public class Universe extends LabelDescription implements IModel {
 	private UniverseDocument doc;
 	private UniverseType type;
 
 	public Universe(UniverseDocument doc, String parentId, String parentVersion)
 			throws Exception {
-		super(doc.getUniverse().getId(), doc.getUniverse().getVersion(), parentId, parentVersion, doc.getUniverse()
-				.getLabelList(), doc.getUniverse().getHumanReadableList());
+		super(doc.getUniverse().getId(), doc.getUniverse().getVersion(),
+				parentId, parentVersion, doc.getUniverse().getLabelList(), doc
+						.getUniverse().getHumanReadableList());
 
 		if (doc == null) {
 			this.doc = UniverseDocument.Factory.newInstance();
@@ -33,7 +33,7 @@ public class Universe extends Model implements IModel {
 		}
 		return null;
 	}
-	
+
 	public LabelType setDisplayDescr(String string) {
 		StructuredStringType descr = super.setDisplayDescr(string);
 		if (descr != null) {
@@ -41,14 +41,13 @@ public class Universe extends Model implements IModel {
 		}
 		return null;
 	}
-	
+
 	public UniverseDocument getDocument() {
 		return doc;
 	}
 
 	@Override
 	public void executeChange(Object value, Class<?> type) throws Exception {
-		// TODO Auto-generated method stub
-
+		// not implemented
 	}
 }
