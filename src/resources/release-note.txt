@@ -8,8 +8,11 @@ Release Data: 2010-
 What's New
 -------------------------------------------------------------------------------
 Item ID:    Description:
- -              Confirmation popup on termination of ingested/ new ddi3 
- resources
+ -              Confirmation popup on ingest of DDI3 file
+ 
+ -              Confirmation popup on delete/ delete all
+ 
+ -              Added lazy view refresh when on cout change resources 
  
  -              Closing of editors in pretermination of resources
    
@@ -17,7 +20,7 @@ Item ID:    Description:
  
  -              Fix of loading items from different resources
  
- -              Removal of VDT binary XML indexing, a GLP project
+ -              Removal of VDT binary XML indexing, a GLP project :- (
  
  -              Added better handling of new ddi3 file creation regarding
  file names. A file name can now be any character value without '*.xml' 
