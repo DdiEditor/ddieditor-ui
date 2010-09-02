@@ -1,32 +1,24 @@
 package org.ddialliance.ddieditor.ui.model.concept;
 
-/**
- * Concept Scheme model.
- * 
- */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 import org.apache.xmlbeans.XmlException;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
-import org.ddialliance.ddieditor.ui.model.LabelDescription;
+import org.ddialliance.ddieditor.ui.model.LabelDescriptionScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class ConceptScheme extends LabelDescription {
+/**
+ * Concept Scheme model
+ */
+public class ConceptScheme extends LabelDescriptionScheme {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			ConceptScheme.class);
 
 	private MaintainableLabelQueryResult maintainableLabelQueryResult;
 
-	
 	/**
 	 * Constructor
 	 * 
@@ -42,12 +34,11 @@ public class ConceptScheme extends LabelDescription {
 			String parentVersion, String agency,
 			MaintainableLabelQueryResult maintainableLabelQueryResult)
 			throws DDIFtpException {
-		
-		super(id, version, parentId, parentVersion, "TODO", maintainableLabelQueryResult);
+
+		super(id, version, parentId, parentVersion, "TODO",
+				maintainableLabelQueryResult);
 		this.maintainableLabelQueryResult = maintainableLabelQueryResult;
 	}
-
-
 
 	/**
 	 * Validates the Concept Scheme before it is saved. It e.g. checks if all
@@ -72,9 +63,9 @@ public class ConceptScheme extends LabelDescription {
 		ConceptSchemeType type = doc.addNewConceptScheme();
 
 		super.getDocument(maintainableLabelQueryResult, type);
-		
-		type.setLabelArray(super.getLabels());
-		type.setDescriptionArray(super.getDescrs());
+
+		type.setLabelArray(super.getLabelsAsArray());
+		type.setDescriptionArray(super.getDescrsAsArray());
 		return doc;
 	}
 

@@ -31,11 +31,13 @@ public class QuestionSchemeDao implements IDao {
 			.getLog(LogType.SYSTEM, QuestionSchemeDao.class);
 
 	@Override
-	public List<LightXmlObjectType> getLightXmlObject(LightXmlObjectType parentDataCollection) throws Exception {
+	public List<LightXmlObjectType> getLightXmlObject(
+			LightXmlObjectType parentDataCollection) throws Exception {
 
 		log.debug("QuestionSchemes.getLightXmlObject()");
 
-		return getLightXmlObject("", "", parentDataCollection.getId(), parentDataCollection.getVersion());
+		return getLightXmlObject("", "", parentDataCollection.getId(),
+				parentDataCollection.getVersion());
 	}
 
 	@Override
@@ -44,8 +46,10 @@ public class QuestionSchemeDao implements IDao {
 			throws Exception {
 		log.debug("QuestionSchemes.getLightXmlObject()");
 
-		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getQuestionSchemesLight(id, version,
-				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager
+				.getInstance().getQuestionSchemesLight(id, version, parentId,
+						parentVersion).getLightXmlObjectList()
+				.getLightXmlObjectList();
 
 		return lightXmlObjectTypeList;
 	}
@@ -64,9 +68,10 @@ public class QuestionSchemeDao implements IDao {
 		log.debug("QuestionScheme.getQuestionSchemesLight(). Id: " + id
 				+ " Version: " + version);
 
-		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getQuestionSchemesLight(id, version,
-				null, null).getLightXmlObjectList().getLightXmlObjectList();
-		log.debug("+++++++++++++++++++"+lightXmlObjectTypeList);
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager
+				.getInstance().getQuestionSchemesLight(id, version, null, null)
+				.getLightXmlObjectList().getLightXmlObjectList();
+		log.debug("+++++++++++++++++++" + lightXmlObjectTypeList);
 		return lightXmlObjectTypeList;
 	}
 
@@ -99,14 +104,17 @@ public class QuestionSchemeDao implements IDao {
 			String parentVersion) throws Exception {
 		log.debug("QuestionSchemes.createQuestionScheme()");
 
-		QuestionSchemeDocument doc = QuestionSchemeDocument.Factory.newInstance();
+		QuestionSchemeDocument doc = QuestionSchemeDocument.Factory
+				.newInstance();
 		IdentificationManager.getInstance().addIdentification(
 				doc.addNewQuestionScheme(),
-				ElementType.getElementType("QuestionScheme").getIdPrefix(), null);
-		IdentificationManager.getInstance().addVersionInformation(doc.getQuestionScheme(), null, null);
+				ElementType.getElementType("QuestionScheme").getIdPrefix(),
+				null);
+		IdentificationManager.getInstance().addVersionInformation(
+				doc.getQuestionScheme(), null, null);
 
 		QuestionScheme model = new QuestionScheme(doc, parentId, parentVersion);
-		return model;		
+		return model;
 	}
 
 	/**

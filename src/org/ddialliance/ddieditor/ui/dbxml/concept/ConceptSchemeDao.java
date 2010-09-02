@@ -16,7 +16,8 @@ import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
 public class ConceptSchemeDao implements IDao {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, ConceptSchemeDao.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			ConceptSchemeDao.class);
 
 	/**
 	 * Get Concept Schemes - light version
@@ -26,13 +27,15 @@ public class ConceptSchemeDao implements IDao {
 	 * @throws Exception
 	 */
 	@Override
-	public List<LightXmlObjectType> getLightXmlObject(LightXmlObjectType parentConceptComponent) throws Exception {
+	public List<LightXmlObjectType> getLightXmlObject(
+			LightXmlObjectType parentConceptComponent) throws Exception {
 
 		log.debug("ConceptSchemes.getLightXmlObject()");
 
-		return getLightXmlObject("", "", parentConceptComponent.getId(), parentConceptComponent.getVersion());
+		return getLightXmlObject("", "", parentConceptComponent.getId(),
+				parentConceptComponent.getVersion());
 	}
- 
+
 	/**
 	 * 
 	 * Get Light version of Concept Schemes
@@ -45,56 +48,64 @@ public class ConceptSchemeDao implements IDao {
 	 * @throws Exception
 	 */
 	@Override
-	public List<LightXmlObjectType> getLightXmlObject(String id, String version, String parentId,
-			String parentVersion) throws Exception {
+	public List<LightXmlObjectType> getLightXmlObject(String id,
+			String version, String parentId, String parentVersion)
+			throws Exception {
 
 		log.debug("ConceptSchemes.getLightXmlObject()");
 
-		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getConceptSchemesLight(id, version,
-				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager
+				.getInstance().getConceptSchemesLight(id, version, parentId,
+						parentVersion).getLightXmlObjectList()
+				.getLightXmlObjectList();
 
 		return lightXmlObjectTypeList;
 	}
-	
-//	/**
-//	 * 
-//	 * Get Light Concept List
-//	 * 
-//	 * - get children (Concepts) of given Concept Scheme
-//	 * 
-//	 * @param id
-//	 * @param version
-//	 * @return List<LightXmlObjectType>
-//	 * @throws Exception
-//	 */
-//	public static List<LightXmlObjectType> getModel(String id, String version) throws Exception {
-//		log.debug("ConceptScheme.getModel(). Id: "+id+" Version: "+version);
-//
-//		DdiManager ddiManager = DdiManager.getInstance();
-//
-//		LightXmlObjectListDocument listDoc = ddiManager.getConceptsLight("", "", id, version);
-//
-//		LightXmlObjectListType lightXmlObjectListType = listDoc.getLightXmlObjectList();
-//
-//		List<LightXmlObjectType> listLightXmlObjectListType = lightXmlObjectListType.getLightXmlObjectList();
-//
-//		return listLightXmlObjectListType;
-//	}
 
+	// /**
+	// *
+	// * Get Light Concept List
+	// *
+	// * - get children (Concepts) of given Concept Scheme
+	// *
+	// * @param id
+	// * @param version
+	// * @return List<LightXmlObjectType>
+	// * @throws Exception
+	// */
+	// public static List<LightXmlObjectType> getModel(String id, String
+	// version) throws Exception {
+	// log.debug("ConceptScheme.getModel(). Id: "+id+" Version: "+version);
+	//
+	// DdiManager ddiManager = DdiManager.getInstance();
+	//
+	// LightXmlObjectListDocument listDoc = ddiManager.getConceptsLight("", "",
+	// id, version);
+	//
+	// LightXmlObjectListType lightXmlObjectListType =
+	// listDoc.getLightXmlObjectList();
+	//
+	// List<LightXmlObjectType> listLightXmlObjectListType =
+	// lightXmlObjectListType.getLightXmlObjectList();
+	//
+	// return listLightXmlObjectListType;
+	// }
 
-//	/**
-//	 * Get Concept Scheme by Id
-//	 * 
-//	 * @param id
-//	 * @param parentId
-//	 * @return ConceptSchemeType
-//	 * @throws Exception
-//	 */
-//	public ConceptSchemeType getConceptSchemeById(String id, String parentId) throws Exception {
-//		log.debug("ConceptScheme.getConceptSchemeById()");
-//		return DdiManager.getInstance().getConceptScheme(id, null, parentId, null).getConceptScheme();
-//	}
-	
+	// /**
+	// * Get Concept Scheme by Id
+	// *
+	// * @param id
+	// * @param parentId
+	// * @return ConceptSchemeType
+	// * @throws Exception
+	// */
+	// public ConceptSchemeType getConceptSchemeById(String id, String parentId)
+	// throws Exception {
+	// log.debug("ConceptScheme.getConceptSchemeById()");
+	// return DdiManager.getInstance().getConceptScheme(id, null, parentId,
+	// null).getConceptScheme();
+	// }
+
 	/**
 	 * Create Concept Scheme object
 	 * 
@@ -106,17 +117,20 @@ public class ConceptSchemeDao implements IDao {
 	 * @throws Exception
 	 */
 	@Override
-	public ConceptScheme create(String id, String version, String parentId, String parentVersion)
-			throws Exception {
+	public ConceptScheme create(String id, String version, String parentId,
+			String parentVersion) throws Exception {
 		log.debug("ConceptSchemes.create()");
 
 		ConceptSchemeDocument doc = ConceptSchemeDocument.Factory.newInstance();
-		IdentificationManager.getInstance().addIdentification(
-				doc.addNewConceptScheme(),
-				ElementType.getElementType("ConceptScheme").getIdPrefix(), null);
+		IdentificationManager.getInstance()
+				.addIdentification(
+						doc.addNewConceptScheme(),
+						ElementType.getElementType("ConceptScheme")
+								.getIdPrefix(), null);
 		IdentificationManager.getInstance().addVersionInformation(
 				doc.getConceptScheme(), null, null);
-		ConceptScheme conceptScheme = new ConceptScheme(doc, parentId, parentVersion);
+		ConceptScheme conceptScheme = new ConceptScheme(doc, parentId,
+				parentVersion);
 		return conceptScheme;
 	}
 
@@ -130,14 +144,15 @@ public class ConceptSchemeDao implements IDao {
 	 * @throws Exception
 	 */
 	@Override
-	public ConceptScheme getModel(String id, String version, String parentId, String parentVersion)
-			throws Exception {
+	public ConceptScheme getModel(String id, String version, String parentId,
+			String parentVersion) throws Exception {
 		log.debug("ConceptSchemes.getConceptScheme()");
 
-		ConceptSchemeDocument conceptSchemeDocument = DdiManager.getInstance().getConceptScheme(id, version,
-				parentId, parentVersion);
+		ConceptSchemeDocument conceptSchemeDocument = DdiManager.getInstance()
+				.getConceptScheme(id, version, parentId, parentVersion);
 
-		ConceptScheme conceptScheme = new ConceptScheme(conceptSchemeDocument, parentId, parentVersion);
+		ConceptScheme conceptScheme = new ConceptScheme(conceptSchemeDocument,
+				parentId, parentVersion);
 
 		return conceptScheme;
 	}
@@ -152,14 +167,13 @@ public class ConceptSchemeDao implements IDao {
 	 * @throws DDIFtpException
 	 */
 	static public void update(ConceptScheme model) throws DDIFtpException {
-		// TODO Version Control - not supported
-		log.debug("Update DBXML Concept Scheme:\n" + model.getConceptSchemeDocument());
 		try {
-			DdiManager.getInstance().updateElement(model.getConceptSchemeDocument(), model.getId(),
+			DdiManager.getInstance().updateElement(
+					model.getConceptSchemeDocument(), model.getId(),
 					model.getVersion());
 		} catch (DDIFtpException e) {
 			log.error("Update DBXML Concept Scheme error: " + e.getMessage());
-			
+
 			throw new DDIFtpException(e.getMessage());
 		}
 	}
@@ -179,15 +193,19 @@ public class ConceptSchemeDao implements IDao {
 	 * @throws Exception
 	 */
 	@Override
-	public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
+	public void delete(String id, String version, String parentId,
+			String parentVersion) throws Exception {
 		log.debug("Delete DBXML Concept Scheme");
-		ConceptScheme conceptScheme = getModel(id, version, parentId, parentVersion);
+		ConceptScheme conceptScheme = getModel(id, version, parentId,
+				parentVersion);
 		try {
-			DdiManager.getInstance().deleteElement(conceptScheme.getConceptSchemeDocument(), conceptScheme.getParentId(),
+			DdiManager.getInstance().deleteElement(
+					conceptScheme.getConceptSchemeDocument(),
+					conceptScheme.getParentId(),
 					conceptScheme.getParentVersion(), "ConceptualComponent");
 		} catch (DDIFtpException e) {
 			log.error("Delete DBXML Concept Scheme error: " + e.getMessage());
-			
+
 			throw new DDIFtpException(e.getMessage());
 		}
 	}
@@ -195,7 +213,8 @@ public class ConceptSchemeDao implements IDao {
 	@Override
 	public void create(IModel model) throws DDIFtpException {
 		log.debug("ConceptSchemeDao.create()");
-		DdiManager.getInstance().createElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
+		DdiManager.getInstance().createElement(model.getDocument(),
+				model.getParentId(), model.getParentVersion(),
 				"ConceptualComponent");
 	}
 

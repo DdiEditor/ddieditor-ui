@@ -6,6 +6,8 @@ import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CategorySchemeDocument;
 import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
@@ -16,53 +18,54 @@ import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
 public class CategorySchemeDao implements IDao {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, CategorySchemeDao.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			CategorySchemeDao.class);
 
 	@Override
-	public IModel create(String id, String version, String parentId, String parentVersion) throws Exception {
-
-		log.debug("CategorySchemeDao.create()");
-		CategorySchemeDocument doc = CategorySchemeDocument.Factory.newInstance();
+	public IModel create(String id, String version, String parentId,
+			String parentVersion) throws Exception {
+		CategorySchemeDocument doc = CategorySchemeDocument.Factory
+				.newInstance();
 		IdentificationManager.getInstance().addIdentification(
 				doc.addNewCategoryScheme(),
-				ElementType.getElementType("CategoryScheme").getIdPrefix(), null);
+				ElementType.getElementType("CategoryScheme").getIdPrefix(),
+				null);
 		IdentificationManager.getInstance().addVersionInformation(
 				doc.getCategoryScheme(), null, null);
-		CategoryScheme categoryScheme = new CategoryScheme(doc, parentId, parentVersion);
+		MaintainableLabelQueryResult maintainableLabelQueryResult = new MaintainableLabelQueryResult();
+		maintainableLabelQueryResult.
+		CategoryScheme categoryScheme = new CategoryScheme(maintainableLabelQueryResult, parentId,
+				parentVersion);																			
 		return categoryScheme;
 	}
 
 	@Override
 	public void create(IModel model) throws DDIFtpException {
-
-		log.debug("CategorySchemeDao.create()");
-		DdiManager.getInstance().createElement(model.getDocument(), model.getParentId(), model.getParentVersion(),
+		DdiManager.getInstance().createElement(model.getDocument(),
+				model.getParentId(), model.getParentVersion(),
 				"CategoryComponent");
 	}
 
 	@Override
-	public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
-
-		log.debug("Delete DBXML Concept Scheme");
-		IModel  model = getModel(id, version, parentId, parentVersion);
-		DdiManager.getInstance()
-				.deleteElement(model.getDocument(), model.getParentId(),
-						model.getParentVersion(), "logicalproduct__LogicalProduct");
+	public void delete(String id, String version, String parentId,
+			String parentVersion) throws Exception {
+		IModel model = getModel(id, version, parentId, parentVersion);
+		DdiManager.getInstance().deleteElement(model.getDocument(),
+				model.getParentId(), model.getParentVersion(),
+				"logicalproduct__LogicalProduct");
 	}
 
 	@Override
-	public List<LightXmlObjectType> getLightXmlObject(LightXmlObjectType parentCategoryScheme) throws Exception {
-
-		log.debug("CategorySchemeDao.getLightXmlObject()");
+	public List<LightXmlObjectType> getLightXmlObject(
+			LightXmlObjectType parentCategoryScheme) throws Exception {
 		return getLightXmlObject("", "", parentCategoryScheme.getId(),
 				parentCategoryScheme.getVersion());
 	}
 
 	@Override
-	public List<LightXmlObjectType> getLightXmlObject(String id, String version, String parentId, String parentVersion)
+	public List<LightXmlObjectType> getLightXmlObject(String id,
+			String version, String parentId, String parentVersion)
 			throws Exception {
-
-		log.debug("CategorySchemeDao.getLightXmlObject()");
 		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager
 				.getInstance().getCategorySchemesLight(id, version, parentId,
 						parentVersion).getLightXmlObjectList()
@@ -74,10 +77,8 @@ public class CategorySchemeDao implements IDao {
 	@Override
 	public CategoryScheme getModel(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-
-		log.debug("CategorySchemeDao.getModel(" + id + ")");
-		CategorySchemeDocument doc = DdiManager.getInstance().getCategoryScheme(id,
-				version, parentId, parentVersion);
+		CategorySchemeDocument doc = DdiManager.getInstance()
+				.getCategoryScheme(id, version, parentId, parentVersion);
 		CategoryScheme model = new CategoryScheme(doc, parentId, parentVersion);
 
 		return model;
