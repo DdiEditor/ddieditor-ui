@@ -17,7 +17,7 @@ import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
  * Label and description model - provides 'get' and 'set' methods for accessing
  * Labels and Descriptions sub-elements
  */
-public abstract class LabelDescription extends Model implements IModel {
+public abstract class LabelDescription extends Model implements IModel, ILabelDescription {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			LabelDescription.class);
 
@@ -49,12 +49,7 @@ public abstract class LabelDescription extends Model implements IModel {
 		this.descrs = descrs;
 	}
 
-	/**
-	 * Get Display Label of Simple Element.
-	 * 
-	 * @return String Label string
-	 * @throws DDIFtpException
-	 */
+	@Override
 	public String getDisplayLabel() throws DDIFtpException {
 
 		if (labels.size() > 0) {
@@ -74,14 +69,7 @@ public abstract class LabelDescription extends Model implements IModel {
 		return "";
 	}
 
-	/**
-	 * Set Label of Display Language.
-	 * 
-	 * @param string
-	 * @return LabelType null - if label updated (no label is added) LabelType
-	 *         is new label added
-	 * @throws DDIFtpException
-	 */
+	@Override
 	public LabelType setDisplayLabel(String string) {
 		XmlObject label = null;
 
@@ -128,13 +116,8 @@ public abstract class LabelDescription extends Model implements IModel {
 		return labelType;
 	}
 
-	/**
-	 * Get Original Description of Simple Element. Original means not
-	 * translated.
-	 * 
-	 * @return String
-	 */
-	public String getDescr() {
+	@Override
+	public String getDisplayDescr() {
 		StructuredStringType descriptionType;
 
 		// Get Description corresponding to language
@@ -149,14 +132,7 @@ public abstract class LabelDescription extends Model implements IModel {
 		return "";
 	}
 
-	/**
-	 * Set Display Description.
-	 * 
-	 * @param string
-	 * @return StructuredStringType null - if description updated (no new
-	 *         description is added) StructuredStringType - if new description
-	 *         added
-	 */
+	@Override
 	public StructuredStringType setDisplayDescr(String string) {
 		XmlObject descr = null;
 
@@ -204,10 +180,12 @@ public abstract class LabelDescription extends Model implements IModel {
 		return descriptionType;
 	}
 
+	@Override
 	public List<LabelType> getLabels() {
 		return labels;
 	}
 
+	@Override
 	public List<StructuredStringType> getDescrs() {
 		return descrs;
 	}
