@@ -587,6 +587,12 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			// guard
+			// TODO
+			if (lightXmlObjectDoc.getLightXmlObjectList().getLightXmlObjectList().isEmpty()) {
+				return;
+			}
 			LightXmlObjectType lightXmlObject = lightXmlObjectDoc
 					.getLightXmlObjectList().getLightXmlObjectList().get(0);
 
