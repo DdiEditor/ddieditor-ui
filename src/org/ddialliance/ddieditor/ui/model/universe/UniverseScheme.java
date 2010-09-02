@@ -1,19 +1,19 @@
 package org.ddialliance.ddieditor.ui.model.universe;
 
 import org.apache.xmlbeans.XmlException;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseSchemeDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseSchemeType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
-import org.ddialliance.ddieditor.ui.model.LabelDescription;
+import org.ddialliance.ddieditor.ui.model.LabelDescriptionScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
-public class UniverseScheme extends LabelDescription {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, UniverseScheme.class);
-
-	private MaintainableLabelQueryResult maintainableLabelQueryResult;
+/**
+ * Universe scheme model
+ */
+public class UniverseScheme extends LabelDescriptionScheme {
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			UniverseScheme.class);
 
 	/**
 	 * Constructor
@@ -30,34 +30,24 @@ public class UniverseScheme extends LabelDescription {
 			String parentVersion, String agency,
 			MaintainableLabelQueryResult maintainableLabelQueryResult)
 			throws DDIFtpException {
-		
-		super(id, version, parentId, parentVersion, "TODO", maintainableLabelQueryResult);
-		this.maintainableLabelQueryResult = maintainableLabelQueryResult;
+		super(maintainableLabelQueryResult, parentId, parentVersion);
 	}
-	
-	public MaintainableLabelQueryResult getMaintainableLabelQueryResult() {
-		return maintainableLabelQueryResult;
-	}
-	
-	/**
-	 * Provides the Universe Scheme Document.
-	 */
-	@Override
-	public UniverseSchemeDocument getDocument() throws DDIFtpException {
 
-		UniverseSchemeDocument doc = UniverseSchemeDocument.Factory.newInstance();
-		UniverseSchemeType type = doc.addNewUniverseScheme();
+//	@Override
+//	public UniverseSchemeDocument getDocument() throws DDIFtpException {
+//		UniverseSchemeDocument doc = UniverseSchemeDocument.Factory
+//				.newInstance();
+//		UniverseSchemeType type = doc.addNewUniverseScheme();
+//
+//		super.getDocument(getMaintainableLabelQueryResult(), type);
+//
+//		type.setLabelArray(super.getLabelsAsArray());
+//		type.setDescriptionArray(super.getDescrsAsArray());
+//		return doc;
+//	}
 
-		super.getDocument(maintainableLabelQueryResult, type);
-		
-		type.setLabelArray(super.getLabels());
-		type.setDescriptionArray(super.getDescrs());
-		return doc;
-	}
-	
 	@Override
 	public void executeChange(Object value, Class<?> type) throws Exception {
-		// TODO Auto-generated method stub
-
+		// not implemented
 	}
 }
