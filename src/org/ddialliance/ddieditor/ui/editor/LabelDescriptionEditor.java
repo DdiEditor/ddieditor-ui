@@ -1,5 +1,6 @@
 package org.ddialliance.ddieditor.ui.editor;
 
+import org.ddialliance.ddieditor.ui.model.ILabelDescription;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -21,7 +22,7 @@ public class LabelDescriptionEditor extends Editor {
 			LabelDescriptionEditor.class);
 
 	private String editorEntityName;
-	private LabelDescription simpleElement;
+	private ILabelDescription simpleElement;
 	private TableViewer tableViewer;
 
 	// May be used for expanding Label Description Tab content
@@ -59,6 +60,6 @@ public class LabelDescriptionEditor extends Editor {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		super.init(site, input);
-		this.simpleElement = (LabelDescription) model;
+		this.simpleElement = (ILabelDescription) model;
 	}
 }
