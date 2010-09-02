@@ -6,7 +6,6 @@ import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CategoryType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
-import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -28,7 +27,6 @@ public class Category extends LabelDescription {
 	 */
 	public Category(CategoryDocument categoryDocument, String parentId,
 			String parentVersion) throws Exception {
-
 		super(categoryDocument.getCategory().getId(), categoryDocument
 				.getCategory().getVersion(), parentId, parentVersion,
 				categoryDocument.getCategory().getLabelList(), categoryDocument
@@ -58,7 +56,6 @@ public class Category extends LabelDescription {
 	 * @return LabelType (always null)
 	 */
 	public LabelType setDisplayLabel(String string) {
-
 		LabelType labelType = super.setDisplayLabel(string);
 		if (labelType != null) {
 			categoryTypeImpl.getLabelList().add(labelType);
@@ -73,7 +70,6 @@ public class Category extends LabelDescription {
 	 * @return StructuredStringType (always null)
 	 */
 	public StructuredStringType setDisplayDescr(String string) {
-
 		StructuredStringType descriptionType = super.setDisplayDescr(string);
 		if (descriptionType != null) {
 			categoryTypeImpl.getDescriptionList().add(descriptionType);
@@ -82,8 +78,8 @@ public class Category extends LabelDescription {
 	}
 
 	/**
-	 * Validates the Category before it is saved. It e.g. checks if all mandatory
-	 * attributes has been given.
+	 * Validates the Category before it is saved. It e.g. checks if all
+	 * mandatory attributes has been given.
 	 * 
 	 * @throws Exception
 	 */
@@ -102,7 +98,5 @@ public class Category extends LabelDescription {
 	@Override
 	public void executeChange(Object value, Class<?> type) throws Exception {
 		// TODO Auto-generated method stub
-
 	}
-
 }
