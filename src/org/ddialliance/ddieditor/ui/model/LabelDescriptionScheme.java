@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.AbstractIdentifiableType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.AbstractVersionableType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DescriptionDocument;
@@ -36,7 +37,9 @@ public abstract class LabelDescriptionScheme extends Model implements IModel,
 	private List<MaintainableLabelUpdateElement> maintainableUpdateDescriptions = new ArrayList<MaintainableLabelUpdateElement>();
 
 	private List<LabelType> labels = new ArrayList<LabelType>(); // aka updates
-	private List<StructuredStringType> descrs = new ArrayList<StructuredStringType>(); 
+	private List<StructuredStringType> descrs = new ArrayList<StructuredStringType>();
+
+	private XmlOptions xmlOptions = new XmlOptions();
 
 	/**
 	 * Constructor
@@ -81,11 +84,14 @@ public abstract class LabelDescriptionScheme extends Model implements IModel,
 		// init updates
 		syncUpdates(labels, maintainableUpdateLabels);
 		syncUpdates(descrs, maintainableUpdateDescriptions);
+
+		xmlOptions.setSaveOuter();
+		xmlOptions.setSaveAggressiveNamespaces();
 	}
-	
-	public void createLabelDescriptionScheme(String localName,
-			String id, String version, String parentId,
-			String parentVersion) throws Exception {
+
+	public void createLabelDescriptionScheme(String localName, String id,
+			String version, String parentId, String parentVersion)
+			throws Exception {
 		// create doc and add new instance of type
 		XmlObject xmlObject = XmlObjectUtil.createXmlObjectDocument(localName);
 		xmlObject = XmlObjectUtil.addXmlObjectType(xmlObject);
@@ -97,13 +103,14 @@ public abstract class LabelDescriptionScheme extends Model implements IModel,
 				null);
 		IdentificationManager.getInstance().addVersionInformation(
 				(AbstractVersionableType) xmlObject, null, null);
-		
+
 		// maintainableLabel - identification
 		MaintainableLabelQueryResult maintainableLabelQueryResult = new MaintainableLabelQueryResult();
 		maintainableLabelQueryResult.setId(id);
 		maintainableLabelQueryResult.setVersion(version);
-		maintainableLabelQueryResult.setAgency(XmlBeansUtil.getXmlAttributeValue(xmlObject.xmlText(), "agency=\""));
-		
+		maintainableLabelQueryResult.setAgency(XmlBeansUtil
+				.getXmlAttributeValue(xmlObject.xmlText(), "agency=\""));
+
 		// maintainableLabel
 	}
 
@@ -196,10 +203,11 @@ public abstract class LabelDescriptionScheme extends Model implements IModel,
 				maintainableLabelUpdateElements.get(i).setCrudValue(i + 1);
 				if (updates.get(i) instanceof LabelType) {
 					maintainableLabelUpdateElements.get(i).setValue(
-							((LabelType) updates.get(i)).xmlText());
+							((LabelType) updates.get(i)).xmlText(xmlOptions));
 				} else if (updates.get(i) instanceof StructuredStringType) {
 					maintainableLabelUpdateElements.get(i).setValue(
-							((StructuredStringType) updates.get(i)).xmlText());
+							((StructuredStringType) updates.get(i))
+									.xmlText());
 				} else {
 					throw new DDIFtpException("Unsupported object type: "
 							+ updates.getClass().getName());
@@ -431,7 +439,7 @@ public abstract class LabelDescriptionScheme extends Model implements IModel,
 		// dirty
 		result.addAll(getDirtyUpdateElements(maintainableUpdateLabels));
 		result.addAll(getDirtyUpdateElements(maintainableUpdateDescriptions));
-				
+
 		return result;
 	}
 
