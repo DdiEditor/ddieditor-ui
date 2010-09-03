@@ -89,9 +89,8 @@ public abstract class LabelDescriptionScheme extends Model implements IModel,
 		xmlOptions.setSaveAggressiveNamespaces();
 	}
 
-	public void createLabelDescriptionScheme(String localName, String id,
-			String version, String parentId, String parentVersion)
-			throws Exception {
+	public static MaintainableLabelQueryResult createLabelDescriptionScheme(
+			String localName) throws Exception {
 		// create doc and add new instance of type
 		XmlObject xmlObject = XmlObjectUtil.createXmlObjectDocument(localName);
 		xmlObject = XmlObjectUtil.addXmlObjectType(xmlObject);
@@ -99,19 +98,21 @@ public abstract class LabelDescriptionScheme extends Model implements IModel,
 		// add version and identification
 		IdentificationManager.getInstance().addIdentification(
 				(AbstractIdentifiableType) xmlObject,
-				ElementType.getElementType("CategoryScheme").getIdPrefix(),
-				null);
+				ElementType.getElementType(localName).getIdPrefix(), null);
 		IdentificationManager.getInstance().addVersionInformation(
 				(AbstractVersionableType) xmlObject, null, null);
 
 		// maintainableLabel - identification
 		MaintainableLabelQueryResult maintainableLabelQueryResult = new MaintainableLabelQueryResult();
-		maintainableLabelQueryResult.setId(id);
-		maintainableLabelQueryResult.setVersion(version);
+		maintainableLabelQueryResult.setId(XmlBeansUtil
+				.getXmlAttributeValue(xmlObject.xmlText(), "id=\""));
+		maintainableLabelQueryResult.setVersion(XmlBeansUtil
+				.getXmlAttributeValue(xmlObject.xmlText(), "version=\""));
 		maintainableLabelQueryResult.setAgency(XmlBeansUtil
 				.getXmlAttributeValue(xmlObject.xmlText(), "agency=\""));
+		maintainableLabelQueryResult.setLocalName(localName);
 
-		// maintainableLabel
+		return maintainableLabelQueryResult;
 	}
 
 	public MaintainableLabelQueryResult getMaintainableLabelQueryResult() {
@@ -189,8 +190,13 @@ public abstract class LabelDescriptionScheme extends Model implements IModel,
 			// find corresponding objects
 			for (int j = 0; j < updates.size(); j++) {
 				try {
-					if (updates.get(j) == maintainableLabelUpdateElements
-							.get(i).getValueAsXmlObject()) {
+					if (log.isDebugEnabled()) {
+						log.debug("Update: " + updates.get(j) + " ~ MLUP: "
+								+ maintainableLabelUpdateElements.get(i));
+					}
+					if (((XmlObject) updates.get(j)).xmlText().equals(
+							maintainableLabelUpdateElements.get(i)
+									.getValueAsXmlObject().xmlText())) {
 						found = true;
 						break;
 					}
@@ -206,8 +212,7 @@ public abstract class LabelDescriptionScheme extends Model implements IModel,
 							((LabelType) updates.get(i)).xmlText(xmlOptions));
 				} else if (updates.get(i) instanceof StructuredStringType) {
 					maintainableLabelUpdateElements.get(i).setValue(
-							((StructuredStringType) updates.get(i))
-									.xmlText());
+							((StructuredStringType) updates.get(i)).xmlText());
 				} else {
 					throw new DDIFtpException("Unsupported object type: "
 							+ updates.getClass().getName());
@@ -276,6 +281,9 @@ public abstract class LabelDescriptionScheme extends Model implements IModel,
 				if (text.length() > 0) {
 					// replace Label:
 					XmlBeansUtil.setTextOnMixedElement(label, text);
+					syncMaintainableLabelUpdateElements(text,
+							maintainableUpdateLabels, labels);
+					syncUpdates(labels, maintainableUpdateLabels);
 				}
 			}
 		}
@@ -288,8 +296,11 @@ public abstract class LabelDescriptionScheme extends Model implements IModel,
 			label.setLang(LanguageUtil.getOriginalLanguage());
 			XmlBeansUtil.setTextOnMixedElement(label, text);
 			labels.add(label);
-			maintainableUpdateLabels.add(new MaintainableLabelUpdateElement(
-					label, MaintainableLabelUpdateElement.NEW));
+			MaintainableLabelUpdateElement newMaintainableLabelUpdateElement = new MaintainableLabelUpdateElement(
+					null, MaintainableLabelUpdateElement.NEW);
+			newMaintainableLabelUpdateElement.setValue(label
+					.xmlText(xmlOptions));
+			maintainableUpdateLabels.add(newMaintainableLabelUpdateElement);
 		}
 
 		return label;
