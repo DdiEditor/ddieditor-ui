@@ -1,8 +1,6 @@
 package org.ddialliance.ddieditor.ui.model.concept;
 
 import org.apache.xmlbeans.XmlException;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptSchemeType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.ui.model.LabelDescriptionScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -35,43 +33,16 @@ public class ConceptScheme extends LabelDescriptionScheme {
 			MaintainableLabelQueryResult maintainableLabelQueryResult)
 			throws DDIFtpException {
 
-		super(id, version, parentId, parentVersion, "TODO",
-				maintainableLabelQueryResult);
-		this.maintainableLabelQueryResult = maintainableLabelQueryResult;
+		super(maintainableLabelQueryResult, parentId, parentVersion);
 	}
 
-	/**
-	 * Validates the Concept Scheme before it is saved. It e.g. checks if all
-	 * mandatory attributes has been given.
-	 * 
-	 * @throws Exception
-	 */
-	public void validate() throws Exception {
-		log.debug("Concept Scheme validation performed");
-
-		// No error found:
-		return;
-	}
-
-	/**
-	 * Provides the Concept Scheme Document.
-	 */
 	@Override
-	public ConceptSchemeDocument getDocument() throws DDIFtpException {
-
-		ConceptSchemeDocument doc = ConceptSchemeDocument.Factory.newInstance();
-		ConceptSchemeType type = doc.addNewConceptScheme();
-
-		super.getDocument(maintainableLabelQueryResult, type);
-
-		type.setLabelArray(super.getLabelsAsArray());
-		type.setDescriptionArray(super.getDescrsAsArray());
-		return doc;
+	public void validate() throws Exception {
+		// not implemented
 	}
 
 	@Override
 	public void executeChange(Object value, Class<?> type) throws Exception {
-		// TODO Auto-generated method stub
-
+		// not implemented
 	}
 }
