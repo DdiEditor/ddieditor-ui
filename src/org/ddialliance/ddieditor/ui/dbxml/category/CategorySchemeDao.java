@@ -8,10 +8,13 @@ import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
+import org.ddialliance.ddieditor.ui.dbxml.DaoSchemeHelper;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
+import org.ddialliance.ddieditor.ui.model.LabelDescriptionScheme;
 import org.ddialliance.ddieditor.ui.model.category.CategoryScheme;
+import org.ddialliance.ddieditor.ui.model.universe.UniverseScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -24,19 +27,13 @@ public class CategorySchemeDao implements IDao {
 	@Override
 	public IModel create(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		CategorySchemeDocument doc = CategorySchemeDocument.Factory
-				.newInstance();
-		IdentificationManager.getInstance().addIdentification(
-				doc.addNewCategoryScheme(),
-				ElementType.getElementType("CategoryScheme").getIdPrefix(),
-				null);
-		IdentificationManager.getInstance().addVersionInformation(
-				doc.getCategoryScheme(), null, null);
-		MaintainableLabelQueryResult maintainableLabelQueryResult = new MaintainableLabelQueryResult();
-		maintainableLabelQueryResult.
-		CategoryScheme categoryScheme = new CategoryScheme(maintainableLabelQueryResult, parentId,
-				parentVersion);																			
-		return categoryScheme;
+		MaintainableLabelQueryResult maintainableLabelQueryResult = LabelDescriptionScheme
+				.createLabelDescriptionScheme("CategoryScheme");
+
+		return new CategoryScheme(maintainableLabelQueryResult.getId(),
+				maintainableLabelQueryResult.getVersion(), parentId,
+				parentVersion, maintainableLabelQueryResult.getAgency(),
+				maintainableLabelQueryResult);
 	}
 
 	@Override
@@ -77,16 +74,17 @@ public class CategorySchemeDao implements IDao {
 	@Override
 	public CategoryScheme getModel(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		CategorySchemeDocument doc = DdiManager.getInstance()
-				.getCategoryScheme(id, version, parentId, parentVersion);
-		CategoryScheme model = new CategoryScheme(doc, parentId, parentVersion);
+		MaintainableLabelQueryResult maintainableLabelQueryResult = DdiManager
+				.getInstance().getCategorySchemeLabel(id, version, parentId,
+						parentVersion);
 
-		return model;
+		return new CategoryScheme(id, version, parentId, parentVersion,
+				maintainableLabelQueryResult.getAgency(),
+				maintainableLabelQueryResult);
 	}
 
 	@Override
 	public void update(IModel model) throws DDIFtpException {
-		DdiManager.getInstance().updateElement(model.getDocument(),
-				model.getId(), model.getVersion());
+		DaoSchemeHelper.update(model);
 	}
 }

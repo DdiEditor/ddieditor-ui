@@ -17,10 +17,15 @@ import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionSchemeType;
 import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
+import org.ddialliance.ddieditor.ui.dbxml.DaoSchemeHelper;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
+import org.ddialliance.ddieditor.ui.model.LabelDescriptionScheme;
+import org.ddialliance.ddieditor.ui.model.concept.ConceptScheme;
 import org.ddialliance.ddieditor.ui.model.question.QuestionScheme;
+import org.ddialliance.ddieditor.ui.model.universe.UniverseScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -102,19 +107,13 @@ public class QuestionSchemeDao implements IDao {
 	 */
 	public QuestionScheme create(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		log.debug("QuestionSchemes.createQuestionScheme()");
+		MaintainableLabelQueryResult maintainableLabelQueryResult = LabelDescriptionScheme
+				.createLabelDescriptionScheme("QuestionScheme");
 
-		QuestionSchemeDocument doc = QuestionSchemeDocument.Factory
-				.newInstance();
-		IdentificationManager.getInstance().addIdentification(
-				doc.addNewQuestionScheme(),
-				ElementType.getElementType("QuestionScheme").getIdPrefix(),
-				null);
-		IdentificationManager.getInstance().addVersionInformation(
-				doc.getQuestionScheme(), null, null);
-
-		QuestionScheme model = new QuestionScheme(doc, parentId, parentVersion);
-		return model;
+		return new QuestionScheme(maintainableLabelQueryResult.getId(),
+				maintainableLabelQueryResult.getVersion(), parentId,
+				parentVersion, maintainableLabelQueryResult.getAgency(),
+				maintainableLabelQueryResult);
 	}
 
 	/**
@@ -128,29 +127,16 @@ public class QuestionSchemeDao implements IDao {
 	 */
 	public QuestionScheme getModel(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		log.debug("QuestionSchemes.getModel()");
-
-		QuestionSchemeDocument questionSchemeDocument = DdiManager
-				.getInstance().getQuestionScheme(id, version, parentId,
+		MaintainableLabelQueryResult maintainableLabelQueryResult = DdiManager
+				.getInstance().getQuestionSchemeLabel(id, version, parentId,
 						parentVersion);
 
-		QuestionScheme questionScheme = new QuestionScheme(
-				questionSchemeDocument, parentId, parentVersion);
-
-		return questionScheme;
+		return new QuestionScheme(id, version, parentId, parentVersion,
+				maintainableLabelQueryResult.getAgency(),
+				maintainableLabelQueryResult);
 	}
 
-	/**
-	 * Create new DBXML Question Scheme
-	 * 
-	 * @param questionScheme
-	 *            question scheme instance
-	 * @param parentId
-	 *            Id. of Data Collection
-	 * @param parentVersion
-	 *            Version of Data Collection
-	 * @throws DDIFtpException
-	 */
+	@Override
 	public void create(IModel questionScheme) throws DDIFtpException {
 		DdiManager.getInstance().createElement(questionScheme.getDocument(),
 				questionScheme.getParentId(),
@@ -158,34 +144,12 @@ public class QuestionSchemeDao implements IDao {
 				"datacollection__DataCollection");
 	}
 
-	/**
-	 * 
-	 * Update DBXML Question Scheme corresponding to the given QuestionScheme
-	 * instance
-	 * 
-	 * @param model
-	 *            question Scheme instance
-	 * @throws DDIFtpException
-	 */
+	@Override
 	public void update(IModel model) throws DDIFtpException {
-		DdiManager.getInstance().updateElement(model.getDocument(),
-				model.getId(), model.getVersion());
+		DaoSchemeHelper.update(model);
 	}
 
-	/**
-	 * 
-	 * Delete DBXML Question Scheme
-	 * 
-	 * @param id
-	 *            Identification
-	 * @param version
-	 *            Version
-	 * @param parentId
-	 *            Parent Identification
-	 * @param parentVersion
-	 *            Parent Version
-	 * @throws Exception
-	 */
+	@Override
 	public void delete(String id, String version, String parentId,
 			String parentVersion) throws Exception {
 		QuestionScheme model = getModel(id, version, parentId, parentVersion);
