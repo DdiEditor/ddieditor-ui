@@ -7,8 +7,8 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public class DdiEditorBackendPreferencePage  extends FieldEditorPreferencePage implements
-		IWorkbenchPreferencePage {
+public class DdiEditorBackendPreferencePage extends FieldEditorPreferencePage
+		implements IWorkbenchPreferencePage {
 
 	public DdiEditorBackendPreferencePage() {
 		super(GRID);
@@ -18,12 +18,21 @@ public class DdiEditorBackendPreferencePage  extends FieldEditorPreferencePage i
 
 	@Override
 	public void createFieldEditors() {
-		addField(new DirectoryFieldEditor(PreferenceConstants.DDIEDITOR_DBXML_HOME,  
-				"&Directory of Oracle &Berkley XML instalation:", getFieldEditorParent()));
-		addField(new DirectoryFieldEditor(PreferenceConstants.DDIEDITOR_DBXML_HOME,  
-				"Directory of DDIEditor XML &enviroment:", getFieldEditorParent()));
+		DirectoryFieldEditor dbXmlInstall = new DirectoryFieldEditor(
+				PreferenceConstants.DDIEDITOR_DBXML_HOME,
+				"&Directory of Oracle &Berkley XML instalation:",
+				getFieldEditorParent());
+		dbXmlInstall.load();
+		addField(dbXmlInstall);
+
+		DirectoryFieldEditor dbXmlEnv = new DirectoryFieldEditor(
+				PreferenceConstants.DDIEDITOR_DBXML_HOME,
+				"Directory of DDIEditor XML &enviroment:",
+				getFieldEditorParent());
+		dbXmlEnv.load();
+		addField(dbXmlEnv);
 	}
-	
+
 	@Override
 	public void init(IWorkbench workbench) {
 	}
