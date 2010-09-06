@@ -21,54 +21,16 @@ public class UniverseSchemeDao implements IDao {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			UniverseSchemeDao.class);
 
-	/**
-	 * Create Universe Scheme object
-	 * 
-	 * @param id
-	 * @param version
-	 * @param parentId
-	 * @param parentVersion
-	 * @param schemeQueryResult
-	 *            (or null)
-	 * @return StudyUnit
-	 * @throws Exception
-	 */
-	public UniverseScheme create(String id, String version,
-			String parentId, String parentVersion,
-			MaintainableLabelQueryResult maintainableLabelQueryResult)
-			throws Exception {
-		UniverseSchemeDocument doc = UniverseSchemeDocument.Factory
-				.newInstance();
-		IdentificationManager.getInstance().addIdentification(
-				doc.addNewUniverseScheme(),
-				ElementType.getElementType("UniverseScheme").getIdPrefix(),
-				null);
-		IdentificationManager.getInstance().addVersionInformation(
-				doc.getUniverseScheme(), null, null);
-
-		UniverseScheme universeScheme = new UniverseScheme(doc
-				.getUniverseScheme().getId(), doc.getUniverseScheme()
-				.getVersion(), parentId, parentVersion, "TODO",
-				maintainableLabelQueryResult);
-
-		return universeScheme;
-	}
-
 	@Override
 	public IModel create(String id, String version, String parentId,
 			String parentVersion) throws Exception {
+		MaintainableLabelQueryResult maintainableLabelQueryResult = LabelDescriptionScheme
+				.createLabelDescriptionScheme("UniverseScheme");
 
-		// log.debug("UniverseSchemeDao.create()");
-		// UniverseSchemeDocument doc =
-		// UniverseSchemeDocument.Factory.newInstance();
-		// IdentificationManager.getInstance().addIdentification(doc.addNewUniverseScheme(),
-		// ElementType.getElementType("UniverseScheme").getIdPrefix(), null);
-		// IdentificationManager.getInstance().addVersionInformation(doc.getUniverseScheme(),
-		// null, null);
-		// UniverseScheme universeScheme = new UniverseScheme(doc, parentId,
-		// parentVersion);
-		return create(id, version, parentId, parentVersion,
-				new MaintainableLabelQueryResult());
+		return new UniverseScheme(maintainableLabelQueryResult.getId(),
+				maintainableLabelQueryResult.getVersion(), parentId,
+				parentVersion, maintainableLabelQueryResult.getAgency(),
+				maintainableLabelQueryResult);
 	}
 
 	@Override
@@ -113,20 +75,20 @@ public class UniverseSchemeDao implements IDao {
 				.getInstance().getUniverseSchemeLabel(id, version, parentId,
 						parentVersion);
 
-		UniverseScheme universeScheme = create(id, version, parentId,
-				parentVersion, maintainableLabelQueryResult);
-
-		return universeScheme;
+		return new UniverseScheme(id, version, parentId, parentVersion,
+				maintainableLabelQueryResult.getAgency(),
+				maintainableLabelQueryResult);
 	}
 
 	@Override
 	public void update(IModel model) throws DDIFtpException {
-		LabelDescriptionScheme ldScheme = (LabelDescriptionScheme)model;
-		
+		LabelDescriptionScheme ldScheme = (LabelDescriptionScheme) model;
+
 		MaintainableLabelQueryResult universeSchemeQueryResult = ldScheme
 				.getMaintainableLabelQueryResult();
 
 		DdiManager.getInstance().updateMaintainableLabel(
-				universeSchemeQueryResult, ldScheme.getMaintainableLabelUpdateElements());
+				universeSchemeQueryResult,
+				ldScheme.getMaintainableLabelUpdateElements());
 	}
 }
