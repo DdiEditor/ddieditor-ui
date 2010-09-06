@@ -7,8 +7,6 @@ import org.ddialliance.ddiftp.util.LanguageUtil;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -23,9 +21,11 @@ public class DdiEditorUiPreferencePage extends FieldEditorPreferencePage
 
 	@Override
 	public void createFieldEditors() {
-		addField(new ComboFieldEditor(PreferenceConstants.DDIEDITORUI_LANGUAGE,
+		ComboFieldEditor comboFieldEditor = new ComboFieldEditor(PreferenceConstants.DDIEDITORUI_LANGUAGE,
 				"&Default language used in user interface:", LanguageUtil
-						.getAvailableLanguages(), getFieldEditorParent()));
+						.getAvailableLanguages(), getFieldEditorParent());
+		comboFieldEditor.load();
+		addField(comboFieldEditor);
 
 		addField(new BooleanFieldEditor(
 				PreferenceConstants.AUTO_CHANGE_PERSPECTIVE, "&"

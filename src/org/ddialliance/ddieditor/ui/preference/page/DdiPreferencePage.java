@@ -22,9 +22,11 @@ public class DdiPreferencePage extends FieldEditorPreferencePage implements
 	public void createFieldEditors() {		
 		addField(new StringFieldEditor(PreferenceConstants.DDI_AGENCY,
 				"&Agency:", getFieldEditorParent()));
-		addField(new ComboFieldEditor(PreferenceConstants.DDI_LANGUAGE,
+		ComboFieldEditor comboFieldEditor = new ComboFieldEditor(PreferenceConstants.DDI_LANGUAGE,
 				"&Default language used when creating new human readable items:", LanguageUtil
-						.getAvailableLanguages(), getFieldEditorParent()));
+				.getAvailableLanguages(), getFieldEditorParent());
+		comboFieldEditor.load();
+		addField(comboFieldEditor);
 	}
 	
 	@Override
