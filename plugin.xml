@@ -484,13 +484,6 @@
                      mnemonic="%command.mnemonic.10"
                      style="push">
                </command>
-               <command
-                     commandId="org.ddialliance.ddieditor.ui.command.RefreshViews"
-                     icon="icons/merge.gif"
-                     label="Refresh All Views"
-                     mnemonic="R"
-                     style="push">
-               </command>
             </menu>
          </menuContribution>
          <menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar">
