@@ -5,6 +5,7 @@ import java.util.List;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
+import org.ddialliance.ddieditor.ui.dbxml.DaoSchemeHelper;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescriptionScheme;
@@ -79,13 +80,6 @@ public class UniverseSchemeDao implements IDao {
 
 	@Override
 	public void update(IModel model) throws DDIFtpException {
-		LabelDescriptionScheme ldScheme = (LabelDescriptionScheme) model;
-
-		MaintainableLabelQueryResult universeSchemeQueryResult = ldScheme
-				.getMaintainableLabelQueryResult();
-
-		DdiManager.getInstance().updateMaintainableLabel(
-				universeSchemeQueryResult,
-				ldScheme.getMaintainableLabelUpdateElements());
+		DaoSchemeHelper.update(model);
 	}
 }
