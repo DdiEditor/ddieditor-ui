@@ -33,19 +33,6 @@ public class UniverseScheme extends LabelDescriptionScheme {
 		super(maintainableLabelQueryResult, parentId, parentVersion);
 	}
 
-//	@Override
-//	public UniverseSchemeDocument getDocument() throws DDIFtpException {
-//		UniverseSchemeDocument doc = UniverseSchemeDocument.Factory
-//				.newInstance();
-//		UniverseSchemeType type = doc.addNewUniverseScheme();
-//
-//		super.getDocument(getMaintainableLabelQueryResult(), type);
-//
-//		type.setLabelArray(super.getLabelsAsArray());
-//		type.setDescriptionArray(super.getDescrsAsArray());
-//		return doc;
-//	}
-
 	@Override
 	public void executeChange(Object value, Class<?> type) throws Exception {
 		// not implemented
