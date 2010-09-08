@@ -17,10 +17,9 @@ public class DaoSchemeHelper {
 		}
 		LabelDescriptionScheme ldScheme = (LabelDescriptionScheme) model;
 
-		MaintainableLabelQueryResult result = ldScheme
-				.getMaintainableLabelQueryResult();
+		MaintainableLabelQueryResult result = ldScheme.getMaintainableLabelQueryResult();
 
-		DdiManager.getInstance().updateMaintainableLabel(result,
-				ldScheme.getMaintainableLabelUpdateElements());
+		DdiManager.getInstance().updateMaintainableLabel(result, ldScheme.getMaintainableLabelUpdateElements());
+		ldScheme.cleanCruds();
 	}
 }
