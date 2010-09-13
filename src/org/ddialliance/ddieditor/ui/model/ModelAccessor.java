@@ -14,7 +14,7 @@ public class ModelAccessor {
 			LightXmlObjectType refered) {
 		IDType id = null;
 		if (reference.getIDList().isEmpty()) {
-			reference.addNewID();
+			id = reference.addNewID();
 		} else {
 			id = reference.getIDList().get(0);
 		}
