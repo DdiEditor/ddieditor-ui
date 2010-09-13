@@ -18,7 +18,7 @@ public class ModelAccessor {
 		} else {
 			id = reference.getIDList().get(0);
 		}
-		XmlBeansUtil.setTextOnMixedElement(id, refered.getId());
+		id.setStringValue(refered.getId());
 
 		return reference;
 	}
