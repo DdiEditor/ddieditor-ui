@@ -16,6 +16,7 @@ import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.ControlConstructSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.IfThenElseDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
+import org.ddialliance.ddieditor.ui.dbxml.instrument.LoopDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
@@ -415,7 +416,13 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getParentId(), lightXmlObject
 										.getParentVersion());
 						break;
-
+					case LOOP:
+						new LoopDao().delete(lightXmlObject
+								.getId(), lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(), lightXmlObject
+										.getParentVersion());
+						break;
+						
 					default:
 						DDIFtpException e = new DDIFtpException(
 								"Editor type not supported: " + entityType,
