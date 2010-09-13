@@ -213,6 +213,27 @@
                   id="org.ddialliance.ddieditor.ui.editor.universe.UniverseEditor"
                   name="%editor.name.16">
             </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.instrument.ControlConstructSchemeEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.instrument.ControlConstructSchemeEditor"
+                  name="ControlConstructSchemeEditor">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.instrument.QuestionConstructEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.instrument.QuestionConstructEditor"
+                  name="QuestionConstructEditor">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor"
+                  name="SequenceEditor">
+            </editor>
       </extension>
       <extension id="org.eclipse.ui.idexportwizard" name="%extension.name"
             point="org.eclipse.ui.exportWizards">
