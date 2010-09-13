@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
@@ -439,6 +440,18 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		group.setLayout(gridLayout);
 		return group;
 	}
+	
+	public Group createSubGroup(Group group, String groupText) {
+		Group subGroup =  new Group(group, SWT.NONE);
+		subGroup.setText(groupText);
+		subGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		subGroup.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, true, false, 2, 1));
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		subGroup.setLayout(gridLayout);
+		
+		return subGroup;
+	}
 
 	public void createPropertiesTab(TabFolder tabFolder) {
 		TabItem tabItem = createTabItem(Messages
@@ -774,6 +787,35 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		// nameList, parentLabel);
 
 		return nameTxt;
+	}
+	
+	public Text createLabelInput(Group group, String labelText,
+			List<LabelType> labelList, String parentLabel) {
+		LabelType label = null;
+		try {
+			label = (LabelType) XmlBeansUtil.getLangElement(LanguageUtil
+					.getDisplayLanguage(), labelList);
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Text text = createTextInput(group, labelText, label == null ? ""
+				: XmlBeansUtil.getTextOnMixedElement(label), label == null ? Boolean.TRUE
+				: Boolean.FALSE);
+
+		if (label == null) {
+			label = org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelDocument.Factory.newInstance()
+					.addNewLabel();
+			label.setTranslatable(true);
+			label.setTranslated(!labelList.isEmpty());
+			label.setLang(LanguageUtil.getOriginalLanguage());
+		}
+		
+		text.addModifyListener(new LabelTypeModyfiListener(label, labelList,
+				editorStatus));
+		
+		return text;
 	}
 
 	public StyledText createStructuredStringInput(Group group,
