@@ -1,7 +1,7 @@
 package org.ddialliance.ddieditor.ui.dbxml.question;
 
 /**
- * Question Items (DBXML).
+ * Question Item.
  * 
  */
 /*
@@ -41,31 +41,7 @@ public class QuestionItemDao implements IDao {
 	public List<LightXmlObjectType> getLightXmlObject(
 			LightXmlObjectType parentQuestionScheme) throws Exception {
 
-		log.debug("QuestionItems.getQuestionItemsLight() - parent: "
-				+ parentQuestionScheme.getId() + "/"
-				+ parentQuestionScheme.getVersion());
-
-		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager
-				.getInstance().getQuestionItemsLight("", "",
-						parentQuestionScheme.getId(),
-						parentQuestionScheme.getVersion())
-				.getLightXmlObjectList().getLightXmlObjectList();
-
-		if (log.isDebugEnabled()) {
-			for (LightXmlObjectType l : lightXmlObjectTypeList) {
-				log.debug("Question Item Id: " + l.getId());
-				if (l.getLabelList().size() > 0) {
-					XmlCursor xmlCursor = l.getLabelArray(0).newCursor();
-					xmlCursor.toLastAttribute();
-					xmlCursor.toNextToken();
-					String result = xmlCursor.getChars();
-					xmlCursor.dispose();
-					log.debug("Question Item Label: " + result);
-				}
-			}
-		}
-
-		return lightXmlObjectTypeList;
+		return getLightXmlObject("", "", parentQuestionScheme.getId(), parentQuestionScheme.getParentVersion());
 	}
 
 	/**
@@ -77,15 +53,11 @@ public class QuestionItemDao implements IDao {
 	 * @return
 	 * @throws Exception
 	 */
-	// @Override
-	// public List<LightXmlObjectType> getLightXmlObject(String id,
-	// String version, String parentId, String parentVersion)
-	// throws Exception;
 	public List<LightXmlObjectType> getLightXmlObject(String id,
 			String version, String parentId, String parentVersion)
 			throws Exception {
 
-		log.debug("QuestionItems.getQuestionItemsLight() - parent: " + parentId
+		log.debug("QuestionItems.getLightXmlObject() - parent: " + parentId
 				+ "/" + parentVersion);
 
 		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager
@@ -94,10 +66,6 @@ public class QuestionItemDao implements IDao {
 				.getLightXmlObjectList();
 
 		if (log.isDebugEnabled()) {
-			boolean numbers;
-			if (numbers = lightXmlObjectTypeList.size() != 1) {
-				log.error("Unexpected numbers of Question Items:" + numbers);
-			}
 			for (LightXmlObjectType l : lightXmlObjectTypeList) {
 				log.debug("Question Item Id: " + l.getId());
 				if (l.getLabelList().size() > 0) {
