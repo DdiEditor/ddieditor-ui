@@ -1,52 +1,92 @@
 package org.ddialliance.ddieditor.ui.model.instrument;
 
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.InitialValueDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.LoopDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
-import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.model.Model;
+import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
-import org.ddialliance.ddiftp.util.DDIFtpException;
 
+/**
+ * Structures a control construct which loops until a limiting condition is met.
+ * The ControlConstruct contained in the Loop operates on the LoopVariable until
+ * the LoopWhile condition is met, and then control is handed back to the
+ * containing control construct.
+ */
 public class Loop extends Model {
 	LoopDocument doc;
 
 	public Loop(LoopDocument doc, String parentId, String parentVersion) {
 		super(doc, parentId, parentVersion);
 		this.doc = doc;
-		this.create = true;
+		this.create = false;
 	}
 
 	@Override
 	public void executeChange(Object value, Class<?> type) throws Exception {
-		// variable reference
-		if (type.equals(ModelIdentifingType.Type_B.class)) {
-			IdentificationManager.getInstance().addReferenceInformation(
-					getLoopVariableReference(), (LightXmlObjectType) value);
+		// init value
+		if (type.equals(ModelIdentifingType.Type_A.class)) {
+			getCode(getInitialValue()).setStringValue((String) value);
 		}
 
-		// init value
-
 		// init value program lang
+		if (type.equals(ModelIdentifingType.Type_B.class)) {
+			getCode(getInitialValue()).setProgrammingLanguage((String) value);
+		}
 
 		// init value source question ref
+		if (type.equals(ModelIdentifingType.Type_C.class)) {
+			ModelAccessor.setReference(getQuestionReference(getInitialValue()),
+					(LightXmlObjectType) value);
+		}
 
 		// loop while
+		if (type.equals(ModelIdentifingType.Type_D.class)) {
+			getCode(getLoopWhile()).setStringValue((String) value);
+		}
 
 		// loop while program lang
+		if (type.equals(ModelIdentifingType.Type_E.class)) {
+			getCode(getLoopWhile()).setProgrammingLanguage((String) value);
+		}
 
 		// loop while source question ref
+		if (type.equals(ModelIdentifingType.Type_F.class)) {
+			ModelAccessor.setReference(getQuestionReference(getLoopWhile()),
+					(LightXmlObjectType) value);
+		}
 
 		// step value
+		if (type.equals(ModelIdentifingType.Type_G.class)) {
+			getCode(getStepValue()).setStringValue((String) value);
+		}
 
 		// step value program lang
+		if (type.equals(ModelIdentifingType.Type_H.class)) {
+			getCode(getStepValue()).setProgrammingLanguage((String) value);
+		}
 
 		// step value source question ref
+		if (type.equals(ModelIdentifingType.Type_I.class)) {
+			ModelAccessor.setReference(getQuestionReference(getStepValue()),
+					(LightXmlObjectType) value);
+		}
 
 		// control construct ref
+		if (type.equals(ModelIdentifingType.Type_J.class)) {
+			ModelAccessor.setReference(getControlConstructReference(),
+					(LightXmlObjectType) value);
+		}
+		
+		// loop variable reference
+		if (type.equals(ModelIdentifingType.Type_K.class)) {
+			// IdentificationManager.getInstance().addReferenceInformation(
+			// getLoopVariableReference(), (LightXmlObjectType) value);
+			ModelAccessor.setReference(getLoopVariableReference(),
+					(LightXmlObjectType) value);
+		}
 	}
 
 	@Override
@@ -101,6 +141,20 @@ public class Loop extends Model {
 		}
 	}
 
+	public ReferenceType getQuestionReference(CodeType codeType) {
+		if (codeType == null && !create) {
+			return null;
+		}
+		ReferenceType ref = null;
+		if (codeType.getSourceQuestionReferenceList().isEmpty()) {
+			ref = create ? codeType. addNewSourceQuestionReference()
+					: null;
+			return ref;
+		} else {
+			return codeType.getSourceQuestionReferenceList().get(0);
+		}
+	}
+
 	public ReferenceType getLoopVariableReference() {
 		ReferenceType ref = doc.getLoop().getLoopVariableReference();
 		if (ref == null) {
@@ -109,26 +163,7 @@ public class Loop extends Model {
 		return ref;
 	}
 
-	
-	public ReferenceType getQuestionReference(CodeType codeType) {
-		if (codeType == null && !create) {
-			return null;
-		}
-		
-		String type = null;
-		try {
-			type = codeType.getDomNode().getLocalName();
-		} catch (Throwable t) {
-			new DDIFtpException("Getting Dom Node exception", t);
-		}
-		if (type == null) {
-			return null;
-		}
-		
-		if (codeType instanceof InitialValueDocument) {
-			System.out.println("break");
-
-		}
+	public ReferenceType getControlConstructReference() {
 		ReferenceType ref = null;
 		if (doc.getLoop().getControlConstructReferenceList().isEmpty()) {
 			ref = create ? doc.getLoop().addNewControlConstructReference()
