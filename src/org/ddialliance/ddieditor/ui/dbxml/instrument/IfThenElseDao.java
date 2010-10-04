@@ -41,7 +41,9 @@ public class IfThenElseDao implements IDao {
 	public List<LightXmlObjectType> getLightXmlObject(String id,
 			String version, String parentId, String parentVersion)
 			throws Exception {
-		return null;
+		return DdiManager.getInstance().getIfThenElsesLight(id, version,
+				parentId, parentVersion).getLightXmlObjectList()
+				.getLightXmlObjectList();
 	}
 
 	/*
