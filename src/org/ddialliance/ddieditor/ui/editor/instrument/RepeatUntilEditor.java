@@ -15,9 +15,12 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.Referen
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.RepeatUntil;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -120,27 +123,34 @@ public class RepeatUntilEditor extends Editor {
 				.getString("editor.label.description"));
 
 		try {
-			createNameInput(
-					group2,
-					Messages.getString("editor.label.name"),
-					modelImpl.getDocument().getRepeatUntil().getConstructNameList(),
-					modelImpl.getDocument().getRepeatUntil().getId());
-
-		createStructuredStringInput(group2, Messages
-				.getString("editor.label.description"), modelImpl.getDocument()
-				.getRepeatUntil().getDescriptionList(), modelImpl.getDocument()
-				.getRepeatUntil().getId());
+			Text txt = createLabelInput(group2, Messages
+					.getString("editor.label.label"), modelImpl.getDocument()
+					.getRepeatUntil().getLabelList(), modelImpl.getDocument()
+					.getRepeatUntil().getId());
+			createTranslation(group2, Messages
+					.getString("editor.button.translate"), modelImpl
+					.getDocument().getControlConstruct().getLabelList(),
+					new LabelTdI(), "", txt);
+			StyledText styledText = createStructuredStringInput(group2,
+					Messages.getString("editor.label.description"), modelImpl
+							.getDocument().getRepeatUntil()
+							.getDescriptionList(), modelImpl.getDocument()
+							.getRepeatUntil().getId());
+			createTranslation(group2, Messages
+					.getString("editor.button.translate"), modelImpl
+					.getDocument().getControlConstruct().getDescriptionList(),
+					new DescriptionTdI(), "", styledText);
 		} catch (DDIFtpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		// id tab
 		createPropertiesTab(getTabFolder());
 
 		// xml tab
 		createXmlTab(modelImpl);
-		
+
 		editorStatus.clearChanged();
 	}
 }

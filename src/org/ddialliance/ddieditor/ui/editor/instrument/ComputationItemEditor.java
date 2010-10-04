@@ -13,9 +13,12 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.Referen
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.ComputationItem;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -110,25 +113,26 @@ public class ComputationItemEditor extends Editor {
 						getEditorIdentification()));
 
 		// description tab
-		// name
 		TabItem tabItem2 = createTabItem(Messages
 				.getString("editor.label.description"));
 		Group group2 = createGroup(tabItem2, Messages
 				.getString("editor.label.description"));
 
 		try {
-			createNameInput(group2, Messages.getString("editor.label.name"),
-					modelImpl.getDocument().getComputationItem()
-							.getConstructNameList(), modelImpl.getDocument()
-							.getComputationItem().getId());
+			Text txt = createLabelInput(group2, Messages.getString("editor.label.label"), modelImpl.getDocument()
+					.getComputationItem().getLabelList(), modelImpl.getDocument().getComputationItem().getId());
 
-		createStructuredStringInput(group2, Messages
-				.getString("editor.label.description"), modelImpl.getDocument()
-				.getComputationItem().getDescriptionList(), modelImpl
-				.getDocument().getComputationItem().getId());
+			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
+					.getComputationItem().getLabelList(), new LabelTdI(), "", txt);
+
+			StyledText styledText = createStructuredStringInput(group2, Messages.getString("editor.label.description"),
+					modelImpl.getDocument().getComputationItem().getDescriptionList(), modelImpl.getDocument()
+							.getComputationItem().getId());
+			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
+					.getComputationItem().getDescriptionList(), new DescriptionTdI(), "", styledText);
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DialogUtil
+			.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
 
 		// id tab

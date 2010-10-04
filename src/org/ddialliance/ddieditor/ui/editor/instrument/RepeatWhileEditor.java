@@ -121,28 +121,26 @@ public class RepeatWhileEditor extends Editor {
 				.getString("editor.label.description"));
 
 		try {
-			createNameInput(
-					group2,
-					Messages.getString("editor.label.name"),
-					modelImpl.getDocument().getRepeatWhile().getConstructNameList(),
+			createLabelInput(group2, Messages.getString("editor.label.name"),
+					modelImpl.getDocument().getRepeatWhile().getLabelList(),
 					modelImpl.getDocument().getRepeatWhile().getId());
 
-		createStructuredStringInput(group2, Messages
-				.getString("editor.label.description"), modelImpl.getDocument()
-				.getRepeatWhile().getDescriptionList(), modelImpl.getDocument()
-				.getRepeatWhile().getId());
+			createStructuredStringInput(group2, Messages
+					.getString("editor.label.description"), modelImpl
+					.getDocument().getRepeatWhile().getDescriptionList(),
+					modelImpl.getDocument().getRepeatWhile().getId());
 
 		} catch (DDIFtpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		// id tab
 		createPropertiesTab(getTabFolder());
 
 		// xml tab
 		createXmlTab(modelImpl);
-		
+
 		editorStatus.clearChanged();
 	}
 }

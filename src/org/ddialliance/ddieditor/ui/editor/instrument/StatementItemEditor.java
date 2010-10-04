@@ -18,6 +18,7 @@ import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.StatementItem;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DynamicTextTdI;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
@@ -163,10 +164,10 @@ public class StatementItemEditor extends Editor implements
 
 		try {
 			// name
-			Text txt = createNameInput(group2, Messages.getString("editor.label.name"), modelImpl.getDocument()
-					.getStatementItem().getConstructNameList(), modelImpl.getDocument().getStatementItem().getId());
+			Text txt = createLabelInput(group2, Messages.getString("editor.label.name"), modelImpl.getDocument()
+					.getStatementItem().getLabelList(), modelImpl.getDocument().getStatementItem().getId());
 			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
-					.getStatementItem().getConstructNameList(), new NameTdI(), "", txt);
+					.getStatementItem().getConstructNameList(), new LabelTdI(), "", txt);
 
 			// description
 			StyledText styledText = createStructuredStringInput(group2, Messages.getString("editor.label.description"),

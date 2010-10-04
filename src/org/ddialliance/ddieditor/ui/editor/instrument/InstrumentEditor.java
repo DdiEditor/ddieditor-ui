@@ -20,6 +20,7 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.Referen
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.Instrument;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
@@ -115,19 +116,20 @@ public class InstrumentEditor extends Editor {
 				.getString("editor.label.description"));
 
 		try {
-			Text txt = createNameInput(group2, Messages.getString("editor.label.name"),
-					modelImpl.getDocument().getInstrument()
-							.getInstrumentNameList(), modelImpl.getDocument()
-							.getInstrument().getId());
+			Text txt = createLabelInput(group2, Messages
+					.getString("editor.label.label"), modelImpl.getDocument()
+					.getInstrument().getLabelList(), modelImpl.getDocument()
+					.getInstrument().getId());
 			createTranslation(group2, Messages
 					.getString("editor.button.translate"), modelImpl
 					.getDocument().getInstrument().getInstrumentNameList(),
-					new NameTdI(), "", txt);
-			
-			StyledText styledText = createStructuredStringInput(group2, Messages
-					.getString("editor.label.description"), modelImpl
-					.getDocument().getInstrument().getDescriptionList(),
-					modelImpl.getDocument().getInstrument().getId());
+					new LabelTdI(), "", txt);
+
+			StyledText styledText = createStructuredStringInput(group2,
+					Messages.getString("editor.label.description"),
+					modelImpl.getDocument().getInstrument()
+							.getDescriptionList(), modelImpl.getDocument()
+							.getInstrument().getId());
 			createTranslation(group2, Messages
 					.getString("editor.button.translate"), modelImpl
 					.getDocument().getInstrument().getDescriptionList(),
