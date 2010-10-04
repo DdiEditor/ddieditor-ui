@@ -7,6 +7,7 @@ import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
+import org.ddialliance.ddieditor.ui.command.RefreshViews;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
@@ -19,7 +20,11 @@ import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PerspectiveAdapter;
 import org.eclipse.ui.PlatformUI;
@@ -79,83 +84,148 @@ public class TreeMenu {
 			input = new EditorInput(inputSelection.getResourceId(),
 					((DDIResourceType) inputSelection.getSelection())
 							.getOrgName(), null, null, null, entityType, mode);
+			// open editor
+			executeOpenEditor(input, entityType, mode, currentView, currentView
+					.getSite().getShell());
 		}
 
 		// light xml object
 		if (inputSelection.getSelection() instanceof LightXmlObjectType) {
 			LightXmlObjectType lightXmlObject = (LightXmlObjectType) inputSelection
 					.getSelection();
+			// open editor
+			defineInputAndOpenEditor(lightXmlObject, mode, inputSelection.getResourceId(),
+					currentView);
+		}
+		
+		// notify any listeners of the view with the actual data of the view
+		treeViewer.setSelection(treeViewer.getSelection());
+	}
+
+	public static void defineInputAndOpenEditor(LightXmlObjectType lightXmlObject,
+			EditorModeType mode, String resourceId, View currentView) {
+		// current view
+		if (currentView == null) {
+			IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
+					.getWorkbenchWindows();
+			IWorkbenchPage page = null;
+			for (int i = 0; i < windows.length; i++) {
+				page = windows[i].getActivePage();
+			}
 
 			// guard
-			if (entityType == null) {
-				try {
-					entityType = ElementType.getElementType(lightXmlObject
-							.getElement());
-				} catch (DDIFtpException e) {
-					DialogUtil.errorDialog(currentView.getSite().getShell(),
-							currentView.ID, null, e.getMessage(), e);
-					return;
+			if (page == null) {
+				log.warn("No view pressent", new Throwable());
+			} else {
+				IViewReference[] viewRefs = page.getViewReferences();
+				for (int j = 0; j < viewRefs.length; j++) {
+					IViewPart viewPart = page.findView(viewRefs[j].getId());
+					if (viewPart != null && viewPart instanceof View) {
+						currentView = (View) viewPart;
+					}
 				}
 			}
-
-			String parentId = "";
-			String parentVersion = "";
-			ElementType selectEntityType = null;
-			try {
-				selectEntityType = ElementType.getElementType(lightXmlObject
-						.getElement());
-			} catch (DDIFtpException e) {
-				DialogUtil.errorDialog(currentView.getSite().getShell(),
-						currentView.ID, null, e.getMessage(), e);
-				return;
-			}
-			if (entityType.equals(selectEntityType)) {
-				parentId = lightXmlObject.getParentId();
-				parentVersion = lightXmlObject.getParentVersion();
-			} else {
-				parentId = lightXmlObject.getId();
-				parentVersion = lightXmlObject.getVersion();
-			}
-			input = new EditorInput(inputSelection.getResourceId(),
-					lightXmlObject.getId(), lightXmlObject.getVersion(),
-					parentId, parentVersion, entityType, mode);
 		}
+
+		// shell - view id
+		Shell shell;
+		String currentViewId;
+		if (currentView != null) {
+			shell = currentView.getSite().getShell();
+			currentViewId = currentView.ID;
+		} else {
+			shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+			currentViewId = "NA";
+		}
+
+		// element type
+		ElementType entityType = null;
+		try {
+			entityType = ElementType
+					.getElementType(lightXmlObject.getElement());
+		} catch (DDIFtpException e) {
+			// guard
+			DialogUtil.errorDialog(shell, currentViewId, null, e.getMessage(),
+					e);
+			return;
+		}
+
+		// parent - child relation
+		String parentId = "";
+		String parentVersion = "";
+		ElementType selectEntityType = null;
+		try {
+			selectEntityType = ElementType.getElementType(lightXmlObject
+					.getElement());
+		} catch (DDIFtpException e) {
+			DialogUtil.errorDialog(shell, currentViewId, null, e.getMessage(),
+					e);
+			return;
+		}
+		if (entityType.equals(selectEntityType)) {
+			parentId = lightXmlObject.getParentId();
+			parentVersion = lightXmlObject.getParentVersion();
+		} else {
+			parentId = lightXmlObject.getId();
+			parentVersion = lightXmlObject.getVersion();
+		}
+
+		// editor input
+		EditorInput input = new EditorInput(resourceId, lightXmlObject.getId(),
+				lightXmlObject.getVersion(), parentId, parentVersion,
+				entityType, mode);
 
 		if (log.isDebugEnabled()) {
 			log.debug("EditorMode:" + mode + ", elementType: " + entityType);
 		}
 
-		// open editor
+		// guard
 		if (input == null) {
 			DDIFtpException e = new DDIFtpException(
 					"editor.editelement.notimplemented",
-					new Object[] { inputSelection.getSelection().getClass()
-							.getName() }, new Throwable());
-			DialogUtil.errorDialog(currentView.getSite().getShell(),
-					currentView.ID, "Error", e.getMessage(), e);
+					new Object[] { lightXmlObject.getClass().getName() },
+					new Throwable());
+			DialogUtil.errorDialog(shell, currentView.ID, "Error", e
+					.getMessage(), e);
 			return;
 		}
 
+		// open editor
+		executeOpenEditor(input, entityType, mode, currentView, shell);
+	}
+
+	private static void executeOpenEditor(EditorInput input,
+			ElementType entityType, EditorModeType mode, View currentView,
+			Shell shell) {
 		try {
 			Editor editor = (Editor) PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getActivePage().openEditor(
 							input, entityType.getEditorId());
 
 			// add update on save listener
-			editor.addPropertyListener(currentView);
+			if (currentView != null) {
+				editor.addPropertyListener(currentView);
+			} else {
+				// TODO Callback from editor to view on change not possible, no
+				// view specified
+				log
+						.warn(
+								"Callback from editor to view on change not possible, no view specified!!!",
+								new Throwable());
+			}
 
 			// set editor as dirty on new
 			if (mode.equals(EditorModeType.NEW)) {
 				editor.editorStatus.setChanged();
 			}
 		} catch (PartInitException e) {
-			DialogUtil.errorDialog(currentView.getSite().getShell(),
-					currentView.ID, "Error", e.getMessage() + input, e);
+			DialogUtil.errorDialog(shell, currentView.ID, "Error", e
+					.getMessage()
+					+ input, e);
 			return;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		// notify any listeners of the view with the actual data of the view
-		treeViewer.setSelection(treeViewer.getSelection());
 	}
 
 	public InputSelection defineSelection(TreeViewer treeViewer, String ID) {
