@@ -16,6 +16,7 @@ import org.ddialliance.ddieditor.ui.editor.instrument.RepeatUntilEditor;
 import org.ddialliance.ddieditor.ui.editor.instrument.RepeatWhileEditor;
 import org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor;
 import org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor;
+import org.ddialliance.ddieditor.ui.editor.question.MultipleQuestionItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
 import org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor;
@@ -35,11 +36,11 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 /**
  * Type to bind DDI elements with Eclipse RCP via the following properties:
  * <ul>
- * <li>elementName DDI local name</li>
- * <li>perspectiveId preferred RCP prospective ID</li>
- * <li>editorId corresponding RCP editor ID</li>
- * <li>idPrefix prefix for DDI ID generation</li>
- * <li>displayMessageEntry message key for retrieving i18n label of elementName</li>
+ * <li>elementName - DDI local name</li>
+ * <li>perspectiveId - preferred RCP perspective ID</li>
+ * <li>editorId - corresponding RCP editor ID</li>
+ * <li>idPrefix - prefix for DDI ID generation</li>
+ * <li>displayMessageEntry - message key for retrieving i18n label of elementName</li>
  * </ul>
  */
 public enum ElementType {
@@ -64,8 +65,10 @@ public enum ElementType {
 
 	// question
 	QUESTION_SCHEME("QuestionScheme", QuestionsPerspective.ID, QuestionSchemeEditor.ID, "ques",
-			"QuestionItemView.label.questionSchemeLabel.QuesitionScheme", ""), QUESTION_ITEM("QuestionItem",
-			QuestionsPerspective.ID, QuestionItemEditor.ID, "quei",
+			"QuestionItemView.label.questionSchemeLabel.QuesitionScheme", ""),
+	MULTIPLE_QUESTION_ITEM("MultipleQuestionItem", QuestionsPerspective.ID, MultipleQuestionItemEditor.ID, "mquei",
+			"QuestionItemView.label.multipleQuestionItemLabel.MultipleQuestionItem", ""),
+	QUESTION_ITEM("QuestionItem", QuestionsPerspective.ID, QuestionItemEditor.ID, "quei",
 			"QuestionItemView.label.questionItemLabel.QuestionItem", ""),
 
 	// category
