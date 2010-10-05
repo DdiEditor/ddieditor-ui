@@ -38,7 +38,7 @@ public class QuestionItemView extends View {
 				ElementType.QUESTION_SCHEME,
 				Messages
 						.getString("QuestionItemView.label.questionItemsTreeGroup.QuestionItemStructure"),
-				Arrays.asList(ElementType.QUESTION_ITEM));
+				Arrays.asList(ElementType.MULTIPLE_QUESTION_ITEM, ElementType.QUESTION_ITEM));
 	}
 
 }
