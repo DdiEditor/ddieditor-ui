@@ -20,9 +20,11 @@ import org.ddialliance.ddieditor.ui.dbxml.category.CategorySchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.question.MultipleQuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseSchemeDao;
+import org.ddialliance.ddieditor.ui.model.question.MultipleQuestionItem;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -224,11 +226,14 @@ public class TreeContentProvider implements IStructuredContentProvider,
 							lightXmlObjectType).toArray();
 					// question scheme
 				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
-					contentList = new QuestionItemDao().getLightXmlObject(
-							lightXmlObjectType).toArray();
-				}
-				// control construct scheme
-				else if (lightXmlTypeLocalname.equals("ControlConstructScheme")) {
+					List<LightXmlObjectType> list = new MultipleQuestionItemDao().getLightXmlObject(lightXmlObjectType);
+					list.addAll(new QuestionItemDao().getLightXmlObject(lightXmlObjectType));
+					contentList = list.toArray();
+					// multiple question item
+				} else if (lightXmlTypeLocalname.equals("MultipleQuestionItem")) {
+					contentList = new QuestionItemDao().getLightXmlObject(lightXmlObjectType).toArray();
+					// control construct scheme
+				} else if (lightXmlTypeLocalname.equals("ControlConstructScheme")) {
 					contentList = DdiManager.getInstance()
 							.getQuestionConstructsLight(null, null,
 									lightXmlObjectType.getId(),
@@ -295,6 +300,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 	@Override
 	public boolean hasChildren(Object element) {
 		// light xml beans
+		System.out.println(element.toString());
 		if (element instanceof LightXmlObjectType) {
 			String localName = ((LightXmlObjectType) element).getElement();
 			boolean result = false;
@@ -304,6 +310,11 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				result = true;
 				if (log.isDebugEnabled()) {
 					log.debug(localName + ": " + result);
+				}
+			}
+			if (localName.equals("MultipleQuestionItem")) {
+				if (getChildren(element).length > 0) {
+					result = true;
 				}
 			}
 			// TODO check up on this, might add other *Names maybe in property
