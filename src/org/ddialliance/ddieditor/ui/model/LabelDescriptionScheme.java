@@ -345,7 +345,7 @@ public abstract class LabelDescriptionScheme extends Model implements IModel, IL
 
 		// new
 		if (descr == null && text != null && !text.equals("")) {
-			StructuredStringType descriptionType = (StructuredStringType) descr;
+			StructuredStringType descriptionType;
 			descriptionType = LabelDocument.Factory.newInstance().addNewLabel();
 			descriptionType.setTranslated(false);
 			descriptionType.setTranslatable(true);
