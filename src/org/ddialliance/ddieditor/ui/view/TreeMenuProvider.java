@@ -18,6 +18,7 @@ import org.ddialliance.ddieditor.ui.dbxml.instrument.IfThenElseDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.LoopDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
+import org.ddialliance.ddieditor.ui.dbxml.question.MultipleQuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseDao;
@@ -385,6 +386,12 @@ public class TreeMenuProvider extends TreeMenu {
 						dao.delete(lightXmlObject.getId(), lightXmlObject
 								.getVersion(), lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						break;
+					case MULTIPLE_QUESTION_ITEM:
+						new MultipleQuestionItemDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(), lightXmlObject
+										.getParentId(), lightXmlObject
+										.getParentVersion());
 						break;
 					case QUESTION_ITEM:
 						new QuestionItemDao().delete(lightXmlObject.getId(),
