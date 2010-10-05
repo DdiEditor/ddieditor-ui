@@ -109,6 +109,13 @@
                   default="false" icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
                   name="%editor.name"> </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.question.MultipleQuestionItemEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.question.MultipleQuestionItemEditor"
+                  name="%editor.name.17">
+            </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
                   default="false" icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
