@@ -91,8 +91,8 @@ public class TreeMenu {
 		treeViewer.setSelection(treeViewer.getSelection());
 	}
 
-	public static void defineInputAndOpenEditor(ElementType entityType, LightXmlObjectType lightXmlObject, EditorModeType mode,
-			String resourceId, View currentView) {
+	public static void defineInputAndOpenEditor(ElementType newEntityType, LightXmlObjectType lightXmlObject,
+			EditorModeType mode, String resourceId, View currentView) {
 		// current view
 		if (currentView == null) {
 			IWorkbenchWindow windows[] = PlatformUI.getWorkbench().getWorkbenchWindows();
@@ -130,24 +130,36 @@ public class TreeMenu {
 		String parentId = "";
 		String parentVersion = "";
 		ElementType selectEntityType = null;
+		ElementType entityType = null;
 		try {
 			selectEntityType = ElementType.getElementType(lightXmlObject.getElement());
 		} catch (DDIFtpException e) {
 			DialogUtil.errorDialog(shell, currentViewId, null, e.getMessage(), e);
 			return;
 		}
-		// parent
-		if (entityType.equals(selectEntityType)) {
+
+		if (mode.equals(EditorModeType.NEW)) {
+			entityType = newEntityType;
+			// parent
+			if (newEntityType.equals(selectEntityType)) {
+				parentId = lightXmlObject.getParentId();
+				parentVersion = lightXmlObject.getParentVersion();
+			}
+			// child/ default
+			else {
+				parentId = lightXmlObject.getId();
+				parentVersion = lightXmlObject.getVersion();
+			}
+		} else if (mode.equals(EditorModeType.EDIT)) {
+			entityType = selectEntityType;
 			parentId = lightXmlObject.getParentId();
 			parentVersion = lightXmlObject.getParentVersion();
-		}
-		// child
-		else {
-			parentId = lightXmlObject.getId();
-			parentVersion = lightXmlObject.getVersion();
+		} else {
+			DDIFtpException e = new DDIFtpException("Unsupported Editor Mode");
+			DialogUtil.errorDialog(shell, currentView.ID, "Error", e.getMessage(), e);
+			return;
 		}
 
-		// editor input
 		EditorInput input = new EditorInput(resourceId, lightXmlObject.getId(), lightXmlObject.getVersion(), parentId,
 				parentVersion, entityType, mode);
 
