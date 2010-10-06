@@ -27,6 +27,7 @@ public class SequenceMenuPopupAddDialog extends Dialog {
 	Combo combo;
 	ReferenceSelectionCombo selectCombo;
 	LightXmlObjectType result;
+	int beforeAfter;
 
 	String title;
 	String label;
@@ -88,6 +89,7 @@ class SelectionAdapter implements SelectionListener {
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 		dialog.result = dialog.selectCombo.getResult();
+		dialog.beforeAfter = dialog.combo.getSelectionIndex();
 	}
 
 	@Override
