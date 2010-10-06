@@ -1,6 +1,7 @@
 package org.ddialliance.ddieditor.ui.editor.instrument;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,9 +18,9 @@ import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.SequenceDao;
-import org.ddialliance.ddieditor.ui.editor.CellEditorListener;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.model.instrument.Sequence;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
@@ -34,19 +35,16 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -74,7 +72,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 	Map<String, LightXmlObjectType> controlConstructMap = new HashMap<String, LightXmlObjectType>();
 
 	private TableViewer tableViewer;
-	private Table table;
+	// private Table table;
 	private List items = new ArrayList();
 
 	private enum PopupAction {
@@ -136,16 +134,201 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		// provider
 		tableViewer = new TableViewer(group, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
-		table = tableViewer.getTable();
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		tableViewer.getTable().setLayoutData(
+				new GridData(SWT.FILL, SWT.FILL, true, true));
 		tableViewer.setContentProvider(new SequenceTableContentProvider());
 		SequenceLabelProvider tableLabelProvider = new SequenceLabelProvider();
 		tableLabelProvider.createColumns(tableViewer);
 		tableViewer.setLabelProvider(tableLabelProvider);
 		tableViewer.setInput(items);
 
+		// dnd
+		int operations = DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT;
+		Transfer[] transferTypes = new Transfer[] { LightXmlObjectTransfer
+				.getInstance()
+		// , TextTransfer.getInstance()
+		};
+
+		//
+		// drag
+		//
+
+		// jface
+		// tableViewer.addDragSupport(operations, transferTypes,
+		// new SequenceDragListener(tableViewer));
+
+		// swt
+		// DragSource source = new DragSource(tableViewer.getTable(),
+		// DND.DROP_MOVE);
+		// source.setTransfer(transferTypes);
+		// source.addDragListener(new DragSourceAdapter() {
+		// public void dragSetData(DragSourceEvent event) {
+		// // Get the selected items in the drag source
+		// log.debug("dragSetData");
+		// DragSource ds = (DragSource) event.widget;
+		// Table table = (Table) ds.getControl();
+		// TableItem[] selection = table.getSelection();
+		//
+		// StringBuffer buff = new StringBuffer();
+		// for (int i = 0, n = selection.length; i < n; i++) {
+		// buff.append(selection[i].getText());
+		// }
+		// event.data = buff.toString();
+		// }
+		//
+		// @Override
+		// public void dragStart(DragSourceEvent event) {
+		// log.debug("dragStart");
+		// event.doit=true;
+		// //super.dragStart(event);
+		// }
+		//
+		// @Override
+		// public void dragFinished(DragSourceEvent event) {
+		// log.debug("dragFinished");
+		// super.dragFinished(event);
+		// }
+		// });
+
+		//		 
+		// drop
+		//
+
+		// jface
+		// SequenceDropListener test = new SequenceDropListener(tableViewer);
+		// tableViewer.addDropSupport(operations, transferTypes,
+		// test);
+
+		// swt
+		// DropTarget target = new DropTarget(tableViewer.getTable(),
+		// DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT);
+		// target.setTransfer(transferTypes);
+		// target.addDropListener(new DropTargetAdapter() {
+		// public void dragEnter(DropTargetEvent event) {
+		// if (event.detail == DND.DROP_DEFAULT) {
+		// event.detail = (event.operations & DND.DROP_COPY) != 0 ?
+		// DND.DROP_COPY : DND.DROP_NONE;
+		// }
+		//
+		// // Allow dropping text only
+		// for (int i = 0, n = event.dataTypes.length; i < n; i++) {
+		// if (TextTransfer.getInstance().isSupportedType(event.dataTypes[i])) {
+		// event.currentDataType = event.dataTypes[i];
+		// }
+		// }
+		// }
+		//
+		// public void dragOver(DropTargetEvent event) {
+		// event.feedback = DND.FEEDBACK_SELECT | DND.FEEDBACK_SCROLL;
+		// }
+		// public void drop(DropTargetEvent event) {
+		// if
+		// (TextTransfer.getInstance().isSupportedType(event.currentDataType)) {
+		// // Get the dropped data
+		// DropTarget target = (DropTarget) event.widget;
+		// Table table = (Table) target.getControl();
+		// String data = (String) event.data;
+		//
+		// // Create a new item in the table to hold the dropped data
+		// TableItem item = new TableItem(table, SWT.NONE);
+		// item.setText(new String[] { data });
+		// table.redraw();
+		// }
+		// }
+		// });
+
+		// tableViewer.addDropSupport(operations, transferTypes,
+		// new DropTargetListener() {
+		//			
+		// @Override
+		// public void dropAccept(DropTargetEvent event) {
+		// // TODO Auto-generated method stub
+		// System.out.println("break");
+		// }
+		//			
+		// @Override
+		// public void drop(DropTargetEvent event) {
+		// // TODO Auto-generated method stub
+		// System.out.println("break");
+		// }
+		//			
+		// @Override
+		// public void dragOver(DropTargetEvent event) {
+		// // TODO Auto-generated method stub
+		// System.out.println("break");
+		// }
+		//			
+		// @Override
+		// public void dragOperationChanged(DropTargetEvent event) {
+		// // TODO Auto-generated method stub
+		// System.out.println("break");
+		// }
+		//			
+		// @Override
+		// public void dragLeave(DropTargetEvent event) {
+		// // TODO Auto-generated method stub
+		// System.out.println("break");
+		// }
+		//			
+		// @Override
+		// public void dragEnter(DropTargetEvent event) {
+		// // TODO Auto-generated method stub
+		// System.out.println("break");
+		// }
+		// });
+		// DropTarget target = new DropTarget(tableViewer.getTable(),
+		// DND.DROP_MOVE );
+		// target.setTransfer(transferTypes);
+		// target.addDropListener(new DropTargetAdapter() {
+		// public void dragEnter(DropTargetEvent event) {
+		// log.debug("dragEnter");
+		// if (event.detail == DND.DROP_DEFAULT) {
+		// event.detail = (event.operations & DND.DROP_COPY) != 0 ?
+		// DND.DROP_COPY
+		// : DND.DROP_NONE;
+		// }
+		//
+		// // Allow dropping text only
+		// for (int i = 0, n = event.dataTypes.length; i < n; i++) {
+		// if (TextTransfer.getInstance().isSupportedType(
+		// event.dataTypes[i])) {
+		// event.currentDataType = event.dataTypes[i];
+		// }
+		// }
+		// }
+		//
+		// public void dragOver(DropTargetEvent event) {
+		// log.debug("dragOver");
+		// event.feedback = DND.FEEDBACK_SELECT | DND.FEEDBACK_SCROLL;
+		// }
+		//
+		// public void drop(DropTargetEvent event) {
+		// log.debug("drop");
+		// if (TextTransfer.getInstance().isSupportedType(
+		// event.currentDataType)) {
+		// // Get the dropped data
+		// DropTarget target = (DropTarget) event.widget;
+		// Table table = (Table) target.getControl();
+		// String data = (String) event.data;
+		//
+		// // Create a new item in the table to hold the dropped data
+		// TableItem item = new TableItem(table, SWT.NONE);
+		// item.setText(new String[] { data });
+		// table.redraw();
+		// }
+		// }
+		//
+		// @Override
+		// public void dropAccept(DropTargetEvent event) {
+		// log.debug("dropAccept");
+		// // TODO Auto-generated method stub
+		// super.dropAccept(event);
+		// }
+		//
+		// });
+
 		// popup menu
-		Menu menu = new Menu(tableViewer.getTable());
+		Menu menu = new Menu(tableViewer.getControl());
 
 		// menu add
 		final MenuItem addMenuItem = new MenuItem(menu, SWT.CASCADE);
@@ -260,28 +443,35 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		for (int i = 0; i < tableItems.length; i++) {
 			LightXmlObjectType selectedLightXmlObject = (LightXmlObjectType) tableItems[i]
 					.getData();
-			if (log.isDebugEnabled()) {
-				log.debug(selectedLightXmlObject);
-			}
 
 			// add
-			MaintainableLightLabelQueryResult controlConstructRefListTemp = null;
-			try {
-				controlConstructRefListTemp = DdiManager.getInstance()
-						.getInstrumentLabel(null, null, null, null);
-			} catch (DDIFtpException e) {
-				DialogUtil.errorDialog(getSite().getShell(), ID, null, e
-						.getMessage(), e);
-			}
-			List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
-			for (LinkedList<LightXmlObjectType> lightXmlObjectList : controlConstructRefListTemp
-					.getResult().values()) {
-				controlConstructRefList.addAll(lightXmlObjectList);
-			}
-			controlConstructRefListTemp = null;
-			controlConstructRefList.removeAll(items);
-
 			if (action.equals(PopupAction.ADD)) {
+				MaintainableLightLabelQueryResult labelQueryResult = null;
+				List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
+				try {
+					labelQueryResult = DdiManager.getInstance()
+							.getInstrumentLabel(null, null, null, null);
+				} catch (DDIFtpException e) {
+					DialogUtil.errorDialog(getSite().getShell(), ID, null, e
+							.getMessage(), e);
+				}
+
+				for (LinkedList<LightXmlObjectType> search : labelQueryResult
+						.getResult().values()) {
+					Iterator<LightXmlObjectType> iterator = search.iterator();
+					while (iterator.hasNext()) {
+						LightXmlObjectType lightXmlObjectType = iterator.next();
+						for (LightXmlObjectType item : (Collection<LightXmlObjectType>) items) {
+							if (lightXmlObjectType.getId().equals(item.getId())) {
+								iterator.remove();
+								continue; // guard to not remove it twice in
+								// case of duplicates
+							}
+						}
+					}
+					controlConstructRefList.addAll(search);
+				}
+				labelQueryResult = null;
 				SequenceMenuPopupAddDialog addDialog = new SequenceMenuPopupAddDialog(
 						getSite().getShell(), Messages
 								.getString("SequenceEditor.adddialog.title"),
@@ -289,7 +479,6 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 						controlConstructRefList, modelImpl);
 				addDialog.open();
 
-				// log.debug();
 				if (addDialog.getResult() != null) {
 					int count = 0; // count is before
 					for (Iterator<LightXmlObjectType> iterator = items
@@ -297,7 +486,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 						LightXmlObjectType lightXmlObject = iterator.next();
 						if (lightXmlObject.equals(selectedLightXmlObject)) {
 							update = true;
-							int insert = addDialog.combo.getSelectionIndex() == 1 ? count + 1
+							int insert = addDialog.beforeAfter == 0 ? count + 1
 									: count;
 
 							if (insert < items.size()) {
@@ -332,9 +521,10 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			// edit
 			else if (action.equals(PopupAction.EDIT)) {
 				try {
-					TreeMenu.defineInputAndOpenEditor(selectedLightXmlObject,
-							EditorModeType.EDIT, PersistenceManager
-									.getInstance().getWorkingResource(), null);
+					TreeMenu.defineInputAndOpenEditor(null,
+							selectedLightXmlObject, EditorModeType.EDIT,
+							PersistenceManager.getInstance()
+									.getWorkingResource(), null);
 				} catch (DDIFtpException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -342,9 +532,10 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			}
 			// remove
 			else if (action.equals(PopupAction.REMOVE)) {
+				int count = 0;
 				for (Iterator<ReferenceType> iterator = modelImpl.getDocument()
 						.getSequence().getControlConstructReferenceList()
-						.iterator(); iterator.hasNext();) {
+						.iterator(); iterator.hasNext(); count++) {
 					ReferenceType type = iterator.next();
 
 					// remove from xml
@@ -396,7 +587,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 				column.getColumn().setText(titles[i]);
 				column.getColumn().setWidth(widths[i]);
 				column.getColumn().setResizable(true);
-				column.setEditingSupport(new TableEditingSupport(viewer, i));
+				// column.setEditingSupport(new TableEditingSupport(viewer, i));
 			}
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
@@ -414,7 +605,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			LabelType label = null;
 
 			switch (columnIndex) {
-			// 0=id, 1=type, 2=label, 3=description
+			// 0=id, 1=type, 2=label
 			case 0:
 				return lightXmlObject.getId();
 			case 1:
@@ -460,92 +651,92 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		}
 	}
 
-	public class TableEditingSupport extends EditingSupport {
-		private CellEditor editor;
-		private int column;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param viewer
-		 *            of column
-		 * @param column
-		 *            no
-		 */
-		public TableEditingSupport(ColumnViewer viewer, int column) {
-			super(viewer);
-			switch (column) {
-			// 0=id, 1=type, 2=label, 3=description
-			case 0:
-
-				break;
-			case 1:
-
-				break;
-			case 2:
-
-				break;
-			default:
-				editor = new TextCellEditor(((TableViewer) viewer).getTable());
-			}
-			this.column = column;
-		}
-
-		@Override
-		protected boolean canEdit(Object element) {
-			return true;
-		}
-
-		@Override
-		protected CellEditor getCellEditor(Object element) {
-			ICellEditorListener listener = new CellEditorListener(editor,
-					editorStatus, column);
-			editor.addListener(listener);
-			return editor;
-		}
-
-		@Override
-		protected Object getValue(Object element) {
-			log.debug("Column: " + this.column);
-			switch (this.column) {
-			// 0=id, 1=type, 2=label, 3=description
-			case 0:
-
-				break;
-			case 1:
-
-				break;
-			case 2:
-
-				break;
-			case 3:
-				break;
-			default:
-				break;
-			}
-			return null;
-		}
-
-		@Override
-		public void setValue(Object element, Object value) {
-			switch (this.column) {
-			case 0:
-
-				break;
-			case 1:
-
-				break;
-			case 2:
-
-				break;
-			case 3:
-				break;
-			default:
-				break;
-			}
-			getViewer().update(element, null);
-		}
-	}
+	// public class TableEditingSupport extends EditingSupport {
+	// private CellEditor editor;
+	// private int column;
+	//
+	// /**
+	// * Constructor
+	// *
+	// * @param viewer
+	// * of column
+	// * @param column
+	// * no
+	// */
+	// public TableEditingSupport(ColumnViewer viewer, int column) {
+	// super(viewer);
+	// switch (column) {
+	// // 0=id, 1=type, 2=label
+	// case 0:
+	//
+	// break;
+	// case 1:
+	//
+	// break;
+	// case 2:
+	//
+	// break;
+	// default:
+	// editor = new TextCellEditor(((TableViewer) viewer).getTable());
+	// }
+	// this.column = column;
+	// }
+	//
+	// @Override
+	// protected boolean canEdit(Object element) {
+	// return false;
+	// }
+	//
+	// @Override
+	// protected CellEditor getCellEditor(Object element) {
+	// ICellEditorListener listener = new CellEditorListener(editor,
+	// editorStatus, column);
+	// editor.addListener(listener);
+	// return editor;
+	// }
+	//
+	// @Override
+	// protected Object getValue(Object element) {
+	// log.debug("Column: " + this.column);
+	// switch (this.column) {
+	// // 0=id, 1=type, 2=label
+	// case 0:
+	//
+	// break;
+	// case 1:
+	//
+	// break;
+	// case 2:
+	//
+	// break;
+	// case 3:
+	// break;
+	// default:
+	// break;
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// public void setValue(Object element, Object value) {
+	// switch (this.column) {
+	// case 0:
+	//
+	// break;
+	// case 1:
+	//
+	// break;
+	// case 2:
+	//
+	// break;
+	// case 3:
+	// break;
+	// default:
+	// break;
+	// }
+	// getViewer().update(element, null);
+	// }
+	// }
 
 	// ------------------------------------------------------------------------
 	// house keeping
