@@ -19,6 +19,19 @@ public class QuestionConstruct extends Model {
 			QuestionConstruct.class);
 	QuestionConstructDocument doc;
 
+	public enum ResponceUnit {
+		INTERVIEWEE("Interviewee"), INTERVIEWER("Interviewer"), OTHER("Other");
+		String label;
+
+		private ResponceUnit(String label) {
+			this.label = label;
+		}
+
+		public String getLabel() {
+			return label;
+		}
+	};
+
 	/**
 	 * Constructor
 	 * 
@@ -67,6 +80,19 @@ public class QuestionConstruct extends Model {
 		}
 	}
 
+	public Integer getResponseUnitConverted() {
+		InternationalStringType result = getResponseUnit();
+		if (result == null) {
+			return null;
+		}
+		for (int i = 0; i < ResponceUnit.values().length; i++) {
+			if (ResponceUnit.values()[i].label.equals(result.getStringValue())) {
+				return i+1;
+			}
+		}
+		return 0;
+	}
+
 	/**
 	 * ResponseSequence - Describes the sequencing of the response categories or
 	 * response options to a question
@@ -94,7 +120,15 @@ public class QuestionConstruct extends Model {
 
 		// InternationalStringType
 		if (type.equals(InternationalStringType.class)) {
-			getResponseUnit().setStringValue((String) value);
+			int count = (Integer) value-1;
+			if (count<1) {
+				if (getResponseUnit()!=null) {
+					doc.getQuestionConstruct().removeResponseUnit(0);
+				}
+				return;
+			}
+			String result = ResponceUnit.values()[(Integer) value-1].label;
+			getResponseUnit().setStringValue(result);
 		}
 
 		// SpecificSequenceType
