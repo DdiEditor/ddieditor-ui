@@ -9,6 +9,7 @@ import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.QuestionConstructDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.editor.Editor.EditorIdentification;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericselectionlistener.GenericComboSelectionListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
@@ -81,24 +82,40 @@ public class QuestionConstructEditor extends Editor {
 						getEditorIdentification()));
 
 		// ResponseUnit - Interviewee
-		Text responseUnitText = createTextInput(group, Messages
-				.getString("QuestionConstructEditor.label.ResponseUnit"),
-				modelImpl.getResponseUnit() == null ? "" : modelImpl
-						.getResponseUnit().getStringValue(), false);
-		responseUnitText.addModifyListener(new TextStyledTextModyfiListener(
-				modelImpl, InternationalStringType.class,
-				getEditorIdentification()));
+		// Text responseUnitText = createTextInput(group, Messages
+		// .getString("QuestionConstructEditor.label.ResponseUnit"),
+		// modelImpl.getResponseUnit() == null ? "" : modelImpl
+		// .getResponseUnit().getStringValue()
+		// modelImpl.getResponseUnitConverted(), false);
+		// responseUnitText.addModifyListener(new TextStyledTextModyfiListener(
+		// modelImpl, InternationalStringType.class,
+		// getEditorIdentification()));
+
+		createLabel(group, Messages
+				.getString("QuestionConstructEditor.label.ResponseUnit"));
+		String[] options = new String[QuestionConstruct.ResponceUnit.values().length + 1];
+		options[0] = "";
+		for (int i = 0; i < QuestionConstruct.ResponceUnit.values().length; i++) {
+			options[i + 1] = QuestionConstruct.ResponceUnit.values()[i]
+					.getLabel();
+		}
+		Combo responseUnitCombo = createCombo(group, options);
+		responseUnitCombo.select(modelImpl.getResponseUnitConverted());
+		responseUnitCombo
+				.addSelectionListener(new ResponceUnitSelectionListener(
+						modelImpl, InternationalStringType.class,
+						getEditorIdentification()));
 
 		// ResponseSequence - Describes the sequencing of the response
 		String responseSequence = modelImpl.getResponseSequence() == null ? ""
 				: modelImpl.getResponseSequence().getItemSequenceType()
 						.toString();
 
-		Combo combo = createSequenceCombo(group, Messages
+		Combo sequencecombo = createSequenceCombo(group, Messages
 				.getString("QuestionConstructEditor.label.ResponseSequence"),
 				defineItemSequenceSelection(responseSequence));
 
-		combo.addSelectionListener(new SequenceComboSelectionListener(
+		sequencecombo.addSelectionListener(new SequenceComboSelectionListener(
 				modelImpl, SpecificSequenceType.class,
 				getEditorIdentification()));
 
@@ -157,6 +174,24 @@ public class QuestionConstructEditor extends Editor {
 			}
 			editorIdentification.getEditorStatus().setChanged();
 			applyChange(Editor.getSequenceOptions()[selected], modifyClass);
+		}
+	}
+
+	class ResponceUnitSelectionListener extends GenericComboSelectionListener {
+
+		public ResponceUnitSelectionListener(IModel model, Class modifyClass,
+				EditorIdentification editorIdentification) {
+			super(model, modifyClass, editorIdentification);
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			int selected = ((Combo) e.widget).getSelectionIndex();
+			if (selected == 4) {
+				// TODO do item other stuff, popup dialog
+			}
+			editorIdentification.getEditorStatus().setChanged();
+			applyChange(selected, InternationalStringType.class);
 		}
 	}
 }
