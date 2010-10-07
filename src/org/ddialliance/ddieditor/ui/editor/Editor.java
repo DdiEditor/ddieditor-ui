@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
@@ -440,16 +441,17 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		group.setLayout(gridLayout);
 		return group;
 	}
-	
+
 	public Group createSubGroup(Group group, String groupText) {
-		Group subGroup =  new Group(group, SWT.NONE);
+		Group subGroup = new Group(group, SWT.NONE);
 		subGroup.setText(groupText);
 		subGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		subGroup.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, true, false, 2, 1));
+		subGroup.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, true, false, 2,
+				1));
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		subGroup.setLayout(gridLayout);
-		
+
 		return subGroup;
 	}
 
@@ -755,11 +757,41 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public Combo createCombo(Group group, String[] options) {
-		final Combo actionCombo = new Combo(group, SWT.READ_ONLY);
-		actionCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
-		actionCombo.setItems(options);
-		return actionCombo;
+		final Combo combo = new Combo(group, SWT.READ_ONLY);
+		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+				1));
+		combo.setItems(options);
+		return combo;
+	}
+
+	public static String[] getSequenceOptions() {
+		String[] sequenceOptions = { "",
+				ItemSequenceTypeType.IN_ORDER_OF_APPEARANCE.toString(),
+				ItemSequenceTypeType.RANDOM.toString(),
+				ItemSequenceTypeType.ROTATE.toString(),
+				ItemSequenceTypeType.OTHER.toString() };
+		return sequenceOptions;
+	}
+
+	public static int defineItemSequenceSelection(String itemSequence) {
+		String[] sequenceOptions = getSequenceOptions();
+		for (int i = 0; i < sequenceOptions.length; i++) {
+			if (itemSequence.equals(sequenceOptions[i])) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public Combo createSequenceCombo(Group group, String labelText,
+			Integer focus) {
+		createLabel(group, labelText);
+		String[] sequenceOptions = getSequenceOptions();
+		Combo combo = createCombo(group, sequenceOptions);
+		if (focus != null && focus > -1 && focus < sequenceOptions.length - 1) {
+			combo.select(focus);
+		}
+		return combo;
 	}
 
 	public Text createNameInput(Group group, String labelText,
@@ -788,7 +820,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 		return nameTxt;
 	}
-	
+
 	public Text createLabelInput(Group group, String labelText,
 			List<LabelType> labelList, String parentLabel) {
 		LabelType label = null;
@@ -801,20 +833,20 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 
 		Text text = createTextInput(group, labelText, label == null ? ""
-				: XmlBeansUtil.getTextOnMixedElement(label), label == null ? Boolean.TRUE
-				: Boolean.FALSE);
+				: XmlBeansUtil.getTextOnMixedElement(label),
+				label == null ? Boolean.TRUE : Boolean.FALSE);
 
 		if (label == null) {
-			label = org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelDocument.Factory.newInstance()
-					.addNewLabel();
+			label = org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelDocument.Factory
+					.newInstance().addNewLabel();
 			label.setTranslatable(true);
 			label.setTranslated(!labelList.isEmpty());
 			label.setLang(LanguageUtil.getOriginalLanguage());
 		}
-		
+
 		text.addModifyListener(new LabelTypeModyfiListener(label, labelList,
 				editorStatus));
-		
+
 		return text;
 	}
 
