@@ -2,6 +2,7 @@ package org.ddialliance.ddieditor.ui.editor.instrument;
 
 import java.util.List;
 
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SpecificSequenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.DdiManager;
@@ -9,8 +10,10 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.QuestionConstructDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.genericselectionlistener.GenericComboSelectionListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.instrument.QuestionConstruct;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
@@ -18,7 +21,9 @@ import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabItem;
@@ -85,11 +90,17 @@ public class QuestionConstructEditor extends Editor {
 				getEditorIdentification()));
 
 		// ResponseSequence - Describes the sequencing of the response
-		Text responseSequenceText = createTextInput(group, Messages
+		String responseSequence = modelImpl.getResponseSequence() == null ? ""
+				: modelImpl.getResponseSequence().getItemSequenceType()
+						.toString();
+
+		Combo combo = createSequenceCombo(group, Messages
 				.getString("QuestionConstructEditor.label.ResponseSequence"),
-				modelImpl.getResponseSequence() == null ? "" : modelImpl
-						.getResponseSequence().toString(), false);
-		// TODO ResponseSequence not implemented
+				defineItemSequenceSelection(responseSequence));
+
+		combo.addSelectionListener(new SequenceComboSelectionListener(
+				modelImpl, SpecificSequenceType.class,
+				getEditorIdentification()));
 
 		// description tab
 		// name
@@ -130,5 +141,22 @@ public class QuestionConstructEditor extends Editor {
 		createXmlTab(modelImpl);
 
 		editorStatus.clearChanged();
+	}
+
+	class SequenceComboSelectionListener extends GenericComboSelectionListener {
+		public SequenceComboSelectionListener(IModel model, Class modifyClass,
+				EditorIdentification editorIdentification) {
+			super(model, modifyClass, editorIdentification);
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			int selected = ((Combo) e.widget).getSelectionIndex();
+			if (selected == 4) {
+				// TODO do item sequence type other stuff
+			}
+			editorIdentification.getEditorStatus().setChanged();
+			applyChange(Editor.getSequenceOptions()[selected], modifyClass);
+		}
 	}
 }
