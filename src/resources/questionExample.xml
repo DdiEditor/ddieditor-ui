@@ -44,6 +44,38 @@
     </c:ConceptualComponent>
     <d:DataCollection id="WLT_DC_1">
       <d:QuestionScheme id="QS">
+        <d:MultipleQuestionItem id="Q0">
+          <d:QuestionText>
+            <d:LiteralText>
+              <d:Text>Multple Question header text</d:Text>
+            </d:LiteralText>
+          </d:QuestionText>
+          <d:QuestionIntent>Purpose of this group of question items</d:QuestionIntent>
+          <d:ConceptReference>
+            <r:ID>ConceptRef</r:ID>
+          </d:ConceptReference>
+          <d:SubQuestionSequence>
+            <d:ItemSequenceType>InOrderOfAppearance</d:ItemSequenceType>
+          </d:SubQuestionSequence>
+          <d:SubQuestions>
+            <d:QuestionItem id="Q01">
+              <d:QuestionText>
+                <d:LiteralText>
+                  <d:Text>Question text 01</d:Text>
+                </d:LiteralText>
+              </d:QuestionText>
+              <d:NumericDomain type="Integer"/>
+            </d:QuestionItem>
+            <d:QuestionItem id="Q02">
+              <d:QuestionText>
+                <d:LiteralText>
+                  <d:Text>Question text 02</d:Text>
+                </d:LiteralText>
+              </d:QuestionText>
+              <d:NumericDomain type="Integer"/>
+            </d:QuestionItem>
+          </d:SubQuestions>
+        </d:MultipleQuestionItem>
         <d:QuestionItem id="Q1">
           <!-- Question Text temp set to "da"-->
           <d:QuestionText xml:lang="da">
@@ -123,6 +155,15 @@
         </d:QuestionItem>
       </d:QuestionScheme>
       <d:ControlConstructScheme id="CCS_1">
+        <d:QuestionConstruct id="IQ_0">
+          <d:QuestionReference>
+            <r:ID>Q0</r:ID>
+          </d:QuestionReference>
+          <d:ResponseUnit>Interviewee</d:ResponseUnit>
+          <r:UniverseReference>
+            <r:ID>U_1</r:ID>
+          </r:UniverseReference>
+        </d:QuestionConstruct>
         <d:QuestionConstruct id="IQ_1">
           <d:QuestionReference>
             <r:ID>Q2</r:ID>
@@ -197,6 +238,9 @@
           </d:DisplayText>
         </d:StatementItem>
         <d:Sequence id="MAS_SEQ">
+          <d:ControlConstructReference>
+            <r:ID>IQ_0</r:ID>
+          </d:ControlConstructReference>
           <d:ControlConstructReference>
             <r:ID>IQ_1</r:ID>
           </d:ControlConstructReference>
@@ -365,6 +409,13 @@
           <l:Value>3</l:Value>
         </l:Code>
       </l:CodeScheme>
+      <l:VariableScheme id="VS_1">
+        <l:Variable id="V1">
+          <l:QuestionReference>
+            <r:ID>Q1</r:ID>
+          </l:QuestionReference>
+        </l:Variable>
+      </l:VariableScheme>
     </l:LogicalProduct>
   </s:StudyUnit>
 </ns1:DDIInstance>
