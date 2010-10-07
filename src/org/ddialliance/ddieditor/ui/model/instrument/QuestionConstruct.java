@@ -1,10 +1,12 @@
 package org.ddialliance.ddieditor.ui.model.instrument;
 
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionConstructDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SpecificSequenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -19,6 +21,7 @@ public class QuestionConstruct extends Model {
 
 	/**
 	 * Constructor
+	 * 
 	 * @param doc
 	 * @param parentId
 	 * @param parentVersion
@@ -91,13 +94,24 @@ public class QuestionConstruct extends Model {
 
 		// InternationalStringType
 		if (type.equals(InternationalStringType.class)) {
-			getResponseUnit().setStringValue((String)value);
+			getResponseUnit().setStringValue((String) value);
 		}
 
 		// SpecificSequenceType
 		if (type.equals(SpecificSequenceType.class)) {
-			//getResponseSequence().addNewAlternateSequenceType()
-			log.debug("Not implemented");
+			log.warn("AlternateSequenceType, not implemented");
+
+			int defined = Editor.defineItemSequenceSelection((String) value);
+			if (defined == -1 || defined == 0) {
+				// remove ResponseSequence
+				doc.getQuestionConstruct().getDomNode().removeChild(
+						doc.getQuestionConstruct().getResponseSequence()
+								.getDomNode());
+			} else {
+				ItemSequenceTypeType.Enum itemSequenceType = ItemSequenceTypeType.Enum
+						.forInt(defined);
+				getResponseSequence().setItemSequenceType(itemSequenceType);
+			}
 		}
 	}
 
