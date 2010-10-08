@@ -30,6 +30,7 @@ public class DeleteSingleDDI3 extends org.eclipse.core.commands.AbstractHandler 
 		}
 
 		List<DDIResourceType> resources = new ArrayList<DDIResourceType>();
+		resources.add(ddiResource);
 
 		// yes - no dialog
 		if(!CommandHelper.confirmResourceDeletion(resources)) {
