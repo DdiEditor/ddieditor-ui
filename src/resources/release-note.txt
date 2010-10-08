@@ -7,45 +7,34 @@ Release Data: 2010-09-06
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
+User interface
 Item ID:    Description:
- -              Confirmation popup on ingest of DDI3 file
- 
- -              Confirmation popup on delete/ delete all
- 
- -              Added lazy view refresh when on count change resources 
- 
- -              Closing of editors in pretermination of resources
+ -          Instrumentation overhaul
+ -          Multiple question item editor
+ -          Bug fix scheme editor for wrong xml type for description, used
+  label
+ -          Bug fix create subelement for all schemes
+ -          Bug fix on corfirm delete dialog
    
- -              Views, added support for listings of resources as top item
- 
- -              Fix of loading items from different resources
- 
- -              Removal of VDT binary XML indexing, a GLP project :- (
- 
- -              Added better handling of new ddi3 file creation regarding
- file names. A file name can now be any character value without '*.xml' 
- extension. Note if whitespace exists in file name they are substituted with 
- '_'
- 
- -              Added menu See file menu: Help->Debug Info
- 
- -              Added perspective auto change toggle in preferences. See: File 
- menu->Window->Preferences->DDI EditorUI 
- 
- -              Minor bug fix to StudyUnit viewer and language in preferences
- 
- -              Implementation of xxxScheme editor as only retrieve and update 
- of attributes, label and descriptions  
+-------------------------------------------------------------------------------  
+Application Infrastructure:
+Item ID:    Description:
+ -          Refactorerd DDI indexing of identifiable - label relation
+ -          Performance enhancement of maintainable label query
+ -          Open editor refactored to allow opening of editors outside of 
+ a view
+ - 			Editor create sequence combo support
+ -          Added generic selection modify listener
 
 -------------------------------------------------------------------------------
 Change Log Previous Releases
 -------------------------------------------------------------------------------
-See http://192.168.99.102:8080/devwiki/en/Change_Log
+See http://172.20.33.20:8080/devwiki/en/Change_Log
 
 -------------------------------------------------------------------------------
 Installing
 -------------------------------------------------------------------------------
-See http://192.168.99.102:8080/devwiki/en/Installation
+See http://172.20.33.20:8080/devwiki/en/Installation
 
 -------------------------------------------------------------------------------
 Uninstalling
