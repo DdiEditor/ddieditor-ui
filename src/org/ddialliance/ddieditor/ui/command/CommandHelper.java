@@ -86,8 +86,7 @@ public class CommandHelper {
 			}
 		}
 		return DialogUtil.yesNoDialog(Messages
-				.getString("delete.resource.title"), Translator
-				.trans("delete.resource.confirm", new Object[] { deletion
+				.getString("delete.resource.title"), Translator.trans("delete.resource.confirm", new Object[] { deletion
 						.toString() }));
 	}
 }
