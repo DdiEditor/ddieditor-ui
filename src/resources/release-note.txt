@@ -10,18 +10,18 @@ What's New
 User interface
 Item ID:    Description:
  -          Instrumentation overhaul
- -          Multiple question item editor
- -          Bug fix scheme editor for wrong xml type for description, used
+ -          Multiple question item editor added
+ -          Bug fix: scheme editor for wrong xml type for description, used
   label
- -          Bug fix create subelement for all schemes
- -          Bug fix on corfirm delete dialog
+ -          Bug fix: create subelement for all schemes
+ -          Bug fix: - on corfirm delete dialog
    
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
- -          Refactorerd DDI indexing of identifiable - label relation
+ -          Refactoring of DDI indexing of identifiable - label relation
  -          Performance enhancement of maintainable label query
- -          Open editor refactored to allow opening of editors outside of 
+ -          Open editor refactoring to allow opening of editors outside of 
  a view
  - 			Editor create sequence combo support
  -          Added generic selection modify listener
