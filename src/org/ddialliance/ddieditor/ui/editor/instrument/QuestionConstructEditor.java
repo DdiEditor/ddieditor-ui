@@ -81,16 +81,7 @@ public class QuestionConstructEditor extends Editor {
 						modelImpl, ReferenceType.class,
 						getEditorIdentification()));
 
-		// ResponseUnit - Interviewee
-		// Text responseUnitText = createTextInput(group, Messages
-		// .getString("QuestionConstructEditor.label.ResponseUnit"),
-		// modelImpl.getResponseUnit() == null ? "" : modelImpl
-		// .getResponseUnit().getStringValue()
-		// modelImpl.getResponseUnitConverted(), false);
-		// responseUnitText.addModifyListener(new TextStyledTextModyfiListener(
-		// modelImpl, InternationalStringType.class,
-		// getEditorIdentification()));
-
+		// ResponseUnit
 		createLabel(group, Messages
 				.getString("QuestionConstructEditor.label.ResponseUnit"));
 		String[] options = new String[QuestionConstruct.ResponceUnit.values().length + 1];
@@ -100,7 +91,9 @@ public class QuestionConstructEditor extends Editor {
 					.getLabel();
 		}
 		Combo responseUnitCombo = createCombo(group, options);
-		responseUnitCombo.select(modelImpl.getResponseUnitConverted());
+		if (modelImpl.getResponseUnitConverted()!=null) {
+			responseUnitCombo.select(modelImpl.getResponseUnitConverted());	
+		}
 		responseUnitCombo
 				.addSelectionListener(new ResponceUnitSelectionListener(
 						modelImpl, InternationalStringType.class,
@@ -178,7 +171,6 @@ public class QuestionConstructEditor extends Editor {
 	}
 
 	class ResponceUnitSelectionListener extends GenericComboSelectionListener {
-
 		public ResponceUnitSelectionListener(IModel model, Class modifyClass,
 				EditorIdentification editorIdentification) {
 			super(model, modifyClass, editorIdentification);
