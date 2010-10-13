@@ -1,4 +1,9 @@
 #! /bin/sh
+#
+# clean up deploy
+#
+rm deploy -r
+mkdir deploy
 
 #
 # build products and properties
@@ -27,35 +32,31 @@ vi ../ddieditor-ui/bin/resources/hibernate/hibernate.cfg.xml
 # version bump
 #
 echo '--- Increment bundle versions [Bundle-Version: ] in MANIFEST.MF files ---'
-echo '--- ---'
-versionbump='Version bump'
-# lib-java
-#vi ../lib-java/META-INF/MANIFEST.MF
-#svn ci ../lib-java/META-INF/MANIFEST.MF  -m '$versionbump'
+echo '--- And commit version bump in SVN ---'
 
-# util
-#vi ../util/META-INF/MANIFEST.MF
-svn ci ../util/META-INF/MANIFEST.MF  -m '$versionbump'
+function versionbump()
+{
+projectpath=$1
+echo $projectpath
+fullpath=../$projectpath/META-INF/MANIFEST.MF
+vi $fullpath
+svn ci $fullpath  -m 'Version bump'
+return;
+}
 
-# ddieditor
-#vi ../ddieditor/META-INF/MANIFEST.MF
-#svn ci ../ddieditor/META-INF/MANIFEST.MF  -m '$versionbump'
+versionbump lib-java
 
-# ddieditor-ui
-#vi ../ddieditor-ui/META-INF/MANIFEST.MF
-#svn ci ../ddieditor-ui/META-INF/MANIFEST.MF  -m '$versionbump'
+versionbump util
 
-# ddieditor-ui product bundle
-#vi ../ddieditor-ui/OSGI-INF/l10n/bundle.properties
-#svn ci ../ddieditor-ui/OSGI-INF/l10n/bundle.properties  -m '$versionbump'
+versionbump ddieditor
 
-# ddadb
-#vi ../ddadb/META-INF/MANIFEST.MF
-#svn ci ../ddadb/META-INF/MANIFEST.MF  -m '$versionbump'
+versionbump ddieditor-ui
 
-# jounal-study-info-export
-#vi ../jounal-study-info-export/META-INF/MANIFEST.MF
-#svn ci ../jounal-study-info-export/META-INF/MANIFEST.MF  -m '$versionbump'
+versionbump ddieditor-ui product bundle
+
+versionbump ddadb
+
+versionbump jounal-study-info-export
 
 #
 # tag build in svn
@@ -74,10 +75,13 @@ svn copy $svnurl/dda/trunk/ddadb $svnurl/dda/tags/ddiftp/test-$version/ddadb -m 
 # jounal-study-info-export
 svn copy $svnurl/dda/trunk/jounal-study-info-export $svnurl/dda/tags/ddiftp/test-$version/jounal-study-info-export -m '$memo'
 
+# ddiftp
+svn copy $svnurl/dda/trunk/ddiftp $svnurl/dda/tags/ddiftp/test-$version/ -m '$memo'
+
 #
 # execute product build
 #
-echo 'Execute product generation in Eclipse, hit any key when done'
+echo 'Execute product generation in Eclipse, hit RETURN when done'
 read done
 
 #
@@ -114,4 +118,3 @@ rm tmp -r
 # End
 #
 echo '--- The end, thank you for flying DDA RCP build script today ---'
-
