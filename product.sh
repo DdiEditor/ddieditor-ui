@@ -1,4 +1,69 @@
 #! /bin/sh
+
+#
+# version bump
+#
+function versionbump()
+{
+projectpath=$1
+echo $projectpath
+fullpath=../$projectpath/META-INF/MANIFEST.MF
+vi $fullpath
+svn ci $fullpath  -m 'Version bump'
+return;
+}
+
+echo '--- Increment bundle versions [Bundle-Version: ] in MANIFEST.MF files ---'
+echo '--- And commit version bump in SVN ---'
+echo 'Do you want to version bump: [yes|no]'
+read doversionbump
+if [ $doversionbump = 'yes' ]
+then
+versionbump lib-java
+versionbump util
+versionbump ddieditor
+versionbump ddieditor-ui
+versionbump ddieditor-ui product bundle
+versionbump ddadb
+versionbump jounal-study-info-export
+else
+echo 'No version bumping taking place'
+fi
+
+#
+# tag build in svn
+#
+echo '--- Tag build in SVN ---'
+echo 'Do you want to tag in SVN: [yes|no]'
+read svntag
+if [ $svntag = 'yes' ]
+then
+echo 'Submit version no. for SVN tag:'
+read version
+
+svnurl=svn://192.168.99.101
+memo='Dev release taging: $version'
+svn mkdir $svnurl/dda/tags/ddiftp/test-$version -m '$memo'
+
+# dbdda
+svn copy $svnurl/dda/trunk/ddadb $svnurl/dda/tags/ddiftp/test-$version/ddadb -m '$memo' 
+
+# jounal-study-info-export
+svn copy $svnurl/dda/trunk/jounal-study-info-export $svnurl/dda/tags/ddiftp/test-$version/jounal-study-info-export -m '$memo'
+
+# ddiftp
+svn copy $svnurl/dda/trunk/ddiftp $svnurl/dda/tags/ddiftp/test-$version/ -m '$memo'
+else
+echo 'No SVN tagging taking place'
+fi
+
+#
+# setup and build
+#
+echo 'Do you want to setup and build: [yes|no]'
+read build
+if [ $build = 'yes' ]
+then
 #
 # clean up deploy
 #
@@ -17,70 +82,21 @@ cd ../ddieditor-ui
 ant resource -f dda-build.xml
 
 echo '--- Edit db connections ---'
-cd ../ddadb
-vi db.properties
+vi ../ddadb/db.properties
 
 echo '--- Copy journal-study-info-export setup ---'
 cd ../jounal-study-info-export
-ant hibernate-tool-deploy -f dda-build.xml
+#ant hibernate-tool-deploy -f dda-build.xml
 ant deploy-to-ddieditor-ui -f dda-build.xml
+cd ../ddieditor-ui/
 
 echo '--- Check db connection ---'
-vi ../ddieditor-ui/bin/resources/hibernate/hibernate.cfg.xml
-
-#
-# version bump
-#
-echo '--- Increment bundle versions [Bundle-Version: ] in MANIFEST.MF files ---'
-echo '--- And commit version bump in SVN ---'
-
-function versionbump()
-{
-projectpath=$1
-echo $projectpath
-fullpath=../$projectpath/META-INF/MANIFEST.MF
-vi $fullpath
-svn ci $fullpath  -m 'Version bump'
-return;
-}
-
-versionbump lib-java
-
-versionbump util
-
-versionbump ddieditor
-
-versionbump ddieditor-ui
-
-versionbump ddieditor-ui product bundle
-
-versionbump ddadb
-
-versionbump jounal-study-info-export
-
-#
-# tag build in svn
-#
-echo '--- Tag build in SVN ---'
-echo 'Submit version no. for SVN tag:'
-read version
-
-svnurl=svn://192.168.99.101
-memo='Dev release taging: $version'
-svn mkdir $svnurl/dda/tags/ddiftp/test-$version -m '$memo'
-
-# dbdda
-svn copy $svnurl/dda/trunk/ddadb $svnurl/dda/tags/ddiftp/test-$version/ddadb -m '$memo' 
-
-# jounal-study-info-export
-svn copy $svnurl/dda/trunk/jounal-study-info-export $svnurl/dda/tags/ddiftp/test-$version/jounal-study-info-export -m '$memo'
-
-# ddiftp
-svn copy $svnurl/dda/trunk/ddiftp $svnurl/dda/tags/ddiftp/test-$version/ -m '$memo'
+vi bin/resources/hibernate/hibernate.cfg.xml
 
 #
 # execute product build
 #
+echo
 echo 'Execute product generation in Eclipse, hit RETURN when done'
 read done
 
@@ -113,6 +129,9 @@ doresourcecopy win32.win32.x86_64
 
 cd ../..
 rm tmp -r
+else
+echo 'Not setting up and not building'
+fi
 
 #
 # End
