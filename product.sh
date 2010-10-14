@@ -23,9 +23,12 @@ versionbump lib-java
 versionbump util
 versionbump ddieditor
 versionbump ddieditor-ui
-versionbump ddieditor-ui product bundle
 versionbump ddadb
 versionbump jounal-study-info-export
+
+# ddieditor-ui product bundle
+vi OSGI-INF/l10n/bundle.properties
+svn ci OSGI-INF/l10n/bundle.properties -m 'Version bump'
 else
 echo 'No version bumping taking place'
 fi
@@ -131,6 +134,34 @@ cd ../..
 rm tmp -r
 else
 echo 'Not setting up and not building'
+fi
+
+
+#
+# Zip
+#
+echo '--- Zipping product builds ---'
+function zipbuild()
+{
+path=$1
+cd $path
+zip -r ../ddieditor.$path.zip ddieditor
+cd ..
+}
+
+echo 'Do you want to zip the product build: [yes|no]'
+read zip
+if [ $zip = 'yes' ]
+then
+echo 'Zipping product builds'
+cd deploy
+zipbuild linux.gtk.x86
+zipbuild linux.gtk.x86_64
+zipbuild win32.win32.x86
+zipbuild win32.win32.x86_64
+cd ..
+else
+echo 'Not zipping product build'
 fi
 
 #
