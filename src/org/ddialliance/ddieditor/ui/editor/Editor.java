@@ -788,7 +788,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		createLabel(group, labelText);
 		String[] sequenceOptions = getSequenceOptions();
 		Combo combo = createCombo(group, sequenceOptions);
-		if (focus != null && focus > -1 && focus < sequenceOptions.length - 1) {
+		if (focus != null && focus > -1 && focus < sequenceOptions.length) {
 			combo.select(focus);
 		}
 		return combo;
