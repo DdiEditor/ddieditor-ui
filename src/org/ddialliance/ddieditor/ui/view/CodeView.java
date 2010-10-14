@@ -4,8 +4,6 @@ package org.ddialliance.ddieditor.ui.view;
  * Code View.
  * 
  */
-import java.util.Arrays;
-
 import org.ddialliance.ddieditor.ui.model.ElementType;
 
 public class CodeView extends View {
@@ -21,7 +19,6 @@ public class CodeView extends View {
 				Messages.getString("CodeView.label.codeLabel.Code"),
 				ElementType.CODE_SCHEME,
 				Messages
-						.getString("CodeView.label.codeTreeGroup.CodeStructure"),
-				Arrays.asList(ElementType.CODE_SCHEME));
+						.getString("CodeView.label.codeTreeGroup.CodeStructure"));
 	}
 }

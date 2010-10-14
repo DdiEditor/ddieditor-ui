@@ -1,7 +1,5 @@
 package org.ddialliance.ddieditor.ui.view;
 
-import java.util.List;
-
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
@@ -31,7 +29,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
-import org.eclipse.ui.dialogs.PatternFilter; 
+import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.internal.actions.HelpContentsAction;
 import org.eclipse.ui.part.ViewPart;
 
@@ -52,11 +50,9 @@ public class View extends ViewPart implements IPropertyListener {
 	private ElementType rootElement;
 	private String viewTreeLabel = "viewTreeLabel";
 	protected View currentView = this;
-	private List<ElementType> subElements;
 	private Action collapseAllAction;
 	private Action expandAllAction;
 	private Action refreshAction;
-	private MenuItem editMenuItem;
 	public TreeViewer treeViewer;
 	private HelpContentsAction helpContentsAction;
 	private Tree tree;
@@ -85,7 +81,7 @@ public class View extends ViewPart implements IPropertyListener {
 	 */
 	public View(ViewContentType viewContentType, String viewTitle,
 			String viewDescr, String viewEntityName, ElementType rootElement,
-			String viewTreeLabel, List<ElementType> subElements) {
+			String viewTreeLabel) {
 
 		this.viewContentType = viewContentType;
 		this.viewTitle = viewTitle;
@@ -93,7 +89,6 @@ public class View extends ViewPart implements IPropertyListener {
 		this.viewEntityName = viewEntityName;
 		this.viewTreeLabel = viewTreeLabel;
 		this.rootElement = rootElement;
-		this.subElements = subElements;
 	}
 
 	@Override
@@ -231,11 +226,8 @@ public class View extends ViewPart implements IPropertyListener {
 		tree.setLayoutData(gd_tree);
 
 		// Define Tree Pop-up Menu
-		if (subElements != null) {
-			TreeMenuProvider treeMenuProvider = new TreeMenuProvider(
-					treeViewer, currentView, rootElement, subElements);
-			treeMenuProvider.setMenu();
-		}
+		TreeMenuProvider treeMenuProvider = new TreeMenuProvider(treeViewer, currentView, rootElement);
+		treeMenuProvider.setMenu();
 
 		createActions();
 		initializeToolBar();

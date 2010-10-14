@@ -4,8 +4,6 @@ package org.ddialliance.ddieditor.ui.view;
  * Concept View.
  * 
  */
-import java.util.Arrays;
-
 import org.ddialliance.ddieditor.ui.model.ElementType;
 
 public class ConceptView extends View {
@@ -21,7 +19,6 @@ public class ConceptView extends View {
 				Messages.getString("ConceptView.label.conceptLabel.Concept"),
 				ElementType.CONCEPT_SCHEME,
 				Messages
-						.getString("ConceptView.label.conceptTreeGroup.ConceptStructure"),
-				Arrays.asList(ElementType.CONCEPT));
+						.getString("ConceptView.label.conceptTreeGroup.ConceptStructure"));
 	}
 }

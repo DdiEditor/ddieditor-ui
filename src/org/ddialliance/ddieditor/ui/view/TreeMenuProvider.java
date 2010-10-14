@@ -1,6 +1,7 @@
 package org.ddialliance.ddieditor.ui.view;
 
 import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.List;
 
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
@@ -61,7 +62,6 @@ public class TreeMenuProvider extends TreeMenu {
 	final ElementType rootElement;
 	final Menu menu;
 	MenuItem editMenuItem = null;
-	private List<ElementType> subElements;
 
 	/**
 	 * Constructor for TreeMenuProvider
@@ -74,11 +74,10 @@ public class TreeMenuProvider extends TreeMenu {
 	 *            list of sub elements types
 	 */
 	public TreeMenuProvider(TreeViewer treeViewer, View currentView,
-			ElementType rootElement, List<ElementType> subElements) {
+			ElementType rootElement) {
 		this.treeViewer = treeViewer;
 		this.currentView = currentView;
 		this.rootElement = rootElement;
-		this.subElements = subElements;
 		menu = new Menu(treeViewer.getTree());
 	}
 
@@ -171,11 +170,11 @@ public class TreeMenuProvider extends TreeMenu {
 		});
 
 		// sub menu
-		createSubMenu(newMenuItem, subElements);
+		createSubMenu(newMenuItem, rootElement);
 	}
 
 	public void createSubMenu(MenuItem newMenuItem,
-			final List<ElementType> subElements) {
+			final ElementType rootElement) {
 		final Menu subMenu = new Menu(newMenuItem);
 		newMenuItem.setMenu(subMenu);
 		MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
@@ -213,23 +212,13 @@ public class TreeMenuProvider extends TreeMenu {
 					// }
 
 					// create menu
-					if (type.equals(rootElement)) {
-						createNewMenuItem(type, true);
-						for (ElementType subType : subElements) {
-							if (subType.equals(rootElement)) {
-								continue;
-							}
-							createNewMenuItem(subType, false);
-						}
-					} else {
-						createNewMenuItem(type, false);
-					}
+					createNewMenuItem(type);
 				}
 
 				// ddi resource
 				else if (inputSelection.getSelection() instanceof DDIResourceType) {
 					cleanPreviousMenuItems();
-					createNewMenuItem(ElementType.FILE, true);
+					createNewMenuItem(ElementType.FILE);
 				}
 				// log guard
 				else if (log.isDebugEnabled()) {
@@ -244,8 +233,7 @@ public class TreeMenuProvider extends TreeMenu {
 				}
 			}
 
-			private void createNewMenuItem(final ElementType type,
-					boolean isRoot) {
+			private void createNewMenuItem(final ElementType type) {
 				MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
 				menuItem.setText(type.getTranslatedDisplayMessageEntry());
 				menuItem.setImage(ResourceManager.getPluginImage(Activator
@@ -257,6 +245,21 @@ public class TreeMenuProvider extends TreeMenu {
 								type);
 					}
 				});
+				List<ElementType> subElements = type.getSubElements();
+				for (Iterator iterator = subElements.iterator(); iterator.hasNext();) {
+					final ElementType elementType = (ElementType) iterator.next();
+					menuItem = new MenuItem(subMenu, SWT.NONE);
+					menuItem.setText(elementType.getTranslatedDisplayMessageEntry());
+					menuItem.setImage(ResourceManager.getPluginImage(Activator
+							.getDefault(), "icons/new_wiz.gif"));
+
+					menuItem.addSelectionListener(new SelectionAdapter() {
+						public void widgetSelected(final SelectionEvent e) {
+							openEditor(treeViewer, currentView, EditorModeType.NEW,
+									elementType);
+						}
+					});
+				}
 			}
 		});
 	}

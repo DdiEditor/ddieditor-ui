@@ -4,8 +4,6 @@ package org.ddialliance.ddieditor.ui.view;
  * Category View.
  * 
  */
-import java.util.Arrays;
-
 import org.ddialliance.ddieditor.ui.model.ElementType;
 
 public class CategoryView extends View {
@@ -21,7 +19,6 @@ public class CategoryView extends View {
 				Messages.getString("CategoryView.label.categoryLabel.Category"),
 				ElementType.CATEGORY_SCHEME,
 				Messages
-						.getString("CategoryView.label.categoryTreeGroup.CategoryStructure"),
-				Arrays.asList(ElementType.CATEGORY));
+						.getString("CategoryView.label.categoryTreeGroup.CategoryStructure"));
 	}
 }

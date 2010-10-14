@@ -10,21 +10,10 @@ package org.ddialliance.ddieditor.ui.view;
  * $Revision$
  */
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.ddialliance.ddieditor.ui.model.ElementType;
-import org.ddialliance.ddiftp.util.log.Log;
-import org.ddialliance.ddiftp.util.log.LogFactory;
-import org.ddialliance.ddiftp.util.log.LogType;
-import org.eclipse.swt.widgets.Composite;
 
 public class QuestionItemView extends View {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM,
-			QuestionItemView.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.QuestionItemView";
-	public static final List<String> newMenuLabelList = Arrays.asList(
-			"Question Scheme", "Question Item");
 
 	public QuestionItemView() {
 		super(
@@ -37,8 +26,7 @@ public class QuestionItemView extends View {
 						.getString("QuestionItemView.label.questionItemLabel.QuestionItem"),
 				ElementType.QUESTION_SCHEME,
 				Messages
-						.getString("QuestionItemView.label.questionItemsTreeGroup.QuestionItemStructure"),
-				Arrays.asList(ElementType.MULTIPLE_QUESTION_ITEM, ElementType.QUESTION_ITEM));
+						.getString("QuestionItemView.label.questionItemsTreeGroup.QuestionItemStructure"));
 	}
 
 }

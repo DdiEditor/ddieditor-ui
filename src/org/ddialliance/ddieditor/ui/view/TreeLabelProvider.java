@@ -12,7 +12,6 @@ package org.ddialliance.ddieditor.ui.view;
 
 import java.util.List;
 
-import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;

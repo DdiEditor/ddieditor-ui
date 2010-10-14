@@ -24,7 +24,6 @@ import org.ddialliance.ddieditor.ui.dbxml.question.MultipleQuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseSchemeDao;
-import org.ddialliance.ddieditor.ui.model.question.MultipleQuestionItem;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;

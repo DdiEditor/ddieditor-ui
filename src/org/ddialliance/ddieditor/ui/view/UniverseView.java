@@ -4,8 +4,6 @@ package org.ddialliance.ddieditor.ui.view;
  * Universe View.
  * 
  */
-import java.util.Arrays;
-
 import org.ddialliance.ddieditor.ui.model.ElementType;
 
 public class UniverseView extends View {
@@ -16,7 +14,6 @@ public class UniverseView extends View {
 				.getString("UniverseView.label.universeNavigationLabel.UniverseNavigation"), Messages
 				.getString("UniverseView.label.selectLabel.NavigatorDescription"), Messages
 				.getString("UniverseView.label.universeLabel.Universe"), ElementType.UNIVERSE_SCHEME, Messages
-				.getString("UniverseView.label.universeTreeGroup.UniverseStructure"), Arrays
-				.asList(ElementType.UNIVERSE));
+				.getString("UniverseView.label.universeTreeGroup.UniverseStructure"));
 	}
 }

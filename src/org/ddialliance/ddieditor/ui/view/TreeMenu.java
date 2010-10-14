@@ -7,7 +7,6 @@ import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
-import org.ddialliance.ddieditor.ui.command.RefreshViews;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
@@ -26,7 +25,6 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PerspectiveAdapter;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 

@@ -1,7 +1,5 @@
 package org.ddialliance.ddieditor.ui.view;
 
-import java.util.Arrays;
-
 import org.ddialliance.ddieditor.ui.model.ElementType;
 
 public class InstrumentView extends View {
@@ -14,11 +12,6 @@ public class InstrumentView extends View {
 				Messages.getString("InstrumentView.label.label.Instrument"),
 				Messages
 						.getString("InstrumentView.label.selectLabel.NavigatorDescription"),
-				ElementType.CONTROL_CONSTRUCT_SCHEME, "", Arrays.asList(
-						ElementType.IF_THEN_ELSE, ElementType.REPEAT_UNTIL,
-						ElementType.REPEAT_WHILE, ElementType.LOOP,
-						ElementType.SEQUENCE, ElementType.COMPUTATION_ITEM,
-						ElementType.STATEMENT_ITEM,
-						ElementType.QUESTION_CONSTRUCT));
+				ElementType.CONTROL_CONSTRUCT_SCHEME, "");
 	}
 }
