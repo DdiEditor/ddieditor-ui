@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SpecificSequenceType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.MultipleQuestionItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.genericselectionlistener.GenericComboSelectionListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.question.MultipleQuestionItem;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DynamicTextTdI;
@@ -30,8 +34,10 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -128,7 +134,19 @@ public class MultipleQuestionItemEditor extends Editor implements ISelectionList
 				conceptReferenceList, new ReferenceSelectionAdapter(
 						refSelecCombo, model, ReferenceType.class,
 						getEditorIdentification()));
+		
+		// - SubQuestion Sequence combobox
+		String subQuestionSequence = modelImpl.getSubQuestionSequence() == null ? ""
+				: modelImpl.getSubQuestionSequence().getItemSequenceType().toString();
 
+		Combo sequencecombo = createSequenceCombo(multiQuestionGroup, Messages
+				.getString("MultipleQuestionItemEditor.label.SubQuestionSequence"),
+				defineItemSequenceSelection(subQuestionSequence));
+
+		sequencecombo.addSelectionListener(new SequenceComboSelectionListener(
+				modelImpl, SpecificSequenceType.class,
+				getEditorIdentification()));
+		
 		// - Multiple Question Item Text
 		DynamicTextType multiQuestionText = null;
 		try {
@@ -178,5 +196,20 @@ public class MultipleQuestionItemEditor extends Editor implements ISelectionList
 		this.modelImpl = (MultipleQuestionItem) model;
 	}
 
+	class SequenceComboSelectionListener extends GenericComboSelectionListener {
+		public SequenceComboSelectionListener(IModel model, Class modifyClass,
+				EditorIdentification editorIdentification) {
+			super(model, modifyClass, editorIdentification);
+		}
 
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			int selected = ((Combo) e.widget).getSelectionIndex();
+			if (selected == 4) {
+				// TODO do item sequence type other stuff
+			}
+			editorIdentification.getEditorStatus().setChanged();
+			applyChange(Editor.getSequenceOptions()[selected], modifyClass);
+		}
+	}
 }
