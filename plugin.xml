@@ -239,7 +239,7 @@
                   default="false"
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor"
-                  name="SequenceEditor">
+                  name="%editor.name.17">
             </editor>
       </extension>
       <extension id="org.eclipse.ui.idexportwizard" name="%extension.name"
