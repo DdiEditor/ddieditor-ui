@@ -6,30 +6,33 @@ import java.util.List;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-import org.aspectj.weaver.ReferenceTypeDelegate;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConceptReferenceDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.LiteralTextDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.LiteralTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.MultipleQuestionItemDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionGroupType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionTextDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SpecificSequenceType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SubQuestionSequenceDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.ConceptReferenceDocumentImpl;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.DynamicTextTypeImpl;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.MultipleQuestionItemTypeImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.SubQuestionSequenceDocumentImpl;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelUpdateElement;
+import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
+import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.util.XmlObjectUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.ReflectionUtil;
-import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -37,13 +40,15 @@ import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 
 public class MultipleQuestionItem extends Model {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, MultipleQuestionItem.class);
-//	private MultipleQuestionItemDocument doc;
 	
 	private MaintainableLabelQueryResult maintainableLabelQueryResult;
 	private List<MaintainableLabelUpdateElement> maintainableUpdateTexts = new ArrayList<MaintainableLabelUpdateElement>();
 	private List<MaintainableLabelUpdateElement> maintainableUpdateConceptRefs = new ArrayList<MaintainableLabelUpdateElement>();
 	private List<DynamicTextType> questionTexts = new ArrayList<DynamicTextType>(); // aka updates
 	private List<ReferenceType> conceptReferences = new ArrayList<ReferenceType>();
+	private MaintainableLabelUpdateElement maintainableUpdateSubQuestionSeq = null;
+	private SpecificSequenceType subQuestionSeq = null;
+	private MaintainableLabelUpdateElement maintainableUpdateSubQuestions = null;
 
 	private XmlOptions xmlOptions = new XmlOptions();
 
@@ -84,6 +89,18 @@ public class MultipleQuestionItem extends Model {
 				maintainableUpdateConceptRefs.add(new MaintainableLabelUpdateElement(((ConceptReferenceDocumentImpl)xmlObjects[i]).getConceptReference(), null /* NOP */));				
 				conceptReferences.add(((ConceptReferenceDocumentImpl)xmlObjects[i]).getConceptReference());
 			}
+
+			// get SubQuestionSequence from Query Result
+			xmlObjects = maintainableLabelQueryResult.getSubElement("SubQuestionSequence");
+			if (xmlObjects.length > 1) {
+				throw new DDIFtpException(Messages
+						.getString("MultipleQuestionItemEditor.mess.UnexceptedNumberOfSubQuestionSequenceFound"));
+			}
+
+			// - store as SpecificSequenceType
+			maintainableUpdateSubQuestionSeq = new MaintainableLabelUpdateElement(
+					((SubQuestionSequenceDocumentImpl) xmlObjects[0]).getSubQuestionSequence(), null /* NOP */);
+			subQuestionSeq = ((SubQuestionSequenceDocumentImpl) xmlObjects[0]).getSubQuestionSequence();
 		}
 
 		xmlOptions.setSaveOuter();
@@ -133,6 +150,22 @@ public class MultipleQuestionItem extends Model {
 	public DynamicTextType[] getQuestionTextAsArray() throws DDIFtpException {
 		return questionTexts.toArray(new DynamicTextType[] {});
 	}
+	
+	/**
+	 * SubQuestion Sequence - Describes the sequencing of the Sub-Question to a
+	 * multiple question item
+	 * 
+	 * @return sub-question sequence
+	 */
+	public SpecificSequenceType getSubQuestionSequence() {
+		return subQuestionSeq;
+	}
+	
+	public SpecificSequenceType[] getSubQuestionSequenceAsArray() {
+		SpecificSequenceType[] result = new SpecificSequenceType[1];
+		result[0] = subQuestionSeq;
+		return result;
+	}
 
 	/**
 	 * Get Question Item Document of Question Item.
@@ -144,7 +177,8 @@ public class MultipleQuestionItem extends Model {
 	public MultipleQuestionItemDocument getDocument() throws DDIFtpException {
 		XmlObject result = XmlObjectUtil.createXmlObjectDocument(maintainableLabelQueryResult.getLocalName());
 		XmlObject type = XmlObjectUtil.addXmlObjectType(result);
-
+		
+		
 		// identification
 		try {
 			// id
@@ -159,16 +193,20 @@ public class MultipleQuestionItem extends Model {
 					&& (!maintainableLabelQueryResult.getAgency().equals(""))) {
 				ReflectionUtil.invokeMethod(type, "setAgency", false, maintainableLabelQueryResult.getAgency());
 			}
-
+			
 			// concept reference
 			ReflectionUtil.invokeMethod(type, "setConceptReferenceArray", false, new Object[] { getConceptREeferenceTypeAsArray() });
-		} catch (Exception e) {
-			throw new DDIFtpException(e);
-		}
-
-		// question text
-		try {
+			
+			// sub-question sequence (optional)
+			if (subQuestionSeq != null) {
+				((MultipleQuestionItemTypeImpl )type).setSubQuestionSequence(getSubQuestionSequence());
+			}
+			
+			// question text
 			ReflectionUtil.invokeMethod(type, "setQuestionTextArray", false, new Object[] { getQuestionTextAsArray() });
+
+			// subquestions
+			((MultipleQuestionItemTypeImpl )type).setSubQuestions(null);
 		} catch (Exception e) {
 			throw new DDIFtpException(e);
 		}
@@ -199,6 +237,25 @@ public class MultipleQuestionItem extends Model {
 						MaintainableLabelUpdateElement.NEW));
 			} else {
 				ModelAccessor.setReference(ref, ((LightXmlObjectType) value));
+			}
+		} else if (type.equals(SpecificSequenceType.class)) {
+			// Set Subquestion Sequence
+			if (!value.equals("")) {
+				int i = Editor.defineItemSequenceSelection((String) value);
+				SpecificSequenceType subSeqType = SpecificSequenceType.Factory.newInstance();
+				ItemSequenceTypeType.Enum itemSequenceType = ItemSequenceTypeType.Enum.forInt(i);
+				subSeqType.setItemSequenceType(itemSequenceType);
+				if (maintainableUpdateSubQuestionSeq == null) {
+					maintainableUpdateSubQuestionSeq = new MaintainableLabelUpdateElement(subSeqType,
+							MaintainableLabelUpdateElement.NEW);
+					subQuestionSeq = SubQuestionSequenceDocument.Factory.newInstance().addNewSubQuestionSequence();
+				} else {
+					maintainableUpdateSubQuestionSeq.setValue(subSeqType.xmlText());
+				}
+				subQuestionSeq.setItemSequenceType(itemSequenceType);
+			}else {
+				maintainableUpdateSubQuestionSeq = null;
+				subQuestionSeq = null;
 			}
 		} else if (type.equals(ModelIdentifingType.Type_A.class)) {
 			// Set Question Text
