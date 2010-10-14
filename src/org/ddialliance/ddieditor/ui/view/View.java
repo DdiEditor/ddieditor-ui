@@ -123,24 +123,22 @@ public class View extends ViewPart implements IPropertyListener {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
+		if (log.isDebugEnabled()) {
+			log.debug("Generic createPartControl called");
+		}
+		
 		parent.setLayout(new GridLayout());
-		log.debug("Generic createPartControl called");
+		parent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 
-		final Composite composite_2 = new Composite(parent, SWT.NONE);
-		composite_2.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-		composite_2
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
-		composite_2.setLayout(new GridLayout());
-
-		final Composite composite_1 = new Composite(composite_2, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+		final Composite titleComposite = new Composite(parent, SWT.NONE);
+		titleComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false));
 		final GridLayout gridLayout_1 = new GridLayout();
-		composite_1.setLayout(gridLayout_1);
-		composite_1.setBackground(SWTResourceManager.getColor(230, 230, 250));
+		titleComposite.setLayout(gridLayout_1);
+		titleComposite
+				.setBackground(SWTResourceManager.getColor(230, 230, 250));
 
-		final Label navigationTitle = new Label(composite_1, SWT.WRAP);
+		final Label navigationTitle = new Label(titleComposite, SWT.WRAP);
 		navigationTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false));
 		navigationTitle.setBackground(SWTResourceManager
@@ -149,7 +147,7 @@ public class View extends ViewPart implements IPropertyListener {
 				.getFont("Sans", 14, SWT.BOLD));
 		navigationTitle.setText(viewTitle);
 
-		final Label selectLabel = new Label(composite_1, SWT.WRAP);
+		final Label selectLabel = new Label(titleComposite, SWT.WRAP);
 		selectLabel.setRedraw(true);
 		final GridData gd_selectLabel = new GridData(SWT.FILL, SWT.CENTER,
 				true, false);
@@ -159,20 +157,22 @@ public class View extends ViewPart implements IPropertyListener {
 		selectLabel.setText(viewDescr);
 
 		// Prepare TreeViewer
-		Composite composite = new Composite(composite_2, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
-		composite.setBackground(Display.getCurrent().getSystemColor(
+		Composite treeViewerCompsite = new Composite(parent, SWT.NONE);
+		treeViewerCompsite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				false, true));
+		treeViewerCompsite.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
-		composite.setLayout(layout);
+		treeViewerCompsite.setLayout(layout);
 
-		final Label viewEntityNameLabel = new Label(composite, SWT.NONE);
+		final Label viewEntityNameLabel = new Label(treeViewerCompsite,
+				SWT.NONE);
 		viewEntityNameLabel.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
 		viewEntityNameLabel.setText(viewEntityName);
 
-		filterText = new Text(composite, SWT.BORDER);
+		filterText = new Text(treeViewerCompsite, SWT.BORDER);
 		filterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
 				false));
 		filterText.addKeyListener(new KeyAdapter() {
@@ -190,7 +190,7 @@ public class View extends ViewPart implements IPropertyListener {
 		});
 
 		// Define group
-		final Group treeGroup = new Group(composite, SWT.NONE);
+		final Group treeGroup = new Group(treeViewerCompsite, SWT.NONE);
 		treeGroup.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
 		final GridLayout gridLayout = new GridLayout();
@@ -239,8 +239,8 @@ public class View extends ViewPart implements IPropertyListener {
 	 */
 	private void createActions() {
 
-		expandAllAction = new Action(Messages
-				.getString("View.label.expandAllAction.ExpandAll")) { //$NON-NLS-1$)
+		expandAllAction = new Action(
+				Messages.getString("View.label.expandAllAction.ExpandAll")) { //$NON-NLS-1$)
 			public void run() {
 				treeViewer.expandAll();
 			}
@@ -249,8 +249,8 @@ public class View extends ViewPart implements IPropertyListener {
 				.getPluginImageDescriptor(Activator.getDefault(),
 						"icons/expand_all.gif"));
 
-		collapseAllAction = new Action(Messages
-				.getString("View.label.collapseAllAction.CollapseAll")) { //$NON-NLS-1$)
+		collapseAllAction = new Action(
+				Messages.getString("View.label.collapseAllAction.CollapseAll")) { //$NON-NLS-1$)
 			public void run() {
 				treeViewer.collapseAll();
 			}
