@@ -1,5 +1,8 @@
 package org.ddialliance.ddieditor.ui.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.ddialliance.ddieditor.ui.editor.category.CategoryEditor;
 import org.ddialliance.ddieditor.ui.editor.category.CategorySchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor;
@@ -41,63 +44,80 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
  * <li>editorId - corresponding RCP editor ID</li>
  * <li>idPrefix - prefix for DDI ID generation</li>
  * <li>displayMessageEntry - message key for retrieving i18n label of elementName</li>
+ * <li>if OPEN - support for open view given
+ * <li>list of subelements (e.g. Multiple Question Item and Question Item are subelements to Question Scheme)
  * </ul>
  */
 public enum ElementType {
 	// application
-	FILE("", InfoPerspective.ID, FileEditor.ID, "", "ddi3file.label", ""), MAINTAINABLE_LIGHTLABEL("", "", "", "", "",
-			""),
+	FILE("", InfoPerspective.ID, FileEditor.ID, "", "ddi3file.label", "", null), 
+	MAINTAINABLE_LIGHTLABEL("", "", "", "", "",	"", null),
 
 	// studyunit
 	CONCEPTUAL_STUDY_UNIT("studyunit__StudyUnit", "", StudyUnitEditor.ID, "",
-			"InfoView.label.studyUnitLabel.StudyUnit", "OPEN"), STUDY_UNIT("studyunit__StudyUnit", "",
-			StudyUnitEditor.ID, "stdu", "InfoView.label.studyUnitLabel.StudyUnit", "OPEN"),
+			"InfoView.label.studyUnitLabel.StudyUnit", "OPEN", null), STUDY_UNIT("studyunit__StudyUnit", "",
+			StudyUnitEditor.ID, "stdu", "InfoView.label.studyUnitLabel.StudyUnit", "OPEN", null),
 
 	// universe
+	UNIVERSE("Universe", UniversePerspective.ID,
+					UniverseEditor.ID, "univ", "UniverseView.label.universeLabel.Universe", "", null),
 	UNIVERSE_SCHEME("UniverseScheme", UniversePerspective.ID, UniverseSchemeEditor.ID, "unis", 
-			"UniverseView.label.universeSchemeLabel.UniverseScheme", ""), UNIVERSE("Universe", UniversePerspective.ID,
-			UniverseEditor.ID, "univ", "UniverseView.label.universeLabel.Universe", ""),
+			"UniverseView.label.universeSchemeLabel.UniverseScheme", "", Arrays
+			.asList(ElementType.UNIVERSE)), 
 
 	// concept
+	CONCEPT("Concept", ConceptsPerspective.ID, ConceptEditor.ID, "conc", "ConceptView.label.conceptLabel.Concept", "",
+			null), 
 	CONCEPT_SCHEME("ConceptScheme", ConceptsPerspective.ID, ConceptSchemeEditor.ID, "cons",
-			"ConceptView.label.conceptSchemeLabel.ConceptScheme", ""), CONCEPT("Concept", ConceptsPerspective.ID,
-			ConceptEditor.ID, "conc", "ConceptView.label.conceptLabel.Concept", ""),
-
+			"ConceptView.label.conceptSchemeLabel.ConceptScheme", "", Arrays.asList(ElementType.CONCEPT)),
 	// question
+	QUESTION_ITEM("QuestionItem",
+					QuestionsPerspective.ID, QuestionItemEditor.ID, "quei",
+					"QuestionItemView.label.questionItemLabel.QuestionItem", "", null),
+	MULTIPLE_QUESTION_ITEM(
+			"MultipleQuestionItem", QuestionsPerspective.ID, MultipleQuestionItemEditor.ID, "mquei",
+			"QuestionItemView.label.multipleQuestionItemLabel.MultipleQuestionItem", "", Arrays.asList(
+					ElementType.QUESTION_ITEM)), 
 	QUESTION_SCHEME("QuestionScheme", QuestionsPerspective.ID, QuestionSchemeEditor.ID, "ques",
-			"QuestionItemView.label.questionSchemeLabel.QuesitionScheme", ""),
-	MULTIPLE_QUESTION_ITEM("MultipleQuestionItem", QuestionsPerspective.ID, MultipleQuestionItemEditor.ID, "mquei",
-			"QuestionItemView.label.multipleQuestionItemLabel.MultipleQuestionItem", ""),
-	QUESTION_ITEM("QuestionItem", QuestionsPerspective.ID, QuestionItemEditor.ID, "quei",
-			"QuestionItemView.label.questionItemLabel.QuestionItem", ""),
+			"QuestionItemView.label.questionSchemeLabel.QuesitionScheme", "", 
+			Arrays.asList(ElementType.QUESTION_ITEM, ElementType.MULTIPLE_QUESTION_ITEM)), 
 
 	// category
+	CATEGORY("Category", CategoryPerspective.ID, CategoryEditor.ID, "cat", "CategoryView.label.categoryLabel.Category",
+			"", null), 
 	CATEGORY_SCHEME("CategoryScheme", CategoryPerspective.ID, CategorySchemeEditor.ID, "cats",
-			"CategoryView.label.categorySchemeLabel.CategoryScheme", ""), CATEGORY("Category", CategoryPerspective.ID,
-			CategoryEditor.ID, "cat", "CategoryView.label.categoryLabel.Category", ""),
+			"CategoryView.label.categorySchemeLabel.CategoryScheme", "", 
+			Arrays.asList(ElementType.CATEGORY)),
 
 	// code
 	CODE_SCHEME("CodeScheme", CodesPerspective.ID, CodeSchemeEditor.ID, "cods",
-			"codeView.label.codeSchemeLabel.CodeScheme", ""),
+			"codeView.label.codeSchemeLabel.CodeScheme", "", null),
 
 	// instrument
 	INSTRUMENT("Instrument", InstrumentPerspective.ID, InstrumentEditor.ID, "inst",
-			"InstrumentItemView.label.instrumentItemLabel.Instrument", ""), CONTROL_CONSTRUCT_SCHEME(
-			"ControlConstructScheme", InstrumentPerspective.ID, ControlConstructSchemeEditor.ID, "cocs",
-			"InstrumentView.ControlConstructScheme.label", ""), QUESTION_CONSTRUCT("QuestionConstruct",
-			InstrumentPerspective.ID, QuestionConstructEditor.ID, "quec", "InstrumentView.QuestionConstruct.label", ""), STATEMENT_ITEM(
-			"StatementItem", InstrumentPerspective.ID, StatementItemEditor.ID, "stai",
-			"InstrumentView.StatementItem.label", ""), IF_THEN_ELSE("IfThenElse", InstrumentPerspective.ID,
-			IfThenElseEditor.ID, "ifth", "InstrumentView.IfThenElse.label", ""), REPEAT_UNTIL("RepeatUntil",
-			InstrumentPerspective.ID, RepeatUntilEditor.ID, "repu", "InstrumentView.RepeatUntil.label", ""), LOOP(
-			"Loop", InstrumentPerspective.ID, LoopEditor.ID, "loop", "InstrumentView.Loop.label", ""), REPEAT_WHILE(
-			"RepeatWhile", InstrumentPerspective.ID, RepeatWhileEditor.ID, "repw", "InstrumentView.RepeatWhile.label",
-			""), SEQUENCE("Sequence", InstrumentPerspective.ID, SequenceEditor.ID, "seqc",
-			"InstrumentView.Sequence.label", ""), COMPUTATION_ITEM("ComputationItem", InstrumentPerspective.ID,
-			ComputationItemEditor.ID, "copi", "InstrumentView.ComputationItem.label", ""),
+			"InstrumentItemView.label.instrumentItemLabel.Instrument", "", null), 
+	QUESTION_CONSTRUCT("QuestionConstruct",InstrumentPerspective.ID, 
+			QuestionConstructEditor.ID, "quec", "InstrumentView.QuestionConstruct.label", "", null), 
+	STATEMENT_ITEM("StatementItem", InstrumentPerspective.ID, StatementItemEditor.ID, "stai",
+			"InstrumentView.StatementItem.label", "", null), 
+	IF_THEN_ELSE("IfThenElse", InstrumentPerspective.ID,
+			IfThenElseEditor.ID, "ifth", "InstrumentView.IfThenElse.label", "", null), 
+	REPEAT_UNTIL("RepeatUntil",	InstrumentPerspective.ID, RepeatUntilEditor.ID, "repu", 
+			"InstrumentView.RepeatUntil.label", "", null), 
+	LOOP("Loop", InstrumentPerspective.ID, LoopEditor.ID, "loop", "InstrumentView.Loop.label", "", null), 
+	REPEAT_WHILE("RepeatWhile", InstrumentPerspective.ID, RepeatWhileEditor.ID, "repw", "InstrumentView.RepeatWhile.label",
+			"", null), 
+	SEQUENCE("Sequence", InstrumentPerspective.ID, SequenceEditor.ID, "seqc",
+			"InstrumentView.Sequence.label", "", null), 
+	COMPUTATION_ITEM("ComputationItem", InstrumentPerspective.ID,
+			ComputationItemEditor.ID, "copi", "InstrumentView.ComputationItem.label", "", null),
+	CONTROL_CONSTRUCT_SCHEME("ControlConstructScheme", InstrumentPerspective.ID, ControlConstructSchemeEditor.ID, "cocs",
+					"InstrumentView.ControlConstructScheme.label", "", Arrays.asList(ElementType.QUESTION_CONSTRUCT, 
+							ElementType.STATEMENT_ITEM, ElementType.IF_THEN_ELSE, ElementType.REPEAT_UNTIL, ElementType.LOOP,
+							ElementType.REPEAT_WHILE, ElementType.SEQUENCE, ElementType.COMPUTATION_ITEM)), 
 
 	// variable
-	VARIABLE_SCHEME("Variable", null, null, "vars", "", ""), VARIABLE("Variable", null, null, "vari", "", "");
+	VARIABLE_SCHEME("Variable", null, null, "vars", "", "", null), VARIABLE("Variable", null, null, "vari", "", "", null);
 
 	private String elementName;
 	private String perspectiveId;
@@ -105,6 +125,7 @@ public enum ElementType {
 	private String idPrefix;
 	private String displayMessageEntry;
 	private String withOpen;
+	private List<ElementType> subElements;
 
 	/**
 	 * Constructor
@@ -119,15 +140,18 @@ public enum ElementType {
 	 *            prefix for DDI ID generation
 	 * @param displayMessageEntry
 	 *            message key for retrieving i18n label of elementName
+	 * @param open view supported
+	 * @param list of additional subelements
 	 */
 	private ElementType(String elementName, String perspectiveId, String editorId, String idPrefix,
-			String displayMessageEntry, String withOpen) {
+			String displayMessageEntry, String withOpen, List<ElementType> subElements) {
 		this.elementName = elementName;
 		this.perspectiveId = perspectiveId;
 		this.editorId = editorId;
 		this.idPrefix = idPrefix;
 		this.displayMessageEntry = displayMessageEntry;
 		this.withOpen = withOpen;
+		this.subElements = subElements;
 	}
 
 	public String getElementName() {
@@ -166,6 +190,10 @@ public enum ElementType {
 
 	public String getWithOpen() {
 		return withOpen;
+	}
+	
+	public List<ElementType> getSubElements() {
+		return subElements;
 	}
 
 	public static String getPerspectiveId(String elementName) throws DDIFtpException {
