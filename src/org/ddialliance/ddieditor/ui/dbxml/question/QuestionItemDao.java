@@ -99,7 +99,6 @@ public class QuestionItemDao implements IDao {
 	public QuestionItem create(String id, String version, String parentId,
 			String parentVersion) throws Exception {
 		log.debug("QuestionItems.createQuestionItem()");
-
 		
 		QuestionItemDocument doc = QuestionItemDocument.Factory.newInstance();
 		IdentificationManager.getInstance().addIdentification(
@@ -163,9 +162,12 @@ public class QuestionItemDao implements IDao {
 		log.debug("Create DBXML Question Item:\n" + questionItem.getDocument()
 				+ " Parent Id: " + questionItem.getParentId());
 		try {
+//			DdiManager.getInstance().createElement(questionItem.getDocument(),
+//					questionItem.getParentId(),
+//					questionItem.getParentVersion(), "QuestionScheme");
 			DdiManager.getInstance().createElement(questionItem.getDocument(),
 					questionItem.getParentId(),
-					questionItem.getParentVersion(), "QuestionScheme");
+					questionItem.getParentVersion(), "MultipleQuestionItem");
 		} catch (DDIFtpException e) {
 			log.error("Create DBXML Question Item error: " + e.getMessage());
 
