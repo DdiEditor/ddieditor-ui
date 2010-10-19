@@ -19,6 +19,9 @@ public class CloseOpenEditors extends org.eclipse.core.commands.AbstractHandler 
 		for (int i = 0; i < openEditors.length; i++) {
 			try {
 				for (int j = 0; j < resourceIds.length; j++) {
+					if (!(openEditors[i].getEditorInput() instanceof EditorInput)) {
+						continue;
+					}					
 					editorInput = ((EditorInput) openEditors[i].getEditorInput());
 					if (editorInput
 							.getResourceId().equals(resourceIds[j])) {
