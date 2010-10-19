@@ -1,30 +1,20 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 0.4.0
-Release Data: 2010-10-08
+Product Version: 0.x.0
+Release Data: 2010-11-xx
 
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
- -          Instrumentation overhaul
- -          Multiple question item editor added
- -          Bug fix: scheme editor for wrong xml type for description, used
-  label
- -          Bug fix: create subelement for all schemes
- -          Bug fix: - on corfirm delete dialog
+ -          Fixed bug on delete single resource
    
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
- -          Refactoring of DDI indexing of identifiable - label relation
- -          Performance enhancement of maintainable label query
- -          Open editor refactoring to allow opening of editors outside of 
- a view
- - 			Editor create sequence combo support
- -          Added generic selection modify listener
+ -          
 
 -------------------------------------------------------------------------------
 Change Log Previous Releases
@@ -39,7 +29,7 @@ See http://172.20.33.20:8080/devwiki/en/Installation
 -------------------------------------------------------------------------------
 Uninstalling
 -------------------------------------------------------------------------------
-Remove installation directory e.g. C:\Programmer\ddieditor-ui
+Remove installation directory e.g. C:\Programmer\ddieditor
 
 -------------------------------------------------------------------------------
 Known Issue
