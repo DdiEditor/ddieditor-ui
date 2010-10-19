@@ -9,6 +9,7 @@ What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
+ -          Removed unused space in views 
  -          Fixed bug on delete single resource
    
 -------------------------------------------------------------------------------  
