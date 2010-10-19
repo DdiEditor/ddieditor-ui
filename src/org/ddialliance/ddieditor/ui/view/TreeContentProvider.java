@@ -299,7 +299,6 @@ public class TreeContentProvider implements IStructuredContentProvider,
 	@Override
 	public boolean hasChildren(Object element) {
 		// light xml beans
-		System.out.println(element.toString());
 		if (element instanceof LightXmlObjectType) {
 			String localName = ((LightXmlObjectType) element).getElement();
 			boolean result = false;
