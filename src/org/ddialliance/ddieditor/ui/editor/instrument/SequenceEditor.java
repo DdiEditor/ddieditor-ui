@@ -22,8 +22,6 @@ import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.model.instrument.Sequence;
-import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
-import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
@@ -42,22 +40,23 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -85,6 +84,10 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		this.dao = new SequenceDao();
 	}
 
+	public Viewer getViewer() {
+		return tableViewer;
+	}
+	
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
@@ -97,8 +100,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			controlConstructsTemp = DdiManager.getInstance()
 					.getInstrumentLabel(null, null, null, null);
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(getSite().getShell(), ID, null, e
-					.getMessage(), e);
+			DialogUtil.errorDialog(getSite().getShell(), ID, null,
+					e.getMessage(), e);
 		}
 
 		for (LinkedList<LightXmlObjectType> lightXmlObjectList : controlConstructsTemp
@@ -121,18 +124,12 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 	}
 
 	@Override
-	public void createPartControl(Composite parent) {
+	public void createPartControl(final Composite parent) {
 		super.createPartControl(parent);
-		parent.setLayout(new GridLayout());
-		createTabFolder(getComposite_1());
-
-		// main tab
-		TabItem tabItem = createTabItem(Messages.getString("Sequence"));
-		Group group = createGroup(tabItem, Messages.getString("Sequence"));
 
 		// table viewer, table, table label provider, table content label
 		// provider
-		tableViewer = new TableViewer(group, SWT.MULTI | SWT.H_SCROLL
+		tableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		tableViewer.getTable().setLayoutData(
 				new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -142,190 +139,18 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		tableViewer.setLabelProvider(tableLabelProvider);
 		tableViewer.setInput(items);
 
-		// dnd
+		// dnd difs
 		int operations = DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT;
 		Transfer[] transferTypes = new Transfer[] { LightXmlObjectTransfer
-				.getInstance()
-		// , TextTransfer.getInstance()
-		};
+				.getInstance() };
 
-		//
 		// drag
-		//
+		tableViewer.addDragSupport(operations, transferTypes,
+				new SequenceDragListener(tableViewer));
 
-		// jface
-		// tableViewer.addDragSupport(operations, transferTypes,
-		// new SequenceDragListener(tableViewer));
-
-		// swt
-		// DragSource source = new DragSource(tableViewer.getTable(),
-		// DND.DROP_MOVE);
-		// source.setTransfer(transferTypes);
-		// source.addDragListener(new DragSourceAdapter() {
-		// public void dragSetData(DragSourceEvent event) {
-		// // Get the selected items in the drag source
-		// log.debug("dragSetData");
-		// DragSource ds = (DragSource) event.widget;
-		// Table table = (Table) ds.getControl();
-		// TableItem[] selection = table.getSelection();
-		//
-		// StringBuffer buff = new StringBuffer();
-		// for (int i = 0, n = selection.length; i < n; i++) {
-		// buff.append(selection[i].getText());
-		// }
-		// event.data = buff.toString();
-		// }
-		//
-		// @Override
-		// public void dragStart(DragSourceEvent event) {
-		// log.debug("dragStart");
-		// event.doit=true;
-		// //super.dragStart(event);
-		// }
-		//
-		// @Override
-		// public void dragFinished(DragSourceEvent event) {
-		// log.debug("dragFinished");
-		// super.dragFinished(event);
-		// }
-		// });
-
-		//		 
 		// drop
-		//
-
-		// jface
-		// SequenceDropListener test = new SequenceDropListener(tableViewer);
-		// tableViewer.addDropSupport(operations, transferTypes,
-		// test);
-
-		// swt
-		// DropTarget target = new DropTarget(tableViewer.getTable(),
-		// DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT);
-		// target.setTransfer(transferTypes);
-		// target.addDropListener(new DropTargetAdapter() {
-		// public void dragEnter(DropTargetEvent event) {
-		// if (event.detail == DND.DROP_DEFAULT) {
-		// event.detail = (event.operations & DND.DROP_COPY) != 0 ?
-		// DND.DROP_COPY : DND.DROP_NONE;
-		// }
-		//
-		// // Allow dropping text only
-		// for (int i = 0, n = event.dataTypes.length; i < n; i++) {
-		// if (TextTransfer.getInstance().isSupportedType(event.dataTypes[i])) {
-		// event.currentDataType = event.dataTypes[i];
-		// }
-		// }
-		// }
-		//
-		// public void dragOver(DropTargetEvent event) {
-		// event.feedback = DND.FEEDBACK_SELECT | DND.FEEDBACK_SCROLL;
-		// }
-		// public void drop(DropTargetEvent event) {
-		// if
-		// (TextTransfer.getInstance().isSupportedType(event.currentDataType)) {
-		// // Get the dropped data
-		// DropTarget target = (DropTarget) event.widget;
-		// Table table = (Table) target.getControl();
-		// String data = (String) event.data;
-		//
-		// // Create a new item in the table to hold the dropped data
-		// TableItem item = new TableItem(table, SWT.NONE);
-		// item.setText(new String[] { data });
-		// table.redraw();
-		// }
-		// }
-		// });
-
-		// tableViewer.addDropSupport(operations, transferTypes,
-		// new DropTargetListener() {
-		//			
-		// @Override
-		// public void dropAccept(DropTargetEvent event) {
-		// // TODO Auto-generated method stub
-		// System.out.println("break");
-		// }
-		//			
-		// @Override
-		// public void drop(DropTargetEvent event) {
-		// // TODO Auto-generated method stub
-		// System.out.println("break");
-		// }
-		//			
-		// @Override
-		// public void dragOver(DropTargetEvent event) {
-		// // TODO Auto-generated method stub
-		// System.out.println("break");
-		// }
-		//			
-		// @Override
-		// public void dragOperationChanged(DropTargetEvent event) {
-		// // TODO Auto-generated method stub
-		// System.out.println("break");
-		// }
-		//			
-		// @Override
-		// public void dragLeave(DropTargetEvent event) {
-		// // TODO Auto-generated method stub
-		// System.out.println("break");
-		// }
-		//			
-		// @Override
-		// public void dragEnter(DropTargetEvent event) {
-		// // TODO Auto-generated method stub
-		// System.out.println("break");
-		// }
-		// });
-		// DropTarget target = new DropTarget(tableViewer.getTable(),
-		// DND.DROP_MOVE );
-		// target.setTransfer(transferTypes);
-		// target.addDropListener(new DropTargetAdapter() {
-		// public void dragEnter(DropTargetEvent event) {
-		// log.debug("dragEnter");
-		// if (event.detail == DND.DROP_DEFAULT) {
-		// event.detail = (event.operations & DND.DROP_COPY) != 0 ?
-		// DND.DROP_COPY
-		// : DND.DROP_NONE;
-		// }
-		//
-		// // Allow dropping text only
-		// for (int i = 0, n = event.dataTypes.length; i < n; i++) {
-		// if (TextTransfer.getInstance().isSupportedType(
-		// event.dataTypes[i])) {
-		// event.currentDataType = event.dataTypes[i];
-		// }
-		// }
-		// }
-		//
-		// public void dragOver(DropTargetEvent event) {
-		// log.debug("dragOver");
-		// event.feedback = DND.FEEDBACK_SELECT | DND.FEEDBACK_SCROLL;
-		// }
-		//
-		// public void drop(DropTargetEvent event) {
-		// log.debug("drop");
-		// if (TextTransfer.getInstance().isSupportedType(
-		// event.currentDataType)) {
-		// // Get the dropped data
-		// DropTarget target = (DropTarget) event.widget;
-		// Table table = (Table) target.getControl();
-		// String data = (String) event.data;
-		//
-		// // Create a new item in the table to hold the dropped data
-		// TableItem item = new TableItem(table, SWT.NONE);
-		// item.setText(new String[] { data });
-		// table.redraw();
-		// }
-		// }
-		//
-		// @Override
-		// public void dropAccept(DropTargetEvent event) {
-		// log.debug("dropAccept");
-		// // TODO Auto-generated method stub
-		// super.dropAccept(event);
-		// }
-		//
-		// });
+		tableViewer.addDropSupport(operations, transferTypes,
+				new SequenceDropListener(this));
 
 		// popup menu
 		Menu menu = new Menu(tableViewer.getControl());
@@ -334,8 +159,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		final MenuItem addMenuItem = new MenuItem(menu, SWT.CASCADE);
 		addMenuItem.setSelection(true);
 		addMenuItem.setText(Messages.getString("View.label.addMenuItem.Add"));
-		addMenuItem.setImage(ResourceManager.getPluginImage(Activator
-				.getDefault(), "icons/new_wiz.gif"));
+		addMenuItem.setImage(ResourceManager.getPluginImage(
+				Activator.getDefault(), "icons/new_wiz.gif"));
 		addMenuItem.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				popupMenuAction(PopupAction.ADD);
@@ -346,8 +171,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		MenuItem editMenuItem = new MenuItem(menu, SWT.NONE);
 		editMenuItem
 				.setText(Messages.getString("View.label.editMenuItem.Edit"));
-		editMenuItem.setImage(ResourceManager.getPluginImage(Activator
-				.getDefault(), "icons/editor_area.gif"));
+		editMenuItem.setImage(ResourceManager.getPluginImage(
+				Activator.getDefault(), "icons/editor_area.gif"));
 		editMenuItem.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				popupMenuAction(PopupAction.EDIT);
@@ -358,8 +183,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		final MenuItem removeMenuItem = new MenuItem(menu, SWT.NONE);
 		removeMenuItem.setText(Messages
 				.getString("View.label.removeMenuItem.Remove"));
-		removeMenuItem.setImage(ResourceManager.getPluginImage(Activator
-				.getDefault(), "icons/delete_obj.gif"));
+		removeMenuItem.setImage(ResourceManager.getPluginImage(
+				Activator.getDefault(), "icons/delete_obj.gif"));
 		removeMenuItem.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				popupMenuAction(PopupAction.REMOVE);
@@ -367,64 +192,45 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		});
 		tableViewer.getControl().setMenu(menu);
 
-		// specific sequence
+		// properties
+		Group pGroup = createGroup(parent, Messages.getString("SequenceEditor.properties"));
 
-		// description tab
-		TabItem tabItem2 = createTabItem(Messages
-				.getString("editor.label.description"));
-		Group group2 = createGroup(tabItem2, Messages
-				.getString("editor.label.description"));
+		Label label = createLabel(pGroup, Messages.getString("SequenceEditor.properties"));
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1,
+				1));
+		Button button = new Button(pGroup, 0);
+		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				1, 1));
+		button.setText(Messages.getString("SequenceEditor.properties"));
+		button.addSelectionListener(new PropertiesEditorListener(this));
 
-		try {
-			Text txt = createLabelInput(group2, Messages
-					.getString("editor.label.label"), modelImpl.getDocument()
-					.getSequence().getLabelList(), modelImpl.getDocument()
-					.getSequence().getId());
+		// clear unwanted changes
+		editorStatus.clearChanged();
+	}
 
-			createTranslation(group2, Messages
-					.getString("editor.button.translate"), modelImpl
-					.getDocument().getSequence().getLabelList(),
-					new LabelTdI(), "", txt);
+	class PropertiesEditorListener implements SelectionListener {
+		Editor editor;
 
-			StyledText styledText = createStructuredStringInput(group2,
-					Messages.getString("editor.label.description"), modelImpl
-							.getDocument().getSequence().getDescriptionList(),
-					modelImpl.getDocument().getSequence().getId());
-			createTranslation(group2, Messages
-					.getString("editor.button.translate"), modelImpl
-					.getDocument().getSequence().getDescriptionList(),
-					new DescriptionTdI(), "", styledText);
-		} catch (DDIFtpException e) {
-			DialogUtil
-					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
+		PropertiesEditorListener(Editor editor) {
+			this.editor = editor;
 		}
 
-		// id tab
-		createPropertiesTab(getTabFolder());
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			SequencePropertiesDialog spd = new SequencePropertiesDialog(editor
+					.getSite().getShell(), Messages.getString("Sequence"), editor);
+			spd.open();
+		}
 
-		// xml tab
-		createXmlTab(modelImpl);
-
-		editorStatus.clearChanged();
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			// do nothing
+		}
 	}
 
 	// ------------------------------------------------------------------------
 	// table support
 	// ------------------------------------------------------------------------
-	/**
-	 * Add new element item to table
-	 * 
-	 * @param tableCount
-	 *            - number of already existing table items.
-	 * @return
-	 * @throws DDIFtpException
-	 */
-	private final Object addItem(int tableItemCount) throws DDIFtpException {
-		XmlObject xml = null;
-		// do some logic here on xml
-		return xml;
-	}
-
 	public List<Object> getItems() {
 		return items;
 	}
@@ -452,8 +258,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 					labelQueryResult = DdiManager.getInstance()
 							.getInstrumentLabel(null, null, null, null);
 				} catch (DDIFtpException e) {
-					DialogUtil.errorDialog(getSite().getShell(), ID, null, e
-							.getMessage(), e);
+					DialogUtil.errorDialog(getSite().getShell(), ID, null,
+							e.getMessage(), e);
 				}
 
 				for (LinkedList<LightXmlObjectType> search : labelQueryResult
@@ -463,7 +269,13 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 						LightXmlObjectType lightXmlObjectType = iterator.next();
 						for (LightXmlObjectType item : (Collection<LightXmlObjectType>) items) {
 							if (lightXmlObjectType.getId().equals(item.getId())) {
-								iterator.remove();
+								try {
+									iterator.remove();
+								} catch (IllegalStateException e) {
+									continue; // hack to prevent exception on
+												// duplicate control construct
+												// in list
+								}
 								continue; // guard to not remove it twice in
 								// case of duplicates
 							}
@@ -473,8 +285,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 				}
 				labelQueryResult = null;
 				SequenceMenuPopupAddDialog addDialog = new SequenceMenuPopupAddDialog(
-						getSite().getShell(), Messages
-								.getString("SequenceEditor.adddialog.title"),
+						getSite().getShell(),
+						Messages.getString("SequenceEditor.adddialog.title"),
 						Messages.getString("SequenceEditor.adddialog.label"),
 						controlConstructRefList, modelImpl);
 				addDialog.open();
@@ -491,10 +303,11 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 
 							if (insert < items.size()) {
 								// add xml
-								modelImpl.getDocument().getSequence()
+								modelImpl
+										.getDocument()
+										.getSequence()
 										.getControlConstructReferenceList()
-										.add(
-												insert,
+										.add(insert,
 												new ReferenceResolution(
 														addDialog.getResult())
 														.getReference());
@@ -503,12 +316,12 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 								items.add(insert, addDialog.getResult());
 							} else {
 								// add xml
-								modelImpl.getDocument().getSequence()
+								modelImpl
+										.getDocument()
+										.getSequence()
 										.getControlConstructReferenceList()
-										.add(
-												new ReferenceResolution(
-														addDialog.getResult())
-														.getReference());
+										.add(new ReferenceResolution(addDialog
+												.getResult()).getReference());
 
 								// add table
 								items.add(addDialog.getResult());
@@ -613,8 +426,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			case 2:
 				try {
 					label = (LabelType) XmlBeansUtil.getLangElement(
-							LanguageUtil.getDisplayLanguage(), lightXmlObject
-									.getLabelList());
+							LanguageUtil.getDisplayLanguage(),
+							lightXmlObject.getLabelList());
 				} catch (DDIFtpException e) {
 					showError(e);
 				}
@@ -622,8 +435,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 						.getTextOnMixedElement(label);
 			default:
 				DDIFtpException e = new DDIFtpException(
-						Messages
-								.getString("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
+						Messages.getString("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
 				showError(e);
 			}
 			return "";
@@ -638,6 +450,10 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		@Override
 		public Object[] getElements(Object parent) {
 			return items.toArray();
+		}
+
+		public List getItems() {
+			return items;
 		}
 
 		@Override
