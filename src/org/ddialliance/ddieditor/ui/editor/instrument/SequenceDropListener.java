@@ -12,7 +12,9 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorIdentification;
 import org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor.SequenceTableContentProvider;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.LightXmlObjectTransfer;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.LightXmlObjectTransferVO;
 import org.ddialliance.ddieditor.ui.model.instrument.Sequence;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -45,9 +47,7 @@ public class SequenceDropListener extends ViewerDropAdapter {
 	@Override
 	public void drop(DropTargetEvent event) {
 		super.drop(event);
-		// DropTarget target = (DropTarget) event.widget;
-		// drop = target.getData();
-		log.debug(event);
+		// log.debug(event);
 	}
 
 	int count = 0;
@@ -56,6 +56,11 @@ public class SequenceDropListener extends ViewerDropAdapter {
 
 	@Override
 	public boolean performDrop(Object data) {
+		if (data == null) { // guard
+			new DDIFtpException("Data is null", new Throwable());
+		}
+
+		LightXmlObjectTransferVO lXmlObjectTransferVO = (LightXmlObjectTransferVO) data;
 		update = false;
 		count = 0; // count is before
 		insertPosition = -1;
@@ -94,26 +99,25 @@ public class SequenceDropListener extends ViewerDropAdapter {
 		if (update) {
 			int from = 0;
 			boolean found = false;
-			LightXmlObjectType dragedLightXmlObject = (LightXmlObjectType) data;
 			for (int i = 0; i < stcp.getItems().size(); i++) {
-				if (dragedLightXmlObject.valueEquals((XmlObject) stcp
-						.getItems().get(i))) {
+				if (lXmlObjectTransferVO.lightXmlObject
+						.valueEquals((XmlObject) stcp.getItems().get(i))) {
 					found = true;
 					from = i;
 					// rcp
 					log.debug("Items: " + stcp.getItems().remove(i));
 					ReferenceType reference = new ReferenceResolution(
 							(LightXmlObjectType) data).getReference();
-					
 
 					// xml
-					for (ReferenceType controlConstructRef : sequenceEditor.modelImpl.getDocument()
-										.getSequence()
-										.getControlConstructReferenceList()) {
+					for (ReferenceType controlConstructRef : sequenceEditor.modelImpl
+							.getDocument().getSequence()
+							.getControlConstructReferenceList()) {
 						if (reference.valueEquals(controlConstructRef)) {
 							sequenceEditor.modelImpl.getDocument()
-							.getSequence()
-							.getControlConstructReferenceList().remove(controlConstructRef);
+									.getSequence()
+									.getControlConstructReferenceList()
+									.remove(controlConstructRef);
 							break;
 						}
 					}
@@ -138,7 +142,7 @@ public class SequenceDropListener extends ViewerDropAdapter {
 
 				// rcp
 				try {
-					stcp.getItems().remove(dragedLightXmlObject);
+					stcp.getItems().remove(lXmlObjectTransferVO.lightXmlObject);
 
 					// stcp.getItems().remove(count);
 					// ((TableViewer)
