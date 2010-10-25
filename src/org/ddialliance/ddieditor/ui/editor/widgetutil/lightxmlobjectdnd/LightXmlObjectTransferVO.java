@@ -1,4 +1,4 @@
-package org.ddialliance.ddieditor.ui.editor.widgetutil;
+package org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd;
 
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 

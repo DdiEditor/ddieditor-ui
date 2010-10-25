@@ -1,4 +1,4 @@
-package org.ddialliance.ddieditor.ui.editor.widgetutil;
+package org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
