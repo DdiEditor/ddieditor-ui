@@ -254,17 +254,16 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		descriptionLabel.setText(description);
 
 		// clean dirt from initialization
-		editorStatus.clearChanged();	
+		editorStatus.clearChanged();
 	}
-	
+
 	public void createPartControl(Composite parent) {
 		// general ui layout
 		// composite = new Composite(parent, SWT.BORDER);
 		// composite.setLayout(new GridLayout());
 		// composite.setRedraw(true);
 
-		final GridData gdParent = new GridData(SWT.FILL, SWT.FILL, true,
-				true);
+		final GridData gdParent = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gdParent.widthHint = 539;
 		gdParent.heightHint = 573;
 
@@ -658,18 +657,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		labelDescriptionTabItem.setText(editorEntityName);
 
 		// - Simple Group
-		final Group group = new Group(simpleRootComposite, SWT.NONE);
-		final GridData gd_labelDescriptionGroup = new GridData(SWT.FILL,
-				SWT.CENTER, true, true);
-		gd_labelDescriptionGroup.heightHint = 632;
-		gd_labelDescriptionGroup.widthHint = 861;
-		group.setLayoutData(gd_labelDescriptionGroup);
-		group.setBackground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_WHITE));
-		final GridLayout gridLayout_1 = new GridLayout();
-		gridLayout_1.numColumns = 2;
-		group.setLayout(gridLayout_1);
-		group.setText(editorEntityName);
+		final Group group = createGroup(labelDescriptionTabItem,
+				editorEntityName);
 		labelDescriptionTabGroup = group;
 
 		// Simple Label:
