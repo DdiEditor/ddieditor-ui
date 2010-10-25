@@ -1,6 +1,9 @@
 package org.ddialliance.ddieditor.ui.editor.widgetutil;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.apache.xmlbeans.XmlException;
@@ -95,18 +98,36 @@ public class LightXmlObjectTransfer extends ByteArrayTransfer {
 
 	@Override
 	public void javaToNative(Object object, TransferData transferData) {
-		if (object == null || !(object instanceof LightXmlObjectType)) {
+		if (object == null || !(object instanceof LightXmlObjectTransferVO[])) {
 			if (log.isDebugEnabled()) {
-				log.debug(object.getClass().getName());
+				log.debug("Error :- (" + object.getClass().getName());
 			}
 			return;
 		}
 
 		if (isSupportedType(transferData)) {
-			byte[] buffer = ((LightXmlObjectType) object).xmlText().getBytes();
-			super.javaToNative(buffer, transferData);
+			LightXmlObjectTransferVO[] data = (LightXmlObjectTransferVO[]) object;
+			try {
+				ByteArrayOutputStream resultOut = new ByteArrayOutputStream();
+				DataOutputStream dataOut = new DataOutputStream(resultOut);
+
+				// write data
+				for (int i = 0; i < data.length; i++) {
+					dataOut.writeUTF(data[i].lightXmlObject.xmlText());
+					dataOut.writeInt(data[i].dragedFromPosition);
+					dataOut.writeUTF(data[i].rcpPartId);
+				}
+				dataOut.close();
+
+				// convert to pMedium
+				super.javaToNative(resultOut.toByteArray(), transferData);
+				resultOut.close();
+			} catch (IOException e) {
+				new DDIFtpException(e);
+			}
+
 			if (log.isDebugEnabled()) {
-				log.debug("JavaToNative performed ;- )");
+				log.debug("Status: OK");
 			}
 		}
 	}
@@ -114,7 +135,6 @@ public class LightXmlObjectTransfer extends ByteArrayTransfer {
 	@Override
 	public Object nativeToJava(TransferData transferData) {
 		if (isSupportedType(transferData)) {
-
 			byte[] buffer = (byte[]) super.nativeToJava(transferData);
 			if (buffer == null) {
 				if (log.isWarnEnabled()) {
@@ -123,12 +143,26 @@ public class LightXmlObjectTransfer extends ByteArrayTransfer {
 				return null;
 			}
 
-			LightXmlObjectType lightXmlObject = null;
-			// String xml = new String(buffer);
+			LightXmlObjectTransferVO[] result = new LightXmlObjectTransferVO[0];
 			try {
 				ByteArrayInputStream in = new ByteArrayInputStream(buffer);
-				lightXmlObject = LightXmlObjectType.Factory.parse(in);
-				in.close();
+				DataInputStream dataIn = new DataInputStream(in);
+
+				// set data
+				while (dataIn.available() > 20) {
+					LightXmlObjectTransferVO resultItem = new LightXmlObjectTransferVO();
+					resultItem.lightXmlObject = LightXmlObjectType.Factory
+							.parse(dataIn.readUTF());
+					resultItem.dragedFromPosition = dataIn.readInt();
+					resultItem.rcpPartId = dataIn.readUTF();
+
+					// copy to result
+					LightXmlObjectTransferVO[] tmpResult = new LightXmlObjectTransferVO[result.length + 1];
+					System.arraycopy(result, 0, tmpResult, 0, result.length);
+					tmpResult[result.length] = resultItem;
+					result = tmpResult;
+				}
+				dataIn.close();
 			} catch (IOException e) {
 				new DDIFtpException(e);
 				return null;
@@ -136,10 +170,13 @@ public class LightXmlObjectTransfer extends ByteArrayTransfer {
 				new DDIFtpException(e);
 				return null;
 			}
+
 			if (log.isDebugEnabled()) {
-				log.debug("NativeToJava performed: " + lightXmlObject);
+				for (int i = 0; i < result.length; i++) {
+					log.debug(i + ", " + result[i]);
+				}
 			}
-			return lightXmlObject;
+			return result;
 		}
 		return null;
 	}
