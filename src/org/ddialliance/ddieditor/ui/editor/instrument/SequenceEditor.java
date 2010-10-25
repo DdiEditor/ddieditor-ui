@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
 import org.ddialliance.ddieditor.model.DdiManager;
@@ -20,7 +19,8 @@ import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.SequenceDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.LightXmlObjectTransfer;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectDragListener;
 import org.ddialliance.ddieditor.ui.model.instrument.Sequence;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
@@ -41,14 +41,12 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -63,7 +61,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 public class SequenceEditor extends Editor implements IAutoChangePerspective {
-
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor";
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			SequenceEditor.class);
@@ -71,7 +68,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 	Map<String, LightXmlObjectType> controlConstructMap = new HashMap<String, LightXmlObjectType>();
 
 	private TableViewer tableViewer;
-	// private Table table;
+	SequenceLabelProvider tableLabelProvider;
 	private List items = new ArrayList();
 
 	private enum PopupAction {
@@ -87,7 +84,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 	public Viewer getViewer() {
 		return tableViewer;
 	}
-	
+
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
@@ -134,7 +131,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		tableViewer.getTable().setLayoutData(
 				new GridData(SWT.FILL, SWT.FILL, true, true));
 		tableViewer.setContentProvider(new SequenceTableContentProvider());
-		SequenceLabelProvider tableLabelProvider = new SequenceLabelProvider();
+		tableLabelProvider = new SequenceLabelProvider();
 		tableLabelProvider.createColumns(tableViewer);
 		tableViewer.setLabelProvider(tableLabelProvider);
 		tableViewer.setInput(items);
@@ -146,7 +143,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 
 		// drag
 		tableViewer.addDragSupport(operations, transferTypes,
-				new SequenceDragListener(tableViewer));
+				new LightXmlObjectDragListener(tableViewer, ID));
 
 		// drop
 		tableViewer.addDropSupport(operations, transferTypes,
@@ -193,9 +190,11 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		tableViewer.getControl().setMenu(menu);
 
 		// properties
-		Group pGroup = createGroup(parent, Messages.getString("SequenceEditor.properties"));
+		Group pGroup = createGroup(parent,
+				Messages.getString("SequenceEditor.properties"));
 
-		Label label = createLabel(pGroup, Messages.getString("SequenceEditor.properties"));
+		Label label = createLabel(pGroup,
+				Messages.getString("SequenceEditor.properties"));
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1,
 				1));
 		Button button = new Button(pGroup, 0);
@@ -218,7 +217,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			SequencePropertiesDialog spd = new SequencePropertiesDialog(editor
-					.getSite().getShell(), Messages.getString("Sequence"), editor);
+					.getSite().getShell(), Messages.getString("Sequence"),
+					editor);
 			spd.open();
 		}
 
@@ -466,93 +466,6 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			// noting to do
 		}
 	}
-
-	// public class TableEditingSupport extends EditingSupport {
-	// private CellEditor editor;
-	// private int column;
-	//
-	// /**
-	// * Constructor
-	// *
-	// * @param viewer
-	// * of column
-	// * @param column
-	// * no
-	// */
-	// public TableEditingSupport(ColumnViewer viewer, int column) {
-	// super(viewer);
-	// switch (column) {
-	// // 0=id, 1=type, 2=label
-	// case 0:
-	//
-	// break;
-	// case 1:
-	//
-	// break;
-	// case 2:
-	//
-	// break;
-	// default:
-	// editor = new TextCellEditor(((TableViewer) viewer).getTable());
-	// }
-	// this.column = column;
-	// }
-	//
-	// @Override
-	// protected boolean canEdit(Object element) {
-	// return false;
-	// }
-	//
-	// @Override
-	// protected CellEditor getCellEditor(Object element) {
-	// ICellEditorListener listener = new CellEditorListener(editor,
-	// editorStatus, column);
-	// editor.addListener(listener);
-	// return editor;
-	// }
-	//
-	// @Override
-	// protected Object getValue(Object element) {
-	// log.debug("Column: " + this.column);
-	// switch (this.column) {
-	// // 0=id, 1=type, 2=label
-	// case 0:
-	//
-	// break;
-	// case 1:
-	//
-	// break;
-	// case 2:
-	//
-	// break;
-	// case 3:
-	// break;
-	// default:
-	// break;
-	// }
-	// return null;
-	// }
-	//
-	// @Override
-	// public void setValue(Object element, Object value) {
-	// switch (this.column) {
-	// case 0:
-	//
-	// break;
-	// case 1:
-	//
-	// break;
-	// case 2:
-	//
-	// break;
-	// case 3:
-	// break;
-	// default:
-	// break;
-	// }
-	// getViewer().update(element, null);
-	// }
-	// }
 
 	// ------------------------------------------------------------------------
 	// house keeping

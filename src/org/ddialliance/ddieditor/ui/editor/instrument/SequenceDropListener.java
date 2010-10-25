@@ -1,29 +1,24 @@
 package org.ddialliance.ddieditor.ui.editor.instrument;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
-import org.apache.xmlbeans.XmlObject;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.ui.editor.Editor.EditorIdentification;
 import org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor.SequenceTableContentProvider;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.LightXmlObjectTransfer;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.LightXmlObjectTransferVO;
-import org.ddialliance.ddieditor.ui.model.instrument.Sequence;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransferVO;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
-import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 
 /**
  * JFace drop listener/ viewer drop adapter for:<br>
@@ -35,7 +30,6 @@ public class SequenceDropListener extends ViewerDropAdapter {
 
 	SequenceEditor sequenceEditor;
 	SequenceTableContentProvider stcp;
-	Object drop;
 
 	public SequenceDropListener(SequenceEditor sequenceEditor) {
 		super(sequenceEditor.getViewer());
@@ -47,151 +41,132 @@ public class SequenceDropListener extends ViewerDropAdapter {
 	@Override
 	public void drop(DropTargetEvent event) {
 		super.drop(event);
-		// log.debug(event);
+		// do nothing
 	}
-
-	int count = 0;
-	int insertPosition = -1;
-	boolean update = false;
 
 	@Override
 	public boolean performDrop(Object data) {
 		if (data == null) { // guard
 			new DDIFtpException("Data is null", new Throwable());
+			return false;
 		}
 
-		LightXmlObjectTransferVO lXmlObjectTransferVO = (LightXmlObjectTransferVO) data;
-		update = false;
-		count = 0; // count is before
-		insertPosition = -1;
+		LightXmlObjectTransferVO[] transfers = (LightXmlObjectTransferVO[]) data;
+		if (transfers.length < 1) { // guard
+			new DDIFtpException("No transfers :- (", new Throwable());
+			return false;
+		}
+		Table table = (Table) ((TableViewer) getViewer()).getControl();
 
-		// define xml location and insert
+		// logic flow:
+		// 1 determine insert position
+		// 2 delete
+		// 3 add
+		// 4 refresh table and table viewer
+
+		// insert position
+		int relativePosition = -1;
+		if (getCurrentLocation() == LOCATION_BEFORE) {
+			relativePosition = -1;
+		} else if (getCurrentLocation() == LOCATION_AFTER) {
+			relativePosition = 1;
+		} else if (getCurrentLocation() == LOCATION_ON) {
+			relativePosition = 1;
+		} else if (getCurrentLocation() == LOCATION_NONE) {
+			return false;
+		}
 		Object selectedLightXmlObject = getCurrentTarget();
-		for (Iterator<LightXmlObjectType> iterator = stcp.getItems().iterator(); iterator
-				.hasNext(); count++) {
-			LightXmlObjectType lightXmlObject = iterator.next();
+		int insertPosition = -1;
+		for (int i = 0; i < table.getItems().length; i++) {
+			if (table.getItems()[i].getData().equals(selectedLightXmlObject)) {
+				insertPosition = i + relativePosition;
+				insertPosition--;
+			}
+		}
+		if (insertPosition < 0) {
+			insertPosition = 0;
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Insert position: " + insertPosition);
+		}
 
-			if (lightXmlObject.equals(selectedLightXmlObject)) {
-				// define relative location
-				int relativePosition = 4;
-				if (getCurrentLocation() == LOCATION_BEFORE) {
-					relativePosition = -1;
-				} else if (getCurrentLocation() == LOCATION_AFTER) {
-					relativePosition = 1;
-				} else if (getCurrentLocation() == LOCATION_ON) {
-					relativePosition = 1;
-				} else if (getCurrentLocation() == LOCATION_NONE) {
-					return false;
-				}
-				log.debug(getCurrentLocation() + " " + relativePosition);
+		// delete from table
+		if (transfers[0].rcpPartId.equals(SequenceEditor.ID)) {
+			// delete rcp
+			int[] indices = table.getSelectionIndices();
+			table.remove(indices);
+			table.update();
 
-				// update
-				update = true;
-				insertPosition = relativePosition == 0 ? count + 1 : count;
-				if (insertPosition < 0) {
-					insertPosition = 0;
+			// resort indices descending
+			Integer[] reverseIndices = new Integer[indices.length];
+			for (int i = 0; i < indices.length; i++) {
+				reverseIndices[i] = indices[i];
+			}
+			Arrays.sort(reverseIndices, Collections.reverseOrder());
+
+			// delete xml
+			for (int i = 0; i < reverseIndices.length; i++) {
+				// delete editor items xml (light xml object)
+				stcp.getItems().remove(reverseIndices[i].intValue());
+
+				// delete model xml (reference xml)
+				sequenceEditor.modelImpl.getDocument().getSequence()
+						.getControlConstructReferenceList()
+						.remove(reverseIndices[i].intValue());
+			}
+
+			if (log.isDebugEnabled()) {
+				StringBuilder info = new StringBuilder();
+				for (int i = 0; i < reverseIndices.length; i++) {
+					info.append(reverseIndices[i]);
+					info.append(", ");
 				}
-				break;
+				log.debug("Deleted: " + info.toString());
 			}
 		}
 
-		// clean and refresh table
-		if (update) {
-			int from = 0;
-			boolean found = false;
-			for (int i = 0; i < stcp.getItems().size(); i++) {
-				if (lXmlObjectTransferVO.lightXmlObject
-						.valueEquals((XmlObject) stcp.getItems().get(i))) {
-					found = true;
-					from = i;
-					// rcp
-					log.debug("Items: " + stcp.getItems().remove(i));
-					ReferenceType reference = new ReferenceResolution(
-							(LightXmlObjectType) data).getReference();
+		// add
+		for (int i = 0; i < transfers.length; i++) {
+			// add rcp table
+			TableItem item = new TableItem(table, SWT.NONE, insertPosition);
+			item.setText(new String[] {
+					sequenceEditor.tableLabelProvider.getColumnText(
+							transfers[i].lightXmlObject, 0),
+					sequenceEditor.tableLabelProvider.getColumnText(
+							transfers[i].lightXmlObject, 1),
+					sequenceEditor.tableLabelProvider.getColumnText(
+							transfers[i].lightXmlObject, 2) });
+			item.setData(transfers[i].lightXmlObject);
 
-					// xml
-					for (ReferenceType controlConstructRef : sequenceEditor.modelImpl
-							.getDocument().getSequence()
-							.getControlConstructReferenceList()) {
-						if (reference.valueEquals(controlConstructRef)) {
-							sequenceEditor.modelImpl.getDocument()
-									.getSequence()
-									.getControlConstructReferenceList()
-									.remove(controlConstructRef);
-							break;
-						}
-					}
-					break;
-				}
-			}
+			// add editor items xml (light xml object)
+			stcp.getItems().add(insertPosition, transfers[i].lightXmlObject);
 
-			// clean up
-			// selectedLightXmlObject, count, insertPosition
-			if (insertPosition < count) {
-				count++;
-			}
-
-			// define operation
-			switch (getCurrentOperation()) {
-			case DND.DROP_COPY:
-				// no clean up
-				log.debug("DND.DROP_COPY");
-				break;
-			case DND.DROP_MOVE:
-				log.debug("DND.DROP_MOVE");
-
-				// rcp
-				try {
-					stcp.getItems().remove(lXmlObjectTransferVO.lightXmlObject);
-
-					// stcp.getItems().remove(count);
-					// ((TableViewer)
-					// getViewer()).remove(selectedLightXmlObject);
-					// ((SequenceEditor.) getViewer()).
-					// Object[] test =
-					// ((SequenceEditor.SequenceTableContentProvider)
-					// ((TableViewer) getViewer()).
-					// .getContentProvider()).
-
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				break;
-			case DND.DROP_LINK:
-				// no clean up
-				break;
-			case DND.DROP_NONE:
-				// no clean up
-				break;
-			default:
-				break;
-			}
-
-			// insert
-			// add xm
+			// add model xml (reference xml)
 			sequenceEditor.modelImpl
 					.getDocument()
 					.getSequence()
 					.getControlConstructReferenceList()
 					.add(insertPosition,
-							new ReferenceResolution((LightXmlObjectType) data)
+							new ReferenceResolution(transfers[i].lightXmlObject)
 									.getReference());
+		}
 
-			// add rcp
-			stcp.getItems().add(insertPosition, (LightXmlObjectType) data);
+		// refresh table
+		if (transfers.length > 0) {
+			if (log.isDebugEnabled()) {
+				log.debug("Table updated, refs: "
+						+ sequenceEditor.modelImpl.getDocument().getSequence()
+								.getControlConstructReferenceList().size()
+						+ ", table: " + table.getItemCount()
+						+ ", contentProvider: " + stcp.getItems().size());
+			}
 
-			// refresh table
 			stcp.inputChanged(getViewer(), null, stcp.getItems());
 			((TableViewer) getViewer()).refresh(true);
 			sequenceEditor.editorStatus.setChanged();
+
 		}
-
 		return true;
-	}
-
-	private void cleanUp() {
-
 	}
 
 	@Override
@@ -210,10 +185,12 @@ public class SequenceDropListener extends ViewerDropAdapter {
 	@Override
 	public void dragEnter(DropTargetEvent event) {
 		super.dragEnter(event);
+		// do nothing
 	}
 
 	@Override
 	public void dragOver(DropTargetEvent event) {
 		super.dragOver(event);
+		// do nothing
 	}
 }
