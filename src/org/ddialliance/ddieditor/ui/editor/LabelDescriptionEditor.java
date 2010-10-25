@@ -24,10 +24,7 @@ public class LabelDescriptionEditor extends Editor {
 	private String editorEntityName;
 	private ILabelDescription simpleElement;
 	private TableViewer tableViewer;
-
-	// May be used for expanding Label Description Tab content
-	protected Group labelDescriptionTabGroup;
-
+	
 	public LabelDescriptionEditor(String headerEditorTitle,
 			String headerEditorDescr, String editorEntityName) {
 		super(headerEditorTitle, headerEditorDescr);
