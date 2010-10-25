@@ -33,10 +33,11 @@ import org.eclipse.ui.WorkbenchException;
  * element in the tree
  */
 public class TreeMenu {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, TreeMenuProvider.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM, TreeMenu.class);
 
 	public void openPerspective(TreeViewer treeViewer, View currentView) {
-		InputSelection inputSelection = defineSelection(treeViewer, currentView.ID);
+		InputSelection inputSelection = defineSelection(treeViewer,
+				currentView.ID);
 		Object obj = inputSelection.getSelection();
 		if (!(obj instanceof LightXmlObjectType)) {
 			return;
@@ -50,21 +51,26 @@ public class TreeMenu {
 			}
 
 			// open perspective
-			IWorkbenchPage page = PlatformUI.getWorkbench().showPerspective(perspectiveId,
+			IWorkbenchPage page = PlatformUI.getWorkbench().showPerspective(
+					perspectiveId,
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 			if (log.isDebugEnabled()) {
 				log.debug("Opened page ID: " + page.getLabel());
 			}
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(currentView.getSite().getShell(), currentView.ID, "Error", e.getMessage(), e);
+			DialogUtil.errorDialog(currentView.getSite().getShell(),
+					currentView.ID, "Error", e.getMessage(), e);
 		} catch (WorkbenchException e) {
 			DDIFtpException ex = new DDIFtpException(e.getMessage(), e);
-			DialogUtil.errorDialog(currentView.getSite().getShell(), currentView.ID, "Error", ex.getMessage(), ex);
+			DialogUtil.errorDialog(currentView.getSite().getShell(),
+					currentView.ID, "Error", ex.getMessage(), ex);
 		}
 	}
 
-	public void openEditor(TreeViewer treeViewer, View currentView, EditorModeType mode, ElementType entityType) {
-		InputSelection inputSelection = defineSelection(treeViewer, currentView.ID);
+	public void openEditor(TreeViewer treeViewer, View currentView,
+			EditorModeType mode, ElementType entityType) {
+		InputSelection inputSelection = defineSelection(treeViewer,
+				currentView.ID);
 		log.debug(entityType);
 		// define editor input
 		EditorInput input = null;
@@ -72,28 +78,34 @@ public class TreeMenu {
 		// ddi resource type
 		if (inputSelection.getSelection() instanceof DDIResourceType) {
 			entityType = ElementType.FILE;
-			input = new EditorInput(inputSelection.getResourceId(), ((DDIResourceType) inputSelection.getSelection())
-					.getOrgName(), null, null, null, entityType, mode);
+			input = new EditorInput(inputSelection.getResourceId(),
+					((DDIResourceType) inputSelection.getSelection())
+							.getOrgName(), null, null, null, entityType, mode);
 			// open editor
-			executeOpenEditor(input, entityType, mode, currentView, currentView.getSite().getShell());
+			executeOpenEditor(input, entityType, mode, currentView, currentView
+					.getSite().getShell());
 		}
 
 		// light xml object
 		if (inputSelection.getSelection() instanceof LightXmlObjectType) {
-			LightXmlObjectType lightXmlObject = (LightXmlObjectType) inputSelection.getSelection();
+			LightXmlObjectType lightXmlObject = (LightXmlObjectType) inputSelection
+					.getSelection();
 			// open editor
-			defineInputAndOpenEditor(entityType, lightXmlObject, mode, inputSelection.getResourceId(), currentView);
+			defineInputAndOpenEditor(entityType, lightXmlObject, mode,
+					inputSelection.getResourceId(), currentView);
 		}
 
 		// notify any listeners of the view with the actual data of the view
 		treeViewer.setSelection(treeViewer.getSelection());
 	}
 
-	public static void defineInputAndOpenEditor(ElementType newEntityType, LightXmlObjectType lightXmlObject,
-			EditorModeType mode, String resourceId, View currentView) {
+	public static void defineInputAndOpenEditor(ElementType newEntityType,
+			LightXmlObjectType lightXmlObject, EditorModeType mode,
+			String resourceId, View currentView) {
 		// current view
 		if (currentView == null) {
-			IWorkbenchWindow windows[] = PlatformUI.getWorkbench().getWorkbenchWindows();
+			IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
+					.getWorkbenchWindows();
 			IWorkbenchPage page = null;
 			for (int i = 0; i < windows.length; i++) {
 				page = windows[i].getActivePage();
@@ -130,9 +142,11 @@ public class TreeMenu {
 		ElementType selectEntityType = null;
 		ElementType entityType = null;
 		try {
-			selectEntityType = ElementType.getElementType(lightXmlObject.getElement());
+			selectEntityType = ElementType.getElementType(lightXmlObject
+					.getElement());
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(shell, currentViewId, null, e.getMessage(), e);
+			DialogUtil.errorDialog(shell, currentViewId, null, e.getMessage(),
+					e);
 			return;
 		}
 
@@ -154,12 +168,14 @@ public class TreeMenu {
 			parentVersion = lightXmlObject.getParentVersion();
 		} else {
 			DDIFtpException e = new DDIFtpException("Unsupported Editor Mode");
-			DialogUtil.errorDialog(shell, currentView.ID, "Error", e.getMessage(), e);
+			DialogUtil.errorDialog(shell, currentView.ID, "Error",
+					e.getMessage(), e);
 			return;
 		}
 
-		EditorInput input = new EditorInput(resourceId, lightXmlObject.getId(), lightXmlObject.getVersion(), parentId,
-				parentVersion, entityType, mode);
+		EditorInput input = new EditorInput(resourceId, lightXmlObject.getId(),
+				lightXmlObject.getVersion(), parentId, parentVersion,
+				entityType, mode);
 
 		if (log.isDebugEnabled()) {
 			log.debug("EditorMode:" + mode + ", elementType: " + entityType);
@@ -167,9 +183,12 @@ public class TreeMenu {
 
 		// guard
 		if (input == null) {
-			DDIFtpException e = new DDIFtpException("editor.editelement.notimplemented", new Object[] { lightXmlObject
-					.getClass().getName() }, new Throwable());
-			DialogUtil.errorDialog(shell, currentView.ID, "Error", e.getMessage(), e);
+			DDIFtpException e = new DDIFtpException(
+					"editor.editelement.notimplemented",
+					new Object[] { lightXmlObject.getClass().getName() },
+					new Throwable());
+			DialogUtil.errorDialog(shell, currentView.ID, "Error",
+					e.getMessage(), e);
 			return;
 		}
 
@@ -177,11 +196,13 @@ public class TreeMenu {
 		executeOpenEditor(input, entityType, mode, currentView, shell);
 	}
 
-	private static void executeOpenEditor(EditorInput input, ElementType entityType, EditorModeType mode,
-			View currentView, Shell shell) {
+	private static void executeOpenEditor(EditorInput input,
+			ElementType entityType, EditorModeType mode, View currentView,
+			Shell shell) {
 		try {
-			Editor editor = (Editor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
-					input, entityType.getEditorId());
+			Editor editor = (Editor) PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage()
+					.openEditor(input, entityType.getEditorId());
 
 			// add update on save listener
 			if (currentView != null) {
@@ -189,7 +210,9 @@ public class TreeMenu {
 			} else {
 				// TODO Callback from editor to view on change not possible, no
 				// view specified
-				log.warn("Callback from editor to view on change not possible, no view specified!!!", new Throwable());
+				log.warn(
+						"Callback from editor to view on change not possible, no view specified!!!",
+						new Throwable());
 			}
 
 			// set editor as dirty on new
@@ -197,7 +220,8 @@ public class TreeMenu {
 				editor.editorStatus.setChanged();
 			}
 		} catch (PartInitException e) {
-			DialogUtil.errorDialog(shell, currentView.ID, "Error", e.getMessage() + input, e);
+			DialogUtil.errorDialog(shell, currentView.ID, "Error",
+					e.getMessage() + input, e);
 			return;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -209,7 +233,8 @@ public class TreeMenu {
 		InputSelection inputSelection = new InputSelection();
 		// resource id
 		if (selection.getPaths()[0].getFirstSegment() instanceof DDIResourceType) {
-			inputSelection.setResourceId(((DDIResourceType) selection.getPaths()[0].getFirstSegment()).getOrgName());
+			inputSelection.setResourceId(((DDIResourceType) selection
+					.getPaths()[0].getFirstSegment()).getOrgName());
 		}
 
 		// selection obj
@@ -217,7 +242,8 @@ public class TreeMenu {
 		try {
 			obj = ((IStructuredSelection) selection).getFirstElement();
 		} catch (Exception e) {
-			DialogUtil.errorDialog(treeViewer.getTree().getShell(), ID, "Error", e.getMessage(), e);
+			DialogUtil.errorDialog(treeViewer.getTree().getShell(), ID,
+					"Error", e.getMessage(), e);
 		}
 
 		// light xml object resolvement
@@ -252,19 +278,26 @@ public class TreeMenu {
 			ConceptualType conTypeObj = (ConceptualType) obj;
 			lightXmlObject = LightXmlObjectType.Factory.newInstance();
 			if (conTypeObj.equals(ConceptualType.STUDY)) {
-				lightXmlObject.setElement(ElementType.STUDY_UNIT.getElementName());
+				lightXmlObject.setElement(ElementType.STUDY_UNIT
+						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_Universe)) {
-				lightXmlObject.setElement(ElementType.UNIVERSE_SCHEME.getElementName());
+				lightXmlObject.setElement(ElementType.UNIVERSE_SCHEME
+						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_concepts)) {
-				lightXmlObject.setElement(ElementType.CONCEPT_SCHEME.getElementName());
+				lightXmlObject.setElement(ElementType.CONCEPT_SCHEME
+						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_category)) {
-				lightXmlObject.setElement(ElementType.CATEGORY_SCHEME.getElementName());
+				lightXmlObject.setElement(ElementType.CATEGORY_SCHEME
+						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_code)) {
-				lightXmlObject.setElement(ElementType.CODE_SCHEME.getElementName());
+				lightXmlObject.setElement(ElementType.CODE_SCHEME
+						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_questions)) {
-				lightXmlObject.setElement(ElementType.QUESTION_SCHEME.getElementName());
+				lightXmlObject.setElement(ElementType.QUESTION_SCHEME
+						.getElementName());
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_instumentation)) {
-				lightXmlObject.setElement(ElementType.INSTRUMENT.getElementName());
+				lightXmlObject.setElement(ElementType.INSTRUMENT
+						.getElementName());
 			}
 		}
 		if (lightXmlObject != null) {
@@ -278,16 +311,19 @@ public class TreeMenu {
 
 		// log values
 		if (log.isDebugEnabled()) {
-			log.debug("Top selection: class: " + selection.getPaths()[0].getFirstSegment().getClass().getName()
-					+ ", value: " + selection.getPaths()[0].getFirstSegment());
+			log.debug("Top selection: class: "
+					+ selection.getPaths()[0].getFirstSegment().getClass()
+							.getName() + ", value: "
+					+ selection.getPaths()[0].getFirstSegment());
 			log.debug(inputSelection);
 		}
 
 		// not recognized!
 		if (inputSelection.getSelection() == null) {
-			DDIFtpException e = new DDIFtpException("Not recognized: " + obj.getClass() + " , value: " + obj,
-					new Throwable());
-			DialogUtil.errorDialog(treeViewer.getTree().getShell(), ID, "Error", e.getMessage(), e);
+			DDIFtpException e = new DDIFtpException("Not recognized: "
+					+ obj.getClass() + " , value: " + obj, new Throwable());
+			DialogUtil.errorDialog(treeViewer.getTree().getShell(), ID,
+					"Error", e.getMessage(), e);
 			return null;
 		}
 		return inputSelection;
