@@ -30,6 +30,6 @@ public class InstrumentView extends View {
 
 		// jface
 		this.treeViewer.addDragSupport(operations, transferTypes,
-				new SequenceDragListener(treeViewer));		
+				new SequenceDragListener(treeViewer, ID));		
 	}
 }
