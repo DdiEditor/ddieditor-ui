@@ -10,13 +10,19 @@ What's New
 User interface
 Item ID:    Description:
  -          Removed unused space in views 
- -          Fixed bug on delete single resource
-   
+ -          Fixed bug on deleting a single resource
+ -          Fixed bug on category editor
+ -          Added drag and drop support to Instrumentation view and 
+ Sequence editor 
+ -           
+ 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
+ -          Removed creation of composite of parent arg in 
+ Editor.createPartControl
  -          
-
+ 
 -------------------------------------------------------------------------------
 Change Log Previous Releases
 -------------------------------------------------------------------------------
