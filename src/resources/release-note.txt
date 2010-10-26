@@ -21,7 +21,7 @@ Application Infrastructure:
 Item ID:    Description:
  -          Removed creation of composite of parent arg in 
  Editor.createPartControl
- -          
+ -          Editor.createLabelDescription cleanup
  
 -------------------------------------------------------------------------------
 Change Log Previous Releases
@@ -37,6 +37,11 @@ See http://172.20.33.20:8080/devwiki/en/Installation
 Uninstalling
 -------------------------------------------------------------------------------
 Remove installation directory e.g. C:\Programmer\ddieditor
+
+-------------------------------------------------------------------------------
+Bug reporting
+-------------------------------------------------------------------------------
+See http://172.20.33.20:8080/jtrac
 
 -------------------------------------------------------------------------------
 Known Issue
