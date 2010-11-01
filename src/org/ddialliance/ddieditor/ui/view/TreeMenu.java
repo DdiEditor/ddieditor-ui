@@ -196,7 +196,7 @@ public class TreeMenu {
 		executeOpenEditor(input, entityType, mode, currentView, shell);
 	}
 
-	private static void executeOpenEditor(EditorInput input,
+	static void executeOpenEditor(EditorInput input,
 			ElementType entityType, EditorModeType mode, View currentView,
 			Shell shell) {
 		try {
@@ -298,6 +298,9 @@ public class TreeMenu {
 			} else if (conTypeObj.equals(ConceptualType.LOGIC_instumentation)) {
 				lightXmlObject.setElement(ElementType.INSTRUMENT
 						.getElementName());
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_variable)) {
+				lightXmlObject.setElement(ElementType.VARIABLE_SCHEME
+						.getElementName());
 			}
 		}
 		if (lightXmlObject != null) {
@@ -310,13 +313,13 @@ public class TreeMenu {
 		}
 
 		// log values
-		if (log.isDebugEnabled()) {
-			log.debug("Top selection: class: "
-					+ selection.getPaths()[0].getFirstSegment().getClass()
-							.getName() + ", value: "
-					+ selection.getPaths()[0].getFirstSegment());
-			log.debug(inputSelection);
-		}
+		// if (log.isDebugEnabled()) {
+		// log.debug("Top selection: class: "
+		// + selection.getPaths()[0].getFirstSegment().getClass()
+		// .getName() + ", value: "
+		// + selection.getPaths()[0].getFirstSegment());
+		// log.debug(inputSelection);
+		// }
 
 		// not recognized!
 		if (inputSelection.getSelection() == null) {
