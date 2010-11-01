@@ -24,6 +24,8 @@ import org.ddialliance.ddieditor.ui.dbxml.question.MultipleQuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseSchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.variable.VariableSchemeDao;
+import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -172,13 +174,19 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				} else if (contentType.equals(ViewContentType.UniverseContent)) {
 					return new UniverseSchemeDao().getLightXmlObject(null,
 							null, null, null).toArray();
+				} else if (contentType.equals(ViewContentType.VariableContent)) {
+					return new VariableSchemeDao().getLightXmlObject(null,
+							null, null, null).toArray();
+				} else { // guard
+					new DDIFtpException(
+							"Not supported, contenttype: " + contentType
+									+ ", parentElement: " + parentElement,
+							new Throwable());
 				}
 			} catch (Exception e) {
-				String errMess = Messages
-						.getString("View.mess.GetElementError"); //$NON-NLS-1$
-				ErrorDialog.openError(site.getShell(), Messages
-						.getString("ErrorTitle"), null, new Status(
-						IStatus.ERROR, ID, 0, errMess, e));
+				DialogUtil.errorDialog(site.getShell(), ID,
+						Messages.getString("ErrorTitle"),
+						Messages.getString("View.mess.GetElementError"), e);
 			}
 		}
 
@@ -225,15 +233,20 @@ public class TreeContentProvider implements IStructuredContentProvider,
 							lightXmlObjectType).toArray();
 					// question scheme
 				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
-					List<LightXmlObjectType> list = new MultipleQuestionItemDao().getLightXmlObject(lightXmlObjectType);
-					list.addAll(new QuestionItemDao().getLightXmlObject(lightXmlObjectType));
+					List<LightXmlObjectType> list = new MultipleQuestionItemDao()
+							.getLightXmlObject(lightXmlObjectType);
+					list.addAll(new QuestionItemDao()
+							.getLightXmlObject(lightXmlObjectType));
 					contentList = list.toArray();
 					// multiple question item
 				} else if (lightXmlTypeLocalname.equals("MultipleQuestionItem")) {
-					contentList = new QuestionItemDao().getLightXmlObject(lightXmlObjectType).toArray();
+					contentList = new QuestionItemDao().getLightXmlObject(
+							lightXmlObjectType).toArray();
 					// control construct scheme
-				} else if (lightXmlTypeLocalname.equals("ControlConstructScheme")) {
-					contentList = DdiManager.getInstance()
+				} else if (lightXmlTypeLocalname
+						.equals("ControlConstructScheme")) {
+					contentList = DdiManager
+							.getInstance()
 							.getQuestionConstructsLight(null, null,
 									lightXmlObjectType.getId(),
 									lightXmlObjectType.getVersion())
@@ -242,17 +255,33 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				}
 				// universe scheme
 				else if (lightXmlTypeLocalname.equals("UniverseScheme")) {
-					contentList = DdiManager.getInstance().getUniversesLight(
-							null, null, lightXmlObjectType.getId(),
-							lightXmlObjectType.getVersion())
+					contentList = DdiManager
+							.getInstance()
+							.getUniversesLight(null, null,
+									lightXmlObjectType.getId(),
+									lightXmlObjectType.getVersion())
 							.getLightXmlObjectList().getLightXmlObjectList()
 							.toArray();
 				}
-
+				// variable scheme				
+				else if (lightXmlTypeLocalname.equals("VariableScheme")) {
+					contentList = DdiManager
+							.getInstance()
+							.getVariablesLight(null, null,
+									lightXmlObjectType.getId(),
+									lightXmlObjectType.getVersion())
+							.getLightXmlObjectList().getLightXmlObjectList()
+							.toArray();
+				}
 				// guard
 				if (contentList == null) {
-					throw new DDIFtpException("Not supported type: "
-							+ lightXmlTypeLocalname);
+					DDIFtpException e = new DDIFtpException(
+							"Not supported type: " + lightXmlTypeLocalname,
+							new Throwable());
+					DialogUtil
+							.errorDialog(site.getShell(), ID,
+									Messages.getString("ErrorTitle"),
+									e.getMessage(), e);
 				}
 				return contentList;
 			} catch (Exception e) {
@@ -344,8 +373,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 
 		// guard
 		// TODO - subject to change
-		log
-				.debug("***** TreeContentProvider.hasChildren() - save guard activated! *****");
+		log.debug("***** TreeContentProvider.hasChildren() - save guard activated! *****");
 		return getChildren(element).length > 0;
 	}
 
