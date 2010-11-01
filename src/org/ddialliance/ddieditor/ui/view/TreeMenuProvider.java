@@ -1,6 +1,8 @@
 package org.ddialliance.ddieditor.ui.view;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,6 +26,9 @@ import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseDao;
 import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseSchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.variable.VariableDao;
+import org.ddialliance.ddieditor.ui.dbxml.variable.VariableSchemeDao;
+import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
@@ -106,17 +111,16 @@ public class TreeMenuProvider extends TreeMenu {
 				openMenuItem.setSelection(true);
 				openMenuItem.setText(Messages
 						.getString("View.label.openMenuItem.Open")); //$NON-NLS-1$
-				openMenuItem.setImage(ResourceManager.getPluginImage(Activator
-						.getDefault(), "icons/new_wiz.gif"));
+				openMenuItem.setImage(ResourceManager.getPluginImage(
+						Activator.getDefault(), "icons/new_wiz.gif"));
 				openMenuItem.setData("name", "OPEN");
 				openMenuItem.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(final SelectionEvent e) {
 						TreeItem[] t = treeViewer.getTree().getSelection();
 						if (t.length != 1) {
-							MessageDialog
-									.openInformation(
-											currentView.getSite().getShell(),
-											Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
+							MessageDialog.openInformation(
+									currentView.getSite().getShell(),
+									Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
 							return;
 						}
 						openPerspective(treeViewer, currentView);
@@ -133,24 +137,23 @@ public class TreeMenuProvider extends TreeMenu {
 		newMenuItem.setSelection(true);
 		newMenuItem.setText(Messages
 				.getString("View.label.newItemMenuItem.New")); //$NON-NLS-1$
-		newMenuItem.setImage(ResourceManager.getPluginImage(Activator
-				.getDefault(), "icons/new_wiz.gif"));
+		newMenuItem.setImage(ResourceManager.getPluginImage(
+				Activator.getDefault(), "icons/new_wiz.gif"));
 		newMenuItem.setData("name", "NEW");
 
 		// menu edit
 		editMenuItem = new MenuItem(menu, SWT.NONE);
 		editMenuItem
 				.setText(Messages.getString("View.label.editMenuItem.Edit")); //$NON-NLS-1$
-		editMenuItem.setImage(ResourceManager.getPluginImage(Activator
-				.getDefault(), "icons/editor_area.gif"));
+		editMenuItem.setImage(ResourceManager.getPluginImage(
+				Activator.getDefault(), "icons/editor_area.gif"));
 		editMenuItem.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				TreeItem[] t = treeViewer.getTree().getSelection();
 				if (t.length != 1) {
-					MessageDialog
-							.openInformation(
-									currentView.getSite().getShell(),
-									Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
+					MessageDialog.openInformation(
+							currentView.getSite().getShell(),
+							Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
 					return;
 				}
 				openEditor(treeViewer, currentView, EditorModeType.EDIT, null);
@@ -161,8 +164,8 @@ public class TreeMenuProvider extends TreeMenu {
 		final MenuItem deleteMenuItem = new MenuItem(menu, SWT.NONE);
 		deleteMenuItem.setText(Messages
 				.getString("View.label.deleteMenuItem.Delete")); //$NON-NLS-1$
-		deleteMenuItem.setImage(ResourceManager.getPluginImage(Activator
-				.getDefault(), "icons/delete_obj.gif"));
+		deleteMenuItem.setImage(ResourceManager.getPluginImage(
+				Activator.getDefault(), "icons/delete_obj.gif"));
 		deleteMenuItem.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				deleteItem(EditorModeType.EDIT);
@@ -182,8 +185,7 @@ public class TreeMenuProvider extends TreeMenu {
 
 		newMenuItem.addArmListener(new ArmListener() {
 			public void widgetArmed(final ArmEvent event) {
-				InputSelection inputSelection = defineSelection(treeViewer,
-						"na");
+
 				// remember breakpoints in this code freezes xorg
 				// if (log.isDebugEnabled()) {
 				// log.debug("Selection: "
@@ -193,6 +195,8 @@ public class TreeMenuProvider extends TreeMenu {
 				// }
 
 				// light xml object
+				InputSelection inputSelection = defineSelection(treeViewer,
+						"na");
 				if (inputSelection.getSelection() instanceof LightXmlObjectType) {
 					LightXmlObjectType lightXmlObject = (LightXmlObjectType) inputSelection
 							.getSelection();
@@ -212,17 +216,32 @@ public class TreeMenuProvider extends TreeMenu {
 					// }
 
 					// create menu
-					createNewMenuItem(type);
+					createElementNewMenuItem(type);
 				}
 
 				// ddi resource
 				else if (inputSelection.getSelection() instanceof DDIResourceType) {
 					cleanPreviousMenuItems();
-					createNewMenuItem(ElementType.FILE);
+					TreeItem[] items = treeViewer.getTree().getSelection()[0]
+							.getItems();
+					ArrayList<ConceptualType> newItems = new ArrayList<ConceptualType>(
+							Arrays.asList(ConceptualType.values()));
+					for (int i = 0; i < items.length; i++) {
+						Object obj = items[i].getData();
+						newItems.remove(obj);
+					}
+					for (ConceptualType conceptualType : newItems) {
+						try {
+							createDDIResourceNewMenuItem(conceptualType,
+									inputSelection.resourceId);
+						} catch (DDIFtpException e) {
+							// do nothing
+						}
+					}
 				}
 				// log guard
-				else if (log.isDebugEnabled()) {
-					log.debug("No match found > no menuitems > do fix");
+				else if (log.isWarnEnabled()) {
+					log.warn("No match found > no menuitems > do fix");
 				}
 			}
 
@@ -233,11 +252,11 @@ public class TreeMenuProvider extends TreeMenu {
 				}
 			}
 
-			private void createNewMenuItem(final ElementType type) {
+			private void createElementNewMenuItem(final ElementType type) {
 				MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
 				menuItem.setText(type.getTranslatedDisplayMessageEntry());
-				menuItem.setImage(ResourceManager.getPluginImage(Activator
-						.getDefault(), "icons/new_wiz.gif"));
+				menuItem.setImage(ResourceManager.getPluginImage(
+						Activator.getDefault(), "icons/new_wiz.gif"));
 
 				menuItem.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(final SelectionEvent e) {
@@ -246,20 +265,48 @@ public class TreeMenuProvider extends TreeMenu {
 					}
 				});
 				List<ElementType> subElements = type.getSubElements();
-				for (Iterator iterator = subElements.iterator(); iterator.hasNext();) {
-					final ElementType elementType = (ElementType) iterator.next();
-					menuItem = new MenuItem(subMenu, SWT.NONE);
-					menuItem.setText(elementType.getTranslatedDisplayMessageEntry());
-					menuItem.setImage(ResourceManager.getPluginImage(Activator
-							.getDefault(), "icons/new_wiz.gif"));
+				if (subElements != null) {
+					for (Iterator iterator = subElements.iterator(); iterator
+							.hasNext();) {
+						final ElementType elementType = (ElementType) iterator
+								.next();
+						menuItem = new MenuItem(subMenu, SWT.NONE);
+						menuItem.setText(elementType
+								.getTranslatedDisplayMessageEntry());
+						menuItem.setImage(ResourceManager.getPluginImage(
+								Activator.getDefault(), "icons/new_wiz.gif"));
 
-					menuItem.addSelectionListener(new SelectionAdapter() {
-						public void widgetSelected(final SelectionEvent e) {
-							openEditor(treeViewer, currentView, EditorModeType.NEW,
-									elementType);
-						}
-					});
+						menuItem.addSelectionListener(new SelectionAdapter() {
+							public void widgetSelected(final SelectionEvent e) {
+								openEditor(treeViewer, currentView,
+										EditorModeType.NEW, elementType);
+							}
+						});
+					}
 				}
+			}
+
+			private void createDDIResourceNewMenuItem(
+					final ConceptualType conceptualType, final String resourceId)
+					throws DDIFtpException {
+				final ElementType elementType = ElementType
+						.getElementTypeByConceptualType(conceptualType);
+				MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
+				menuItem.setText(Messages.getString(conceptualType.toString()));
+				menuItem.setImage(ResourceManager.getPluginImage(
+						Activator.getDefault(), "icons/new_wiz.gif"));
+
+				menuItem.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(final SelectionEvent e) {
+						// TODO create needed parents
+						EditorInput input = new EditorInput(resourceId, null,
+								null, null, null, elementType,
+								EditorModeType.NEW);
+						executeOpenEditor(input, elementType,
+								EditorModeType.NEW, currentView, currentView
+										.getSite().getShell());
+					}
+				});
 			}
 		});
 	}
@@ -323,45 +370,41 @@ public class TreeMenuProvider extends TreeMenu {
 										.openConfirm(
 												currentView.getSite()
 														.getShell(),
-												Messages
-														.getString("ConfirmTitle"),
-												MessageFormat
-														.format(
-																Messages
-																		.getString("View.mess.ConfirmDeleteConcepts"),
-																conceptList
-																		.size()))) {
+												Messages.getString("ConfirmTitle"),
+												MessageFormat.format(
+														Messages.getString("View.mess.ConfirmDeleteConcepts"),
+														conceptList.size()))) {
 							break;
 						}
 						new ConceptSchemeDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
-										.getParentVersion());
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
 					case CONCEPT:
 						new ConceptDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
-										.getParentVersion());
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 
 						break;
 					case CODE_SCHEME:
 						new CodeSchemeDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
-										.getParentVersion());
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
 					case UNIVERSE_SCHEME:
 						new UniverseSchemeDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
-										.getParentVersion());
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
 					case UNIVERSE:
 						new UniverseDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
-										.getParentVersion());
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
 					case QUESTION_SCHEME:
 						QuestionSchemeDao dao = new QuestionSchemeDao();
@@ -376,63 +419,72 @@ public class TreeMenuProvider extends TreeMenu {
 										.openConfirm(
 												currentView.getSite()
 														.getShell(),
-												Messages
-														.getString("ConfirmTitle"),
-												MessageFormat
-														.format(
-																Messages
-																		.getString("View.mess.ConfirmDeleteQuestionItem"),
-																questionItemList
-																		.size()))) {
+												Messages.getString("ConfirmTitle"),
+												MessageFormat.format(
+														Messages.getString("View.mess.ConfirmDeleteQuestionItem"),
+														questionItemList.size()))) {
 							break;
 						}
-						dao.delete(lightXmlObject.getId(), lightXmlObject
-								.getVersion(), lightXmlObject.getParentId(),
+						dao.delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
 						break;
 					case MULTIPLE_QUESTION_ITEM:
-						new MultipleQuestionItemDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
-										.getParentVersion());
+						new MultipleQuestionItemDao().delete(
+								lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
 					case QUESTION_ITEM:
 						new QuestionItemDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
-										.getParentVersion());
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
 					case INSTRUMENT:
 						new InstrumentDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
-										.getParentVersion());
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
 					case STATEMENT_ITEM:
 						new StatementItemDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
-										.getParentVersion());
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
 					case IF_THEN_ELSE:
 						new IfThenElseDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
-										.getParentVersion());
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
 					case CONTROL_CONSTRUCT_SCHEME:
-						new ControlConstructSchemeDao().delete(lightXmlObject
-								.getId(), lightXmlObject.getVersion(),
-								lightXmlObject.getParentId(), lightXmlObject
-										.getParentVersion());
+						new ControlConstructSchemeDao().delete(
+								lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
 					case LOOP:
-						new LoopDao().delete(lightXmlObject
-								.getId(), lightXmlObject.getVersion(),
-								lightXmlObject.getParentId(), lightXmlObject
-										.getParentVersion());
+						new LoopDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
-						
+
+					case VARIABLE_SCHEME:
+						new VariableSchemeDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
+					case VARIABLE:
+						new VariableDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 					default:
 						DDIFtpException e = new DDIFtpException(
 								"Editor type not supported: " + entityType,
@@ -450,16 +502,14 @@ public class TreeMenuProvider extends TreeMenu {
 									currentView.getSite().getShell(),
 									currentView.ID,
 									Messages.getString("ErrorTitle"),
-									Messages
-											.getString("View.mess.EditorUIDeleteError") + "\n" + ex.getMessage(), ex); //$NON-NLS-1$
+									Messages.getString("View.mess.EditorUIDeleteError") + "\n" + ex.getMessage(), ex); //$NON-NLS-1$
 				} catch (Exception e) {
 					DialogUtil
 							.errorDialog(
 									currentView.getSite().getShell(),
 									currentView.ID,
 									Messages.getString("ErrorTitle"),
-									Messages
-											.getString("View.mess.EditorDeleteError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
+									Messages.getString("View.mess.EditorDeleteError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
 				}
 				removeItemFromMenu(lightXmlObject);
 			}
