@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorPart;
@@ -40,7 +39,7 @@ public class View extends ViewPart implements IPropertyListener {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, View.class);
 
 	public enum ViewContentType {
-		StudyContent, UniverseContent, ConceptContent, CodeContent, CategoryContent, QuestionContent, InstrumentationContent;
+		StudyContent, UniverseContent, ConceptContent, CodeContent, CategoryContent, QuestionContent, InstrumentationContent, VariableContent;
 	}
 
 	private ViewContentType viewContentType;
@@ -126,7 +125,7 @@ public class View extends ViewPart implements IPropertyListener {
 		if (log.isDebugEnabled()) {
 			log.debug("Generic createPartControl called");
 		}
-		
+
 		parent.setLayout(new GridLayout());
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 
@@ -226,7 +225,8 @@ public class View extends ViewPart implements IPropertyListener {
 		tree.setLayoutData(gd_tree);
 
 		// Define Tree Pop-up Menu
-		TreeMenuProvider treeMenuProvider = new TreeMenuProvider(treeViewer, currentView, rootElement);
+		TreeMenuProvider treeMenuProvider = new TreeMenuProvider(treeViewer,
+				currentView, rootElement);
 		treeMenuProvider.setMenu();
 
 		createActions();
@@ -238,7 +238,6 @@ public class View extends ViewPart implements IPropertyListener {
 	 * Create the actions
 	 */
 	private void createActions() {
-
 		expandAllAction = new Action(
 				Messages.getString("View.label.expandAllAction.ExpandAll")) { //$NON-NLS-1$)
 			public void run() {
@@ -273,7 +272,6 @@ public class View extends ViewPart implements IPropertyListener {
 						"icons/refresh.gif"));
 
 		helpContentsAction = new HelpContentsAction();
-
 	}
 
 	/**
@@ -282,19 +280,12 @@ public class View extends ViewPart implements IPropertyListener {
 	private void initializeToolBar() {
 		IToolBarManager toolbarManager = getViewSite().getActionBars()
 				.getToolBarManager();
-
 		toolbarManager.add(new Separator());
-
 		toolbarManager.add(expandAllAction);
-
 		toolbarManager.add(collapseAllAction);
-
 		toolbarManager.add(new Separator());
-
 		toolbarManager.add(refreshAction);
-
 		toolbarManager.add(new Separator());
-
 		toolbarManager.add(helpContentsAction);
 	}
 
