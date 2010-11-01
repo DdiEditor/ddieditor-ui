@@ -34,6 +34,11 @@
                   id="org.ddialliance.ddieditor.ui.perspective.UniversePerspective"
                   name="%perspective.name.5">
             </perspective>
+            <perspective
+                  class="org.ddialliance.ddieditor.ui.perspective.VariablePerspective"
+                  id="org.ddialliance.ddieditor.ui.perspective.VariablePerspective"
+                  name="%perspective.name.6">
+            </perspective>
       </extension>
       <extension point="org.eclipse.ui.views">
             <view class="org.ddialliance.ddieditor.ui.view.InfoView" icon="icons/tree.gif"
@@ -59,6 +64,13 @@
                   icon="icons/tree.gif"
                   id="org.ddialliance.ddieditor.ui.view.UniverseView"
                   name="%view.name.5"
+                  restorable="true">
+            </view>
+            <view
+                  class="org.ddialliance.ddieditor.ui.view.VariableView"
+                  icon="icons/tree.gif"
+                  id="org.ddialliance.ddieditor.ui.view.VariableView"
+                  name="%view.name.6"
                   restorable="true">
             </view>
       </extension>
@@ -240,6 +252,20 @@
                   icon="icons/editor_area.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor"
                   name="%editor.name.17">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.variable.VariableSchemeEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.variable.VariableSchemeEditor"
+                  name="%editor.name.19">
+            </editor>
+            <editor
+                  class="org.ddialliance.ddieditor.ui.editor.variable.VariableEditor"
+                  default="false"
+                  icon="icons/editor_area.gif"
+                  id="org.ddialliance.ddieditor.ui.editor.variable.VariableEditor"
+                  name="%editor.name.20">
             </editor>
       </extension>
       <extension id="org.eclipse.ui.idexportwizard" name="%extension.name"
