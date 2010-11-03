@@ -40,7 +40,7 @@ public class CategorySchemeDao implements IDao {
 	public void create(IModel model) throws DDIFtpException {
 		DdiManager.getInstance().createElement(model.getDocument(),
 				model.getParentId(), model.getParentVersion(),
-				"CategoryComponent");
+				"logicalproduct__LogicalProduct");
 	}
 
 	@Override
