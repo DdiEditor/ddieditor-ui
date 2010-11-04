@@ -334,7 +334,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			// edit
 			else if (action.equals(PopupAction.EDIT)) {
 				try {
-					TreeMenu.defineInputAndOpenEditor(null,
+					TreeMenu.defineInputAndOpenEditor(null, null,
 							selectedLightXmlObject, EditorModeType.EDIT,
 							PersistenceManager.getInstance()
 									.getWorkingResource(), null);
