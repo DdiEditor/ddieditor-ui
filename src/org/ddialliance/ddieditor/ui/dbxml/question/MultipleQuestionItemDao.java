@@ -1,14 +1,20 @@
 package org.ddialliance.ddieditor.ui.dbxml.question;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.MultipleQuestionItemDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionGroupType;
 import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelUpdateElement;
+import org.ddialliance.ddieditor.ui.dbxml.DaoSchemeHelper;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
@@ -63,7 +69,6 @@ public class MultipleQuestionItemDao implements IDao {
 
 		log.debug("MultipleQuestionItems.getItemsLight() - parent: " + parentId
 				+ "/" + parentVersion);
-		DdiManager.getInstance().getQuestionItemsLight(id, version, parentId, parentVersion);
 
 		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager
 				.getInstance().getMultipleQuestionItemsLight(id, version, parentId,
@@ -102,6 +107,7 @@ public class MultipleQuestionItemDao implements IDao {
 	 *            Parent Identification
 	 * @param parentVersion
 	 *            Parent version
+	 * @param selectElementType
 	 * @return QuestionItem
 	 * @throws Exception
 	 */
@@ -164,8 +170,12 @@ public class MultipleQuestionItemDao implements IDao {
 	public void create(IModel multipleQuestionItem) throws DDIFtpException {
 		log.debug("Create DBXML Multiple Question Item:\n" + multipleQuestionItem.getDocument()
 				+ " Parent Id: " + multipleQuestionItem.getParentId());
+		MultipleQuestionItemDocument doc = (MultipleQuestionItemDocument )multipleQuestionItem.getDocument();
+		if (doc.getMultipleQuestionItem().getSubQuestions() == null) {
+			doc.getMultipleQuestionItem().addNewSubQuestions();
+		}
 		try {
-			DdiManager.getInstance().createElement(multipleQuestionItem.getDocument(),
+			DdiManager.getInstance().createElement(doc,
 					multipleQuestionItem.getParentId(),
 					multipleQuestionItem.getParentVersion(), "QuestionScheme");
 		} catch (DDIFtpException e) {
@@ -196,6 +206,39 @@ public class MultipleQuestionItemDao implements IDao {
 
 			throw new DDIFtpException(e.getMessage());
 		}
+		
+//		// TODO Version Control - not supported
+//		
+//		MaintainableLabelQueryResult maintainableLabelQueryResult = DdiManager
+//		.getInstance().getMultipleQuestionItemLabel(multiplequestionItem.getId(), multiplequestionItem.getVersion(), 
+//				multiplequestionItem.getParentId(), multiplequestionItem.getParentVersion());
+//		
+//		System.out.println("MaintainableLabelQueryResult: "+maintainableLabelQueryResult.getResult());
+//		System.out.println("MaintainableLabelQueryResult size:"+maintainableLabelQueryResult.getResult().size());
+//
+//		XmlObject[] questionTexts = maintainableLabelQueryResult.getSubElement("QuestionText");
+//		XmlObject[] conceptReferences = maintainableLabelQueryResult.getSubElement("ConceptReference");
+//		XmlObject[] subQuestionSequence = maintainableLabelQueryResult.getSubElement("SubQuestionSequence");
+//		
+//		List<MaintainableLabelUpdateElement> updQuestionTextsList = new ArrayList<MaintainableLabelUpdateElement>();
+//		MaintainableLabelUpdateElement updQuestionTexts = new MaintainableLabelUpdateElement();
+//
+//		// update Question Text
+//		updQuestionTexts.setLocalName("QuestionText");
+//		updQuestionTexts.setCrudValue(1);
+//		MultipleQuestionItemDocument doc = (MultipleQuestionItemDocument)multiplequestionItem.getDocument();
+//		List<DynamicTextType> texts = doc.getMultipleQuestionItem().getQuestionTextList();
+//		updQuestionTexts.setValue("<LiteralText xmlns='ddi:datacollection:3_1'><Text>Multple Question header text.</Text></LiteralText>");
+//		updQuestionTextsList.add(updQuestionTexts);
+//		
+//		System.out.println("updQuestionTexts: "+updQuestionTexts);
+//		System.out.println("updQuestionTextsList: "+updQuestionTextsList);
+//
+//		DdiManager.getInstance().updateMaintainableLabel(maintainableLabelQueryResult, updQuestionTextsList);
+////
+////		multiplequestionItem.clearChanged();
+//		// updates target maintabable
+//		// updates on childs
 	}
 
 	/**
@@ -236,5 +279,4 @@ public class MultipleQuestionItemDao implements IDao {
 			}
 		}
 	}
-
 }

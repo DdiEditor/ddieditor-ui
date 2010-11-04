@@ -76,7 +76,6 @@ public class QuestionSchemeDao implements IDao {
 		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager
 				.getInstance().getQuestionSchemesLight(id, version, null, null)
 				.getLightXmlObjectList().getLightXmlObjectList();
-		log.debug("+++++++++++++++++++" + lightXmlObjectTypeList);
 		return lightXmlObjectTypeList;
 	}
 
@@ -149,7 +148,6 @@ public class QuestionSchemeDao implements IDao {
 		DaoSchemeHelper.update(model);
 	}
 
-	@Override
 	public void delete(String id, String version, String parentId,
 			String parentVersion) throws Exception {
 		QuestionScheme model = getModel(id, version, parentId, parentVersion);

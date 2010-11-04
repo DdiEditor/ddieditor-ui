@@ -10,6 +10,7 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelUpdateElement;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.studyunit.StudyUnit;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -66,7 +67,7 @@ public class StudyUnitDao implements IDao {
 	 * @throws Exception
 	 */
 	public static List<LightXmlObjectType> getConceptsLight(String id,
-			String version) throws Exception {
+			String version, ElementType parentElementType) throws Exception {
 		log.debug("StudyUnit.getConceptsLight(). Id: " + id + " Version: "
 				+ version);
 

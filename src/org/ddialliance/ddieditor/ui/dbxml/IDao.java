@@ -3,6 +3,7 @@ package org.ddialliance.ddieditor.ui.dbxml;
 import java.util.List;
 
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 
@@ -59,6 +60,7 @@ public interface IDao {
 	 * @param version
 	 * @param parentId
 	 * @param parentVersion
+	 * @param Element Type of selected tree element (parent or sibling)
 	 * @return IModel
 	 * @throws Exception
 	 */
@@ -96,6 +98,8 @@ public interface IDao {
 	 *            Identification
 	 * @param version
 	 *            Version
+	 * @param elementType
+	 *            Element Type
 	 * @param parentId
 	 *            Parent Identification
 	 * @param parentVersion
