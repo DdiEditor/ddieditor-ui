@@ -23,11 +23,9 @@ public class CategoryDao implements IDao {
 	public IModel create(String id, String version, String parentId,
 			String parentVersion) throws Exception {
 		CategoryDocument doc = CategoryDocument.Factory.newInstance();
-		IdentificationManager.getInstance().addIdentification(
-				doc.addNewCategory(),
+		IdentificationManager.getInstance().addIdentification(doc.addNewCategory(),
 				ElementType.getElementType("Category").getIdPrefix(), null);
-		IdentificationManager.getInstance().addVersionInformation(
-				doc.getCategory(), null, null);
+		IdentificationManager.getInstance().addVersionInformation(doc.getCategory(), null, null);
 		Category category = new Category(doc, parentId, parentVersion);
 		return category;
 	}
@@ -51,19 +49,15 @@ public class CategoryDao implements IDao {
 	@Override
 	public List<LightXmlObjectType> getLightXmlObject(
 			LightXmlObjectType parentCategory) throws Exception {
-		return getLightXmlObject("", "", parentCategory.getId(),
-				parentCategory.getVersion());
+		return getLightXmlObject("", "", parentCategory.getId(), parentCategory.getVersion());
 	}
 
 	@Override
 	public List<LightXmlObjectType> getLightXmlObject(String id,
 			String version, String parentId, String parentVersion)
 			throws Exception {
-		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager
-				.getInstance()
-				.getCategorysLight(id, version, parentId, parentVersion)
-				.getLightXmlObjectList().getLightXmlObjectList();
-
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getCategoryLight(id, version,
+				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
 		return lightXmlObjectTypeList;
 	}
 
