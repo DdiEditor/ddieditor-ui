@@ -3,6 +3,7 @@ package org.ddialliance.ddieditor.ui.model.question;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -19,6 +20,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SubQuestionSequenceDocum
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.ConceptReferenceDocumentImpl;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.MultipleQuestionItemTypeImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.QuestionGroupTypeImpl;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.SubQuestionSequenceDocumentImpl;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -96,11 +98,12 @@ public class MultipleQuestionItem extends Model {
 				throw new DDIFtpException(Messages
 						.getString("MultipleQuestionItemEditor.mess.UnexceptedNumberOfSubQuestionSequenceFound"));
 			}
-
 			// - store as SpecificSequenceType
-			maintainableUpdateSubQuestionSeq = new MaintainableLabelUpdateElement(
-					((SubQuestionSequenceDocumentImpl) xmlObjects[0]).getSubQuestionSequence(), null /* NOP */);
-			subQuestionSeq = ((SubQuestionSequenceDocumentImpl) xmlObjects[0]).getSubQuestionSequence();
+			if (xmlObjects.length > 0) {
+				maintainableUpdateSubQuestionSeq = new MaintainableLabelUpdateElement(
+						((SubQuestionSequenceDocumentImpl) xmlObjects[0]).getSubQuestionSequence(), null /* NOP */);
+				subQuestionSeq = ((SubQuestionSequenceDocumentImpl) xmlObjects[0]).getSubQuestionSequence();
+			}
 		}
 
 		xmlOptions.setSaveOuter();
