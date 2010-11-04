@@ -20,6 +20,7 @@ import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
+import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dialogs.TranslationDialog;
 import org.ddialliance.ddieditor.ui.dialogs.TranslationDialogInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
@@ -28,6 +29,7 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.Referen
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.DDITabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.PropertyTabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.TabFolderListener;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ILabelDescription;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
@@ -180,13 +182,14 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
-				model = dao.getModel(editorInput.getId(),
-						editorInput.getVersion(), editorInput.getParentId(),
+				if (editorInput.getElementType() == ElementType.QUESTION_ITEM) {
+					((QuestionItemDao) dao).setParentElementType(editorInput.getParentElementType());
+				}
+
+				model = dao.getModel(editorInput.getId(), editorInput.getVersion(), editorInput.getParentId(),
 						editorInput.getParentVersion());
 			} catch (Exception e) {
-				throw new PartInitException(
-						Messages.getString("editor.init.error.retrieval"),
-						new DDIFtpException(e));
+				throw new PartInitException(Messages.getString("editor.init.error.retrieval"), new DDIFtpException(e));
 			}
 		} else {
 			throw new PartInitException(
@@ -346,6 +349,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 		try {
 			if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
+				if (getEditorInputImpl().getElementType() == ElementType.QUESTION_ITEM ||
+						getEditorInputImpl().getElementType() == ElementType.SUB_QUESTION_ITEM) {
+					((QuestionItemDao)dao).setParentElementType(getEditorInputImpl().getParentElementType());
+				}
 				dao.create(model);
 				getEditorInputImpl().setEditorMode(EditorModeType.EDIT);
 			} else if (getEditorInputImpl().getEditorMode().equals(
