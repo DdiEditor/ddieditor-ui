@@ -56,7 +56,7 @@ public class CategoryDao implements IDao {
 	public List<LightXmlObjectType> getLightXmlObject(String id,
 			String version, String parentId, String parentVersion)
 			throws Exception {
-		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getCategoryLight(id, version,
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getCategorysLight(id, version,
 				parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
 		return lightXmlObjectTypeList;
 	}
