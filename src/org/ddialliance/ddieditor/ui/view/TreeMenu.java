@@ -193,7 +193,7 @@ public class TreeMenu {
 		executeOpenEditor(input, mode, currentView, shell);
 	}
 
-	private static void executeOpenEditor(EditorInput input, EditorModeType mode,
+	static void executeOpenEditor(EditorInput input, EditorModeType mode,
 			View currentView, Shell shell) {
 		try {
 			Editor editor = (Editor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
