@@ -49,8 +49,7 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
  * <li>displayMessageEntry - message key for retrieving i18n label of
  * elementName</li>
  * <li>if OPEN - support for open view given
- * <li>list of subelements (e.g. Multiple Question Item and Question Item are
- * subelements to Question Scheme)
+ * <li>list of child elements (e.g. Multiple Question Item and Question Item are subelements to Question Scheme)
  * </ul>
  */
 public enum ElementType {
@@ -77,21 +76,21 @@ public enum ElementType {
 			"ConceptScheme", ConceptsPerspective.ID, ConceptSchemeEditor.ID,
 			"cons", "ConceptView.label.conceptSchemeLabel.ConceptScheme", "",
 			Arrays.asList(ElementType.CONCEPT)),
+
 	// question
-	QUESTION_ITEM("QuestionItem", QuestionsPerspective.ID,
-			QuestionItemEditor.ID, "quei",
-			"QuestionItemView.label.questionItemLabel.QuestionItem", "", null), MULTIPLE_QUESTION_ITEM(
-			"MultipleQuestionItem",
-			QuestionsPerspective.ID,
-			MultipleQuestionItemEditor.ID,
-			"mquei",
-			"QuestionItemView.label.multipleQuestionItemLabel.MultipleQuestionItem",
-			"", Arrays.asList(ElementType.QUESTION_ITEM)), QUESTION_SCHEME(
-			"QuestionScheme", QuestionsPerspective.ID, QuestionSchemeEditor.ID,
-			"ques",
-			"QuestionItemView.label.questionSchemeLabel.QuesitionScheme", "",
-			Arrays.asList(ElementType.QUESTION_ITEM,
-					ElementType.MULTIPLE_QUESTION_ITEM)),
+	QUESTION_ITEM("QuestionItem",
+					QuestionsPerspective.ID, QuestionItemEditor.ID, "quei",
+					"QuestionItemView.label.questionItemLabel.QuestionItem", "", null),
+	SUB_QUESTION_ITEM("QuestionItem",
+					QuestionsPerspective.ID, QuestionItemEditor.ID, "quei",
+					"QuestionItemView.label.questionItemLabel.SubQuestionItem", "", null),
+	MULTIPLE_QUESTION_ITEM(
+			"MultipleQuestionItem", QuestionsPerspective.ID, MultipleQuestionItemEditor.ID, "mquei",
+			"QuestionItemView.label.multipleQuestionItemLabel.MultipleQuestionItem", "", Arrays.asList(
+					ElementType.SUB_QUESTION_ITEM)), 
+	QUESTION_SCHEME("QuestionScheme", QuestionsPerspective.ID, QuestionSchemeEditor.ID, "ques",
+			"QuestionItemView.label.questionSchemeLabel.QuesitionScheme", "", 
+			Arrays.asList(ElementType.MULTIPLE_QUESTION_ITEM, ElementType.QUESTION_ITEM)), 
 
 	// category
 	CATEGORY("Category", CategoryPerspective.ID, CategoryEditor.ID, "cat",
