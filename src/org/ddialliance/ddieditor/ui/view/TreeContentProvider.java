@@ -25,6 +25,7 @@ import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.variable.VariableSchemeDao;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -150,8 +151,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 					return CodeSchemeDao.getCodeSchemesLight(null, null)
 							.toArray();
 				} else if (contentType.equals(ViewContentType.QuestionContent)) {
-					return new QuestionSchemeDao()
-							.getLightXmlObject(null, null).toArray();
+					return new QuestionSchemeDao().getLightXmlObject(null, null, null, null).toArray();
 				} else if (contentType
 						.equals(ViewContentType.InstrumentationContent)) {
 					LightXmlObjectListDocument listDoc = DdiManager
@@ -233,15 +233,16 @@ public class TreeContentProvider implements IStructuredContentProvider,
 							lightXmlObjectType).toArray();
 					// question scheme
 				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
-					List<LightXmlObjectType> list = new MultipleQuestionItemDao()
-							.getLightXmlObject(lightXmlObjectType);
-					list.addAll(new QuestionItemDao()
-							.getLightXmlObject(lightXmlObjectType));
+					List<LightXmlObjectType> list = new MultipleQuestionItemDao().getLightXmlObject(lightXmlObjectType);
+					QuestionItemDao questionItemDao = new QuestionItemDao();
+					questionItemDao.setParentElementType(ElementType.QUESTION_SCHEME);
+					list.addAll(questionItemDao.getLightXmlObject(lightXmlObjectType));
 					contentList = list.toArray();
 					// multiple question item
 				} else if (lightXmlTypeLocalname.equals("MultipleQuestionItem")) {
-					contentList = new QuestionItemDao().getLightXmlObject(
-							lightXmlObjectType).toArray();
+					QuestionItemDao questionItemDao = new QuestionItemDao();
+					questionItemDao.setParentElementType(ElementType.MULTIPLE_QUESTION_ITEM);
+					contentList = questionItemDao.getLightXmlObject(lightXmlObjectType).toArray();
 					// control construct scheme
 				} else if (lightXmlTypeLocalname
 						.equals("ControlConstructScheme")) {
