@@ -37,6 +37,7 @@ public class EditorInput implements IEditorInput {
 	private String parentId;
 	private String parentVersion;
 	private ElementType elementType;
+	private ElementType parentEntityType;
 	private String resourceId;
 
 	/**
@@ -73,6 +74,7 @@ public class EditorInput implements IEditorInput {
 	 */
 	public EditorInput(String resourceId, String id, String version,
 			String parentId, String parentVersion, ElementType elementType,
+			ElementType parentEntityType,
 			EditorModeType mode) {
 		this.resourceId = resourceId;
 		if (mode.equals(EditorModeType.NEW)) {
@@ -88,6 +90,7 @@ public class EditorInput implements IEditorInput {
 		this.parentVersion = parentVersion;
 		this.mode = mode;
 		this.elementType = elementType;
+		this.parentEntityType = parentEntityType;
 	}
 
 	public String getId() {
@@ -149,7 +152,15 @@ public class EditorInput implements IEditorInput {
 	protected void setParentVersion(String parentVersion) {
 		this.parentVersion = parentVersion;
 	}
-
+	
+	protected void setParentElementType(ElementType parentElementType) {
+		this.parentEntityType = parentElementType;
+	}
+	
+	protected ElementType getParentElementType() {
+		return this.parentEntityType;
+	}
+	
 	@Override
 	public boolean exists() {
 		return false;
