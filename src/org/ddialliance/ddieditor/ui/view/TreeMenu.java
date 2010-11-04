@@ -74,16 +74,14 @@ public class TreeMenu {
 		log.debug(entityType);
 		// define editor input
 		EditorInput input = null;
-
+		
 		// ddi resource type
 		if (inputSelection.getSelection() instanceof DDIResourceType) {
 			entityType = ElementType.FILE;
-			input = new EditorInput(inputSelection.getResourceId(),
-					((DDIResourceType) inputSelection.getSelection())
-							.getOrgName(), null, null, null, entityType, mode);
+			input = new EditorInput(inputSelection.getResourceId(), ((DDIResourceType) inputSelection.getSelection())
+					.getOrgName(), null, null, null, entityType, null, mode);
 			// open editor
-			executeOpenEditor(input, entityType, mode, currentView, currentView
-					.getSite().getShell());
+			executeOpenEditor(input, mode, currentView, currentView.getSite().getShell());
 		}
 
 		// light xml object
@@ -91,17 +89,15 @@ public class TreeMenu {
 			LightXmlObjectType lightXmlObject = (LightXmlObjectType) inputSelection
 					.getSelection();
 			// open editor
-			defineInputAndOpenEditor(entityType, lightXmlObject, mode,
-					inputSelection.getResourceId(), currentView);
+			defineInputAndOpenEditor(entityType, inputSelection.getParentElementType(), lightXmlObject, mode, inputSelection.getResourceId(), currentView);
 		}
 
 		// notify any listeners of the view with the actual data of the view
 		treeViewer.setSelection(treeViewer.getSelection());
 	}
 
-	public static void defineInputAndOpenEditor(ElementType newEntityType,
-			LightXmlObjectType lightXmlObject, EditorModeType mode,
-			String resourceId, View currentView) {
+	public static void defineInputAndOpenEditor(ElementType newEntityType, ElementType parentEntityType, LightXmlObjectType lightXmlObject,
+			EditorModeType mode, String resourceId, View currentView) {
 		// current view
 		if (currentView == null) {
 			IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
@@ -139,11 +135,10 @@ public class TreeMenu {
 		// parent - child relation
 		String parentId = "";
 		String parentVersion = "";
-		ElementType selectEntityType = null;
+		ElementType selectElementType = null;
 		ElementType entityType = null;
 		try {
-			selectEntityType = ElementType.getElementType(lightXmlObject
-					.getElement());
+			selectElementType = ElementType.getElementType(lightXmlObject.getElement());
 		} catch (DDIFtpException e) {
 			DialogUtil.errorDialog(shell, currentViewId, null, e.getMessage(),
 					e);
@@ -152,18 +147,20 @@ public class TreeMenu {
 
 		if (mode.equals(EditorModeType.NEW)) {
 			entityType = newEntityType;
-			// parent
-			if (newEntityType.equals(selectEntityType)) {
+			if (newEntityType.equals(selectElementType)) {
+				// create sibling of selected
 				parentId = lightXmlObject.getParentId();
 				parentVersion = lightXmlObject.getParentVersion();
 			}
-			// child/ default
 			else {
+				// create child of selected
 				parentId = lightXmlObject.getId();
 				parentVersion = lightXmlObject.getVersion();
+				parentEntityType = selectElementType;
 			}
 		} else if (mode.equals(EditorModeType.EDIT)) {
-			entityType = selectEntityType;
+			// edit selected
+			entityType = selectElementType;
 			parentId = lightXmlObject.getParentId();
 			parentVersion = lightXmlObject.getParentVersion();
 		} else {
@@ -173,9 +170,9 @@ public class TreeMenu {
 			return;
 		}
 
-		EditorInput input = new EditorInput(resourceId, lightXmlObject.getId(),
-				lightXmlObject.getVersion(), parentId, parentVersion,
-				entityType, mode);
+		EditorInput input = new EditorInput(resourceId, lightXmlObject.getId(), lightXmlObject.getVersion(), parentId,
+				parentVersion, entityType, parentEntityType, mode);
+
 
 		if (log.isDebugEnabled()) {
 			log.debug("EditorMode:" + mode + ", elementType: " + entityType);
@@ -193,16 +190,14 @@ public class TreeMenu {
 		}
 
 		// open editor
-		executeOpenEditor(input, entityType, mode, currentView, shell);
+		executeOpenEditor(input, mode, currentView, shell);
 	}
 
-	static void executeOpenEditor(EditorInput input,
-			ElementType entityType, EditorModeType mode, View currentView,
-			Shell shell) {
+	private static void executeOpenEditor(EditorInput input, EditorModeType mode,
+			View currentView, Shell shell) {
 		try {
-			Editor editor = (Editor) PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getActivePage()
-					.openEditor(input, entityType.getEditorId());
+			Editor editor = (Editor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
+					input, input.getElementType().getEditorId());
 
 			// add update on save listener
 			if (currentView != null) {
@@ -227,8 +222,21 @@ public class TreeMenu {
 			e.printStackTrace();
 		}
 	}
+	
+	// get parent element type of selected element
+	private ElementType getElementType(TreeSelection selection) throws DDIFtpException {
+		int length = selection.getPaths()[0].getSegmentCount();
+		if (length > 2 && selection.getPaths()[0].getSegment(length-2) instanceof LightXmlObjectType) {
+			String parentElementName = ((LightXmlObjectType) selection.getPaths()[0].getSegment(length-2)).getElement();
+			log.debug("ParentElementType: "+ElementType.getElementType(parentElementName));
+			return ElementType.getElementType(parentElementName);
+		}
+		// DDIResourceType:
+		return ElementType.FILE;
+	}
 
 	public InputSelection defineSelection(TreeViewer treeViewer, String ID) {
+		System.out.println("TreeMenu.defineSelection()");
 		TreeSelection selection = (TreeSelection) treeViewer.getSelection();
 		InputSelection inputSelection = new InputSelection();
 		// resource id
@@ -236,10 +244,13 @@ public class TreeMenu {
 			inputSelection.setResourceId(((DDIResourceType) selection
 					.getPaths()[0].getFirstSegment()).getOrgName());
 		}
-
-		// selection obj
+		
 		Object obj = null;
 		try {
+			// get parent type
+			inputSelection.setParentElementType(getElementType(selection));
+
+			// selection obj
 			obj = ((IStructuredSelection) selection).getFirstElement();
 		} catch (Exception e) {
 			DialogUtil.errorDialog(treeViewer.getTree().getShell(), ID,
@@ -313,13 +324,11 @@ public class TreeMenu {
 		}
 
 		// log values
-		// if (log.isDebugEnabled()) {
-		// log.debug("Top selection: class: "
-		// + selection.getPaths()[0].getFirstSegment().getClass()
-		// .getName() + ", value: "
-		// + selection.getPaths()[0].getFirstSegment());
-		// log.debug(inputSelection);
-		// }
+//		if (log.isDebugEnabled()) {
+//			log.debug("XTop selection: class: " + selection.getPaths()[0].getFirstSegment().getClass().getName()
+//					+ ", value: " + selection.getPaths()[0].getFirstSegment());
+//			log.debug(inputSelection);
+//		}
 
 		// not recognized!
 		if (inputSelection.getSelection() == null) {
