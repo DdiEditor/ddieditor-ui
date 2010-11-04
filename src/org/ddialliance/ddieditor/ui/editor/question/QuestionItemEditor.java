@@ -23,6 +23,7 @@ import org.ddialliance.ddieditor.ui.editor.question.ResponseTypeDetail.RESPONSE_
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
 import org.ddialliance.ddieditor.ui.model.reference.ResponseTypeReference;
