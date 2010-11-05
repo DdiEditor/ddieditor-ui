@@ -3,7 +3,6 @@ package org.ddialliance.ddieditor.ui.dbxml;
 import java.util.List;
 
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 
