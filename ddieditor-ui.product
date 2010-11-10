@@ -35,13 +35,16 @@
       </win>
    </launcher>
 
+
    <vm>
    </vm>
+
 
    <plugins>
       <plugin id="com.ibm.icu"/>
       <plugin id="ddadb"/>
       <plugin id="ddieditor"/>
+      <plugin id="ddieditor-spss"/>
       <plugin id="ddieditor-ui"/>
       <plugin id="jounal-study-info-export"/>
       <plugin id="lib-java"/>
