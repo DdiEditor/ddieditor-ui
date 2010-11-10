@@ -1034,6 +1034,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						Object object = iteratorItems.next();
 						CacheHolder cacheHolder = (CacheHolder) iteratorCache
 								.next();
+						System.out.println("item: "+object);
+						System.out.println("cacheHolder text: "+cacheHolder.text);
 						try {
 							// restore
 							translationDialog.setXmlText(object,
@@ -1044,6 +1046,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 									cacheHolder.translated);
 							translationDialog.setTranslated(object,
 									cacheHolder.translateable);
+							System.out.println("Update object: "+object);
 						} catch (Exception e) {
 							DialogUtil
 									.errorDialog(
