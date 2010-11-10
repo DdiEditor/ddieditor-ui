@@ -25,6 +25,7 @@ versionbump ddieditor
 versionbump ddieditor-ui
 versionbump ddadb
 versionbump jounal-study-info-export
+versionbump ddieditor-spss
 
 # ddieditor-ui product bundle
 vi OSGI-INF/l10n/bundle.properties
@@ -56,6 +57,7 @@ svn copy $svnurl/dda/trunk/jounal-study-info-export $svnurl/dda/tags/ddiftp/test
 
 # ddiftp
 svn copy $svnurl/dda/trunk/ddiftp $svnurl/dda/tags/ddiftp/test-$version/ -m '$memo'
+
 else
 echo 'No SVN tagging taking place'
 fi
@@ -95,6 +97,11 @@ cd ../ddieditor-ui/
 
 echo '--- Check db connection ---'
 vi bin/resources/hibernate/hibernate.cfg.xml
+
+echo '--- Copy ddieditor-spss setup ---'
+cd ../ddieditor-spss
+ant deploy-to-ddieditor-ui -f dda-build.xml
+cd ../ddieditor-ui/
 
 #
 # execute product build
