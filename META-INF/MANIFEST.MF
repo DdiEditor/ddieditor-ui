@@ -24,5 +24,6 @@ Bundle-Vendor: Danish Data Archive
 Bundle-Copyright: LGLP
 Export-Package: org.ddialliance.ddieditor.ui.editor,
  org.ddialliance.ddieditor.ui.perspective,
+ org.ddialliance.ddieditor.ui.preference,
  org.ddialliance.ddieditor.ui.util,
  org.ddialliance.ddieditor.ui.view
