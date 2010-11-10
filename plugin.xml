@@ -385,6 +385,10 @@
                id="org.ddialliance.ddieditor.ui.command.RefreshViews"
                name="RefreshViews">
          </command>
+         <command
+               id="org.ddialliance.ddieditor.ui.command.MergeDDI3"
+               name="MergeDDI3">
+         </command>
       </extension>
       <extension
             point="org.eclipse.ui.menus">
@@ -394,31 +398,6 @@
                   id="labelMenu"
                   label="%menu.label"
                   mnemonic="%menu.mnemonic">                  
-               <menu
-                     icon="icons/import_wiz.gif"
-                     id="filemenu-importmenu"
-                     label="%menu.label.0"
-                     mnemonic="%menu.mnemonic.0">                     
-               <command
-                     commandId="org.ddialliance.ddieditor.ui.command.OpenDDI3File"
-                     icon="icons/project_open.gif"
-                     label="%command.label"
-                     mnemonic="%command.mnemonic"
-                     style="push">
-               </command>
-               <command
-                     commandId="org.ddialliance.ddieditor.ui.command.NewDDI3File"
-                     icon="icons/newfile_wiz.gif"
-                     id="new-ddi-3-file"
-                     label="%command.label.0"
-                     mnemonic="%command.mnemonic.0"
-                     style="push">
-               </command>
-               </menu>
-               <separator
-                     name="seperator-1"
-                     visible="true">
-               </separator>
                <command
                      commandId="org.eclipse.ui.file.close"
                      label="%command.label.1"
@@ -432,7 +411,7 @@
                      style="push">
                </command>
                <separator
-                     name="seperator-2"
+                     name="seperator-1"
                      visible="true">
                </separator>
                <command
@@ -449,9 +428,22 @@
                      style="push">
                </command>
                <separator
-                     name="separator-3"
+                     name="seperator-2"
                      visible="true">
                </separator>
+               <menu
+                     icon="icons/import_wiz.gif"
+                     id="filemenu-importmenu"
+                     label="%menu.label.0"
+                     mnemonic="%menu.mnemonic.0">
+                  <command
+                        commandId="org.ddialliance.ddieditor.ui.command.MergeDDI3"
+                        icon="icons/open-task.gif"
+                        id="merge-ddi"
+                        label="Merge DDI 3"
+                        style="push">
+                  </command>
+               </menu>
                <menu
                      icon="icons/export_wiz.gif"
                      label="%menu.label.1"
@@ -477,6 +469,26 @@
                      visible="true">
                </separator>
                <command
+                     commandId="org.ddialliance.ddieditor.ui.command.OpenDDI3File"
+                     icon="icons/project_open.gif"
+                     id="open-ddi"
+                     label="%command.label"
+                     mnemonic="%command.mnemonic"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.ddialliance.ddieditor.ui.command.NewDDI3File"
+                     icon="icons/newfile_wiz.gif"
+                     id="new-ddi-3-file"
+                     label="%command.label.0"
+                     mnemonic="%command.mnemonic.0"
+                     style="push">
+               </command>
+               <separator
+                     name="ddieditor-ui.separator5"
+                     visible="true">
+               </separator>
+               <command
                      commandId="org.ddialliance.ddieditor.ui.command.DeleteSingleDDI3"
                      icon="icons/delete_obj.gif"
                      label="%command.label.7"
@@ -491,7 +503,8 @@
                      style="push">
                </command>
                <separator
-                     name="ddieditor-ui.separator5">
+                     name="ddieditor-ui.separator6"
+                     visible="true">
                </separator>
                <command
                      commandId="org.eclipse.ui.file.exit"
