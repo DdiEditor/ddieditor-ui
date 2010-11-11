@@ -1,5 +1,6 @@
 package org.ddialliance.ddieditor.ui.model.variable;
 
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.RepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.VariableDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
@@ -67,6 +68,10 @@ public class Variable extends Model {
 			return doc.getVariable().getVariableNameList().get(0);
 		}
 	}
+	
+	public RepresentationType getRepresentation() {
+		return doc.getVariable().getRepresentation();
+	}
 
 	@Override
 	public void executeChange(Object value, Class<?> type) throws Exception {
@@ -89,7 +94,7 @@ public class Variable extends Model {
 
 		// universe ref
 		if (type.equals(ModelIdentifingType.Type_C.class)) {
-			ReferenceType ref = getConceptReference();
+			ReferenceType ref = getUniverseReference();
 			ModelAccessor.setReference(ref, (LightXmlObjectType) value);
 		}
 	}
