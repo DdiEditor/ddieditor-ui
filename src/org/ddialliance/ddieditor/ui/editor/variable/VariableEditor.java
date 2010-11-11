@@ -3,8 +3,10 @@ package org.ddialliance.ddieditor.ui.editor.variable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.NumericRepresentationDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.RepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericRepresentationType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.variable.VariableDao;
@@ -19,6 +21,9 @@ import org.ddialliance.ddieditor.ui.model.variable.Variable;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.log.Log;
+import org.ddialliance.ddiftp.util.log.LogFactory;
+import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -31,6 +36,8 @@ import org.eclipse.ui.PartInitException;
 
 public class VariableEditor extends Editor {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.variable.VariableEditor";
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			VariableEditor.class);
 	Variable modelImpl;
 
 	public VariableEditor() {
@@ -90,12 +97,12 @@ public class VariableEditor extends Editor {
 		}
 		ReferenceSelectionCombo uniRefSelectCombo = null;
 		uniRefSelectCombo = createRefSelection(group,
-				Messages.getString("VariableEditor.label.conceptref"),
-				Messages.getString("VariableEditor.label.conceptref"),
-				modelImpl.getQuestionReference(), conceptRefList, false);
+				Messages.getString("VariableEditor.label.universeref"),
+				Messages.getString("VariableEditor.label.universeref"),
+				modelImpl.getQuestionReference(), uniRefList, false);
 		uniRefSelectCombo.addSelectionListener(Messages
-				.getString("VariableEditor.label.conceptref"), uniRefList,
-				new ReferenceSelectionAdapter(conRefSelectCombo, model,
+				.getString("VariableEditor.label.universeref"), uniRefList,
+				new ReferenceSelectionAdapter(uniRefSelectCombo, model,
 						ModelIdentifingType.Type_C.class,
 						getEditorIdentification()));
 
@@ -119,6 +126,18 @@ public class VariableEditor extends Editor {
 				questionRefList, new ReferenceSelectionAdapter(refSelecCombo,
 						model, ModelIdentifingType.Type_A.class,
 						getEditorIdentification()));
+
+		// representation
+		createLabel(group,
+				Messages.getString("VariableEditor.label.representation"));
+		RepresentationType representation = modelImpl.getRepresentation();
+		if (representation instanceof NumericRepresentationDocument) {
+			
+		} else if(false) {
+			
+		} else {
+			
+		}
 
 		// description tab
 		TabItem tabItem2 = createTabItem(Messages
