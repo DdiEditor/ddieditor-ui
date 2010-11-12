@@ -1,12 +1,21 @@
 package org.ddialliance.ddieditor.ui.editor.variable;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.NumericRepresentationDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.RepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeRepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateTimeRepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.ExternalCategoryRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericRepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericTypeCodeType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextRepresentationType;
+import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.variable.VariableDao;
@@ -24,10 +33,16 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -78,7 +93,7 @@ public class VariableEditor extends Editor {
 		conRefSelectCombo = createRefSelection(group,
 				Messages.getString("VariableEditor.label.conceptref"),
 				Messages.getString("VariableEditor.label.conceptref"),
-				modelImpl.getQuestionReference(), conceptRefList, false);
+				modelImpl.getConceptReference(), conceptRefList, false);
 		conRefSelectCombo.addSelectionListener(Messages
 				.getString("VariableEditor.label.conceptref"), conceptRefList,
 				new ReferenceSelectionAdapter(conRefSelectCombo, model,
@@ -99,7 +114,7 @@ public class VariableEditor extends Editor {
 		uniRefSelectCombo = createRefSelection(group,
 				Messages.getString("VariableEditor.label.universeref"),
 				Messages.getString("VariableEditor.label.universeref"),
-				modelImpl.getQuestionReference(), uniRefList, false);
+				modelImpl.getUniverseReference(), uniRefList, false);
 		uniRefSelectCombo.addSelectionListener(Messages
 				.getString("VariableEditor.label.universeref"), uniRefList,
 				new ReferenceSelectionAdapter(uniRefSelectCombo, model,
@@ -129,44 +144,190 @@ public class VariableEditor extends Editor {
 
 		// representation
 		createLabel(group,
+				Messages.getString("VariableEditor.label.representation"))
+				.setLayoutData(
+						new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
+		Group representationGroup = createGroup(group,
 				Messages.getString("VariableEditor.label.representation"));
-		RepresentationType representation = modelImpl.getRepresentation();
-		if (representation instanceof NumericRepresentationDocument) {
-			
-		} else if(false) {
-			
-		} else {
-			
+		representationGroup.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING,
+				true, true, 1, 1));
+
+		Object repImpl = modelImpl.getValueRepresentation();
+		// CodeRepresentation
+		try {
+			if (repImpl instanceof CodeRepresentationType) {
+				representationGroup.setText(Messages
+						.getString("VariableEditor.label.coderepresentation"));
+				ReferenceType codeSchemeRef = ((CodeRepresentationType) repImpl)
+						.getCodeSchemeReference();
+
+				// code schemes light
+				List<LightXmlObjectType> codeSchemeRefList = new ArrayList<LightXmlObjectType>();
+				try {
+					codeSchemeRefList = DdiManager.getInstance()
+							.getCodeSchemesLight(null, null, null, null)
+							.getLightXmlObjectList().getLightXmlObjectList();
+				} catch (Exception e) {
+					DialogUtil.errorDialog(getEditorSite(), ID, null,
+							e.getMessage(), e);
+				}
+
+				// code scheme selection
+				final ReferenceSelectionCombo refSelectCodeSchemeCombo = createRefSelection(
+						representationGroup,
+						Messages.getString("VariableEditor.label.codeschemereference"),
+						Messages.getString("VariableEditor.label.codeschemereference"),
+						codeSchemeRef, codeSchemeRefList, false);
+				refSelectCodeSchemeCombo.addSelectionListener(Messages
+						.getString("VariableEditor.label.codeschemereference"),
+						codeSchemeRefList, new ReferenceSelectionAdapter(
+								refSelectCodeSchemeCombo, model,
+								ModelIdentifingType.Type_D.class,
+								getEditorIdentification()));
+
+				// codes values
+				createLabel(
+						representationGroup,
+						Messages.getString("VariableEditor.label.coderepresentation.codevalues"));
+				final Label codeValue = createLabel(representationGroup, "");
+				codeValue.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
+						false, false, 1, 1));
+				changeCodeRepresentationCodeValues(codeSchemeRef, codeValue);
+				refSelectCodeSchemeCombo.getCombo().addModifyListener(
+						new ModifyListener() {
+							@Override
+							public void modifyText(ModifyEvent e) {
+								try {
+									changeCodeRepresentationCodeValues(
+											new ReferenceResolution(
+													refSelectCodeSchemeCombo
+															.getResult())
+													.getReference(), codeValue);
+								} catch (Exception e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
+						});
+			}
+			// DateTimeRepresentation
+			if (repImpl instanceof DateTimeRepresentationType) {
+				representationGroup
+				.setText(Messages
+						.getString("VariableEditor.label.datetimerepresentation"));
+				createLabel(representationGroup, "Not implemented!");
+			}
+			// ExternalCategoryRepresentation
+			if (repImpl instanceof ExternalCategoryRepresentationType) {
+				representationGroup
+				.setText(Messages
+						.getString("VariableEditor.label.textrepresentation"));
+				createLabel(representationGroup, "Not implemented!");
+			}
+			// NumericRepresentation
+			if (repImpl instanceof NumericRepresentationType) {
+				NumericRepresentationType numRep = (NumericRepresentationType) repImpl;
+				representationGroup
+						.setText(Messages
+								.getString("VariableEditor.label.numericrepresentation"));
+				// numeric type
+				createLabel(
+						representationGroup,
+						Messages.getString("VariableEditor.label.numericrepresentation.types"));
+				Combo numericCombo = createCombo(representationGroup,
+						Variable.NUMERIC_TYPES);
+				int search = numRep.getType().intValue();
+				if (search != 0) {
+					search--;
+				}
+				for (int i = 0; i < Variable.NUMERIC_TYPES.length; i++) {
+					if (search == i) {
+						numericCombo.select(i);
+					}
+				}
+				numericCombo.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent event) {
+						editorStatus.setChanged();
+						int index = ((Combo) event.getSource())
+								.getSelectionIndex();
+						index++;
+						try {
+							modelImpl.applyChange(
+									NumericTypeCodeType.Enum.forInt(index),
+									ModelIdentifingType.Type_E.class);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				Text numericDecimalPositionText = createTextInput(
+						representationGroup,
+						Messages.getString("VariableEditor.label.numericrepresentation.decimalpositions"),
+						modelImpl.getNumericDecimalPosition().toString(), false);
+				numericDecimalPositionText
+						.addModifyListener(new ModifyListener() {
+							@Override
+							public void modifyText(ModifyEvent e) {
+								editorStatus.setChanged();
+
+								try {
+									BigInteger bigint = null;
+									bigint = new BigInteger(((Text) e
+											.getSource()).getText());
+									modelImpl.applyChange(bigint,
+											ModelIdentifingType.Type_F.class);
+								} catch (Exception e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
+						});
+			}
+			// TextRepresentation
+			if (repImpl instanceof TextRepresentationType) {
+				representationGroup
+				.setText(Messages
+						.getString("VariableEditor.label.textrepresentation"));
+				createLabel(representationGroup, "Not implemented!");
+			}
+		} catch (Exception e) {
+			if (!(e instanceof DDIFtpException)) {
+				DDIFtpException ddiE = new DDIFtpException(e);
+				ddiE.setRealThrowable(new Throwable());
+			}
 		}
 
 		// description tab
 		TabItem tabItem2 = createTabItem(Messages
 				.getString("editor.label.description"));
-		Group group2 = createGroup(tabItem2,
+		Group descriptionGroup = createGroup(tabItem2,
 				Messages.getString("editor.label.description"));
 
 		try {
-			Text txt = createLabelInput(group2,
+			Text txt = createLabelInput(descriptionGroup,
 					Messages.getString("editor.label.label"), modelImpl
 							.getDocument().getVariable().getLabelList(),
 					modelImpl.getDocument().getVariable().getId());
 
-			createTranslation(group2,
+			createTranslation(descriptionGroup,
 					Messages.getString("editor.button.translate"), modelImpl
 							.getDocument().getVariable().getLabelList(),
 					new LabelTdI(), "", txt);
 
-			StyledText styledText = createStructuredStringInput(group2,
+			StyledText styledText = createStructuredStringInput(
+					descriptionGroup,
 					Messages.getString("editor.label.description"), modelImpl
 							.getDocument().getVariable().getDescriptionList(),
 					modelImpl.getDocument().getVariable().getId());
-			createTranslation(group2,
+			createTranslation(descriptionGroup,
 					Messages.getString("editor.button.translate"), modelImpl
 							.getDocument().getVariable().getDescriptionList(),
 					new DescriptionTdI(), "", styledText);
 
 			// name
-			Text nameText = createTextInput(group2,
+			Text nameText = createTextInput(descriptionGroup,
 					Messages.getString("VariableEditor.label.name"),
 					modelImpl.getName() == null ? "" : modelImpl.getName()
 							.getStringValue(), false);
@@ -184,5 +345,21 @@ public class VariableEditor extends Editor {
 		createXmlTab(modelImpl);
 
 		editorStatus.clearChanged();
+	}
+
+	public static void changeCodeRepresentationCodeValues(
+			ReferenceType codeSchemeRef, Label codeValue) throws Exception {
+		ReferenceResolution refRes = new ReferenceResolution(codeSchemeRef);
+		CodeSchemeDocument codeScheme = DdiManager.getInstance().getCodeScheme(
+				refRes.getId(), null, null, null);
+		StringBuilder codeValues = new StringBuilder();
+		for (Iterator<CodeType> iterator = codeScheme.getCodeScheme()
+				.getCodeList().iterator(); iterator.hasNext();) {
+			codeValues.append(iterator.next().getValue());
+			if (iterator.hasNext()) {
+				codeValues.append(", ");
+			}
+		}
+		codeValue.setText(codeValues.toString());
 	}
 }
