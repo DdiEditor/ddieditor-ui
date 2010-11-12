@@ -361,8 +361,11 @@ public class TreeMenuProvider extends TreeMenu {
 				try {
 					InputSelection inputSelection = defineSelection(treeViewer, currentView.ID);
 					ElementType parentElementType = inputSelection.getParentElementType();
+					
+					// TODO only instantiate when needed!!!
 					QuestionItemDao questionItemDao = new QuestionItemDao();
 					List<LightXmlObjectType> multipleQuestionItemList = null;
+					
 					switch (entityType) {
 					case FILE:
 						MessageUtil.currentNotSupported(currentView.getSite()
