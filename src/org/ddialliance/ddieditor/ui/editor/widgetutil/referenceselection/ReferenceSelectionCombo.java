@@ -20,6 +20,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -38,6 +39,13 @@ public class ReferenceSelectionCombo {
 		this.isNew = isNew;
 	}
 
+	public Combo getCombo() {
+		if (comboViewer!=null) {
+			return comboViewer.getCombo();
+		}
+		return null;
+	}
+	
 	/**
 	 * Create Part Control i.e. create labels, field and browse button
 	 * 
