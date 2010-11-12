@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 0.x.0
+Product Version: 0.5.1
 Release Data: 2010-11-xx
 
 -------------------------------------------------------------------------------
@@ -9,19 +9,14 @@ What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
- -          Removed unused space in views 
- -          Fixed bug on deleting a single resource
- -          Fixed bug on category editor
- -          Added drag and drop support to Instrumentation view and 
- Sequence editor 
- -           
+ -          Added SPSS import
+ -          Added Variable support
+ -          Creation of Question Items as child of Multiple Question Items
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
- -          Removed creation of composite of parent arg in 
- Editor.createPartControl
- -          Editor.createLabelDescription cleanup
+ -          
  
 -------------------------------------------------------------------------------
 Change Log Previous Releases
@@ -48,3 +43,7 @@ Known Issue
 -------------------------------------------------------------------------------
  - Importing study level information only fully works for XML, containing an 
  empty DDIInstance.
+ - Access to DDA database is troublesome on administration platform accessing 
+ development database mirror.
+ - Initial use of Dext project has to be tweeked to fit ddieditor 
+ infrastructure and DDA integration. 
