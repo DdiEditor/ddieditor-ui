@@ -816,6 +816,15 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return button;
 	}
 
+	public Button createCheckBox(Group group, String label, String buttonText ) {
+		createLabel(group, label);
+		Button check = new Button(group, SWT.CHECK);
+		check.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		check.setText(buttonText);
+		check.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		return check;
+	}
+
 	public Combo createCombo(Group group, String[] options) {
 		final Combo combo = new Combo(group, SWT.READ_ONLY);
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
@@ -1174,7 +1183,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		setControl(text);
 		return text;
 	}
-
+		
 	public Composite createErrorComposite(Composite parent,
 			String controlIdentification) {
 		Composite composite = new Composite(parent, SWT.NONE);
