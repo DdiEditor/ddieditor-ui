@@ -2,6 +2,7 @@ package org.ddialliance.ddieditor.ui.dbxml.variable;
 
 import java.util.List;
 
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.VariableSchemeDocument;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
@@ -68,9 +69,12 @@ public class VariableSchemeDao implements IDao {
 	@Override
 	public void delete(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		VariableScheme model = getModel(id, version, parentId, parentVersion);
-		DdiManager.getInstance()
-				.deleteElement(model.getDocument(), model.getParentId(),
-						model.getParentVersion(), "VariableScheme");
+		// VariableScheme model = getModel(id, version, parentId,
+		// parentVersion);
+		VariableSchemeDocument doc = VariableSchemeDocument.Factory
+				.newInstance();
+		doc.addNewVariableScheme();
+		DdiManager.getInstance().deleteElement(doc, parentId, parentVersion,
+				"logicalproduct__LogicalProduct");
 	}
 }
