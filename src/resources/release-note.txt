@@ -2,7 +2,7 @@
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
 Product Version: 0.5.1
-Release Data: 2010-11-xx
+Release Data: 2010-11-12
 
 -------------------------------------------------------------------------------
 What's New
@@ -16,7 +16,7 @@ Item ID:    Description:
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
- -          
+ -          Added ddieditor-spss plugin
  
 -------------------------------------------------------------------------------
 Change Log Previous Releases
