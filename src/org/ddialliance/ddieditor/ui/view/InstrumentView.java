@@ -14,8 +14,8 @@ public class InstrumentView extends View {
 		super(
 				ViewContentType.InstrumentationContent,
 				Messages.getString("InstrumentView.label.navigation"),
-				Messages.getString("InstrumentView.label.label.Instrument"),
 				Messages.getString("InstrumentView.label.selectLabel.NavigatorDescription"),
+				Messages.getString("InstrumentView.label.label.Instrument"),
 				ElementType.CONTROL_CONSTRUCT_SCHEME, "");
 	}
 
