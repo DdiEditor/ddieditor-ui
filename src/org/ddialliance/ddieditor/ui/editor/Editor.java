@@ -85,6 +85,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -183,13 +184,17 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
 			try {
 				if (editorInput.getElementType() == ElementType.QUESTION_ITEM) {
-					((QuestionItemDao) dao).setParentElementType(editorInput.getParentElementType());
+					((QuestionItemDao) dao).setParentElementType(editorInput
+							.getParentElementType());
 				}
 
-				model = dao.getModel(editorInput.getId(), editorInput.getVersion(), editorInput.getParentId(),
+				model = dao.getModel(editorInput.getId(),
+						editorInput.getVersion(), editorInput.getParentId(),
 						editorInput.getParentVersion());
 			} catch (Exception e) {
-				throw new PartInitException(Messages.getString("editor.init.error.retrieval"), new DDIFtpException(e));
+				throw new PartInitException(
+						Messages.getString("editor.init.error.retrieval"),
+						new DDIFtpException(e));
 			}
 		} else {
 			throw new PartInitException(
@@ -349,9 +354,11 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 		try {
 			if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
-				if (getEditorInputImpl().getElementType() == ElementType.QUESTION_ITEM ||
-						getEditorInputImpl().getElementType() == ElementType.SUB_QUESTION_ITEM) {
-					((QuestionItemDao)dao).setParentElementType(getEditorInputImpl().getParentElementType());
+				if (getEditorInputImpl().getElementType() == ElementType.QUESTION_ITEM
+						|| getEditorInputImpl().getElementType() == ElementType.SUB_QUESTION_ITEM) {
+					((QuestionItemDao) dao)
+							.setParentElementType(getEditorInputImpl()
+									.getParentElementType());
 				}
 				dao.create(model);
 				getEditorInputImpl().setEditorMode(EditorModeType.EDIT);
@@ -413,6 +420,23 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	public EditorInput getEditorInputImpl() {
 		return (EditorInput) super.getEditorInput();
+	}
+
+	/**
+	 * Ui error display, if exception not ddi exception then one is created
+	 * 
+	 * @param e
+	 *            exception to display
+	 */
+	public void showError(Exception e) {
+		DDIFtpException ddiFtpException = null;
+		if (!(e instanceof DDIFtpException)) {
+			ddiFtpException = new DDIFtpException(e);
+		} else {
+			ddiFtpException = (DDIFtpException) e;
+		}
+		DialogUtil.errorDialog(getSite().getShell(), ID, null,
+				ddiFtpException.getMessage(), ddiFtpException);
 	}
 
 	/**
@@ -816,12 +840,13 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return button;
 	}
 
-	public Button createCheckBox(Group group, String label, String buttonText ) {
+	public Button createCheckBox(Group group, String label, String buttonText) {
 		createLabel(group, label);
 		Button check = new Button(group, SWT.CHECK);
 		check.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		check.setText(buttonText);
-		check.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		check.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+				1));
 		return check;
 	}
 
@@ -1043,8 +1068,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						Object object = iteratorItems.next();
 						CacheHolder cacheHolder = (CacheHolder) iteratorCache
 								.next();
-						System.out.println("item: "+object);
-						System.out.println("cacheHolder text: "+cacheHolder.text);
+						System.out.println("item: " + object);
+						System.out.println("cacheHolder text: "
+								+ cacheHolder.text);
 						try {
 							// restore
 							translationDialog.setXmlText(object,
@@ -1055,7 +1081,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 									cacheHolder.translated);
 							translationDialog.setTranslated(object,
 									cacheHolder.translateable);
-							System.out.println("Update object: "+object);
+							System.out.println("Update object: " + object);
 						} catch (Exception e) {
 							DialogUtil
 									.errorDialog(
@@ -1183,7 +1209,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		setControl(text);
 		return text;
 	}
-		
+
 	public Composite createErrorComposite(Composite parent,
 			String controlIdentification) {
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -1306,10 +1332,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		e.doit = false;
 		// Get the character typed
 		myChar = e.character;
-		log.debug("Verify char: '" + myChar + "'");
+		// log.debug("Verify char: '" + myChar + "'");
 
 		int i = myChar;
-		log.debug("Verify char(hex): " + Integer.toHexString(i));
+		// log.debug("Verify char(hex): " + Integer.toHexString(i));
 
 		IActionBars bars = currentSite.getActionBars();
 
@@ -1345,5 +1371,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			}
 			break;
 		}
+	}
+
+	public static void verifyField(FIELD_TYPE digit, VerifyEvent e,
+			IWorkbenchPartSite site) {
+		verifyField(digit, e, (IEditorSite) site);
 	}
 }
