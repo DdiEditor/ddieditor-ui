@@ -466,12 +466,4 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			// noting to do
 		}
 	}
-
-	// ------------------------------------------------------------------------
-	// house keeping
-	// ------------------------------------------------------------------------
-	private final void showError(Exception e) {
-		// TODO
-		e.printStackTrace();
-	}
 }
