@@ -604,4 +604,10 @@ public class TranslationDialog extends Dialog {
 		// if validate
 		super.okPressed();
 	}
+	
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
+
 }
