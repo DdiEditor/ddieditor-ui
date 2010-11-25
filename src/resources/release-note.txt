@@ -9,9 +9,10 @@ What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
- -          Added SPSS import
- -          Added Variable support
- -          Creation of Question Items as child of Multiple Question Items
+ -          Bug corrected:
+ 			1. Labling error in Instrumentation view.
+ 			2. Translation pop-up now re-sizeable.
+ 			3. Error when adding/modifying Description in Question Scheme editor.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
