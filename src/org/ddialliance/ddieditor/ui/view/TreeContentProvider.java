@@ -215,6 +215,12 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) parentElement;
 			String lightXmlTypeLocalname = lightXmlObjectType.getElement();
 			Object[] contentList = null;
+			
+			// Skip leafs as hasChild() does not filter these when view filter used
+			if (lightXmlTypeLocalname.indexOf("Scheme") < 0  &&
+					!lightXmlTypeLocalname.equals("MultipleQuestionItem")) {
+				return contentList;
+			}
 
 			try {
 				// code scheme
