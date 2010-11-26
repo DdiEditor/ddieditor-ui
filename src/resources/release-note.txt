@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 0.5.2
-Release Data: 2010-11-12
+Product Version: 0.6.0
+Release Data: 2010-12-XX
 
 -------------------------------------------------------------------------------
 What's New
@@ -13,11 +13,14 @@ Item ID:    Description:
  			1. Labling error in Instrumentation view.
  			2. Translation pop-up now re-sizeable.
  			3. Error when adding/modifying Description in Question Scheme editor.
+ 			
+ -          Added Datetime representation support in variable editor
+ -          Added Text representation support in variable editor
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
- -          Added ddieditor-spss plugin
+ -          Changed definition of date ddieditor-spss plugin
  
 -------------------------------------------------------------------------------
 Change Log Previous Releases
