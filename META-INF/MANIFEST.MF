@@ -23,6 +23,8 @@ Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Danish Data Archive
 Bundle-Copyright: LGLP
 Export-Package: org.ddialliance.ddieditor.ui.editor,
+ org.ddialliance.ddieditor.ui.model,
+ org.ddialliance.ddieditor.ui.model.instrument,
  org.ddialliance.ddieditor.ui.perspective,
  org.ddialliance.ddieditor.ui.preference,
  org.ddialliance.ddieditor.ui.util,
