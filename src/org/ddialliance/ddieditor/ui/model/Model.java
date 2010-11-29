@@ -137,4 +137,8 @@ public abstract class Model implements IModel {
 	 */
 	public abstract void executeChange(Object value, Class<?> type)
 			throws Exception;
+	
+	public void setCreate(boolean create) {
+		this.create = create;
+	}
 }
