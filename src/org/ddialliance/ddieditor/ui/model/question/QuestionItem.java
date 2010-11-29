@@ -314,11 +314,17 @@ public class QuestionItem extends Model {
 			ReferenceType ref = getConceptReferenceType();
 			ModelAccessor.setReference(ref, ((LightXmlObjectType) value));
 		} else if (type.equals(ModelIdentifingType.Type_A.class)) {
-			DynamicTextType questionText = (DynamicTextType) XmlBeansUtil.getLangElement(LanguageUtil
-					.getDisplayLanguage(), getQuestionText());
-			LiteralTextType lTextType = (LiteralTextType) questionText.getTextList().get(0).substitute(LiteralTextDocument.type
-					.getDocumentElementName(), LiteralTextType.type);			
-			XmlBeansUtil.setTextOnMixedElement(lTextType.getText(), (String) value);
+			if (((String )value).length() == 0) {
+				if (doc.getQuestionItem().getQuestionTextList().size() > 0) {
+				doc.getQuestionItem().removeQuestionText(0);
+				}
+			} else {
+				DynamicTextType questionText = (DynamicTextType) XmlBeansUtil.getLangElement(
+						LanguageUtil.getDisplayLanguage(), getQuestionText());
+				LiteralTextType lTextType = (LiteralTextType) questionText.getTextList().get(0)
+						.substitute(LiteralTextDocument.type.getDocumentElementName(), LiteralTextType.type);
+				XmlBeansUtil.setTextOnMixedElement(lTextType.getText(), (String) value);
+			}
 		} else {
 			log.debug("******** Class type not supported: " + type + " ********");
 		}
