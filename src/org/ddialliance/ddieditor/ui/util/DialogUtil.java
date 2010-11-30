@@ -68,4 +68,13 @@ public class DialogUtil {
 		return MessageDialog.openConfirm(PlatformUI.getWorkbench().getDisplay()
 				.getActiveShell(), title, message);
 	}
+	
+	public static void infoDialog(Shell shell, String pluginId, String title,
+			String infoMessage) {
+		if (title == null) {
+			title = Messages.getString("InfoTitle");
+		}
+		
+		MessageDialog.openInformation(shell, title, infoMessage);
+	}
 }

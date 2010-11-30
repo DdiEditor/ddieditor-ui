@@ -439,6 +439,10 @@ public class ResponseTypeDetail {
 	 */
 	static public RESPONSE_TYPES getResponseType(
 			RepresentationType representationType) {
+		
+		if (representationType == null) {
+			return RESPONSE_TYPES.UNDEFINED;
+		}
 
 		String responseType = representationType.getClass().getSimpleName();
 		RESPONSE_TYPES responseTypeEnum = null;

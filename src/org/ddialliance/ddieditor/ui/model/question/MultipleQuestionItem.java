@@ -279,10 +279,10 @@ public class MultipleQuestionItem extends Model {
 							MaintainableLabelUpdateElement.NEW));
 				}
 			} else {
-				LiteralTextType lTextType = (LiteralTextType) questionText.getTextList().get(0).substitute(
-						LiteralTextDocument.type.getDocumentElementName(), LiteralTextType.type);
-				XmlBeansUtil.setTextOnMixedElement(lTextType.getText(), (String) value);
-			}
+					LiteralTextType lTextType = (LiteralTextType) questionText.getTextList().get(0)
+							.substitute(LiteralTextDocument.type.getDocumentElementName(), LiteralTextType.type);
+					XmlBeansUtil.setTextOnMixedElement(lTextType.getText(), (String) value);
+				}
 		} else {
 			log.debug("******** Class type not supported: " + type + " ********");
 		}
