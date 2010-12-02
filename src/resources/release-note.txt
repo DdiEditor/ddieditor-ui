@@ -23,7 +23,10 @@ Item ID:    Description:
  -          Fix in Sequence editor
  -          Implement UUDI level 4 for new ids
  -			Ddieditor-spss plugin use editor defined id constructs
-  
+ -			Fix in control constructs editors of resolving referred control 
+ constructs
+ -  
+ 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
