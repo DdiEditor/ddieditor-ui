@@ -2,6 +2,7 @@ package org.ddialliance.ddieditor.ui.dbxml.instrument;
 
 import java.util.List;
 
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DataCollectionDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.InstrumentDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.InstrumentType;
 import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
@@ -19,14 +20,8 @@ import org.ddialliance.ddiftp.util.log.LogType;
 public class InstrumentDao implements IDao {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			InstrumentDao.class);
-	
-	/**
-	 * Get Light XML Object
-	 * 
-	 * @param parentInstrumentScheme
-	 * @return List<LightXmlObjectType>
-	 * @throws Exception
-	 */
+
+	@Override
 	public List<LightXmlObjectType> getLightXmlObject(
 			LightXmlObjectType parentInstrumentScheme) throws Exception {
 
@@ -36,16 +31,7 @@ public class InstrumentDao implements IDao {
 				parentInstrumentScheme.getVersion());
 	}
 
-	/**
-	 * Get Light XML Object
-	 * 
-	 * @param id
-	 * @param version
-	 * @param parentId
-	 * @param parentVersion
-	 * @return List<LightXmlObjectType>
-	 * @throws Exception
-	 */
+	@Override
 	public List<LightXmlObjectType> getLightXmlObject(String id,
 			String version, String parentId, String parentVersion)
 			throws Exception {
@@ -53,33 +39,23 @@ public class InstrumentDao implements IDao {
 		log.debug("Instruments.getInstrumentsLight()");
 
 		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager
-				.getInstance().getInstrumentsLight(id, version, parentId,
-						parentVersion).getLightXmlObjectList()
-				.getLightXmlObjectList();
+				.getInstance()
+				.getInstrumentsLight(id, version, parentId, parentVersion)
+				.getLightXmlObjectList().getLightXmlObjectList();
 
 		return lightXmlObjectTypeList;
 	}
 
-	/**
-	 * Create model
-	 * 
-	 * @param id
-	 * @param version
-	 * @param parentId
-	 * @param parentVersion
-	 * @return Instrument
-	 * @throws Exception
-	 */
+	@Override
 	public Instrument create(String id, String version, String parentId,
 			String parentVersion) throws Exception {
 		InstrumentDocument doc = InstrumentDocument.Factory.newInstance();
 		InstrumentType type = doc.addNewInstrument();
-		
-		IdentificationManager.getInstance()
-		.addIdentification(
+
+		IdentificationManager.getInstance().addIdentification(
 				doc.getInstrument(),
 				ElementType.getElementType(type.getDomNode().getLocalName())
-				.getIdPrefix(), "");
+						.getIdPrefix(), "");
 		IdentificationManager.getInstance().addVersionInformation(
 				doc.getInstrument(), null, null);
 
@@ -87,16 +63,7 @@ public class InstrumentDao implements IDao {
 		return model;
 	}
 
-	/**
-	 * Get model
-	 * 
-	 * @param id
-	 * @param version
-	 * @param parentId
-	 * @param parentVersion
-	 * @return Instrument
-	 * @throws Exception
-	 */
+	@Override
 	public Instrument getModel(String id, String version, String parentId,
 			String parentVersion) throws Exception {
 		log.debug("Instruments.getInstrument(" + id + ")");
@@ -108,55 +75,83 @@ public class InstrumentDao implements IDao {
 		return model;
 	}
 
-	/**
-	 * Create new DBXML
-	 * 
-	 * @param model
-	 *            model
-	 * @param parentId
-	 *            parent id
-	 * @param parentVersion
-	 *            parent version
-	 * @throws DDIFtpException
-	 */
+	@Override
 	public void create(IModel model) throws DDIFtpException {
+		LightXmlObjectType lightXmlObjectType = null;
+		if (model.getParentId() == null) {
+			try {
+				lightXmlObjectType = createDataCollection();
+			} catch (Exception e) {
+				throw new DDIFtpException(e);
+			}
+		}
+		model.setParentId(lightXmlObjectType.getId());
+		model.setParentVersion(lightXmlObjectType.getVersion());
 		DdiManager.getInstance().createElement(model.getDocument(),
-				model.getParentId(), model.getParentVersion(), "datacollection__DataCollection");
+				model.getParentId(), model.getParentVersion(),
+				"datacollection__DataCollection");
 	}
 
-	/**
-	 * 
-	 * Update DBXML
-	 * 
-	 * @param model
-	 *            model
-	 * @throws DDIFtpException
-	 */
+	private LightXmlObjectType createDataCollection() throws Exception {
+		// study unit
+		LightXmlObjectType studyUnitLight = null;
+		List<LightXmlObjectType> studyUnits = DdiManager.getInstance()
+				.getStudyUnitsLight(null, null, null, null)
+				.getLightXmlObjectList().getLightXmlObjectList();
+
+		if (studyUnits.isEmpty()) {
+			throw new DDIFtpException("No study unit");
+		} else {
+			studyUnitLight = DdiManager.createLightXmlObject(null, null,
+					studyUnits.get(0).getId(), studyUnits.get(0).getVersion());
+		}
+
+		// data collection
+		LightXmlObjectType dataColLight = DdiManager.createLightXmlObject(null,
+				null, null, null);
+
+		List<LightXmlObjectType> datacollectionList = DdiManager.getInstance()
+				.getDataCollectionsLight(null, null, null, null)
+				.getLightXmlObjectList().getLightXmlObjectList();
+		if (datacollectionList.isEmpty()) {
+			// new data collection
+			DataCollectionDocument dataColDoc = DataCollectionDocument.Factory
+					.newInstance();
+			dataColDoc.addNewDataCollection();
+			// to element type datacollection
+			IdentificationManager.getInstance().addIdentification(
+					dataColDoc.getDataCollection(),
+					ElementType.DATA_COLLECTION.getIdPrefix(), null);
+			IdentificationManager.getInstance().addVersionInformation(
+					dataColDoc.getDataCollection(), null, null);
+			dataColDoc.getDataCollection().setAgency(ElementType.getAgency());
+
+			dataColLight.setId(dataColDoc.getDataCollection().getId());
+			dataColLight
+					.setVersion(dataColDoc.getDataCollection().getVersion());
+
+			DdiManager.getInstance().createElement(dataColDoc,
+					studyUnitLight.getId(), studyUnitLight.getVersion(),
+					"studyunit__StudyUnit");
+		} else {
+			dataColLight.setId(datacollectionList.get(0).getId());
+			dataColLight.setVersion(datacollectionList.get(0).getVersion());
+		}
+		return dataColLight;
+	}
+
+	@Override
 	public void update(IModel model) throws DDIFtpException {
 		DdiManager.getInstance().updateElement(model.getDocument(),
 				model.getId(), model.getVersion());
 	}
 
-	/**
-	 * 
-	 * Delete DBXML
-	 * 
-	 * @param id
-	 *            Identification
-	 * @param version
-	 *            Version
-	 * @param parentId
-	 *            Parent Identification
-	 * @param parentVersion
-	 *            Parent Version
-	 * @throws Exception
-	 */
+	@Override
 	public void delete(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		log.debug("Delete DBXML");
-		IModel  model = getModel(id, version, parentId, parentVersion);
-		DdiManager.getInstance()
-				.deleteElement(model.getDocument(), model.getParentId(),
-						model.getParentVersion(), "datacollection__DataCollection");
+		IModel model = getModel(id, version, parentId, parentVersion);
+		DdiManager.getInstance().deleteElement(model.getDocument(),
+				model.getParentId(), model.getParentVersion(),
+				"datacollection__DataCollection");
 	}
 }
