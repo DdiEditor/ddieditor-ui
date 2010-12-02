@@ -90,25 +90,15 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			throws PartInitException {
 		super.init(site, input);
 		modelImpl = (Sequence) model;
-
-		// control constructs lights
-		MaintainableLightLabelQueryResult controlConstructsTemp = null;
+		
 		try {
-			controlConstructsTemp = DdiManager.getInstance()
-					.getInstrumentLabel(null, null, null, null);
-		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(getSite().getShell(), ID, null,
-					e.getMessage(), e);
+			controlConstructMap = DdiManager.getInstance().getControlConstructsLightasMap();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
-		for (LinkedList<LightXmlObjectType> lightXmlObjectList : controlConstructsTemp
-				.getResult().values()) {
-			for (LightXmlObjectType lightXmlObject : lightXmlObjectList) {
-				controlConstructMap.put(lightXmlObject.getId(), lightXmlObject);
-			}
-		}
-		controlConstructsTemp = null;
-
+		
+		// items to feed table
 		LightXmlObjectType lightXmlObject = null;
 		for (ReferenceType ref : modelImpl.getDocument().getSequence()
 				.getControlConstructReferenceList()) {
@@ -251,39 +241,35 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 					.getData();
 
 			// add
-			if (action.equals(PopupAction.ADD)) {
-				MaintainableLightLabelQueryResult labelQueryResult = null;
+			if (action.equals(PopupAction.ADD)) {				
 				List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
 				try {
-					labelQueryResult = DdiManager.getInstance()
-							.getInstrumentLabel(null, null, null, null);
-				} catch (DDIFtpException e) {
+					controlConstructRefList = DdiManager.getInstance()
+							.getControlConstructsLight();
+				} catch (Exception e) {
 					DialogUtil.errorDialog(getSite().getShell(), ID, null,
 							e.getMessage(), e);
 				}
-
-				for (LinkedList<LightXmlObjectType> search : labelQueryResult
-						.getResult().values()) {
-					Iterator<LightXmlObjectType> iterator = search.iterator();
-					while (iterator.hasNext()) {
-						LightXmlObjectType lightXmlObjectType = iterator.next();
-						for (LightXmlObjectType item : (Collection<LightXmlObjectType>) items) {
-							if (lightXmlObjectType.getId().equals(item.getId())) {
-								try {
-									iterator.remove();
-								} catch (IllegalStateException e) {
-									continue; // hack to prevent exception on
-												// duplicate control construct
-												// in list
-								}
-								continue; // guard to not remove it twice in
-								// case of duplicates
+				for (Iterator<LightXmlObjectType> iterator = controlConstructRefList.iterator(); iterator
+						.hasNext();) {
+					LightXmlObjectType lightXmlObjectType = iterator
+							.next();
+					for (LightXmlObjectType item : (Collection<LightXmlObjectType>) items) {
+						if (lightXmlObjectType.getId().equals(item.getId())) {
+							try {
+								iterator.remove();
+							} catch (IllegalStateException e) {
+								continue; // hack to prevent exception on
+											// duplicate control construct
+											// in list
 							}
+							continue; // guard to not remove it twice in
+							// case of duplicates
 						}
 					}
-					controlConstructRefList.addAll(search);
 				}
-				labelQueryResult = null;
+				
+				//labelQueryResult = null;
 				SequenceMenuPopupAddDialog addDialog = new SequenceMenuPopupAddDialog(
 						getSite().getShell(),
 						Messages.getString("SequenceEditor.adddialog.title"),
