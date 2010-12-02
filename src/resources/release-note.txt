@@ -1,13 +1,8 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-<<<<<<< .mine
-Product Version: 0.5.2
-Release Data: 2010-11-29
-=======
 Product Version: 0.6.0
 Release Data: 2010-12-XX
->>>>>>> .r1958
 
 -------------------------------------------------------------------------------
 What's New
@@ -23,12 +18,16 @@ Item ID:    Description:
  			
  -          Added Datetime representation support in variable editor
  -          Added Text representation support in variable editor
- 
+ -          Fix in Sequence editor
+ -          Implement UUDI level 4 for new ids
+ -			Ddieditor-spss plugin use editor defined id constructs
+  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
  -          Changed definition of date ddieditor-spss plugin
- 
+ -			Added ddieditor-line
+  
 -------------------------------------------------------------------------------
 Change Log Previous Releases
 -------------------------------------------------------------------------------
