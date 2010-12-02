@@ -4,14 +4,6 @@ package org.ddialliance.ddieditor.ui.model;
  * Defined constants is being used to identify CRUD elements of same type
  */
 public class ModelIdentifingType {
-	public enum Type_K {
-
-	}
-
-	public enum Type_J {
-
-	}
-
 	public final class Type_A {
 		private Type_A() {
 		}
@@ -56,4 +48,40 @@ public class ModelIdentifingType {
 		private Type_I() {
 		}
 	};
+
+	public enum Type_J {
+
+	}
+
+	public enum Type_K {
+
+	}
+
+	public enum Type_L {
+
+	}
+
+	public enum Type_M {
+
+	}
+
+	public enum Type_N {
+
+	}
+
+	public enum Type_O {
+
+	}
+
+	public enum Type_P {
+
+	}
+
+	public enum Type_Q {
+
+	}
+
+	public enum Type_R {
+
+	}
 }
