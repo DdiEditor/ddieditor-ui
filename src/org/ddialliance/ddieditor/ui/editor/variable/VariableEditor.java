@@ -9,6 +9,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateTimeRepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateTypeCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ExternalCategoryRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericRepresentationType;
@@ -20,6 +21,7 @@ import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.variable.VariableDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.editor.Editor.FIELD_TYPE;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
@@ -30,6 +32,7 @@ import org.ddialliance.ddieditor.ui.model.variable.Variable;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -37,6 +40,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -210,20 +215,6 @@ public class VariableEditor extends Editor {
 							}
 						});
 			}
-			// DateTimeRepresentation
-			if (repImpl instanceof DateTimeRepresentationType) {
-				representationGroup
-				.setText(Messages
-						.getString("VariableEditor.label.datetimerepresentation"));
-				createLabel(representationGroup, "Not implemented!");
-			}
-			// ExternalCategoryRepresentation
-			if (repImpl instanceof ExternalCategoryRepresentationType) {
-				representationGroup
-				.setText(Messages
-						.getString("VariableEditor.label.textrepresentation"));
-				createLabel(representationGroup, "Not implemented!");
-			}
 			// NumericRepresentation
 			if (repImpl instanceof NumericRepresentationType) {
 				NumericRepresentationType numRep = (NumericRepresentationType) repImpl;
@@ -279,17 +270,150 @@ public class VariableEditor extends Editor {
 									modelImpl.applyChange(bigint,
 											ModelIdentifingType.Type_F.class);
 								} catch (Exception e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+									showError(e1);
 								}
 							}
 						});
 			}
 			// TextRepresentation
 			if (repImpl instanceof TextRepresentationType) {
-				representationGroup
-				.setText(Messages
+				TextRepresentationType rep = (TextRepresentationType) repImpl;
+				representationGroup.setText(Messages
 						.getString("VariableEditor.label.textrepresentation"));
+				// min length
+				Text minlengthText = createTextInput(
+						representationGroup,
+						Messages.getString("VariableEditor.label.textrepresentation.minlength"),
+						modelImpl.getMinLength() == null ? "" : modelImpl
+								.getMinLength().toString(), false);
+
+				minlengthText.addVerifyListener(new VerifyListener() {
+					public void verifyText(final VerifyEvent e) {
+						Editor.verifyField(FIELD_TYPE.DIGIT, e, getSite());
+					}
+				});
+
+				minlengthText.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						try {
+							BigInteger bigint = Translator
+									.stringToBigInt(((Text) e.getSource())
+											.getText());
+							modelImpl.applyChange(bigint,
+									ModelIdentifingType.Type_G.class);
+							editorStatus.setChanged();
+						} catch (Exception e1) {
+							showError(e1);
+						}
+					}
+				});
+
+				// max length
+				Text maxlengthText = createTextInput(
+						representationGroup,
+						Messages.getString("VariableEditor.label.textrepresentation.maxlength"),
+						modelImpl.getMaxLength() == null ? "" : modelImpl
+								.getMaxLength().toString(), false);
+
+				maxlengthText.addVerifyListener(new VerifyListener() {
+					public void verifyText(final VerifyEvent e) {
+						Editor.verifyField(FIELD_TYPE.DIGIT, e, getSite());
+					}
+				});
+
+				maxlengthText.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						try {
+							BigInteger bigint = Translator
+									.stringToBigInt(((Text) e.getSource())
+											.getText());
+							modelImpl.applyChange(bigint,
+									ModelIdentifingType.Type_I.class);
+							editorStatus.setChanged();
+						} catch (Exception e1) {
+							showError(e1);
+						}
+					}
+				});
+
+				// regx
+				Text regxText = createTextInput(
+						representationGroup,
+						Messages.getString("VariableEditor.label.textrepresentation.regx"),
+						modelImpl.getRegx() == null ? "" : modelImpl.getRegx(),
+						false);
+				regxText.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						try {
+							modelImpl.applyChange(
+									((Text) e.getSource()).getText(),
+									ModelIdentifingType.Type_H.class);
+							editorStatus.setChanged();
+						} catch (Exception e1) {
+							showError(e1);
+						}
+					}
+				});
+			}
+			// DateTimeRepresentation
+			if (repImpl instanceof DateTimeRepresentationType) {
+				representationGroup
+						.setText(Messages
+								.getString("VariableEditor.label.datetimerepresentation"));
+
+				// format
+				Text format = createTextInput(
+						representationGroup,
+						Messages.getString("VariableEditor.label.datetimerepresentation.format"),
+						modelImpl.getFormat() == null ? "" : modelImpl
+								.getFormat(), false);
+				format.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						try {
+							modelImpl.applyChange(
+									((Text) e.getSource()).getText(),
+									ModelIdentifingType.Type_J.class);
+							editorStatus.setChanged();
+						} catch (Exception e1) {
+							showError(e1);
+						}
+					}
+				});
+
+				// date time type
+				createLabel(
+						representationGroup,
+						Messages.getString("VariableEditor.label.datetimerepresentation.type"));
+				Combo datetimeCombo = createCombo(representationGroup,
+						Variable.DATE_TIME_TYPES);
+				DateTypeCodeType.Enum dateTime = modelImpl.getDateTimeType();
+				int value = dateTime.intValue();
+				datetimeCombo.select(--value);
+				datetimeCombo.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						try {
+							int select = ((Combo) e.getSource())
+									.getSelectionIndex();
+							modelImpl.executeChange(++select,
+									ModelIdentifingType.Type_K.class);
+							editorStatus.setChanged();
+						} catch (Exception e1) {
+							showError(e1);
+						}
+					}
+				});
+			}
+
+			// ExternalCategoryRepresentation
+			if (repImpl instanceof ExternalCategoryRepresentationType) {
+				// TODO external category representation
+				representationGroup.setText(Messages
+						.getString("VariableEditor.label.externalcategoryrepresentation"));
 				createLabel(representationGroup, "Not implemented!");
 			}
 		} catch (Exception e) {
@@ -334,8 +458,7 @@ public class VariableEditor extends Editor {
 			nameText.addModifyListener(new TextStyledTextModyfiListener(model,
 					NameType.class, getEditorIdentification()));
 		} catch (DDIFtpException e) {
-			DialogUtil
-					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
+			showError(e);
 		}
 
 		// id tab
