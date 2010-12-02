@@ -1,9 +1,10 @@
-#! /bin/sh
+#!/bin/sh
 
 #
 # version bump
 #
-function versionbump()
+# function versionbump()
+versionbump()
 {
 projectpath=$1
 echo $projectpath
@@ -122,7 +123,8 @@ cd tmp
 jar fx ddieditor-ui_*.jar bin/resources
 cd bin
 
-function doresourcecopy()
+#function doresourcecopy()
+doresourcecopy()
 {
 archpath=$1
 echo $archpath
@@ -148,7 +150,8 @@ fi
 # Zip
 #
 echo '--- Zipping product builds ---'
-function zipbuild()
+#function zipbuild()
+zipbuild()
 {
 path=$1
 cd $path
