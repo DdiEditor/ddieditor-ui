@@ -11,11 +11,8 @@ import org.ddialliance.ddi3.xml.xmlbeans.datacollection.StatementItemDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.model.Model;
-import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -58,12 +55,6 @@ public class StatementItem extends Model {
 		// ProgrammingLanguage
 		if (type.equals(ModelIdentifingType.Type_A.class)) {
 			getProgrammingLanguageCode().setProgrammingLanguage((String) value);
-		}
-
-		// ReferenceType
-		if (type.equals(ReferenceType.class)) {
-			ReferenceType ref = getSourceQuestionReference();
-			ModelAccessor.setReference(ref, (LightXmlObjectType) value);
 		}
 	}
 
@@ -162,23 +153,6 @@ public class StatementItem extends Model {
 			return create ? codeType.addNewCode() : null;
 		} else {
 			return codeType.getCodeList().get(0);
-		}
-	}
-
-	public ReferenceType getSourceQuestionReference() throws DDIFtpException {
-		CodeType codeType = getCodeType();
-		if (codeType == null) {
-			return null;
-		}
-		if (codeType.getSourceQuestionReferenceList().isEmpty()) {
-			if (create) {
-				ReferenceType ref = codeType.addNewSourceQuestionReference();
-				ref.addNewID();
-				return ref;
-			}
-			return null;
-		} else {
-			return codeType.getSourceQuestionReferenceList().get(0);
 		}
 	}
 }
