@@ -416,8 +416,8 @@ public class ResponseTypeDetail {
 									}
 								}
 							});
-
-			parentLabelComposite.getParent().layout();
+			parentLabelComposite.layout();
+			parentCodeComposite.layout();
 			return;
 		} else {
 			// ***** OTHER *****
