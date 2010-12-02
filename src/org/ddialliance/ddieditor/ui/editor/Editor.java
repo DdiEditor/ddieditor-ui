@@ -52,9 +52,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -62,6 +66,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -1236,14 +1242,41 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				.getSystemColor(SWT.COLOR_WHITE));
 		label.setText(labelText);
 
+		return createTextAreaInput(group, initText);
+	}
+	
+	public StyledText createTextAreaInput(Group group, 
+			String initText) {
 		StyledText styledText = new StyledText(group, SWT.WRAP | SWT.V_SCROLL
 				| SWT.BORDER);
 		styledText.setText(initText);
-		styledText.setData(NEW_ITEM, isNew);
 		final GridData gd_Text = new GridData(GridData.FILL_BOTH);
 		styledText.setLayoutData(gd_Text);
 		setControl(styledText);
 		return styledText;
+	}
+	
+
+	public Browser createBrowser(Group group, String labelText) {
+		createLabel(group, labelText);
+		return createBrowser(group);
+	}
+	
+	public Browser createBrowser(Group group) {
+		Browser browser = new Browser(group, SWT.EMBEDDED|SWT.BORDER);
+		browser.setFont(getFont("Arial Narrow", 8,SWT.NORMAL));
+		final GridData gd_Text = new GridData(GridData.FILL_BOTH);
+		browser.setLayoutData(gd_Text);
+		return browser;
+	}	
+
+	public Font getFont(String name, int height, int style) {
+		FontRegistry reg = JFaceResources.getFontRegistry();
+		Font returnedFont = reg.defaultFont();
+		FontDescriptor fdesc=FontDescriptor.createFrom(name, height, style);
+		Font f = fdesc.createFont(returnedFont.getDevice());
+		
+		return f;
 	}
 
 	public void createDateInput(Group group, String labelText, String initDate,
