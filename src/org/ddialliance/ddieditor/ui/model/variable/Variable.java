@@ -4,11 +4,14 @@ import java.math.BigInteger;
 
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.VariableDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateTimeRepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateTypeCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericTypeCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextRepresentationType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
@@ -24,6 +27,9 @@ public class Variable extends Model {
 	public static String[] NUMERIC_TYPES = new String[] { "BigInteger",
 			"Integer", "Long", "Short", "Decimal", "Float", "Double", "Count",
 			"Incremental" };
+	public static String[] DATE_TIME_TYPES = new String[] { "DateTime", "Date",
+			"Time", "Year", "Month", "Day", "MonthDay", "YearMonth",
+			"Duration", "Timespan" };
 
 	public Variable(VariableDocument doc, String parentId, String parentVersion) {
 		super(doc, parentId, parentVersion);
@@ -86,13 +92,16 @@ public class Variable extends Model {
 	}
 
 	public RepresentationType getValueRepresentation() {
-		// LiteralTextType lTextType = (LiteralTextType) textType.substitute(
-		// LiteralTextDocument.type.getDocumentElementName(),
-		// LiteralTextType.type);
-		// lTextType.addNewText();
-		return doc.getVariable().getRepresentation().getValueRepresentation();
+		org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.RepresentationType representation = doc
+				.getVariable().getRepresentation();
+		if (representation==null) {
+			return null;
+		} else {
+			return doc.getVariable().getRepresentation().getValueRepresentation();			
+		}
 	}
 
+	// code rep
 	public ReferenceType getCodeRepresentationCodeSchemeReference() {
 		RepresentationType rep = getValueRepresentation();
 		if (!(rep instanceof CodeRepresentationType)) {
@@ -108,6 +117,7 @@ public class Variable extends Model {
 		return reference;
 	}
 
+	// numeric rep
 	public BigInteger getNumericDecimalPosition() {
 		if (!(getValueRepresentation() instanceof NumericRepresentationType)) {
 			log.warn("Not setting NumericRepresentation.type as ValueRepresentation is of type: "
@@ -116,6 +126,57 @@ public class Variable extends Model {
 		}
 		return ((NumericRepresentationType) getValueRepresentation())
 				.getDecimalPositions();
+	}
+
+	// text rep
+	public BigInteger getMaxLength() {
+		if (!(getValueRepresentation() instanceof TextRepresentationType)) {
+			log.warn("Not setting TextRepresentation.maxlenght as ValueRepresentation is of type: "
+					+ getValueRepresentation().getClass().getName());
+			return null;
+		}
+		return ((TextRepresentationType) getValueRepresentation())
+				.getMaxLength();
+	}
+
+	public BigInteger getMinLength() {
+		if (!(getValueRepresentation() instanceof TextRepresentationType)) {
+			log.warn("Not setting TextRepresentation.minlength as ValueRepresentation is of type: "
+					+ getValueRepresentation().getClass().getName());
+			return null;
+		}
+		return ((TextRepresentationType) getValueRepresentation())
+				.getMinLength();
+	}
+
+	public String getRegx() {
+		if (!(getValueRepresentation() instanceof TextRepresentationType)) {
+			log.warn("Not setting TextRepresentation.regx as ValueRepresentation is of type: "
+					+ getValueRepresentation().getClass().getName());
+			return null;
+		}
+		return ((TextRepresentationType) getValueRepresentation()).getRegExp();
+	}
+
+	// date time rep
+	public String getFormat() {
+		if (!(getValueRepresentation() instanceof DateTimeRepresentationType)) {
+			log.warn("Not setting DateTimeRepresentation.format as ValueRepresentation is of type: "
+					+ getValueRepresentation().getClass().getName());
+			return null;
+		}
+		return ((DateTimeRepresentationType) getValueRepresentation())
+				.getFormat();
+	}
+
+	public DateTypeCodeType.Enum getDateTimeType() {
+		if (!(getValueRepresentation() instanceof DateTimeRepresentationType)) {
+			log.warn("Not setting DateTimeRepresentation.format as ValueRepresentation is of type: "
+					+ getValueRepresentation().getClass().getName());
+			return null;
+		}
+		return ((DateTimeRepresentationType) getValueRepresentation())
+				.getType();
 	}
 
 	@Override
@@ -175,6 +236,89 @@ public class Variable extends Model {
 			((NumericRepresentationType) getValueRepresentation())
 					.setDecimalPositions((BigInteger) value);
 		}
+
+		// text rep
+		// min lenght
+		if (type.equals(ModelIdentifingType.Type_G.class)) {
+			if (!(getValueRepresentation() instanceof TextRepresentationType)) {
+				log.warn("Not setting TextRepresentation.type as ValueRepresentation is of type: "
+						+ getValueRepresentation().getClass().getName());
+				return;
+			}
+			if (bigIntIsZero((BigInteger) value)) {
+				((TextRepresentationType) getValueRepresentation())
+						.unsetMinLength();
+				return;
+			}
+			((TextRepresentationType) getValueRepresentation())
+					.setMinLength((BigInteger) value);
+		}
+
+		// regx
+		if (type.equals(ModelIdentifingType.Type_H.class)) {
+			if (!(getValueRepresentation() instanceof TextRepresentationType)) {
+				log.warn("Not setting TextRepresentation.type as ValueRepresentation is of type: "
+						+ getValueRepresentation().getClass().getName());
+				return;
+			}
+			if ("".equals(((String) value))) {
+				((TextRepresentationType) getValueRepresentation())
+						.unsetRegExp();
+				return;
+			}
+			((TextRepresentationType) getValueRepresentation())
+					.setRegExp((String) value);
+		}
+
+		// max lenght
+		if (type.equals(ModelIdentifingType.Type_I.class)) {
+			if (!(getValueRepresentation() instanceof TextRepresentationType)) {
+				log.warn("Not setting TextRepresentation.type as ValueRepresentation is of type: "
+						+ getValueRepresentation().getClass().getName());
+				return;
+			}
+			if (bigIntIsZero((BigInteger) value)) {
+				((TextRepresentationType) getValueRepresentation())
+						.unsetMaxLength();
+				return;
+			}
+			((TextRepresentationType) getValueRepresentation())
+					.setMaxLength((BigInteger) value);
+		}
+
+		// date time rep
+		// format
+		if (type.equals(ModelIdentifingType.Type_J.class)) {
+			if (!(getValueRepresentation() instanceof DateTimeRepresentationType)) {
+				log.warn("Not setting DateTimeRepresentation.format as ValueRepresentation is of type: "
+						+ getValueRepresentation().getClass().getName());
+				return;
+			}
+			if (value == null || "".equals((String) value)) {
+				((DateTimeRepresentationType) getValueRepresentation())
+						.unsetFormat();
+				return;
+			}
+			((DateTimeRepresentationType) getValueRepresentation())
+					.setFormat((String) value);
+		}
+
+		// type
+		if (type.equals(ModelIdentifingType.Type_K.class)) {
+			if (!(getValueRepresentation() instanceof DateTimeRepresentationType)) {
+				log.warn("Not setting DateTimeRepresentation.type as ValueRepresentation is of type: "
+						+ getValueRepresentation().getClass().getName());
+				return;
+			}
+			DateTypeCodeType.Enum dateTime = DateTypeCodeType.Enum
+					.forInt((Integer) value);
+			((DateTimeRepresentationType) getValueRepresentation())
+					.setType(dateTime);
+		}
+	}
+
+	private boolean bigIntIsZero(BigInteger bigInt) {
+		return bigInt.intValue() == 0;
 	}
 
 	@Override
