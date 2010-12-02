@@ -49,7 +49,8 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
  * <li>displayMessageEntry - message key for retrieving i18n label of
  * elementName</li>
  * <li>if OPEN - support for open view given
- * <li>list of child elements (e.g. Multiple Question Item and Question Item are subelements to Question Scheme)
+ * <li>list of child elements (e.g. Multiple Question Item and Question Item are
+ * subelements to Question Scheme)
  * </ul>
  */
 public enum ElementType {
@@ -57,7 +58,7 @@ public enum ElementType {
 	FILE("", InfoPerspective.ID, FileEditor.ID, "", "ddi3file.label", "", null), MAINTAINABLE_LIGHTLABEL(
 			"", "", "", "", "", "", null),
 
-	// studyunit
+	// study unit
 	CONCEPTUAL_STUDY_UNIT("studyunit__StudyUnit", "", StudyUnitEditor.ID, "",
 			"InfoView.label.studyUnitLabel.StudyUnit", "OPEN", null), STUDY_UNIT(
 			"studyunit__StudyUnit", "", StudyUnitEditor.ID, "stdu",
@@ -70,6 +71,7 @@ public enum ElementType {
 			"unis", "UniverseView.label.universeSchemeLabel.UniverseScheme",
 			"", Arrays.asList(ElementType.UNIVERSE)),
 
+	// conceptual component
 	// concept
 	CONCEPT("Concept", ConceptsPerspective.ID, ConceptEditor.ID, "conc",
 			"ConceptView.label.conceptLabel.Concept", "", null), CONCEPT_SCHEME(
@@ -77,20 +79,26 @@ public enum ElementType {
 			"cons", "ConceptView.label.conceptSchemeLabel.ConceptScheme", "",
 			Arrays.asList(ElementType.CONCEPT)),
 
+	// data collection
+
 	// question
-	QUESTION_ITEM("QuestionItem",
-					QuestionsPerspective.ID, QuestionItemEditor.ID, "quei",
-					"QuestionItemView.label.questionItemLabel.QuestionItem", "", null),
-	SUB_QUESTION_ITEM("QuestionItem",
-					QuestionsPerspective.ID, QuestionItemEditor.ID, "quei",
-					"QuestionItemView.label.questionItemLabel.SubQuestionItem", "", null),
-	MULTIPLE_QUESTION_ITEM(
-			"MultipleQuestionItem", QuestionsPerspective.ID, MultipleQuestionItemEditor.ID, "mquei",
-			"QuestionItemView.label.multipleQuestionItemLabel.MultipleQuestionItem", "", Arrays.asList(
-					ElementType.SUB_QUESTION_ITEM)), 
-	QUESTION_SCHEME("QuestionScheme", QuestionsPerspective.ID, QuestionSchemeEditor.ID, "ques",
-			"QuestionItemView.label.questionSchemeLabel.QuesitionScheme", "", 
-			Arrays.asList(ElementType.MULTIPLE_QUESTION_ITEM, ElementType.QUESTION_ITEM)), 
+	QUESTION_ITEM("QuestionItem", QuestionsPerspective.ID,
+			QuestionItemEditor.ID, "quei",
+			"QuestionItemView.label.questionItemLabel.QuestionItem", "", null), SUB_QUESTION_ITEM(
+			"QuestionItem", QuestionsPerspective.ID, QuestionItemEditor.ID,
+			"quei", "QuestionItemView.label.questionItemLabel.SubQuestionItem",
+			"", null), MULTIPLE_QUESTION_ITEM(
+			"MultipleQuestionItem",
+			QuestionsPerspective.ID,
+			MultipleQuestionItemEditor.ID,
+			"mquei",
+			"QuestionItemView.label.multipleQuestionItemLabel.MultipleQuestionItem",
+			"", Arrays.asList(ElementType.SUB_QUESTION_ITEM)), QUESTION_SCHEME(
+			"QuestionScheme", QuestionsPerspective.ID, QuestionSchemeEditor.ID,
+			"ques",
+			"QuestionItemView.label.questionSchemeLabel.QuesitionScheme", "",
+			Arrays.asList(ElementType.MULTIPLE_QUESTION_ITEM,
+					ElementType.QUESTION_ITEM)),
 
 	// category
 	CATEGORY("Category", CategoryPerspective.ID, CategoryEditor.ID, "cat",
@@ -98,10 +106,6 @@ public enum ElementType {
 			"CategoryScheme", CategoryPerspective.ID, CategorySchemeEditor.ID,
 			"cats", "CategoryView.label.categorySchemeLabel.CategoryScheme",
 			"", Arrays.asList(ElementType.CATEGORY)),
-
-	// code
-	CODE_SCHEME("CodeScheme", CodesPerspective.ID, CodeSchemeEditor.ID, "cods",
-			"codeView.label.codeSchemeLabel.CodeScheme", "", null),
 
 	// instrument
 	INSTRUMENT("Instrument", InstrumentPerspective.ID, InstrumentEditor.ID,
@@ -132,11 +136,43 @@ public enum ElementType {
 					ElementType.LOOP, ElementType.REPEAT_WHILE,
 					ElementType.SEQUENCE, ElementType.COMPUTATION_ITEM)),
 
+	// logical product
+	LOGICAL_PRODUCT("LogicalProduct", null, null, "lopr",
+			"LogicalProduct.label", "", null), DATA_RELATIONSHIP(
+			"DataRelationship", null, null, "dars", "DataRelationship.label",
+			"", null),
+
+	// code
+	CODE_SCHEME("CodeScheme", CodesPerspective.ID, CodeSchemeEditor.ID, "cods",
+			"codeView.label.codeSchemeLabel.CodeScheme", "", null),
+
 	// variable
 	VARIABLE("Variable", VariablePerspective.ID, VariableEditor.ID, "vari",
 			"Variable", "", null), VARIABLE_SCHEME("VariableScheme",
 			VariablePerspective.ID, VariableSchemeEditor.ID, "vars",
-			"VariableScheme", "", Arrays.asList(ElementType.VARIABLE));
+			"VariableScheme", "", Arrays.asList(ElementType.VARIABLE)),
+
+	// physical data product
+	PHYSICAL_DATA_PRODUCT("PhysicalDataProduct", null, null, "phdp",
+			"PhysicalDataProduct.label", "", null),
+
+	// physical instance
+	PHYSICAL_INSTANCE("PhysicalInstance", null, null, "phin",
+			"PhysicalInstance.label", "", null), GROSS_FILE_STRUCTURE(
+			"GrossFileStructure", null, null, "grfs",
+			"GrossFileStructure.label", "", null), GROSS_RECORD_STRUCTURE(
+			"GrossRecordStructure", null, null, "grst",
+			"GrossRecordStructure.label", "", null), LOGICAL_RECORD(
+			"LogicalRecord", null, null, "lore", "LogicalRecord.label", "",
+			null), PHYSICAL_RECORDSEGMENT("PhysicalRecordSegment", null, null,
+			"phrs", "PhysicalRecordSegment.label", "", null), PHYSICAL_STRUCTURE_SCHEME(
+			"PhysicalStructureScheme", null, null, "phss",
+			"PhysicalStructureScheme.label", "", null), PHYSICAL_STRUCTURE(
+			"PhysicalStructure", null, null, "phst", "PhysicalStructure.label",
+			"", null), RECORD_LAYOUT_SCHEME("RecordLayoutScheme", null, null,
+			"rels", "RecordLayoutScheme.label", "", null), DATA_FILE_IDENTIFICATION(
+			"DataFileIdentification", null, null, "dafi",
+			"DataFileIdentification.label", "", null);
 
 	private String elementName;
 	private String perspectiveId;
