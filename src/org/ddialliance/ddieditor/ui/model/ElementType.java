@@ -80,6 +80,8 @@ public enum ElementType {
 			Arrays.asList(ElementType.CONCEPT)),
 
 	// data collection
+	DATA_COLLECTION("datacollection__DataCollection", null, null, "daco",
+			"DataCollection.label", "", null),
 
 	// question
 	QUESTION_ITEM("QuestionItem", QuestionsPerspective.ID,
