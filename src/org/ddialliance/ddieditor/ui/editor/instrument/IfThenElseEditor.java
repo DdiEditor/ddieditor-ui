@@ -117,20 +117,12 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 						getEditorIdentification()));
 
 		// then ref
-		MaintainableLightLabelQueryResult controlConstructRefListTemp = null;
-		try {
-			controlConstructRefListTemp = DdiManager.getInstance()
-					.getInstrumentLabel(null, null, null, null);
-		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(getSite().getShell(), ID, null, e
-					.getMessage(), e);
-		}
 		List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
-		for (LinkedList<LightXmlObjectType> lightXmlObjectList : controlConstructRefListTemp
-				.getResult().values()) {
-			controlConstructRefList.addAll(lightXmlObjectList);
-		}
-		controlConstructRefListTemp = null;	
+		try {
+			controlConstructRefList = DdiManager.getInstance().getControlConstructsLight();
+		} catch (Exception e) {
+			showError(e);
+		}		
 
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(group,
 				Messages.getString("IfThenElse.editor.thenref"), Messages
