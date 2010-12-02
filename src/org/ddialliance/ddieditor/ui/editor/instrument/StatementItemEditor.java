@@ -1,25 +1,18 @@
 package org.ddialliance.ddieditor.ui.editor.instrument;
 
 import java.text.MessageFormat;
-import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
-import org.ddialliance.ddieditor.model.DdiManager;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.StatementItem;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DynamicTextTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
-import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
@@ -44,7 +37,6 @@ public class StatementItemEditor extends Editor implements
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			StatementItemEditor.class);
 	private StatementItem modelImpl;
-	private List<LightXmlObjectType> questionRefList;
 
 	public StatementItemEditor() {
 		super(
@@ -131,30 +123,6 @@ public class StatementItemEditor extends Editor implements
 				.addModifyListener(new TextStyledTextModyfiListener(model,
 						ModelIdentifingType.Type_A.class,
 						getEditorIdentification()));
-
-		// question source reference
-		try {
-			questionRefList = DdiManager.getInstance().getQuestionItemsLight(
-					null, null, null, null).getLightXmlObjectList()
-					.getLightXmlObjectList();
-		} catch (Exception e) {
-			DialogUtil
-					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
-		}
-		ReferenceSelectionCombo refSelecCombo = null;
-		try {
-			refSelecCombo = createRefSelection(group, Messages
-					.getString("StatementItem.editor.questionref"), Messages
-					.getString("StatementItem.editor.questionref"), modelImpl
-					.getSourceQuestionReference(), questionRefList, false);
-		} catch (DDIFtpException e) {
-			DialogUtil
-					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
-		}
-		refSelecCombo.addSelectionListener(Messages
-				.getString("StatementItem.editor.questionref"),
-				questionRefList, new ReferenceSelectionAdapter(refSelecCombo,
-						model, ReferenceType.class, getEditorIdentification()));
 
 		// description tab
 		TabItem tabItem2 = createTabItem(Messages
