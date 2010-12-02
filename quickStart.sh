@@ -17,7 +17,12 @@ ant resource -f dda-build.xml
 echo '--- Resource ddieditor-spss ---'
 cd ../ddieditor-spss
 ant resource -f dda-build.xml
-ant  deploy-to-ddieditor-ui -f dda-build.xml 
+ant deploy-to-ddieditor-ui -f dda-build.xml
+
+echo '--- Resource ddieditor-line ---'
+cd ../ddieditor-line
+ant resource -f dda-build.xml
+ant deploy-to-ddieditor-ui -f dda-build.xml
 
 echo '--- Resource jounal-study-info-export ---'
 cd ../jounal-study-info-export
