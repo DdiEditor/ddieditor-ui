@@ -214,6 +214,15 @@ public enum ElementType {
 		this.subElements = subElements;
 	}
 
+	/**
+	 * TODO concider agency access in non rcp concept!!! ddieditor module can
+	 * not depend ddieditor-ui Solution refactor
+	 * org.ddialliance.ddieditor.ui.model into model
+	 */
+	public static String getAgency() {
+		return "dk.dda";
+	}
+
 	public String getElementName() {
 		return elementName;
 	}
