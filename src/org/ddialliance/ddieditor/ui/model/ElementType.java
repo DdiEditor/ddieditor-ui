@@ -57,6 +57,9 @@ public enum ElementType {
 	// application
 	FILE("", InfoPerspective.ID, FileEditor.ID, "", "ddi3file.label", "", null), MAINTAINABLE_LIGHTLABEL(
 			"", "", "", "", "", "", null),
+	// note
+	NOTE("Note", null, null, "note",
+			"Note.label", "", null),
 
 	// study unit
 	CONCEPTUAL_STUDY_UNIT("studyunit__StudyUnit", "", StudyUnitEditor.ID, "",
