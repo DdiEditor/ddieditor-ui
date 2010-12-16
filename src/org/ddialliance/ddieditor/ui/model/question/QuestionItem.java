@@ -280,7 +280,9 @@ public class QuestionItem extends Model {
 			throw new Exception(Messages.getString("QuestionItem.mess.QuestionResponseTypeHasNotBeenSpecified")); //$NON-NLS-1$
 		}
 		String sn = rt.getClass().getSimpleName();
-		if (sn.equals("CodeDomainTypeImpl")) {
+		if (sn.equals("RepresentationTypeImpl")) {
+			throw new Exception(Messages.getString("QuestionItem.mess.QuestionResponseTypeHasNotBeenSpecified")); //$NON-NLS-1$
+		} else if (sn.equals("CodeDomainTypeImpl")) {
 			try {
 				XmlBeansUtil.getTextOnMixedElement(rt);
 			} catch (Exception e) {

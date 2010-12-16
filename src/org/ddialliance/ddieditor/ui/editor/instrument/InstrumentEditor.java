@@ -97,8 +97,7 @@ public class InstrumentEditor extends Editor {
 				Messages.getString("InstrumentEditor.software.mainsequence"),
 				null, sequenceRefList, false);
 		sequenceRefSelectCombo.addSelectionListener(Messages
-				.getString("InstrumentEditor.software.mainsequence"),
-				sequenceRefList, new ReferenceSelectionAdapter(
+				.getString("InstrumentEditor.software.mainsequence"), new ReferenceSelectionAdapter(
 						sequenceRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));

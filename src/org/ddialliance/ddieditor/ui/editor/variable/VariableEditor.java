@@ -100,7 +100,7 @@ public class VariableEditor extends Editor {
 				Messages.getString("VariableEditor.label.conceptref"),
 				modelImpl.getConceptReference(), conceptRefList, false);
 		conRefSelectCombo.addSelectionListener(Messages
-				.getString("VariableEditor.label.conceptref"), conceptRefList,
+				.getString("VariableEditor.label.conceptref"),
 				new ReferenceSelectionAdapter(conRefSelectCombo, model,
 						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
@@ -121,7 +121,7 @@ public class VariableEditor extends Editor {
 				Messages.getString("VariableEditor.label.universeref"),
 				modelImpl.getUniverseReference(), uniRefList, false);
 		uniRefSelectCombo.addSelectionListener(Messages
-				.getString("VariableEditor.label.universeref"), uniRefList,
+				.getString("VariableEditor.label.universeref"),
 				new ReferenceSelectionAdapter(uniRefSelectCombo, model,
 						ModelIdentifingType.Type_C.class,
 						getEditorIdentification()));
@@ -142,8 +142,7 @@ public class VariableEditor extends Editor {
 				Messages.getString("VariableEditor.label.questionref"),
 				modelImpl.getQuestionReference(), questionRefList, false);
 		refSelecCombo.addSelectionListener(Messages
-				.getString("VariableEditor.label.questionref"),
-				questionRefList, new ReferenceSelectionAdapter(refSelecCombo,
+				.getString("VariableEditor.label.questionref"), new ReferenceSelectionAdapter(refSelecCombo,
 						model, ModelIdentifingType.Type_A.class,
 						getEditorIdentification()));
 
@@ -184,8 +183,7 @@ public class VariableEditor extends Editor {
 						Messages.getString("VariableEditor.label.codeschemereference"),
 						codeSchemeRef, codeSchemeRefList, false);
 				refSelectCodeSchemeCombo.addSelectionListener(Messages
-						.getString("VariableEditor.label.codeschemereference"),
-						codeSchemeRefList, new ReferenceSelectionAdapter(
+						.getString("VariableEditor.label.codeschemereference"), new ReferenceSelectionAdapter(
 								refSelectCodeSchemeCombo, model,
 								ModelIdentifingType.Type_D.class,
 								getEditorIdentification()));

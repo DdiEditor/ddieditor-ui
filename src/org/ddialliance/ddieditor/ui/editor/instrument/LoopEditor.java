@@ -72,7 +72,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 				Messages.getString("LoopEditor.label.variableref"),
 				modelImpl.getLoopVariableReference(), variableRefList, false);
 		variableRefSelectCombo.addSelectionListener(Messages
-				.getString("LoopEditor.label.variableref"), variableRefList,
+				.getString("LoopEditor.label.variableref"),
 				new ReferenceSelectionAdapter(variableRefSelectCombo,
 						modelImpl, ModelIdentifingType.Type_K.class,
 						getEditorIdentification()));
@@ -92,7 +92,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 				modelImpl.getControlConstructReference(),
 				controlConstructRefList, false);
 		controlConstructRefSelectCombo.addSelectionListener(Messages
-				.getString("ControlConstruct.ref"), controlConstructRefList,
+				.getString("ControlConstruct.ref"),
 				new ReferenceSelectionAdapter(controlConstructRefSelectCombo,
 						modelImpl, ModelIdentifingType.Type_J.class,
 						getEditorIdentification()));
@@ -140,7 +140,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 				modelImpl.getQuestionReference(modelImpl.getInitialValue()),
 				questionRefList, false);
 		initValueQuestRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.ifquestionref"), questionRefList,
+				.getString("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(initValueQuestRefSelectCombo,
 						modelImpl, ModelIdentifingType.Type_C.class,
 						getEditorIdentification()));
@@ -178,7 +178,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 				modelImpl.getQuestionReference(modelImpl.getLoopWhile()),
 				questionRefList, false);
 		loopWhileQuestRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.ifquestionref"), questionRefList,
+				.getString("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(loopWhileQuestRefSelectCombo,
 						modelImpl, ModelIdentifingType.Type_F.class,
 						getEditorIdentification()));
@@ -217,7 +217,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 				modelImpl.getQuestionReference(modelImpl.getStepValue()),
 				questionRefList, false);
 		steepValueQuestRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.ifquestionref"), questionRefList,
+				.getString("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(steepValueQuestRefSelectCombo,
 						modelImpl, ModelIdentifingType.Type_I.class,
 						getEditorIdentification()));

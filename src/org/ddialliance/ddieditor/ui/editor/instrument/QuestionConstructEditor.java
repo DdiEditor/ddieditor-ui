@@ -76,7 +76,7 @@ public class QuestionConstructEditor extends Editor {
 				Messages.getString("IfThenElse.editor.ifquestionref"),
 				modelImpl.getQuestionReference(), questionRefList, false);
 		questionRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.ifquestionref"), questionRefList,
+				.getString("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(questionRefSelectCombo,
 						modelImpl, ReferenceType.class,
 						getEditorIdentification()));

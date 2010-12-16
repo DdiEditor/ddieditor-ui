@@ -67,7 +67,7 @@ public class SequenceMenuPopupAddDialog extends Dialog {
 				.getString("SequenceEditor.adddialog.label"),
 				ReferenceType.Factory.newInstance(), refs, false);
 		selectCombo.addSelectionListener(Messages
-				.getString("SequenceEditor.adddialog.label"), refs,
+				.getString("SequenceEditor.adddialog.label"),
 				new SelectionAdapter(this));
 
 		return null;

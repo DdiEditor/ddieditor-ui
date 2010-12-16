@@ -111,7 +111,7 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 				Messages.getString("IfThenElse.editor.ifquestionref"),
 				modelImpl.getIfQuestionReference(), questionRefList, false);
 		questionRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.ifquestionref"), questionRefList,
+				.getString("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(questionRefSelectCombo,
 						modelImpl, ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
@@ -129,8 +129,7 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 						.getString("IfThenElse.editor.thenref"), modelImpl
 						.getThenReference(), controlConstructRefList, false);
 		thenRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.thenref"),
-				controlConstructRefList, new ReferenceSelectionAdapter(
+				.getString("IfThenElse.editor.thenref"), new ReferenceSelectionAdapter(
 						thenRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_C.class,
 						getEditorIdentification()));
@@ -141,8 +140,7 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 						.getString("IfThenElse.editor.elseref"), modelImpl
 						.getElseReference(), controlConstructRefList, false);
 		elseRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.elseref"),
-				controlConstructRefList, new ReferenceSelectionAdapter(
+				.getString("IfThenElse.editor.elseref"), new ReferenceSelectionAdapter(
 						elseRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_D.class,
 						getEditorIdentification()));

@@ -95,8 +95,7 @@ public class RepeatWhileEditor extends Editor {
 				Messages.getString("RepeatWhile.editor.whileref"),
 				modelImpl.getWhileReference(), controlConstructRefList, false);
 		thenRefSelectCombo.addSelectionListener(Messages
-				.getString("RepeatWhile.editor.whileref"),
-				controlConstructRefList, new ReferenceSelectionAdapter(
+				.getString("RepeatWhile.editor.whileref"), new ReferenceSelectionAdapter(
 						thenRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));

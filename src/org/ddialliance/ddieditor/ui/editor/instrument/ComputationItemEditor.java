@@ -105,11 +105,8 @@ public class ComputationItemEditor extends Editor {
 						.getString("ComputationItem.editor.computationvariableref"),
 				modelImpl.getAssignedVariableReference(), variableRefList,
 				false);
-		thenRefSelectCombo.addSelectionListener(Messages
-				.getString("ComputationItem.editor.computationvariableref"),
-				variableRefList, new ReferenceSelectionAdapter(
-						thenRefSelectCombo, modelImpl,
-						ModelIdentifingType.Type_B.class,
+		thenRefSelectCombo.addSelectionListener(Messages.getString("ComputationItem.editor.computationvariableref"),
+				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl, ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
 
 		// description tab

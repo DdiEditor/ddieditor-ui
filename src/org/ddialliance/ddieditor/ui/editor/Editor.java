@@ -349,14 +349,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		try {
 			model.validate();
 		} catch (Exception e) {
-			DialogUtil
-					.errorDialog(
-							(IEditorSite) getSite(),
-							ID,
-							Messages.getString("ErrorTitle"),
-							Messages.getString("Editor.mess.ValidationErrorDuringSave"),
-							e);
-			return;
+			// Save with warning
+			DialogUtil.infoDialog(getSite().getShell(), ID, Messages.getString("InfoTitle"),
+					e.getMessage());
 		}
 		try {
 			if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
@@ -1003,6 +998,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				translationDialogOption, parentLabel, parentWidget));
 		return button;
 	}
+	
+	
 
 	private SelectionListener createTranslationSelectionListener(
 			final List items,
@@ -1066,17 +1063,25 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						translationDialogOption, parentLabel, parentWidget);
 				translationDialog.open();
 				if (translationDialog.getReturnCode() == Window.OK) {
+					for (int i = 0; i < items.size(); i++) {
+						// remove empty items
+						if (XmlBeansUtil.getTextOnMixedElement((XmlObject) items.get(i)).equals("")) {
+							items.remove(i);
+						}
+					}
 					updateParentWidget(translationDialog);
 				} else {
+					for (Iterator iterator = items.iterator(); iterator.hasNext();) {
+						Object object2 = (Object) iterator.next();
+						
+					}
 					// restore original items
-					for (Iterator iteratorItems = items.iterator(), iteratorCache = cache
-							.iterator(); iteratorItems.hasNext();) {
+					for (Iterator iteratorItems = items.iterator(),
+							iteratorCache = cache.iterator(); 
+							iteratorCache.hasNext();) {
 						Object object = iteratorItems.next();
 						CacheHolder cacheHolder = (CacheHolder) iteratorCache
 								.next();
-						System.out.println("item: " + object);
-						System.out.println("cacheHolder text: "
-								+ cacheHolder.text);
 						try {
 							// restore
 							translationDialog.setXmlText(object,
@@ -1087,7 +1092,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 									cacheHolder.translated);
 							translationDialog.setTranslated(object,
 									cacheHolder.translateable);
-							System.out.println("Update object: " + object);
 						} catch (Exception e) {
 							DialogUtil
 									.errorDialog(
@@ -1098,6 +1102,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 											e);
 							return;
 						}
+					}
+					// Remove exceeding items
+					for (int i = items.size()-1; i > cache.size()-1; i--) {
+						items.remove(i);
 					}
 				}
 			}

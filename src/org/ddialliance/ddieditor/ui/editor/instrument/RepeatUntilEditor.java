@@ -102,8 +102,7 @@ public class RepeatUntilEditor extends Editor {
 						.getString("RepeatUntil.editor.untilref"), modelImpl
 						.getUntilReference(), controlConstructRefList, false);
 		thenRefSelectCombo.addSelectionListener(Messages
-				.getString("RepeatUntil.editor.untilref"),
-				controlConstructRefList, new ReferenceSelectionAdapter(
+				.getString("RepeatUntil.editor.untilref"), new ReferenceSelectionAdapter(
 						thenRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));

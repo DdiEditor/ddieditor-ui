@@ -4,6 +4,7 @@ package org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection;
  * Generic Filtered Items Section.
  * 
  */
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class ReferenceSelectionCombo {
 	ComboViewer comboViewer;
 	Button browseButton;
 	LightXmlObjectType result;
-	List<LightXmlObjectType> referenceList;
+	List<LightXmlObjectType> m_referenceList; // reference list with prefixed empty item
 	boolean isNew;
 
 	public ReferenceSelectionCombo(boolean isNew) {
@@ -63,7 +64,12 @@ public class ReferenceSelectionCombo {
 			String preIdValue) {
 
 		this.parentCodeComposite = parentCodeComposite;
-		this.referenceList = referenceList;
+		// prefix reference list with 'empty' LigthXmlObject
+		List<LightXmlObjectType> addedWithEmpty = new ArrayList<LightXmlObjectType>();
+		LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory.newInstance();
+		addedWithEmpty.add(lightXmlObject);
+		addedWithEmpty.addAll(referenceList);
+		this.m_referenceList = addedWithEmpty;
 
 		// Create Label Composite:
 		final Composite labelComposite = new Composite(parentLabelComposite,
@@ -123,13 +129,14 @@ public class ReferenceSelectionCombo {
 		comboViewer.getCombo().setLayoutData(gd_combo_1);
 		comboViewer.getCombo().setData(Editor.NEW_ITEM, isNew);
 
-		comboViewer.setInput(referenceList);
+		comboViewer.setInput(this.m_referenceList);
+				
 		// Select preIdValue:
 		int index = 0;
-		for (Iterator iterator = referenceList.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = this.m_referenceList.iterator(); iterator.hasNext();) {
 			LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) iterator
 					.next();
-			if (lightXmlObjectType.getId().equals(preIdValue)) {
+			if (lightXmlObjectType.getId() != null && lightXmlObjectType.getId().equals(preIdValue)) {
 				break;
 			}
 			index++;
@@ -150,17 +157,14 @@ public class ReferenceSelectionCombo {
 	 * 
 	 * @param Title
 	 *            of FilteredItemsSelectionDialog
-	 * @param referenceList
 	 * @param selectionListener
 	 */
 	public void addSelectionListener(final String title,
-			final List<LightXmlObjectType> referenceList,
 			SelectionListener selectionListener) {
 
 		comboViewer.getCombo().addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				result = referenceList.get(comboViewer.getCombo()
-						.getSelectionIndex());
+				result = m_referenceList.get(comboViewer.getCombo().getSelectionIndex());
 			}
 		});
 		comboViewer.getCombo().addSelectionListener(selectionListener);
@@ -170,7 +174,7 @@ public class ReferenceSelectionCombo {
 				Shell shell = new Shell();
 
 				FilteredItemsSelectionDialog dialog = new ReferenceSelectionPopUp(
-						shell, title, referenceList, false, false);
+						shell, title, m_referenceList, false, false);
 
 				dialog.setInitialPattern(comboViewer.getCombo()
 						.getSelectionIndex() == -1 ? "**" : comboViewer
@@ -181,7 +185,7 @@ public class ReferenceSelectionCombo {
 				result = (LightXmlObjectType) dialog.getFirstResult();
 				if (result != null) {
 					int index = 0;
-					for (Iterator iterator = referenceList.iterator(); iterator
+					for (Iterator iterator = m_referenceList.iterator(); iterator
 							.hasNext();) {
 						LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) iterator
 								.next();

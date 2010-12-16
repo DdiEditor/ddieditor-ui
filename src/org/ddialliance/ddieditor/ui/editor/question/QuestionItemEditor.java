@@ -8,9 +8,12 @@ package org.ddialliance.ddieditor.ui.editor.question;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
@@ -23,7 +26,6 @@ import org.ddialliance.ddieditor.ui.editor.question.ResponseTypeDetail.RESPONSE_
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
-import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
 import org.ddialliance.ddieditor.ui.model.reference.ResponseTypeReference;
@@ -119,6 +121,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 
 		// - Get available Concepts:
 		List<LightXmlObjectType> conceptReferenceList = new ArrayList();
+
 		try {
 			conceptReferenceList = new ConceptDao().getLightXmlObject("", "",
 					"", "");
@@ -131,20 +134,12 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		}
 
 		// - Create Concept Reference selection combobox
-		ReferenceSelectionCombo refSelecCombo = createRefSelection(
-				questionGroup,
-				Messages
-						.getString("QuestionItemEditor.label.conceptLabel.Concept")
-						+ ":",
-				Messages
-						.getString("QuestionItemEditor.label.conceptLabel.Concept"),
-				modelImpl.getConceptReferenceType(), conceptReferenceList,
-				false);
-		refSelecCombo.addSelectionListener(Messages
-				.getString("QuestionItemEditor.label.conceptLabel.Concept"),
-				conceptReferenceList, new ReferenceSelectionAdapter(
-						refSelecCombo, model, ReferenceType.class,
-						getEditorIdentification()));
+		ReferenceSelectionCombo refSelecCombo = createRefSelection(questionGroup,
+				Messages.getString("QuestionItemEditor.label.conceptLabel.Concept") + ":",
+				Messages.getString("QuestionItemEditor.label.conceptLabel.Concept"),
+				modelImpl.getConceptReferenceType(), conceptReferenceList, false);
+		refSelecCombo.addSelectionListener(Messages.getString("QuestionItemEditor.label.conceptLabel.Concept"),
+				new ReferenceSelectionAdapter(refSelecCombo, model, ReferenceType.class, getEditorIdentification()));
 
 		// - Question Text
 		DynamicTextType questionText = null;

@@ -131,8 +131,7 @@ public class MultipleQuestionItemEditor extends Editor implements ISelectionList
 				modelImpl.getConceptReferenceType(), conceptReferenceList,
 				false);
 		refSelecCombo.addSelectionListener(Messages
-				.getString("MultipleQuestionItemEditor.label.conceptLabel.Concept"),
-				conceptReferenceList, new ReferenceSelectionAdapter(
+				.getString("MultipleQuestionItemEditor.label.conceptLabel.Concept"), new ReferenceSelectionAdapter(
 						refSelecCombo, model, ReferenceType.class,
 						getEditorIdentification()));
 		
