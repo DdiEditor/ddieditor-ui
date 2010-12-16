@@ -26,7 +26,6 @@ public class ReferenceSelectionAdapter implements SelectionListener {
 	public void widgetSelected(SelectionEvent e) {
 		// Combo combo = (Combo) e.getSource();
 		try {
-			System.out.println("********************\n"+refSelecCombo.getResult());
 			if (refSelecCombo.getResult().getId().equals("")) {
 				// TODO Remove sub-element of given type
 //				model.applyChange(value, type, DELETE);
