@@ -73,6 +73,13 @@
                   name="%view.name.6"
                   restorable="true">
             </view>
+            <view
+                  class="org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.SequenceflowView"
+                  icon="icons/instrument-icon/outline.gif"
+                  id="org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.SequenceflowView"
+                  name="%view.name.7"
+                  restorable="true">
+            </view>
       </extension>
       <extension
             id="product"
