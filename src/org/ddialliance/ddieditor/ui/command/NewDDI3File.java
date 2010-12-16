@@ -10,9 +10,6 @@ import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.persistenceaccess.filesystem.FilesystemManager;
 import org.ddialliance.ddieditor.ui.dialogs.NewDDI3FileDialog;
-import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
-import org.ddialliance.ddieditor.ui.view.InfoView;
-import org.ddialliance.ddieditor.ui.view.View;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -20,12 +17,7 @@ import org.ddialliance.ddiftp.util.log.LogType;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
 
 /**
  * RCP entry point to create a ddi 3 resource
