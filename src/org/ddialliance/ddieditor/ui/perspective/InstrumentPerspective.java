@@ -1,6 +1,7 @@
 package org.ddialliance.ddieditor.ui.perspective;
 
 import org.ddialliance.ddieditor.ui.view.InstrumentView;
+import org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.SequenceflowView;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -17,8 +18,10 @@ public class InstrumentPerspective implements IPerspectiveFactory {
 			log.debug("Create");
 		}
 		addViewShortcuts(layout);
-		layout.addView(InstrumentView.ID, IPageLayout.LEFT, 0.50f, layout
-				.getEditorArea());
+		layout.addView(SequenceflowView.ID, IPageLayout.RIGHT, 0.70f, layout
+				.getEditorArea()); 
+		layout.addView(InstrumentView.ID, IPageLayout.LEFT, 0.55f, layout
+				.getEditorArea());		
 		addFastViews(layout);
 	}
 
