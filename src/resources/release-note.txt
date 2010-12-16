@@ -17,6 +17,8 @@ Item ID:    Description:
  			5. Empty Question Text is not stored.
  			6. When a Question Item is saved without a Respondse Type, an warning
  			(not an error) is given.
+ 			7. Translation pop-up: Empty rows now suppressed.
+ 			8. Combo Box: Now possible to unset selected value.
  			
  -          Added Datetime representation support in variable editor
  -          Added Text representation support in variable editor
