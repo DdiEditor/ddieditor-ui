@@ -43,38 +43,17 @@ import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Decorations;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 public class SequenceflowView extends ViewPart {
+	public static final String ID = "org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.SequenceflowView";
+
 	FigureCanvas figureCanvas;
 	private Chart chart;
 	private Composite parent;
 	private Combo combo;
-
-	@Override
-	public void init(IViewSite site) throws PartInitException {
-		// TODO Auto-generated method stub
-		super.init(site);
-	}
-
-	// @Override
-	// public IViewSite getViewSite() {
-	// try {
-	// ((SequenceflowView)super.getViewSite()).intCombo();
-	// } catch (Exception e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	//
-	// return super.getViewSite();
-	// }
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -112,10 +91,10 @@ public class SequenceflowView extends ViewPart {
 		// MenuItem item = new MenuItem(subMenuB, SWT.PUSH);
 		// }
 		// });
-		//
-		// // diagram
-		// chart = new Chart();
-		// freeformViewport.setContents(chart);
+
+		// diagram
+		chart = new Chart();
+		freeformViewport.setContents(chart);
 
 		// actions
 		initActions();
@@ -288,7 +267,7 @@ public class SequenceflowView extends ViewPart {
 			combo.setData(seqList.getLightXmlObjectList()
 					.getLightXmlObjectList());
 		} else {
-			combo.setItems(new String[] {""});
+			combo.setItems(new String[] { "" });
 		}
 	}
 
@@ -301,7 +280,7 @@ public class SequenceflowView extends ViewPart {
 		// clear figures
 		chart.removeAll();
 
-		// create figures		
+		// create figures
 		ActivityFigure prev = null;
 		List<ActivityFigure> prevList = new ArrayList<ActivityFigure>();
 		FigureFactory figureFactory = new FigureFactory();
@@ -320,34 +299,36 @@ public class SequenceflowView extends ViewPart {
 				// location
 				current.setBounds(new Rectangle(x, y, width, height));
 				increaseY(current.getBounds());
-				
+
 				if (current instanceof IfThenElseFigure) {
 					chart.add(current);
 					createConnections(prev, current);
-					//prev.clear();
-					
-					IfThenElseFigure ifth = (IfThenElseFigure)current;		
-					
+					// prev.clear();
+
+					IfThenElseFigure ifth = (IfThenElseFigure) current;
+
 					// then
-					ifth.then.setBounds(new Rectangle(x-sideMove, y, width, height));
+					ifth.then.setBounds(new Rectangle(x - sideMove, y, width,
+							height));
 					new MouseFigureAction(ifth.then);
 					chart.add(ifth.then);
 					createConnections(ifth, ifth.then);
-					prev=ifth.then;
-					
+					prev = ifth.then;
+
 					// else
-					if (ifth.elze!=null) {
-						ifth.elze.setBounds(new Rectangle(x+sideMove, y, width, height));
+					if (ifth.elze != null) {
+						ifth.elze.setBounds(new Rectangle(x + sideMove, y,
+								width, height));
 						new MouseFigureAction(ifth.elze);
 						chart.add(ifth.elze);
 						createConnections(ifth, ifth.elze);
 						prevList.add(ifth.elze);
 						prevList.add(ifth.then);
-						prev= null;
+						prev = null;
 					} else {
 						prevList.add(ifth);
 						prevList.add(ifth.then);
-						prev= null;
+						prev = null;
 					}
 					increaseY(ifth.then.getBounds());
 					continue;
@@ -355,39 +336,40 @@ public class SequenceflowView extends ViewPart {
 
 				// connection
 				if (prevList.isEmpty()) {
-					createConnections(prev, current);	
+					createConnections(prev, current);
 				} else {
-					createConnections(prevList.get(0), current);	
+					createConnections(prevList.get(0), current);
 					createConnections(prevList.get(1), current);
 					prevList.clear();
 				}
-				//prev.clear();
-				
+				// prev.clear();
+
 				// add
-//				prev.add(current);
+				// prev.add(current);
 				prev = current;
 				chart.add(current);
 			}
 		}
-		
+
 		// getting ready for new chart
 		resetLocation();
 	}
-	
-	int x= 200, y = 0, width=275, height=100, yNext=100, sideMove=(width/3)*2;
-	private void increaseY(Rectangle rect){
+
+	int x = 200, y = 0, width = 275, height = 100, yNext = 100,
+			sideMove = (width / 3) * 2;
+
+	private void increaseY(Rectangle rect) {
 		y = y + rect.height + yNext;
 	}
-	
+
 	private void resetLocation() {
-		x= 200; y = 0; width=275; height=100; yNext=100;
+		x = 200;
+		y = 0;
+		width = 275;
+		height = 100;
+		yNext = 100;
 	}
 
-//	private void createConnections(ActivityFigure prev, ActivityFigure current) {
-//		List<ActivityFigure> prevList = new ArrayList<ActivityFigure>();
-//		createConnections(prevList, current);
-//	}
-	
 	private void createConnections(ActivityFigure prev, ActivityFigure current) {
 		// connections
 		ConnectionFigure con = null;
@@ -398,9 +380,9 @@ public class SequenceflowView extends ViewPart {
 			con.setTargetAnchor(current.inAnchor);
 
 			// out anchor
-			//for (ActivityFigure activityFigure : prev) {
-				con.setSourceAnchor(prev.outAnchor);	
-			//}
+			// for (ActivityFigure activityFigure : prev) {
+			con.setSourceAnchor(prev.outAnchor);
+			// }
 		}
 
 		// add
