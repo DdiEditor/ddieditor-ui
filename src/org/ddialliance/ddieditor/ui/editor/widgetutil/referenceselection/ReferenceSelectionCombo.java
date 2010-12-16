@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ddialliance.ddieditor.model.lightxmlobject.LabelType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -67,6 +69,9 @@ public class ReferenceSelectionCombo {
 		// prefix reference list with 'empty' LigthXmlObject
 		List<LightXmlObjectType> addedWithEmpty = new ArrayList<LightXmlObjectType>();
 		LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory.newInstance();
+		lightXmlObject.setId("");
+		LabelType labelType = lightXmlObject.addNewLabel();
+		XmlBeansUtil.setTextOnMixedElement(labelType, "");
 		addedWithEmpty.add(lightXmlObject);
 		addedWithEmpty.addAll(referenceList);
 		this.m_referenceList = addedWithEmpty;
