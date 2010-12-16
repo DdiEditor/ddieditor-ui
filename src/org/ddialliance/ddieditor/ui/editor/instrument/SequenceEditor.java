@@ -90,14 +90,15 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			throws PartInitException {
 		super.init(site, input);
 		modelImpl = (Sequence) model;
-		
+
 		try {
-			controlConstructMap = DdiManager.getInstance().getControlConstructsLightasMap();
+			controlConstructMap = DdiManager.getInstance()
+					.getControlConstructsLightasMap();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		// items to feed table
 		LightXmlObjectType lightXmlObject = null;
 		for (ReferenceType ref : modelImpl.getDocument().getSequence()
@@ -241,7 +242,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 					.getData();
 
 			// add
-			if (action.equals(PopupAction.ADD)) {				
+			if (action.equals(PopupAction.ADD)) {
 				List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
 				try {
 					controlConstructRefList = DdiManager.getInstance()
@@ -250,10 +251,9 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 					DialogUtil.errorDialog(getSite().getShell(), ID, null,
 							e.getMessage(), e);
 				}
-				for (Iterator<LightXmlObjectType> iterator = controlConstructRefList.iterator(); iterator
-						.hasNext();) {
-					LightXmlObjectType lightXmlObjectType = iterator
-							.next();
+				for (Iterator<LightXmlObjectType> iterator = controlConstructRefList
+						.iterator(); iterator.hasNext();) {
+					LightXmlObjectType lightXmlObjectType = iterator.next();
 					for (LightXmlObjectType item : (Collection<LightXmlObjectType>) items) {
 						if (lightXmlObjectType.getId().equals(item.getId())) {
 							try {
@@ -268,8 +268,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 						}
 					}
 				}
-				
-				//labelQueryResult = null;
+
+				// labelQueryResult = null;
 				SequenceMenuPopupAddDialog addDialog = new SequenceMenuPopupAddDialog(
 						getSite().getShell(),
 						Messages.getString("SequenceEditor.adddialog.title"),
@@ -375,14 +375,15 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		public void createColumns(final TableViewer viewer) {
 			Table table = viewer.getTable();
 			String[] titles = {
-					// 0=id, 1=type, 2=label, 3=description
-					Messages.getString("SequenceEditor.tabel.idlabel"),
+					// 0=type, 1=label, 2=id
 					Messages.getString("SequenceEditor.tabel.typelabel"),
-					Messages.getString("SequenceEditor.tabel.labellabel") };
-			int[] widths = { 250, 200, 300 };
+					Messages.getString("SequenceEditor.tabel.labellabel"),
+					Messages.getString("SequenceEditor.tabel.idlabel") };
+			int[] widths = { 200, 375, 225 };
+			int[] style = { SWT.RIGHT, SWT.LEFT, SWT.LEFT };
 			for (int i = 0; i < titles.length; i++) {
 				TableViewerColumn column = new TableViewerColumn(viewer,
-						SWT.CENTER);
+						style[i]);
 				column.getColumn().setText(titles[i]);
 				column.getColumn().setWidth(widths[i]);
 				column.getColumn().setResizable(true);
@@ -404,12 +405,12 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			LabelType label = null;
 
 			switch (columnIndex) {
-			// 0=id, 1=type, 2=label
-			case 0:
-				return lightXmlObject.getId();
-			case 1:
-				return lightXmlObject.getElement();
+			// 0=type, 1=label, 2=id
 			case 2:
+				return lightXmlObject.getId();
+			case 0:
+				return lightXmlObject.getElement();
+			case 1:
 				try {
 					label = (LabelType) XmlBeansUtil.getLangElement(
 							LanguageUtil.getDisplayLanguage(),
