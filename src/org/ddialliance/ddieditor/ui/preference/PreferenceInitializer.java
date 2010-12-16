@@ -30,6 +30,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.DDIEDITOR_DBXML_ENVIROMENT, ".");
 		
 		// auto change perspective
-		store.setDefault(PreferenceConstants.AUTO_CHANGE_PERSPECTIVE, "true");
+		store.setDefault(PreferenceConstants.AUTO_CHANGE_PERSPECTIVE, "false");
 	}
 }
