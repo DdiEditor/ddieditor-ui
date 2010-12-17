@@ -1,5 +1,7 @@
 package org.ddialliance.ddieditor.ui.model;
 
+import java.util.List;
+
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.IDType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.DdiManager;
@@ -20,6 +22,25 @@ public class ModelAccessor {
 		}
 		id.setStringValue(refered.getId());
 
+		return reference;
+	}
+	
+	public static ReferenceType setReference(List<?> refList, ReferenceType reference,
+			LightXmlObjectType refered) {
+		if (refered.getId().equals("")) {
+			if (!refList.isEmpty()) {
+				refList.remove(0);
+			}
+			return null;
+		} else {
+			IDType id = null;
+			if (reference.getIDList().isEmpty()) {
+				id = reference.addNewID();
+			} else {
+				id = reference.getIDList().get(0);
+			}
+			id.setStringValue(refered.getId());
+		}
 		return reference;
 	}
 

@@ -138,6 +138,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 				Messages.getString("QuestionItemEditor.label.conceptLabel.Concept") + ":",
 				Messages.getString("QuestionItemEditor.label.conceptLabel.Concept"),
 				modelImpl.getConceptReferenceType(), conceptReferenceList, false);
+		
 		refSelecCombo.addSelectionListener(Messages.getString("QuestionItemEditor.label.conceptLabel.Concept"),
 				new ReferenceSelectionAdapter(refSelecCombo, model, ReferenceType.class, getEditorIdentification()));
 

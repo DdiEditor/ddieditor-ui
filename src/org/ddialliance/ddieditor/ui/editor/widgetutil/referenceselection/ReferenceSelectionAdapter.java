@@ -26,16 +26,11 @@ public class ReferenceSelectionAdapter implements SelectionListener {
 	public void widgetSelected(SelectionEvent e) {
 		// Combo combo = (Combo) e.getSource();
 		try {
-			if (refSelecCombo.getResult().getId().equals("")) {
-				// TODO Remove sub-element of given type
-//				model.applyChange(value, type, DELETE);
-			} else {
-				model.applyChange(refSelecCombo.getResult(), type /* , UPDATE */);
-			}
+			model.applyChange(refSelecCombo.getResult(), type);
 		} catch (Exception ex) {
 			DDIFtpException e1 = new DDIFtpException(ex);
-			DialogUtil.errorDialog(editorIdentification.getSite(),
-					editorIdentification.getID(), null, e1.getMessage(), e1);
+			DialogUtil.errorDialog(editorIdentification.getSite(), editorIdentification.getID(), null, e1.getMessage(),
+					e1);
 		}
 		editorIdentification.getEditorStatus().setChanged();
 	}

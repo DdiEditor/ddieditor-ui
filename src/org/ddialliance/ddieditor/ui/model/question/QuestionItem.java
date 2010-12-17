@@ -123,18 +123,16 @@ public class QuestionItem extends Model {
 	 */
 	public List<DynamicTextType> getQuestionText() throws DDIFtpException {
 		if (doc.getQuestionItem().getQuestionTextList().isEmpty() && create) {
-			
+
 			DynamicTextType dynamicText = doc.getQuestionItem().addNewQuestionText();
 			TextType textType = dynamicText.addNewText();
-			XmlBeansUtil.addTranslationAttributes(dynamicText, Translator
-			.getLocaleLanguage(), false, true);
-			LiteralTextType lTextType = (LiteralTextType) textType.substitute(LiteralTextDocument.type
-					.getDocumentElementName(), LiteralTextType.type);
+			XmlBeansUtil.addTranslationAttributes(dynamicText, Translator.getLocaleLanguage(), false, true);
+			LiteralTextType lTextType = (LiteralTextType) textType.substitute(
+					LiteralTextDocument.type.getDocumentElementName(), LiteralTextType.type);
 			lTextType.addNewText();
 		}
-		return(doc.getQuestionItem().getQuestionTextList());
+		return (doc.getQuestionItem().getQuestionTextList());
 	}
-
 
 	/**
 	 * Get Response Domain of Question Item.
@@ -238,8 +236,8 @@ public class QuestionItem extends Model {
 			// tdt.setMaxLength(arg0);
 			return tdt;
 		} else if (responseType == RESPONSE_TYPES.NUMERIC) {
-			NumericDomainType ndt = (NumericDomainType) rt.substitute(NumericDomainDocument.type
-					.getDocumentElementName(), NumericDomainType.type);
+			NumericDomainType ndt = (NumericDomainType) rt.substitute(
+					NumericDomainDocument.type.getDocumentElementName(), NumericDomainType.type);
 			ndt.setType(null);
 			return ndt;
 		} else if (responseType == RESPONSE_TYPES.DATE) {
@@ -286,14 +284,15 @@ public class QuestionItem extends Model {
 			try {
 				XmlBeansUtil.getTextOnMixedElement(rt);
 			} catch (Exception e) {
-				throw new Exception(Messages.getString("QuestionItem.mess.QuestionResponseCodeReferenceNotBeenSpecified")); //$NON-NLS-1$
+				throw new Exception(
+						Messages.getString("QuestionItem.mess.QuestionResponseCodeReferenceNotBeenSpecified")); //$NON-NLS-1$
 			}
 		} else if (sn.equals("TextDomainTypeImpl")) {
 			// Nothing to check
 		} else if (sn.equals("NumericDomainTypeImpl")) {
 			// Nothing to check
 		}
-		
+
 		// Check if Language has been given for all Question Texts
 		DynamicTextType dynamicText = null;
 		List<DynamicTextType> dynamicTextList = doc.getQuestionItem().getQuestionTextList();
@@ -314,11 +313,12 @@ public class QuestionItem extends Model {
 		// Set Concept reference
 		if (type.equals(ReferenceType.class)) {
 			ReferenceType ref = getConceptReferenceType();
-			ModelAccessor.setReference(ref, ((LightXmlObjectType) value));
+			ModelAccessor.setReference(doc.getQuestionItem().getConceptReferenceList(), ref, ((LightXmlObjectType) value));
+			
 		} else if (type.equals(ModelIdentifingType.Type_A.class)) {
-			if (((String )value).length() == 0) {
+			if (((String) value).length() == 0) {
 				if (doc.getQuestionItem().getQuestionTextList().size() > 0) {
-				doc.getQuestionItem().removeQuestionText(0);
+					doc.getQuestionItem().removeQuestionText(0);
 				}
 			} else {
 				DynamicTextType questionText = (DynamicTextType) XmlBeansUtil.getLangElement(
