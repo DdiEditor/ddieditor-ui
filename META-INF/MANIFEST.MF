@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.5.2",
  org.eclipse.gef;bundle-version="3.6.1",
  org.eclipse.gmf.runtime.draw2d.ui;bundle-version="1.4.1",
  org.eclipse.gmf.runtime.draw2d.ui.render;bundle-version="1.4.1"
-Bundle-Version: 0.4.1
+Bundle-Version: 0.5.0
 Bundle-SymbolicName: ddieditor-ui;singleton:=true
 Bundle-Name: %Bundle-Name
 Import-Package: 
