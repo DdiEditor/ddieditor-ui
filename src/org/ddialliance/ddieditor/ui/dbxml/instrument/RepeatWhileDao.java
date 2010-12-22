@@ -92,9 +92,9 @@ public class RepeatWhileDao implements IDao {
 	 * .ui.model.IModel)
 	 */
 	public void update(IModel model) throws DDIFtpException {
-		IdentificationManager.getInstance().addVersionInformation(
-				((RepeatWhileDocument) model.getDocument()).getRepeatWhile(),
-				null, null);
+		// IdentificationManager.getInstance().addVersionInformation(
+		// ((RepeatWhileDocument) model.getDocument()).getRepeatWhile(), null,
+		// null);
 		DdiManager.getInstance().updateElement(model.getDocument(),
 				model.getId(), model.getVersion());
 	}

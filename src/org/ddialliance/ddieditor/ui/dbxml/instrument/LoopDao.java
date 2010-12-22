@@ -96,9 +96,9 @@ public class LoopDao implements IDao {
 	 * .ui.model.IModel)
 	 */
 	public void update(IModel model) throws DDIFtpException {
-		IdentificationManager.getInstance().addVersionInformation(
-				((LoopDocument) model.getDocument())
-						.getLoop(), null, null);
+		// IdentificationManager.getInstance().addVersionInformation(
+		// ((LoopDocument) model.getDocument())
+		// .getLoop(), null, null);
 		DdiManager.getInstance().updateElement(model.getDocument(),
 				model.getId(), model.getVersion());
 	}

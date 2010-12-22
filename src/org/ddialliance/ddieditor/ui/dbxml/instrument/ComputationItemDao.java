@@ -95,9 +95,9 @@ public class ComputationItemDao implements IDao {
 	 * .ui.model.IModel)
 	 */
 	public void update(IModel model) throws DDIFtpException {
-		IdentificationManager.getInstance().addVersionInformation(
-				((ComputationItemDocument) model.getDocument()).getComputationItem(),
-				null, null);
+		// IdentificationManager.getInstance().addVersionInformation(
+		// ((ComputationItemDocument) model.getDocument()).getComputationItem(),
+		// null, null);
 		DdiManager.getInstance().updateElement(model.getDocument(),
 				model.getId(), model.getVersion());
 	}

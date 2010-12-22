@@ -92,9 +92,9 @@ public class RepeatUntilDao implements IDao {
 	 * .ui.model.IModel)
 	 */
 	public void update(IModel model) throws DDIFtpException {
-		IdentificationManager.getInstance().addVersionInformation(
-				((RepeatUntilDocument) model.getDocument()).getRepeatUntil(),
-				null, null);
+		// IdentificationManager.getInstance().addVersionInformation(
+		// ((RepeatUntilDocument) model.getDocument()).getRepeatUntil(),
+		// null, null);
 		DdiManager.getInstance().updateElement(model.getDocument(),
 				model.getId(), model.getVersion());
 	}
