@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 0.6.0
+Product Version: 0.7.0
 Release Data: 2010-12-XX
 
 -------------------------------------------------------------------------------
@@ -10,24 +10,8 @@ What's New
 User interface
 Item ID:    Description:
  -          Bugs corrected:
- 			1. Labling error in Instrumentation view.
- 			2. Translation pop-up now re-sizeable.
- 			3. Error when adding/modifying Description in Question Scheme editor.
- 			4. View filter now works.
- 			5. Empty Question Text is not stored.
- 			6. When a Question Item is saved without a Respondse Type, an warning
- 			(not an error) is given.
- 			7. Translation pop-up: Empty rows now suppressed.
- 			8. Combo Box: Now possible to unset selected value.
- 			
- -          Added Datetime representation support in variable editor
- -          Added Text representation support in variable editor
- -          Fix in Sequence editor
- -          Implement UUDI level 4 for new ids
- -			Ddieditor-spss plugin use editor defined id constructs
- -			Fix in control constructs editors of resolving referred control 
- constructs
- -			Fix in create new Instrument
+ 			1. It is now possible to unset references e.g. setting Question 
+ 			Reference in the Question Construct Editor to blank.
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
