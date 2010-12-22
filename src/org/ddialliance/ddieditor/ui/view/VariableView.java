@@ -6,11 +6,8 @@ public class VariableView extends View {
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.VariableView";
 
 	public VariableView() {
-		super(
-				ViewContentType.VariableContent,
-				Messages.getString("VariableView.label.navigation"),
-				Messages.getString("VariableView.label.label.VariableScheme"),
-				Messages.getString("VariableView.label.selectLabel.NavigatorDescription"),
-				ElementType.VARIABLE_SCHEME, "");
+		super(ViewContentType.VariableContent, Messages.getString("VariableView.label.navigation"), Messages
+				.getString("VariableView.label.selectLabel.NavigatorDescription"), Messages
+				.getString("VariableView.label.label.VariableScheme"), ElementType.VARIABLE_SCHEME, "");
 	}
 }
