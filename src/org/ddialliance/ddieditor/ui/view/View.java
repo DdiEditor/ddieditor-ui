@@ -150,7 +150,6 @@ public class View extends ViewPart implements IPropertyListener {
 		selectLabel.setRedraw(true);
 		final GridData gd_selectLabel = new GridData(SWT.FILL, SWT.CENTER,
 				true, false);
-		gd_selectLabel.widthHint = 468;
 		selectLabel.setLayoutData(gd_selectLabel);
 		selectLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
 		selectLabel.setText(viewDescr);
@@ -196,8 +195,6 @@ public class View extends ViewPart implements IPropertyListener {
 		treeGroup.setLayout(gridLayout);
 		final GridData gd_treeGroup = new GridData(SWT.FILL, SWT.FILL, true,
 				true, 2, 1);
-		gd_treeGroup.widthHint = 460;
-		gd_treeGroup.heightHint = 640;
 		treeGroup.setLayoutData(gd_treeGroup);
 		treeGroup.setText(viewTreeLabel);
 
@@ -220,8 +217,6 @@ public class View extends ViewPart implements IPropertyListener {
 		// Define Tree
 		tree = treeViewer.getTree();
 		final GridData gd_tree = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd_tree.heightHint = 540;
-		gd_tree.widthHint = 458;
 		tree.setLayoutData(gd_tree);
 
 		// Define Tree Pop-up Menu
