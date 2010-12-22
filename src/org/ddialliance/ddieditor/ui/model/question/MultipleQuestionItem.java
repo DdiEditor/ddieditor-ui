@@ -239,7 +239,7 @@ public class MultipleQuestionItem extends Model {
 				maintainableUpdateConceptRefs.add(new MaintainableLabelUpdateElement(ref,
 						MaintainableLabelUpdateElement.NEW));
 			} else {
-				ModelAccessor.setReference(ref, ((LightXmlObjectType) value));
+				ModelAccessor.setReference(conceptReferences, ref, ((LightXmlObjectType) value));
 			}
 		} else if (type.equals(SpecificSequenceType.class)) {
 			// Set Subquestion Sequence

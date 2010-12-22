@@ -12,6 +12,7 @@ import org.ddialliance.ddiftp.util.ReflectionUtil;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 
 public class ModelAccessor {
+	
 	public static ReferenceType setReference(ReferenceType reference,
 			LightXmlObjectType refered) {
 		IDType id = null;
@@ -20,9 +21,13 @@ public class ModelAccessor {
 		} else {
 			id = reference.getIDList().get(0);
 		}
-		id.setStringValue(refered.getId());
-
+		if (refered.getId().equals("")) {
+			reference.getIDList().remove(0);
+		} else {
+			id.setStringValue(refered.getId());
+		}
 		return reference;
+
 	}
 	
 	public static ReferenceType setReference(List<?> refList, ReferenceType reference,
@@ -32,16 +37,8 @@ public class ModelAccessor {
 				refList.remove(0);
 			}
 			return null;
-		} else {
-			IDType id = null;
-			if (reference.getIDList().isEmpty()) {
-				id = reference.addNewID();
-			} else {
-				id = reference.getIDList().get(0);
-			}
-			id.setStringValue(refered.getId());
 		}
-		return reference;
+		return setReference(reference, refered);
 	}
 
 	public static LightXmlObjectListDocument resolveReference(

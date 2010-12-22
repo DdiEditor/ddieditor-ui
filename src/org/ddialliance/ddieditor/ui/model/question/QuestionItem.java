@@ -314,7 +314,6 @@ public class QuestionItem extends Model {
 		if (type.equals(ReferenceType.class)) {
 			ReferenceType ref = getConceptReferenceType();
 			ModelAccessor.setReference(doc.getQuestionItem().getConceptReferenceList(), ref, ((LightXmlObjectType) value));
-			
 		} else if (type.equals(ModelIdentifingType.Type_A.class)) {
 			if (((String) value).length() == 0) {
 				if (doc.getQuestionItem().getQuestionTextList().size() > 0) {

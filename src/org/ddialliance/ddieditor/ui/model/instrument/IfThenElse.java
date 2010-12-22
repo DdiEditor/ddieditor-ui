@@ -8,6 +8,7 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
+import org.ddialliance.ddieditor.ui.view.Messages;
 
 public class IfThenElse extends Model {
 	IfThenElseDocument doc;
@@ -43,20 +44,22 @@ public class IfThenElse extends Model {
 
 		// question reference
 		if (type.equals(ModelIdentifingType.Type_B.class)) {
-			ModelAccessor.setReference(getIfQuestionReference(),
-					(LightXmlObjectType) value);
+			ModelAccessor.setReference(doc.getIfThenElse().getIfCondition().getSourceQuestionReferenceList(),
+					getIfQuestionReference(), (LightXmlObjectType) value);
 		}
 
 		// then reference
 		if (type.equals(ModelIdentifingType.Type_C.class)) {
-			ModelAccessor.setReference(getThenReference(),
-					(LightXmlObjectType) value);
+			ModelAccessor.setReference(doc.getIfThenElse().getThenConstructReference(), (LightXmlObjectType) value);
 		}
 
 		// else reference
 		if (type.equals(ModelIdentifingType.Type_D.class)) {
-			ModelAccessor.setReference(getElseReference(),
-					(LightXmlObjectType) value);
+			if (((LightXmlObjectType) value).getId().equals("")) {
+				doc.getIfThenElse().unsetElseConstructReference();
+			} else {
+				ModelAccessor.setReference(getElseReference(), (LightXmlObjectType) value);
+			}
 		}
 	}
 
@@ -64,6 +67,10 @@ public class IfThenElse extends Model {
 	public void validate() throws Exception {
 		// TODO Auto-generated method stub
 		super.validate();
+		if (doc.getIfThenElse().getThenConstructReference().getIDList().isEmpty()) {
+			System.out.println("Warning");
+			throw new Exception(Messages.getString("IfThenElse.mess.MandatoryThenReferenceHasNotBeenSpecified")); //$NON-NLS-1$
+		}
 	}
 
 	public ProgrammingLanguageCodeType getIfCondition() {

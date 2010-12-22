@@ -114,8 +114,11 @@ public class QuestionConstruct extends Model {
 	public void executeChange(Object value, Class<?> type) throws Exception {
 		// QuestionReference
 		if (type.equals(ReferenceType.class)) {
-			ModelAccessor.setReference(getQuestionReference(),
-					(LightXmlObjectType) value);
+			if (((LightXmlObjectType) value).getId().equals("")) {
+				doc.getQuestionConstruct().getQuestionReference().removeID(0);
+			} else {
+				ModelAccessor.setReference(getQuestionReference(), (LightXmlObjectType) value);
+			}
 		}
 
 		// InternationalStringType
