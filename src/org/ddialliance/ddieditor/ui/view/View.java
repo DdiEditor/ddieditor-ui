@@ -14,6 +14,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -96,10 +97,7 @@ public class View extends ViewPart implements IPropertyListener {
 	}
 
 	private void refreshTreeViewer(TreeViewer treeViewer) {
-		treeViewer.getControl().setRedraw(false);
 		treeViewer.refresh();
-		treeViewer.getControl().setRedraw(true);
-		treeViewer.expandAll();
 		treeViewer.getTree().setFocus();
 	}
 
@@ -178,10 +176,7 @@ public class View extends ViewPart implements IPropertyListener {
 				// on a CR we want to filter
 				if (e.keyCode == SWT.CR) {
 					nameFilter.setPattern(filterText.getText());
-					treeViewer.getControl().setRedraw(false);
 					treeViewer.refresh();
-					treeViewer.getControl().setRedraw(true);
-					treeViewer.expandAll();
 					treeViewer.getTree().setFocus();
 				}
 			}
@@ -202,6 +197,7 @@ public class View extends ViewPart implements IPropertyListener {
 		treeViewer = new TreeViewer(treeGroup, SWT.SINGLE | SWT.BORDER);
 		treeViewer.setContentProvider(new TreeContentProvider(getViewSite()));
 		treeViewer.setLabelProvider(new TreeLabelProvider());
+		treeViewer.setComparer(new XmlObjectComparer());
 		try {
 			treeViewer.setInput(viewContentType);
 		} catch (Exception e1) {
@@ -212,7 +208,7 @@ public class View extends ViewPart implements IPropertyListener {
 							Messages.getString("ErrorTitle"), Messages.getString("View.mess.TreeViewerSetInputError") + ":\n" + e1.getMessage()); //$NON-NLS-1$
 		}
 		treeViewer.addFilter(nameFilter);
-		treeViewer.expandAll();
+		treeViewer.expandToLevel(2);
 
 		// Define Tree
 		tree = treeViewer.getTree();
@@ -255,10 +251,8 @@ public class View extends ViewPart implements IPropertyListener {
 
 		refreshAction = new Action("Refresh") {
 			public void run() {
-				treeViewer.getControl().setRedraw(false);
 				treeViewer.refresh();
-				treeViewer.getControl().setRedraw(true);
-				treeViewer.expandAll();
+				treeViewer.getTree().setFocus();
 			}
 		};
 

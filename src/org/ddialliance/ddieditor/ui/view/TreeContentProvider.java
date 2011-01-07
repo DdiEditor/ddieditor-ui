@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
@@ -145,13 +146,16 @@ public class TreeContentProvider implements IStructuredContentProvider,
 					return new ConceptSchemeDao().getLightXmlObject(null, null,
 							null, null).toArray();
 				} else if (contentType.equals(ViewContentType.CategoryContent)) {
-					return new CategorySchemeDao().getLightXmlObject(null,
-							null, null, null).toArray();
+					Object[] objs = new CategorySchemeDao().getLightXmlObject(
+							null, null, null, null).toArray();
+					// addToParentCache(parentElement, objs);
+					return objs;
 				} else if (contentType.equals(ViewContentType.CodeContent)) {
 					return CodeSchemeDao.getCodeSchemesLight(null, null)
 							.toArray();
 				} else if (contentType.equals(ViewContentType.QuestionContent)) {
-					return new QuestionSchemeDao().getLightXmlObject(null, null, null, null).toArray();
+					return new QuestionSchemeDao().getLightXmlObject(null,
+							null, null, null).toArray();
 				} else if (contentType
 						.equals(ViewContentType.InstrumentationContent)) {
 					LightXmlObjectListDocument listDoc = DdiManager
@@ -215,10 +219,11 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) parentElement;
 			String lightXmlTypeLocalname = lightXmlObjectType.getElement();
 			Object[] contentList = null;
-			
-			// Skip leafs as hasChild() does not filter these when view filter used
-			if (lightXmlTypeLocalname.indexOf("Scheme") < 0  &&
-					!lightXmlTypeLocalname.equals("MultipleQuestionItem")) {
+
+			// Skip leafs as hasChild() does not filter these when view filter
+			// used
+			if (lightXmlTypeLocalname.indexOf("Scheme") < 0
+					&& !lightXmlTypeLocalname.equals("MultipleQuestionItem")) {
 				return contentList;
 			}
 
@@ -239,16 +244,21 @@ public class TreeContentProvider implements IStructuredContentProvider,
 							lightXmlObjectType).toArray();
 					// question scheme
 				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
-					List<LightXmlObjectType> list = new MultipleQuestionItemDao().getLightXmlObject(lightXmlObjectType);
+					List<LightXmlObjectType> list = new MultipleQuestionItemDao()
+							.getLightXmlObject(lightXmlObjectType);
 					QuestionItemDao questionItemDao = new QuestionItemDao();
-					questionItemDao.setParentElementType(ElementType.QUESTION_SCHEME);
-					list.addAll(questionItemDao.getLightXmlObject(lightXmlObjectType));
+					questionItemDao
+							.setParentElementType(ElementType.QUESTION_SCHEME);
+					list.addAll(questionItemDao
+							.getLightXmlObject(lightXmlObjectType));
 					contentList = list.toArray();
 					// multiple question item
 				} else if (lightXmlTypeLocalname.equals("MultipleQuestionItem")) {
 					QuestionItemDao questionItemDao = new QuestionItemDao();
-					questionItemDao.setParentElementType(ElementType.MULTIPLE_QUESTION_ITEM);
-					contentList = questionItemDao.getLightXmlObject(lightXmlObjectType).toArray();
+					questionItemDao
+							.setParentElementType(ElementType.MULTIPLE_QUESTION_ITEM);
+					contentList = questionItemDao.getLightXmlObject(
+							lightXmlObjectType).toArray();
 					// control construct scheme
 				} else if (lightXmlTypeLocalname
 						.equals("ControlConstructScheme")) {
@@ -270,7 +280,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 							.getLightXmlObjectList().getLightXmlObjectList()
 							.toArray();
 				}
-				// variable scheme				
+				// variable scheme
 				else if (lightXmlTypeLocalname.equals("VariableScheme")) {
 					contentList = DdiManager
 							.getInstance()
@@ -290,6 +300,8 @@ public class TreeContentProvider implements IStructuredContentProvider,
 									Messages.getString("ErrorTitle"),
 									e.getMessage(), e);
 				}
+				// cache for getparent
+
 				return contentList;
 			} catch (Exception e) {
 				displayGetChildrenException(e);
@@ -308,6 +320,12 @@ public class TreeContentProvider implements IStructuredContentProvider,
 		return (new Object[0]);
 	}
 
+	Map<Object, Object> childrenParentMap = new HashMap<Object, Object>();
+
+	public void clearChildrenParentMap() {
+		childrenParentMap.clear();
+	}
+
 	private void displayGetChildrenException(Exception e) {
 		String errMess = Messages.getString("View.mess.GetChildError"); //$NON-NLS-1$
 		// log exception
@@ -321,14 +339,22 @@ public class TreeContentProvider implements IStructuredContentProvider,
 						IStatus.ERROR, ID, 0, errMess, e));
 	}
 
-	/**
-	 * @param element
-	 *            Element
-	 * @return Object Parent Element
-	 */
+	private void addToParentCache(Object parentElement, Object[] objs) {
+		for (Object object : objs) {
+			Object o = childrenParentMap.put(object.toString(), parentElement);
+			if (o == null) {
+				System.out.println(object);
+			}
+		}
+	}
+
 	@Override
 	public Object getParent(Object element) {
-		log.debug("Not implemented return: null");
+		// Implement by: In each case of getChildren cache the result and the
+		// parent via:
+		// addToParentCache(parentElement, objs);
+
+		// childrenParentMap.get(element.toString());
 		return null;
 	}
 
