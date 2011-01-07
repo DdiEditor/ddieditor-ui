@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
@@ -19,6 +21,8 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextRepresentationType;
 import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.persistenceaccess.DynamicQueryManager;
+import org.ddialliance.ddieditor.persistenceaccess.dbxml.QueryThread;
 import org.ddialliance.ddieditor.ui.dbxml.variable.VariableDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.Editor.FIELD_TYPE;
@@ -65,6 +69,39 @@ public class VariableEditor extends Editor {
 				Messages.getString("VariableEditor.label"),
 				Messages.getString("VariableEditor.label.useTheEditorLabel.Description"));
 		this.dao = new VariableDao();
+	}
+
+	@Override
+	public void setFocus() {
+		super.setFocus();
+		// DynamicQueryManager
+		// List<String> q = new ArrayList<String>();
+		// try {
+		// q.add(DdiManager.getInstance().getQueryElementString(modelImpl.getId(),
+		// modelImpl.getVersion(), "Variable", model.getParentId(),
+		// modelImpl.getParentVersion(), "VariableScheme"));
+		// q.add(DdiManager.getInstance().getQueryElementString(modelImpl.getId(),
+		// modelImpl.getVersion(), "Variable", model.getParentId(),
+		// modelImpl.getParentVersion(), "VariableScheme"));
+		// } catch (DDIFtpException e) {
+		// e.printStackTrace();
+		// }
+		// List result = DynamicQueryManager.getInstance().executeQueryList(q);
+		//
+		// for (Object object : result) {
+		// try {
+		// List result2 = ((Future<List<String>>)object).get();
+		// for (Object object2 : result2) {
+		// System.out.println(object2);
+		// }
+		// } catch (InterruptedException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (ExecutionException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
 	}
 
 	@Override
@@ -142,8 +179,9 @@ public class VariableEditor extends Editor {
 				Messages.getString("VariableEditor.label.questionref"),
 				modelImpl.getQuestionReference(), questionRefList, false);
 		refSelecCombo.addSelectionListener(Messages
-				.getString("VariableEditor.label.questionref"), new ReferenceSelectionAdapter(refSelecCombo,
-						model, ModelIdentifingType.Type_A.class,
+				.getString("VariableEditor.label.questionref"),
+				new ReferenceSelectionAdapter(refSelecCombo, model,
+						ModelIdentifingType.Type_A.class,
 						getEditorIdentification()));
 
 		// representation
@@ -183,9 +221,9 @@ public class VariableEditor extends Editor {
 						Messages.getString("VariableEditor.label.codeschemereference"),
 						codeSchemeRef, codeSchemeRefList, false);
 				refSelectCodeSchemeCombo.addSelectionListener(Messages
-						.getString("VariableEditor.label.codeschemereference"), new ReferenceSelectionAdapter(
-								refSelectCodeSchemeCombo, model,
-								ModelIdentifingType.Type_D.class,
+						.getString("VariableEditor.label.codeschemereference"),
+						new ReferenceSelectionAdapter(refSelectCodeSchemeCombo,
+								model, ModelIdentifingType.Type_D.class,
 								getEditorIdentification()));
 
 				// codes values
@@ -410,8 +448,9 @@ public class VariableEditor extends Editor {
 			// ExternalCategoryRepresentation
 			if (repImpl instanceof ExternalCategoryRepresentationType) {
 				// TODO external category representation
-				representationGroup.setText(Messages
-						.getString("VariableEditor.label.externalcategoryrepresentation"));
+				representationGroup
+						.setText(Messages
+								.getString("VariableEditor.label.externalcategoryrepresentation"));
 				createLabel(representationGroup, "Not implemented!");
 			}
 		} catch (Exception e) {
