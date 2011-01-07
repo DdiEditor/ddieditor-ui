@@ -1,23 +1,24 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 0.7.0
-Release Data: 2010-12-XX
+Product Version: 0.8.0
+Release Data: 2011-01-;)
 
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
- -          Bugs corrected:
- 			1. It is now possible to unset references e.g. setting Question 
- 			Reference in the Question Construct Editor to blank.
+- Changed behaviour of view create to if possible to expand only to the 2nd 
+level.
+
+- Changed behaviour of view refresh from expand all to keep state of 
+expanded items. 
+ 			
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
- -          Changed definition of date ddieditor-spss plugin
- -			Added ddieditor-line
   
 -------------------------------------------------------------------------------
 Change Log Previous Releases
@@ -47,4 +48,6 @@ Known Issue
  - Access to DDA database is troublesome on administration platform accessing 
  development database mirror.
  - Initial use of Dext project has to be tweeked to fit ddieditor 
- infrastructure and DDA integration. 
+ infrastructure and DDA integration.
+ - A potential bug in CustomHashTable in eclipse jface results in ununiqe index 
+ keys. A fix is provided.
