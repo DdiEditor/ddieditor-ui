@@ -14,7 +14,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -279,7 +278,7 @@ public class View extends ViewPart implements IPropertyListener {
 	}
 
 	/**
-	 * Initialize the menu
+	 * Initialise the menu
 	 */
 	private void initializeMenu() {
 		IMenuManager menuManager = getViewSite().getActionBars()
@@ -290,8 +289,8 @@ public class View extends ViewPart implements IPropertyListener {
 
 	@Override
 	public void setFocus() {
-		// Set the focus
-		log.debug("SetFocus: " + getClass().getSimpleName());
+		// enable access to tree from keyboard
+		treeViewer.getControl().forceFocus();
 	}
 
 	@Override
