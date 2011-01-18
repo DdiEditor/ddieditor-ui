@@ -30,18 +30,17 @@ public class LightXmlObjectDragListener implements DragSourceListener {
 	@Override
 	public void dragStart(DragSourceEvent event) {
 		// do nothing
-		System.out.println("LightXmlObjectDragListener.dragStart()");
 	}
 
 	@Override
 	public void dragSetData(DragSourceEvent event) {
-		log.debug("Start");
+		// log.debug("Start");
 		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 
 		// set data on event
 		int[] indices = null;
 		if (LightXmlObjectTransfer.getInstance().isSupportedType(event.dataType)) {
-			log.debug("Is supported, size: " + selection.size());
+			// log.debug("Is supported, size: " + selection.size());
 			Object control = ((DragSource) event.getSource()).getControl();
 
 			// indices
@@ -75,7 +74,7 @@ public class LightXmlObjectDragListener implements DragSourceListener {
 			// set event data
 			int count = 0;
 			LightXmlObjectTransferVO[] result = new LightXmlObjectTransferVO[indices.length];
-			log.debug("result: "+result.length);
+			// log.debug("result: "+result.length);
 			for (Iterator iterator = selection.iterator(); iterator.hasNext(); count++) {
 				log.debug("Setting data: "+iterator.toString());
 				try {
@@ -85,18 +84,17 @@ public class LightXmlObjectDragListener implements DragSourceListener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				log.debug("is here ?");
+				// log.debug("is here ?");
 			}
 
 			event.data = result;
 		}
-		log.debug("Doing return ;- )");
+		// log.debug("Doing return ;- )");
 	}
 
 	@Override
 	public void dragFinished(DragSourceEvent event) {
 		// do nothing
-		System.out.println("LightXmlObjectDragListener.dragFinished()");
 	}
 
 	private void defineIndexOfSelectedTreeItems(TreeItem[] selectedItems, int[] indices, TreeItem treeItem) {
