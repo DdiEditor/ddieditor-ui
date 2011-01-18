@@ -67,7 +67,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -787,6 +786,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+	}
+	
+	public Group getLabelDescriptionTabGroup() {
+		return labelDescriptionTabGroup;
 	}
 
 	public TabItem getLabelDescriptionTabItem() {
