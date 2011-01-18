@@ -80,6 +80,13 @@
                   name="%view.name.7"
                   restorable="true">
             </view>
+            <view
+                  class="org.ddialliance.ddieditor.ui.view.variable.questionrelation.VariableQuestionView"
+                  icon="icons/customize.gif"
+                  id="org.ddialliance.ddieditor.ui.view.variable.questionrelation.VariableQuestionView"
+                  name="%view.name.8"
+                  restorable="true">
+            </view>
       </extension>
       <extension
             id="product"
@@ -275,14 +282,14 @@
                   name="%editor.name.20">
             </editor>
       </extension>
-      <extension id="org.eclipse.ui.idexportwizard" name="%extension.name"
+      <!--extension id="org.eclipse.ui.idexportwizard" name="%extension.name"
             point="org.eclipse.ui.exportWizards">
             <wizard name="%wizard.name" icon="icons/properties.gif"
                   class="org.ddialliance.ddieditor.ui.wizard.export.ExportDdiXmlWizard"
                   id="org.ddialliance.ddieditor.ui.wizard.exportddi.ExportDdiXmlWizard">
                   <description> %Export DDI </description>
             </wizard>
-      </extension>
+      </extension-->
       <extension id="product" point="org.eclipse.core.runtime.products">
             <product application="ddieditor-ui.application" name="DDI Editor">
                   <property name="appName" value="DDI Editor"> </property>
@@ -395,6 +402,11 @@
          <command
                id="org.ddialliance.ddieditor.ui.command.MergeDDI3"
                name="MergeDDI3">
+         </command>
+         <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.TestCommand"
+               id="org.ddialliance.ddieditor.ui.command.TestCommand"
+               name="Test">
          </command>
       </extension>
       <extension
@@ -558,6 +570,11 @@
                      mnemonic="%command.mnemonic.10"
                      style="push">
                </command>
+               <!--command
+                     commandId="org.ddialliance.ddieditor.ui.command.TestCommand"
+                     label="Test"
+                     style="push">
+               </command-->
             </menu>
          </menuContribution>
          <menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar">
@@ -569,7 +586,7 @@
 			</toolbar>
 		</menuContribution>
       </extension>
-      <extension
+      <!--extension
             point="org.eclipse.ui.intro">
          <intro
                class="org.ddialliance.ddieditor.ui.IntroPart"
@@ -579,5 +596,30 @@
                introId="ddieditor-ui.intro"
                productId="org.ddialliance.ddieditor.ui.product">
          </introProductBinding>
+      </extension-->
+      <extension
+            point="org.eclipse.ui.bindings">
+         <key
+               commandId="org.ddialliance.ddieditor.ui.command.OpenDDI3File"
+               contextId="org.eclipse.ui.contexts.window"
+               schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+               sequence="CTRL+O">
+         </key>
+
+         <key commandId="org.eclipse.ui.window.nextEditor" 
+			contextId="org.eclipse.ui.contexts.window" 
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" 
+			sequence="CTRL+TAB"/>
+		 
+		 <key commandId="org.eclipse.ui.window.nextView"
+			contextId="org.eclipse.ui.contexts.window"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="CTRL+1"/>
+			<!-- u00bd  \u00A7"/-->
+
+		 <key commandId="org.eclipse.ui.window.nextPerspective"
+			contextId="org.eclipse.ui.contexts.window"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="CTRL+2"/>
       </extension>
 </plugin>
