@@ -12,7 +12,10 @@ package org.ddialliance.ddieditor.ui.dbxml.code;
 
 import java.util.List;
 
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionItemDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeType;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
@@ -22,6 +25,7 @@ import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescriptionScheme;
 import org.ddialliance.ddieditor.ui.model.code.CodeScheme;
+import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
 import org.ddialliance.ddieditor.ui.model.universe.UniverseScheme;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -75,13 +79,13 @@ public class CodeSchemeDao implements IDao {
 	@Override
 	public IModel create(String id, String version, String parentId,
 			String parentVersion) throws Exception {
-		MaintainableLabelQueryResult maintainableLabelQueryResult = LabelDescriptionScheme
-				.createLabelDescriptionScheme("CodeScheme");
-
-		return new CodeScheme(maintainableLabelQueryResult.getId(),
-				maintainableLabelQueryResult.getVersion(), parentId,
-				parentVersion, maintainableLabelQueryResult.getAgency(),
-				maintainableLabelQueryResult);
+		
+		CodeSchemeDocument doc = CodeSchemeDocument.Factory.newInstance();
+		IdentificationManager.getInstance().addIdentification(
+				doc.addNewCodeScheme(),	ElementType.getElementType("CategoryScheme").getIdPrefix(), null);
+		IdentificationManager.getInstance().addVersionInformation(doc.getCodeScheme(), null, null);
+		CodeScheme model = new CodeScheme(doc, parentId, parentVersion);
+		return model;
 	}
 
 	@Override
@@ -110,19 +114,24 @@ public class CodeSchemeDao implements IDao {
 	}
 
 	@Override
-	public IModel getModel(String id, String version, String parentId,
-			String parentVersion) throws Exception {
-		MaintainableLabelQueryResult maintainableLabelQueryResult = DdiManager
-				.getInstance().getCodeSchemeLabel(id, version, parentId,
-						parentVersion);
-
-		return new CodeScheme(id, version, parentId, parentVersion,
-				maintainableLabelQueryResult.getAgency(),
-				maintainableLabelQueryResult);
+	public IModel getModel(String id, String version, String parentId, String parentVersion) throws Exception {
+		CodeSchemeDocument doc = DdiManager.getInstance().getCodeScheme(id, version, parentId, parentVersion);
+		return doc == null ? null : new CodeScheme(doc, parentId, parentVersion);
 	}
 
 	@Override
 	public void update(IModel model) throws DDIFtpException {
-		DaoSchemeHelper.update(model);
+		try {
+			// TODO Version Control - not supported
+			DdiManager.getInstance().updateElement(model.getDocument(), model.getId(), model.getVersion());
+		} catch (DDIFtpException e) {
+			log.error("Update Code Scheme error: " + e.getMessage());
+
+			throw new DDIFtpException(e.getMessage());
+		}
+
+		
+		
+//		DaoSchemeHelper.update(model);
 	}
 }
