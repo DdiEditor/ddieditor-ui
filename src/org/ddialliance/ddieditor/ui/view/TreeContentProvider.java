@@ -155,7 +155,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 							.toArray();
 				} else if (contentType.equals(ViewContentType.QuestionContent)) {
 					return new QuestionSchemeDao().getLightXmlObject(null,
-							null, null, null).toArray();
+							null, null, null).toArray();					
 				} else if (contentType
 						.equals(ViewContentType.InstrumentationContent)) {
 					LightXmlObjectListDocument listDoc = DdiManager
