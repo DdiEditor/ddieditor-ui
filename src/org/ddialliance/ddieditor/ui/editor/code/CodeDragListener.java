@@ -24,13 +24,11 @@ public class CodeDragListener  implements DragSourceListener {
 	@Override
 	public void dragStart(DragSourceEvent event) {
 		// do nothing
-		System.out.println("CodeDragListener.dragStart()");
 		event.doit = true;
 	}
 
 	@Override
 	public void dragSetData(DragSourceEvent event) {
-		log.debug("Start");
 		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 
 		event.data = selection.getFirstElement();
@@ -39,8 +37,6 @@ public class CodeDragListener  implements DragSourceListener {
 
 	@Override
 	public void dragFinished(DragSourceEvent event) {
-		// TODO Auto-generated method stub
-		System.out.println("CodeDragListener.dragFinished()");
-		
+		// do nothing
 	}
 }
