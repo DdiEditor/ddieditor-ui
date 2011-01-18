@@ -32,7 +32,6 @@ public class CodeDragListener  implements DragSourceListener {
 		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 
 		event.data = selection.getFirstElement();
-		System.out.println("event.data: "+event.data);
 	}
 
 	@Override
