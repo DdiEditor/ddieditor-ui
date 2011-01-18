@@ -78,6 +78,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -349,8 +350,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			model.validate();
 		} catch (Exception e) {
 			// Save with warning
-			DialogUtil.infoDialog(getSite().getShell(), ID, Messages.getString("InfoTitle"),
-					e.getMessage());
+			DialogUtil.infoDialog(getSite().getShell(), ID,
+					Messages.getString("InfoTitle"), e.getMessage());
 		}
 		try {
 			if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
@@ -436,6 +437,17 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			ddiFtpException = (DDIFtpException) e;
 		}
 		DialogUtil.errorDialog(getSite().getShell(), ID, null,
+				ddiFtpException.getMessage(), ddiFtpException);
+	}
+
+	public static void showError(Exception e, String ID, IWorkbenchPartSite site) {
+		DDIFtpException ddiFtpException = null;
+		if (!(e instanceof DDIFtpException)) {
+			ddiFtpException = new DDIFtpException(e);
+		} else {
+			ddiFtpException = (DDIFtpException) e;
+		}
+		DialogUtil.errorDialog(site.getShell(), ID, null,
 				ddiFtpException.getMessage(), ddiFtpException);
 	}
 
@@ -1001,8 +1013,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				translationDialogOption, parentLabel, parentWidget));
 		return button;
 	}
-	
-	
 
 	private SelectionListener createTranslationSelectionListener(
 			final List items,
@@ -1068,20 +1078,21 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				if (translationDialog.getReturnCode() == Window.OK) {
 					for (int i = 0; i < items.size(); i++) {
 						// remove empty items
-						if (XmlBeansUtil.getTextOnMixedElement((XmlObject) items.get(i)).equals("")) {
+						if (XmlBeansUtil.getTextOnMixedElement(
+								(XmlObject) items.get(i)).equals("")) {
 							items.remove(i);
 						}
 					}
 					updateParentWidget(translationDialog);
 				} else {
-					for (Iterator iterator = items.iterator(); iterator.hasNext();) {
+					for (Iterator iterator = items.iterator(); iterator
+							.hasNext();) {
 						Object object2 = (Object) iterator.next();
-						
+
 					}
 					// restore original items
-					for (Iterator iteratorItems = items.iterator(),
-							iteratorCache = cache.iterator(); 
-							iteratorCache.hasNext();) {
+					for (Iterator iteratorItems = items.iterator(), iteratorCache = cache
+							.iterator(); iteratorCache.hasNext();) {
 						Object object = iteratorItems.next();
 						CacheHolder cacheHolder = (CacheHolder) iteratorCache
 								.next();
@@ -1107,7 +1118,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						}
 					}
 					// Remove exceeding items
-					for (int i = items.size()-1; i > cache.size()-1; i--) {
+					for (int i = items.size() - 1; i > cache.size() - 1; i--) {
 						items.remove(i);
 					}
 				}
@@ -1255,9 +1266,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 		return createTextAreaInput(group, initText);
 	}
-	
-	public StyledText createTextAreaInput(Group group, 
-			String initText) {
+
+	public StyledText createTextAreaInput(Group group, String initText) {
 		StyledText styledText = new StyledText(group, SWT.WRAP | SWT.V_SCROLL
 				| SWT.BORDER);
 		styledText.setText(initText);
@@ -1266,27 +1276,26 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		setControl(styledText);
 		return styledText;
 	}
-	
 
 	public Browser createBrowser(Group group, String labelText) {
 		createLabel(group, labelText);
 		return createBrowser(group);
 	}
-	
+
 	public Browser createBrowser(Group group) {
-		Browser browser = new Browser(group, SWT.EMBEDDED|SWT.BORDER);
-		browser.setFont(getFont("Arial Narrow", 8,SWT.NORMAL));
+		Browser browser = new Browser(group, SWT.EMBEDDED | SWT.BORDER);
+		browser.setFont(getFont("Arial Narrow", 8, SWT.NORMAL));
 		final GridData gd_Text = new GridData(GridData.FILL_BOTH);
 		browser.setLayoutData(gd_Text);
 		return browser;
-	}	
+	}
 
 	public Font getFont(String name, int height, int style) {
 		FontRegistry reg = JFaceResources.getFontRegistry();
 		Font returnedFont = reg.defaultFont();
-		FontDescriptor fdesc=FontDescriptor.createFrom(name, height, style);
+		FontDescriptor fdesc = FontDescriptor.createFrom(name, height, style);
 		Font f = fdesc.createFont(returnedFont.getDevice());
-		
+
 		return f;
 	}
 
