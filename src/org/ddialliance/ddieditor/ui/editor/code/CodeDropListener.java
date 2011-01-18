@@ -2,17 +2,11 @@ package org.ddialliance.ddieditor.ui.editor.code;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.impl.CodeTypeImpl;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.IDType;
-import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor.CodeTableContentProvider;
-import org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor;
-import org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor.SequenceTableContentProvider;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransferVO;
 import org.ddialliance.ddieditor.ui.view.Messages;
@@ -24,7 +18,6 @@ import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Table;
@@ -42,14 +35,12 @@ public class CodeDropListener extends ViewerDropAdapter {
 
 	public CodeDropListener(CodeSchemeEditor codeSchemeEditor) {
 		super(codeSchemeEditor.getViewer());
-		log.debug("CodeDropListener.CodeDropListener()");
 		this.codeSchemeEditor = codeSchemeEditor;
 		stcp = ((CodeSchemeEditor.CodeTableContentProvider) ((TableViewer) getViewer()).getContentProvider());
 	}
 
 	@Override
 	public boolean performDrop(Object data) {
-		log.debug("CodeDropListener.performDrop()");
 		if (data == null) { // guard
 			new DDIFtpException("Data is null", new Throwable());
 			return false;
@@ -69,7 +60,7 @@ public class CodeDropListener extends ViewerDropAdapter {
 		// TODO Element type not defined for move - transfers[0].lightXmlObject.getElement() is null!
 		if (transfers[0].lightXmlObject.getElement() != null &&
 				!transfers[0].lightXmlObject.getElement().equals("Category")) {
-			log.debug("Only Categories supported");
+			log.warn("Only Categories supported");
 			return false;
 		}
 		Table table = (Table) ((TableViewer) getViewer()).getControl();
@@ -83,31 +74,37 @@ public class CodeDropListener extends ViewerDropAdapter {
 		// 1. determine insert position
 		int relativePosition = -1;
 		if (getCurrentLocation() == LOCATION_BEFORE) {
-			relativePosition = -1;
-		} else if (getCurrentLocation() == LOCATION_AFTER) {
 			relativePosition = 0;
+		} else if (getCurrentLocation() == LOCATION_AFTER) {
+			relativePosition = 1;
 		} else if (getCurrentLocation() == LOCATION_ON) {
-			if (transfers[0].rcpPartId.equals(codeSchemeEditor.ID)) {
-				relativePosition = -1;
-			} else {
-				relativePosition = -1;
-			}
+			relativePosition = 0;
 		} else if (getCurrentLocation() == LOCATION_NONE) {
 			return false;
 		}
 		// - selected code object
+		String sourceId = transfers[0].lightXmlObject.getId();
+		boolean sourceFound = false;
 		Object selectedLightXmlObject = getCurrentTarget();
-		int insertPosition = -1;
-		log.debug("table.size: " + table.getItems().length);
+		int insertPosition = -2;
 		for (int i = 0; i < table.getItems().length; i++) {
-			log.debug("items Data(i): " + table.getItems()[i].getData() + "(" + i + ")");
-			log.debug("selectedLightXmlObject: " + selectedLightXmlObject);
+			// log.debug("items Data(" + i +
+			// "):"+table.getItems()[i].getData());
+			// log.debug("selectedLightXmlObject: " + selectedLightXmlObject);
+			String currentId = XmlBeansUtil.getXmlAttributeValue((String) table.getItems()[i].getData().toString(),
+					"id=\"");
+			if (sourceId.equals(currentId)) {
+				sourceFound = true;
+			}
 			if (table.getItems()[i].getData().equals(selectedLightXmlObject)) {
-				insertPosition = i + 1 + relativePosition;
-				log.debug("relativePosition: " + relativePosition);
-				log.debug("insertPosition: " + insertPosition);
+				insertPosition = i + relativePosition;
+				// log.debug("relativePosition: " + relativePosition);
+				// log.debug("insertPosition: " + insertPosition);
 				break;
 			}
+		}
+		if (sourceFound) {
+			insertPosition--; // if source found before tager - decrement position
 		}
 		if (insertPosition < 0) {
 			insertPosition = 0;
@@ -156,10 +153,8 @@ public class CodeDropListener extends ViewerDropAdapter {
 			}
 		}
 
-		log.debug("transfers.length: " + transfers.length);
 		// 3. add item - Code based on transferred Category
 		for (int i = 0; i < transfers.length; i++) {
-			log.debug("transfers[i].lightXmlObject:\n" + transfers[i].lightXmlObject);
 			// add items ligth xml object
 			LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory.newInstance();
 			String codeValue = "";
@@ -184,8 +179,6 @@ public class CodeDropListener extends ViewerDropAdapter {
 			} else {
 				stcp.getItems().add(insertPosition, lightXmlObject);
 			}
-			log.debug("ContentProvider: " + stcp.getItems());
-			log.debug("XML: " + transfers[i].lightXmlObject);
 			// add to model
 			CodeType codeType = CodeType.Factory.newInstance();
 			codeType.addNewCategoryReference().addNewID()
@@ -236,7 +229,6 @@ public class CodeDropListener extends ViewerDropAdapter {
 
 	@Override
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {
-		log.debug("CodeDropListener.validateDrop()");
 		boolean result = LightXmlObjectTransfer.getInstance().isSupportedType(transferType)
 				&& target instanceof CodeTypeImpl;
 		if (!result) {
