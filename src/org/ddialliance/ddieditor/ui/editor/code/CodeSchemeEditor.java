@@ -10,45 +10,27 @@ package org.ddialliance.ddieditor.ui.editor.code;
  * $Revision$
  */
 
-import java.lang.reflect.Array;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.xmlbeans.XmlObject;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.CodeDocumentImpl;
-import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeType;
-import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.impl.CodeTypeImpl;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.IDType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.SchemeReferenceType;
-import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
-import org.ddialliance.ddieditor.model.DdiManager;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.category.CategoryDao;
 import org.ddialliance.ddieditor.ui.dbxml.category.CategorySchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
-import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.editor.CellEditorListener;
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
-import org.ddialliance.ddieditor.ui.editor.category.CategorySchemeEditor.CategoryLabelProvider;
-import org.ddialliance.ddieditor.ui.editor.category.CategorySchemeEditor.CategoryTableContentProvider;
-import org.ddialliance.ddieditor.ui.editor.category.CategorySchemeEditor.TableEditingSupport;
-import org.ddialliance.ddieditor.ui.editor.instrument.SequenceDropListener;
-import org.ddialliance.ddieditor.ui.editor.instrument.SequenceMenuPopupAddDialog;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectDragListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.IModel;
-import org.ddialliance.ddieditor.ui.model.category.CategoryScheme;
 import org.ddialliance.ddieditor.ui.model.code.CodeScheme;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
@@ -61,10 +43,8 @@ import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -73,7 +53,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -135,7 +114,6 @@ public class CodeSchemeEditor extends Editor {
 	}
 	
 	private void popupMenuAction(PopupAction action) {
-		System.out.println("Action: "+action);
 		TableItem[] tableItems = tableViewer.getTable().getSelection();
 		// guard
 		if (action.equals(PopupAction.REMOVE) && tableItems.length <= 0) {
@@ -382,6 +360,9 @@ public class CodeSchemeEditor extends Editor {
 			case 1:
 				// convert category id to category label
 				LightXmlObjectType xml = null;
+				if (code.getId().equals("")) {
+					return "";
+				}
 				try {
 					xml = new CategoryDao().getLightXmlObject(
 							code.getId(), "", "", "").get(0);
@@ -505,7 +486,7 @@ public class CodeSchemeEditor extends Editor {
 
 		@Override
 		protected Object getValue(Object element) {
-			log.debug("Column: " + this.column);
+			//log.debug("Column: " + this.column);
 			switch (this.column) {
 			// code value
 			case 0:
