@@ -11,6 +11,7 @@ package org.ddialliance.ddieditor.ui.perspective;
  */
 
 import org.ddialliance.ddieditor.ui.view.QuestionItemView;
+import org.ddialliance.ddieditor.ui.view.variable.questionrelation.VariableQuestionView;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -26,7 +27,9 @@ public class QuestionsPerspective implements IPerspectiveFactory {
 			log.debug("Create");	
 		}
 		addViewShortcuts(layout);
-		layout.addView(QuestionItemView.ID, IPageLayout.LEFT, 0.50f, layout.getEditorArea());
+		layout.addView(QuestionItemView.ID, IPageLayout.LEFT, 0.55f, layout.getEditorArea());
+		layout.addView(VariableQuestionView.ID, IPageLayout.RIGHT, 0.70f, layout
+				.getEditorArea());		
 		addFastViews(layout);
 	}
 
