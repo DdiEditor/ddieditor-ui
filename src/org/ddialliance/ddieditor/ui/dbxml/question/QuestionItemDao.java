@@ -31,9 +31,9 @@ public class QuestionItemDao implements IDao {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			QuestionItemDao.class);
 	protected ElementType parentElementType = null;
-	
+
 	public QuestionItemDao() {
-		
+
 	}
 
 	/**
@@ -46,7 +46,8 @@ public class QuestionItemDao implements IDao {
 	public List<LightXmlObjectType> getLightXmlObject(
 			LightXmlObjectType parentXmlObject) throws Exception {
 
-		return getLightXmlObject("", "", parentXmlObject.getId(), parentXmlObject.getParentVersion());
+		return getLightXmlObject("", "", parentXmlObject.getId(),
+				parentXmlObject.getParentVersion());
 	}
 
 	/**
@@ -64,19 +65,24 @@ public class QuestionItemDao implements IDao {
 
 		log.debug("QuestionItems.getLightXmlObject() - parent: " + parentId
 				+ "/" + parentVersion);
-		
+
 		List<LightXmlObjectType> lightXmlObjectTypeList = null;
 		if (this.parentElementType == null) {
 			log.error("getLightXmlObject: Missing parent element type");
 			// TODO get error message
-			throw new DDIFtpException("getLightXmlObject: Missing parent element type");
+			throw new DDIFtpException(
+					"getLightXmlObject: Missing parent element type");
 		}
 		if (this.parentElementType == ElementType.MULTIPLE_QUESTION_ITEM) {
-			lightXmlObjectTypeList = DdiManager.getInstance().getMultipleQuestionQuestionItemsLight(id, version,
-					parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
+			lightXmlObjectTypeList = DdiManager
+					.getInstance()
+					.getMultipleQuestionQuestionItemsLight(id, version,
+							parentId, parentVersion).getLightXmlObjectList()
+					.getLightXmlObjectList();
 		} else {
-			lightXmlObjectTypeList = DdiManager.getInstance().getQuestionItemsLight(id, version, parentId,
-					parentVersion).getLightXmlObjectList().getLightXmlObjectList();
+			lightXmlObjectTypeList = DdiManager.getInstance()
+					.getQuestionItemsLightPlus(null, null, null, null)
+					.getLightXmlObjectList().getLightXmlObjectList();
 		}
 
 		if (log.isDebugEnabled()) {
@@ -95,7 +101,7 @@ public class QuestionItemDao implements IDao {
 
 		return lightXmlObjectTypeList;
 	}
-	
+
 	/**
 	 * Create QuestionItem object
 	 * 
@@ -163,10 +169,13 @@ public class QuestionItemDao implements IDao {
 			throw new DDIFtpException("getModel: Missing parent element type");
 		}
 		if (this.parentElementType.equals(ElementType.MULTIPLE_QUESTION_ITEM)) {
-			System.out.println("*********** MULTIPLE_QUESTION_ITEM parent ********************");
-			doc = DdiManager.getInstance().getMultipleQuestionQuestionItem(id, version, parentId, parentVersion);
+			System.out
+					.println("*********** MULTIPLE_QUESTION_ITEM parent ********************");
+			doc = DdiManager.getInstance().getMultipleQuestionQuestionItem(id,
+					version, parentId, parentVersion);
 		} else {
-			doc = DdiManager.getInstance().getQuestionItem(id, version, parentId, parentVersion);
+			doc = DdiManager.getInstance().getQuestionItem(id, version,
+					parentId, parentVersion);
 		}
 		return doc == null ? null : new QuestionItem(doc, parentId,
 				parentVersion);
@@ -192,12 +201,16 @@ public class QuestionItemDao implements IDao {
 				// TODO get error message
 				throw new DDIFtpException("create: Missing parent element type");
 			}
-			if (this.parentElementType.equals(ElementType.MULTIPLE_QUESTION_ITEM)) {
-				DdiManager.getInstance().createElement(questionItem.getDocument(), questionItem.getParentId(),
-						questionItem.getParentVersion(), "MultipleQuestionItem", "SubQuestions",
+			if (this.parentElementType
+					.equals(ElementType.MULTIPLE_QUESTION_ITEM)) {
+				DdiManager.getInstance().createElement(
+						questionItem.getDocument(), questionItem.getParentId(),
+						questionItem.getParentVersion(),
+						"MultipleQuestionItem", "SubQuestions",
 						"getMultipleQuestionItemsLight");
 			} else {
-				DdiManager.getInstance().createElement(questionItem.getDocument(), questionItem.getParentId(),
+				DdiManager.getInstance().createElement(
+						questionItem.getDocument(), questionItem.getParentId(),
 						questionItem.getParentVersion(), "QuestionScheme");
 			}
 		} catch (DDIFtpException e) {
@@ -257,13 +270,16 @@ public class QuestionItemDao implements IDao {
 				// TODO get error message
 				throw new DDIFtpException("delete: Missing parent element type");
 			}
-			if (this.parentElementType.equals(ElementType.MULTIPLE_QUESTION_ITEM)) {
-				DdiManager.getInstance().deleteElement(questionItem.getDocument(),
-						questionItem.getParentId(),
-						questionItem.getParentVersion(), "MultipleQuestionItem");
+			if (this.parentElementType
+					.equals(ElementType.MULTIPLE_QUESTION_ITEM)) {
+				DdiManager.getInstance()
+						.deleteElement(questionItem.getDocument(),
+								questionItem.getParentId(),
+								questionItem.getParentVersion(),
+								"MultipleQuestionItem");
 			} else {
-				DdiManager.getInstance().deleteElement(questionItem.getDocument(),
-						questionItem.getParentId(),
+				DdiManager.getInstance().deleteElement(
+						questionItem.getDocument(), questionItem.getParentId(),
 						questionItem.getParentVersion(), "QuestionScheme");
 			}
 		} catch (DDIFtpException e) {
@@ -276,12 +292,11 @@ public class QuestionItemDao implements IDao {
 			questionItem = null;
 			questionItem = getModel(id, version, parentId, parentVersion);
 			if (questionItem != null) {
-				log
-						.error("****************** Question Item not deleted *****************");
+				log.error("****************** Question Item not deleted *****************");
 			}
 		}
 	}
-	
+
 	public void setParentElementType(ElementType parentElementTYpe) {
 		this.parentElementType = parentElementTYpe;
 	}
