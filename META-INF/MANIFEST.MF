@@ -20,7 +20,8 @@ Import-Package:
  org.ddialliance.ddiftp.util,
  org.ddialliance.ddiftp.util.log,
  org.ddialliance.ddiftp.util.xml
-Bundle-ClassPath: ., bin/
+Bundle-ClassPath: .,
+ bin/
 Bundle-Activator: org.ddialliance.ddieditor.ui.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Danish Data Archive
