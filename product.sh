@@ -27,6 +27,7 @@ versionbump ddieditor-ui
 versionbump ddadb
 versionbump jounal-study-info-export
 versionbump ddieditor-spss
+versionbump ddieditor-line
 
 # ddieditor-ui product bundle
 vi OSGI-INF/l10n/bundle.properties
@@ -95,6 +96,11 @@ cd ../jounal-study-info-export
 #ant hibernate-tool-deploy -f dda-build.xml
 ant deploy-to-ddieditor-ui -f dda-build.xml
 cd ../ddieditor-ui/
+
+echo '--- Copy ddieditor-line ---'
+cd ../ddieditor-line
+ant resource -f dda-build.xml
+ant deploy-to-ddieditor-ui -f dda-build.xml
 
 echo '--- Check db connection ---'
 vi bin/resources/hibernate/hibernate.cfg.xml
