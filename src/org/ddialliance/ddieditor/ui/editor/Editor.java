@@ -218,65 +218,28 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		editorInput.setParentVersion(model.getParentVersion());
 		setInput(editorInput);
 
-		// name
-		setPartName(model.getId());
-		setTitleToolTip(Messages.getString(editorInput.getElementType()
-				.getDisplayMessageEntry())); // TODO
-		// i18n
-	}
-
-	public void createPartControl_old(Composite parent) {
-		// TODO Auto-generated method stub
-		parent.setLayout(new GridLayout());
-
-		// general ui layout
-		composite = new Composite(parent, SWT.BORDER);
-		composite.setLayout(new GridLayout());
-		composite.setRedraw(true);
-
-		final GridData gd_composite_1 = new GridData(SWT.FILL, SWT.FILL, true,
-				true);
-		gd_composite_1.widthHint = 539;
-		gd_composite_1.heightHint = 573;
-		composite.setLayoutData(gd_composite_1);
-		composite.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
-
-		final Composite composite_2 = new Composite(composite, SWT.NONE);
-		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
-		composite_2.setBackground(SWTResourceManager.getColor(230, 230, 250));
-		composite_2.setLayout(new GridLayout());
-
-		// title
-		final Label titleLabel = new Label(composite_2, SWT.WRAP);
-		titleLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
-		titleLabel.setFont(SWTResourceManager.getFont("Sans", 14, SWT.BOLD));
-
-		titleLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
-		titleLabel.setText(title);
-
-		// description
-		final Label descriptionLabel = new Label(composite_2, SWT.WRAP);
-		final GridData gd_descriptionLabel = new GridData(SWT.FILL, SWT.CENTER,
-				true, false);
-		gd_descriptionLabel.widthHint = 471;
-		descriptionLabel.setLayoutData(gd_descriptionLabel);
-		descriptionLabel.setBackground(SWTResourceManager.getColor(230, 230,
-				250));
-		descriptionLabel.setText(description);
-
-		// clean dirt from initialization
-		editorStatus.clearChanged();
+		// part name
+		if (editorInput.getLabelList() == null
+				|| editorInput.getLabelList().isEmpty()) {
+			setPartName(model.getId());
+		} else {
+			try {
+				org.ddialliance.ddieditor.model.lightxmlobject.LabelType name = (org.ddialliance.ddieditor.model.lightxmlobject.LabelType) XmlBeansUtil
+						.getDefaultLangElement(editorInput.getLabelList());
+				if (name != null) {
+					setPartName(XmlBeansUtil.getTextOnMixedElement(name));
+				}
+			} catch (DDIFtpException e) {
+				setPartName(model.getId());
+			}
+		}
+		String toolTip = Messages.getString(editorInput.getElementType()
+				.getDisplayMessageEntry());
+		setTitleToolTip(toolTip); 
+		// TODO i18n
 	}
 
 	public void createPartControl(Composite parent) {
-		// general ui layout
-		// composite = new Composite(parent, SWT.BORDER);
-		// composite.setLayout(new GridLayout());
-		// composite.setRedraw(true);
-
 		final GridData gdParent = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gdParent.widthHint = 539;
 		gdParent.heightHint = 573;
@@ -799,7 +762,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	public Group getLabelDescriptionTabGroup() {
 		return labelDescriptionTabGroup;
 	}

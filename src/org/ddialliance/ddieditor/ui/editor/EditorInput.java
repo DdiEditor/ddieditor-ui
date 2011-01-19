@@ -1,5 +1,8 @@
 package org.ddialliance.ddieditor.ui.editor;
 
+import java.util.List;
+
+import org.ddialliance.ddieditor.model.lightxmlobject.LabelType;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -39,6 +42,7 @@ public class EditorInput implements IEditorInput {
 	private ElementType elementType;
 	private ElementType parentEntityType;
 	private String resourceId;
+	private List<LabelType> labelList;
 
 	/**
 	 * State of editor based on persistence and access
@@ -57,6 +61,8 @@ public class EditorInput implements IEditorInput {
 	/**
 	 * Constructor
 	 * 
+	 * @param labelList
+	 *            list of labels
 	 * @param resourceId
 	 *            id of resource of the input
 	 * @param id
@@ -72,11 +78,12 @@ public class EditorInput implements IEditorInput {
 	 * @param mode
 	 * @see {@link EditorModeType}
 	 */
-	public EditorInput(String resourceId, String id, String version,
-			String parentId, String parentVersion, ElementType elementType,
-			ElementType parentEntityType,
+	public EditorInput(List<LabelType> labelList, String resourceId, String id,
+			String version, String parentId, String parentVersion,
+			ElementType elementType, ElementType parentEntityType,
 			EditorModeType mode) {
 		this.resourceId = resourceId;
+		this.labelList = labelList;
 		if (mode.equals(EditorModeType.NEW)) {
 			// id and version generation handled by model
 			this.id = null;
@@ -152,15 +159,15 @@ public class EditorInput implements IEditorInput {
 	protected void setParentVersion(String parentVersion) {
 		this.parentVersion = parentVersion;
 	}
-	
+
 	protected void setParentElementType(ElementType parentElementType) {
 		this.parentEntityType = parentElementType;
 	}
-	
+
 	protected ElementType getParentElementType() {
 		return this.parentEntityType;
 	}
-	
+
 	@Override
 	public boolean exists() {
 		return false;
@@ -231,6 +238,14 @@ public class EditorInput implements IEditorInput {
 
 	public void setResourceId(String resourceId) {
 		this.resourceId = resourceId;
+	}
+
+	public List<LabelType> getLabelList() {
+		return labelList;
+	}
+
+	public void setLabelList(List<LabelType> labelList) {
+		this.labelList = labelList;
 	}
 
 	@Override

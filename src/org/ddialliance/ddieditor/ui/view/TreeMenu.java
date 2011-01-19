@@ -78,7 +78,8 @@ public class TreeMenu {
 		// ddi resource type
 		if (inputSelection.getSelection() instanceof DDIResourceType) {
 			entityType = ElementType.FILE;
-			input = new EditorInput(inputSelection.getResourceId(),
+
+			input = new EditorInput(null, inputSelection.getResourceId(),
 					((DDIResourceType) inputSelection.getSelection())
 							.getOrgName(), null, null, null, entityType, null,
 					mode);
@@ -91,6 +92,7 @@ public class TreeMenu {
 		if (inputSelection.getSelection() instanceof LightXmlObjectType) {
 			LightXmlObjectType lightXmlObject = (LightXmlObjectType) inputSelection
 					.getSelection();
+
 			// open editor
 			defineInputAndOpenEditor(entityType,
 					inputSelection.getParentElementType(), lightXmlObject,
@@ -176,7 +178,8 @@ public class TreeMenu {
 			return;
 		}
 
-		EditorInput input = new EditorInput(resourceId, lightXmlObject.getId(),
+		EditorInput input = new EditorInput(lightXmlObject.getLabelList(),
+				resourceId, lightXmlObject.getId(),
 				lightXmlObject.getVersion(), parentId, parentVersion,
 				entityType, parentEntityType, mode);
 
