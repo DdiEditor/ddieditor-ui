@@ -19,7 +19,6 @@ import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.variable.VariableDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectDragListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
@@ -30,7 +29,6 @@ import org.ddialliance.ddieditor.ui.model.variable.Variable;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.TreeMenuProvider;
-import org.ddialliance.ddieditor.ui.view.View;
 import org.ddialliance.ddieditor.ui.view.XmlObjectComparer;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.xml.Urn;
@@ -64,9 +62,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 public class VariableQuestionView extends ViewPart {
@@ -170,6 +166,15 @@ public class VariableQuestionView extends ViewPart {
 						}
 					}
 
+					/**
+					 * Relates a question item to a variable via custom user id
+					 * on the question item set as the variable name
+					 * 
+					 * @param quei
+					 *            question item
+					 * @param variName
+					 *            variable name
+					 */
 					void setPseudoVariIdOnQuei(LightXmlObjectType quei,
 							String variName) {
 						QuestionItemDao dao = new QuestionItemDao();
@@ -210,6 +215,13 @@ public class VariableQuestionView extends ViewPart {
 						}
 					}
 
+					/**
+					 * Relates a variable to a question item via the variable
+					 * question reference tag
+					 * 
+					 * @param variQueiRel
+					 *            containing the variable and question item
+					 */
 					void setQueiRefOnVari(VariableQuestionRelation variQueiRel) {
 						VariableDao dao = new VariableDao();
 						try {
@@ -228,6 +240,13 @@ public class VariableQuestionView extends ViewPart {
 						}
 					}
 
+					/**
+					 * Removes the question reference on a variable (the first
+					 * question reference in the list)
+					 * 
+					 * @param variQueiRel
+					 *            containing the variable and question item
+					 */
 					void deleteQueiRefOnVari(
 							VariableQuestionRelation variQueiRel) {
 						VariableDao dao = new VariableDao();
@@ -571,7 +590,7 @@ public class VariableQuestionView extends ViewPart {
 						VariableQuestionRelation variQueirel = (VariableQuestionRelation) items[i]
 								.getData();
 
-						if (variQueirel.quei!=null) {
+						if (variQueirel.quei != null) {
 							TreeMenuProvider.defineInputAndOpenEditor(
 									ElementType.QUESTION_ITEM,
 									ElementType.QUESTION_SCHEME,
