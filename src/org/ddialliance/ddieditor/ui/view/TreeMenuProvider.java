@@ -31,7 +31,6 @@ import org.ddialliance.ddieditor.ui.dbxml.variable.VariableSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.ElementType;
-import org.ddialliance.ddieditor.ui.model.question.QuestionScheme;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.MessageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
@@ -186,16 +185,16 @@ public class TreeMenuProvider extends TreeMenu {
 
 		newMenuItem.addArmListener(new ArmListener() {
 			public void widgetArmed(final ArmEvent event) {
-                InputSelection inputSelection = defineSelection(treeViewer,
-                        "na");
+				InputSelection inputSelection = defineSelection(treeViewer,
+						"na");
 
 				// remember breakpoints in this code freezes xorg
-				 if (log.isDebugEnabled()) {
-				 log.debug("Selection: "
-				 + inputSelection.getSelection().getClass()
-				 .getSimpleName() + ", value: "
-				 + inputSelection.getSelection());
-				 }
+				// if (log.isDebugEnabled()) {
+				// log.debug("Selection: "
+				// + inputSelection.getSelection().getClass()
+				// .getSimpleName() + ", value: "
+				// + inputSelection.getSelection());
+				// }
 
 				// light xml object
 				if (inputSelection.getSelection() instanceof LightXmlObjectType) {
@@ -300,13 +299,12 @@ public class TreeMenuProvider extends TreeMenu {
 				menuItem.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(final SelectionEvent e) {
 						// TODO create needed parents
-						EditorInput input = new EditorInput(resourceId, null,
-								null, null, null, elementType, null,
+						EditorInput input = new EditorInput(null, resourceId,
+								null, null, null, null, elementType, null,
 								EditorModeType.NEW);
-						
-						executeOpenEditor(input,
-								EditorModeType.NEW, currentView, currentView
-										.getSite().getShell());
+
+						executeOpenEditor(input, EditorModeType.NEW,
+								currentView, currentView.getSite().getShell());
 					}
 				});
 			}
@@ -359,13 +357,15 @@ public class TreeMenuProvider extends TreeMenu {
 							entityType.getTranslatedDisplayMessageEntry(),
 							lightXmlObject.getId()))) {
 				try {
-					InputSelection inputSelection = defineSelection(treeViewer, currentView.ID);
-					ElementType parentElementType = inputSelection.getParentElementType();
-					
+					InputSelection inputSelection = defineSelection(treeViewer,
+							currentView.ID);
+					ElementType parentElementType = inputSelection
+							.getParentElementType();
+
 					// TODO only instantiate when needed!!!
 					QuestionItemDao questionItemDao = new QuestionItemDao();
 					List<LightXmlObjectType> multipleQuestionItemList = null;
-					
+
 					switch (entityType) {
 					case FILE:
 						MessageUtil.currentNotSupported(currentView.getSite()
@@ -418,44 +418,59 @@ public class TreeMenuProvider extends TreeMenu {
 					case QUESTION_SCHEME:
 						multipleQuestionItemList = new MultipleQuestionItemDao()
 								.getLightXmlObject(lightXmlObject);
-						questionItemDao.setParentElementType(ElementType.QUESTION_SCHEME);
+						questionItemDao
+								.setParentElementType(ElementType.QUESTION_SCHEME);
 						List<LightXmlObjectType> questionItemList = questionItemDao
-						.getLightXmlObject(lightXmlObject);
+								.getLightXmlObject(lightXmlObject);
 
 						// confirm deletions of x number of question items
 						// TODO needs inclusion of refs to instrumentation
-						// elements 
-						if ((multipleQuestionItemList.size() > 0
-								|| questionItemList.size() > 0)
-								&& !MessageDialog.openConfirm(currentView.getSite().getShell(), Messages
-										.getString("ConfirmTitle"), MessageFormat.format(Messages
-										.getString("View.mess.ConfirmDeleteMultipleQuestionItemQuestionItem"),
-										multipleQuestionItemList.size(), questionItemList.size()))) {
+						// elements
+						if ((multipleQuestionItemList.size() > 0 || questionItemList
+								.size() > 0)
+								&& !MessageDialog
+										.openConfirm(
+												currentView.getSite()
+														.getShell(),
+												Messages.getString("ConfirmTitle"),
+												MessageFormat.format(
+														Messages.getString("View.mess.ConfirmDeleteMultipleQuestionItemQuestionItem"),
+														multipleQuestionItemList
+																.size(),
+														questionItemList.size()))) {
 							break;
 						}
-						new QuestionSchemeDao().delete(lightXmlObject.getId(), lightXmlObject
-								.getVersion(), lightXmlObject.getParentId(),
+						new QuestionSchemeDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
 						break;
 					case MULTIPLE_QUESTION_ITEM:
-						questionItemDao.setParentElementType(ElementType.MULTIPLE_QUESTION_ITEM);
-						questionItemList = questionItemDao.getLightXmlObject(lightXmlObject);
+						questionItemDao
+								.setParentElementType(ElementType.MULTIPLE_QUESTION_ITEM);
+						questionItemList = questionItemDao
+								.getLightXmlObject(lightXmlObject);
 
 						// confirm deletions of x number of question items
 						// TODO needs inclusion of refs to instrumentation
-						// elements 
+						// elements
 						if (questionItemList.size() > 0
-								&& !MessageDialog.openConfirm(currentView.getSite().getShell(), Messages
-										.getString("ConfirmTitle"), MessageFormat.format(Messages
-										.getString("View.mess.ConfirmDeleteQuestionItem"),
-										questionItemList.size()))) {
+								&& !MessageDialog
+										.openConfirm(
+												currentView.getSite()
+														.getShell(),
+												Messages.getString("ConfirmTitle"),
+												MessageFormat.format(
+														Messages.getString("View.mess.ConfirmDeleteQuestionItem"),
+														questionItemList.size()))) {
 							break;
 						}
 
-						new MultipleQuestionItemDao().delete(lightXmlObject.getId(),
-								lightXmlObject.getVersion(), lightXmlObject
-										.getParentId(), lightXmlObject
-										.getParentVersion());
+						new MultipleQuestionItemDao().delete(
+								lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 						break;
 					case QUESTION_ITEM:
 						questionItemDao.setParentElementType(parentElementType);
