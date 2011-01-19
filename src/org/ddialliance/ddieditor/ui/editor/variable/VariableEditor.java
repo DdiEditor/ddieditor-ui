@@ -462,6 +462,14 @@ public class VariableEditor extends Editor {
 				Messages.getString("editor.label.description"));
 
 		try {
+			// name
+			Text nameText = createTextInput(descriptionGroup,
+					Messages.getString("VariableEditor.label.name"),
+					modelImpl.getName() == null ? "" : modelImpl.getName()
+							.getStringValue(), false);
+			nameText.addModifyListener(new TextStyledTextModyfiListener(model,
+					NameType.class, getEditorIdentification()));
+			
 			Text txt = createLabelInput(descriptionGroup,
 					Messages.getString("editor.label.label"), modelImpl
 							.getDocument().getVariable().getLabelList(),
@@ -481,14 +489,6 @@ public class VariableEditor extends Editor {
 					Messages.getString("editor.button.translate"), modelImpl
 							.getDocument().getVariable().getDescriptionList(),
 					new DescriptionTdI(), "", styledText);
-
-			// name
-			Text nameText = createTextInput(descriptionGroup,
-					Messages.getString("VariableEditor.label.name"),
-					modelImpl.getName() == null ? "" : modelImpl.getName()
-							.getStringValue(), false);
-			nameText.addModifyListener(new TextStyledTextModyfiListener(model,
-					NameType.class, getEditorIdentification()));
 		} catch (DDIFtpException e) {
 			showError(e);
 		}
