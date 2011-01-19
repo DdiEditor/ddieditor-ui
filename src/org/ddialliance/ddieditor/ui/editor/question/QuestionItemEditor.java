@@ -15,6 +15,7 @@ import java.util.List;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -57,6 +58,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
@@ -116,6 +118,14 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 		gridLayout_1.numColumns = 2;
 		questionGroup.setLayout(gridLayout_1);
 		questionGroup.setText("Question Item");
+		
+		// Name
+		NameType name = modelImpl.getDocument().getQuestionItem().getQuestionItemNameList().size() == 0 ? 
+				null : modelImpl.getDocument().getQuestionItem().getQuestionItemNameList().get(0);
+		
+		Text nameTxt = createTextInput(questionGroup, Messages.getString("QuestionItemEditor.label.Name") + ":",
+				name == null ? "" : name.getStringValue(), false);
+		nameTxt.addModifyListener(new TextStyledTextModyfiListener(modelImpl, NameType.class, getEditorIdentification()));
 
 		// Concept Reference:
 
