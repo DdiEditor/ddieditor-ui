@@ -78,7 +78,7 @@ public class CodeDropListener extends ViewerDropAdapter {
 		} else if (getCurrentLocation() == LOCATION_AFTER) {
 			relativePosition = 1;
 		} else if (getCurrentLocation() == LOCATION_ON) {
-			relativePosition = 0;
+			relativePosition = 1;
 		} else if (getCurrentLocation() == LOCATION_NONE) {
 			return false;
 		}
@@ -88,8 +88,8 @@ public class CodeDropListener extends ViewerDropAdapter {
 		Object selectedLightXmlObject = getCurrentTarget();
 		int insertPosition = -2;
 		for (int i = 0; i < table.getItems().length; i++) {
-			// log.debug("items Data(" + i +
-			// "):"+table.getItems()[i].getData());
+			// log.debug("items Data(" + i + "):" +
+			// table.getItems()[i].getData());
 			// log.debug("selectedLightXmlObject: " + selectedLightXmlObject);
 			String currentId = XmlBeansUtil.getXmlAttributeValue((String) table.getItems()[i].getData().toString(),
 					"id=\"");
