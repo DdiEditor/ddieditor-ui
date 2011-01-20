@@ -169,10 +169,7 @@ public class QuestionItemDao implements IDao {
 			throw new DDIFtpException("getModel: Missing parent element type");
 		}
 		if (this.parentElementType.equals(ElementType.MULTIPLE_QUESTION_ITEM)) {
-			System.out
-					.println("*********** MULTIPLE_QUESTION_ITEM parent ********************");
-			doc = DdiManager.getInstance().getMultipleQuestionQuestionItem(id,
-					version, parentId, parentVersion);
+			doc = DdiManager.getInstance().getMultipleQuestionQuestionItem(id, version, parentId, parentVersion);
 		} else {
 			doc = DdiManager.getInstance().getQuestionItem(id, version,
 					parentId, parentVersion);
