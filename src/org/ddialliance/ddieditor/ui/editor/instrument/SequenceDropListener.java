@@ -12,6 +12,7 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.SWT;
@@ -64,10 +65,10 @@ public class SequenceDropListener extends ViewerDropAdapter {
 		// 3 add
 		// 4 refresh table and table viewer
 
-		// insert position
+		// 1. insert position
 		int relativePosition = -1;
 		if (getCurrentLocation() == LOCATION_BEFORE) {
-			relativePosition = -1;
+			relativePosition = 0;
 		} else if (getCurrentLocation() == LOCATION_AFTER) {
 			relativePosition = 1;
 		} else if (getCurrentLocation() == LOCATION_ON) {
@@ -75,22 +76,40 @@ public class SequenceDropListener extends ViewerDropAdapter {
 		} else if (getCurrentLocation() == LOCATION_NONE) {
 			return false;
 		}
+		
+		// selected object
+		String sourceId = transfers[0].lightXmlObject.getId();
+		boolean sourceFound = false;
 		Object selectedLightXmlObject = getCurrentTarget();
-		int insertPosition = -1;
+		int insertPosition = -2;
 		for (int i = 0; i < table.getItems().length; i++) {
+			System.out.println("Data: "+table.getItems()[i].getData().toString());
+			String currentId = XmlBeansUtil.getXmlAttributeValue((String) table.getItems()[i].getData().toString(),
+					"id=\"");
+			// log.debug("sourceId: "+sourceId);
+			// log.debug("currentId: "+currentId);
+			// log.debug("i: "+i);
+			if (sourceId.equals(currentId)) {
+				log.debug("1");
+				sourceFound = true;
+			}
+			// TODO Problem - an item may be added more than once!
 			if (table.getItems()[i].getData().equals(selectedLightXmlObject)) {
 				insertPosition = i + relativePosition;
-				insertPosition--;
+				break;
 			}
+		}
+		if (sourceFound) {
+			insertPosition--; // if source found before tager - decrement position
 		}
 		if (insertPosition < 0) {
 			insertPosition = 0;
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Insert position: " + insertPosition);
+			log.debug("Final insert position: " + insertPosition);
 		}
 
-		// delete from table
+		// 2. delete from table
 		if (transfers[0].rcpPartId.equals(SequenceEditor.ID)) {
 			// delete rcp
 			int[] indices = table.getSelectionIndices();
