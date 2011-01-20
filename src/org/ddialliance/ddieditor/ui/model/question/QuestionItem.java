@@ -23,6 +23,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.datacollection.NumericDomainType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionItemDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextDomainDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericTypeCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
@@ -326,6 +327,20 @@ public class QuestionItem extends Model {
 						.substitute(LiteralTextDocument.type.getDocumentElementName(), LiteralTextType.type);
 				XmlBeansUtil.setTextOnMixedElement(lTextType.getText(), (String) value);
 			}
+		} if (type.equals(NameType.class)) {
+			if (((String) value).length() == 0) {
+				if (doc.getQuestionItem().getQuestionItemNameList().size() > 0) {
+					doc.getQuestionItem().removeQuestionItemName(0);
+				}
+			} else {
+				NameType name = NameType.Factory.newInstance();
+				name.setStringValue((String) value);
+				if (doc.getQuestionItem().getQuestionItemNameList().size() > 0) {
+					doc.getQuestionItem().getQuestionItemNameList().set(0, name);
+				} else {
+					doc.getQuestionItem().getQuestionItemNameList().add(name);
+				}
+			}			
 		} else {
 			log.debug("******** Class type not supported: " + type + " ********");
 		}
