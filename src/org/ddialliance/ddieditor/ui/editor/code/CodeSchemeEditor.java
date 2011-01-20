@@ -280,6 +280,15 @@ public class CodeSchemeEditor extends Editor {
 //			}
 //		});
 		
+		// support double clip to activate Category editor
+//		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+//			public void doubleClick(final DoubleClickEvent event) {
+//				Object obj = ((StructuredSelection) event.getSelection()).getFirstElement();
+//				System.out.println(XmlBeansUtil.getXmlAttributeValue(event.getSelection().toString(), "id=\""));
+//				openEditor(tableViewer, currentView, EditorModeType.EDIT, null);
+//			}
+//		});
+		
 		tableViewer.getControl().setMenu(menu);
 		
 		// description tab
