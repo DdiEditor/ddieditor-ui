@@ -89,10 +89,6 @@ public class VariableQuestionFreeDropListener extends ViewerDropAdapter {
 		boolean result = false;
 		result = VariableQuestionRelationTransfer.getInstance()
 				.isSupportedType(transferType);
-		if (!result) {
-			log.warn("Not validating, target: " + target + ", transferType: "
-					+ transferType.type);
-		}
 		return result;
 	}
 

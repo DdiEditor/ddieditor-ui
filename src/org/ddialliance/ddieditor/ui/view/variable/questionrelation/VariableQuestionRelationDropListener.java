@@ -97,10 +97,6 @@ public class VariableQuestionRelationDropListener extends ViewerDropAdapter {
 					transferType)
 					&& target instanceof VariableQuestionRelation;
 		}
-		if (!result) {
-			log.warn("Not validating, target: " + target + ", transferType: "
-					+ transferType.type);
-		}
 		return result;
 	}
 

@@ -52,46 +52,46 @@ public class VariableQuestionRelationTransfer extends ByteArrayTransfer {
 		return typeNames;
 	}
 
-	@Override
-	public TransferData[] getSupportedTypes() {
-		int[] types = getTypeIds();
-		TransferData[] data = new TransferData[types.length];
-		for (int i = 0; i < types.length; i++) {
-			data[i] = new TransferData();
-			data[i].type = types[i];
-			// if (log.isDebugEnabled()) {
-			// log.debug("Added: " + data[i].type);
-			// }
-		}
-		return data;
-	}
-
-	@Override
-	public boolean isSupportedType(TransferData transferData) {
-		if (transferData == null) {
-			if (log.isWarnEnabled()) {
-				log.warn("TransferData is null!");
-			}
-			return false;
-		}
-		int[] types = getTypeIds();
-		for (int i = 0; i < types.length; i++) {
-			// if (log.isDebugEnabled()) {
-			// log.debug("TransferData: " + transferData.type + " ~ types["
-			// + i + "]: " + types[i]);
-			// }
-			if (transferData.type == types[i]) {
-				// if (log.isDebugEnabled()) {
-				// log.debug("true");
-				// }
-				return true;
-			}
-		}
-		if (log.isWarnEnabled()) {
-			log.warn("TransferData:" + transferData + " is not supported!");
-		}
-		return false;
-	}
+//	@Override
+//	public TransferData[] getSupportedTypes() {
+//		int[] types = getTypeIds();
+//		TransferData[] data = new TransferData[types.length];
+//		for (int i = 0; i < types.length; i++) {
+//			data[i] = new TransferData();
+//			data[i].type = types[i];
+//			// if (log.isDebugEnabled()) {
+//			// log.debug("Added: " + data[i].type);
+//			// }
+//		}
+//		return data;
+//	}
+//
+//	@Override
+//	public boolean isSupportedType(TransferData transferData) {
+//		if (transferData == null) {
+//			if (log.isWarnEnabled()) {
+//				log.warn("TransferData is null!");
+//			}
+//			return false;
+//		}
+//		int[] types = getTypeIds();
+//		for (int i = 0; i < types.length; i++) {
+//			// if (log.isDebugEnabled()) {
+//			// log.debug("TransferData: " + transferData.type + " ~ types["
+//			// + i + "]: " + types[i]);
+//			// }
+//			if (transferData.type == types[i]) {
+//				// if (log.isDebugEnabled()) {
+//				// log.debug("true");
+//				// }
+//				return true;
+//			}
+//		}
+//		if (log.isWarnEnabled()) {
+//			log.warn("TransferData:" + transferData + " is not supported!");
+//		}
+//		return false;
+//	}
 
 	@Override
 	public void javaToNative(Object object, TransferData transferData) {
