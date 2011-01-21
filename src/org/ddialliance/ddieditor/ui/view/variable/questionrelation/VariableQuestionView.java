@@ -132,7 +132,9 @@ public class VariableQuestionView extends ViewPart {
 											.equals(Ddi3NamespaceHelper.QUEI_VAR_USER_ID_TYPE)) {
 										variPseudoId = XmlBeansUtil
 												.getTextOnMixedElement(cus);
-										if (!variName.equals(variPseudoId)) {
+										if (variName != null
+												&& !variName
+														.equals(variPseudoId)) {
 											setPseudoVariIdOnQuei(
 													variQueiRel.quei, variName);
 										} else {
@@ -672,12 +674,15 @@ public class VariableQuestionView extends ViewPart {
 				break;
 			}
 			StringBuilder str = new StringBuilder();
+			String empty = "";
 			for (int i = 0; i < result.length; i++) {
-				if (result[i] == null) {
+				if (result[i] == null || result[i].equals(empty)) {
 					str.append("");
-				} else
+				} else {
 					str.append(result[i]);
-				str.append("\n");
+					// str.append(System.getProperty("line.separator"));
+					str.append(" - ");
+				}
 			}
 			return str.toString();
 		}
@@ -817,12 +822,15 @@ public class VariableQuestionView extends ViewPart {
 				break;
 			}
 			StringBuilder str = new StringBuilder();
+			String empty = "";
 			for (int i = 0; i < result.length; i++) {
-				if (result[i] == null) {
+				if (result[i] == null || result[i].equals(empty)) {
 					str.append("");
-				} else
+				} else {
 					str.append(result[i]);
-				str.append("\n");
+					// str.append("\n");
+					str.append(" - ");
+				}
 			}
 			return str.toString();
 		}
