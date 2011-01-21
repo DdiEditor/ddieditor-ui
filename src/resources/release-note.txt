@@ -2,24 +2,40 @@
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
 Product Version: 0.8.0
-Release Data: 2011-01-;)
+Release Data: 2011-01-21
 
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
+- Key bindings started. Open DDI3 and change between views, perspectives and 
+editors. Key bindings:  
+ * Next view: CTRL+1
+ * Next perspective: CTRL+2 
+ * Next editor: CTRL+TAB
+ * Open DDI3: CTRL+O
+
 - Changed behaviour of view create to if possible to expand only to the 2nd 
 level.
 
 - Changed behaviour of view refresh from expand all to keep state of 
-expanded items. 
- 			
+expanded items.
+
+- Added label on editor tabs if any labels asigned to the edit element.
+
+- Variable question relation view with relation edit.
+
+- Codes (value and category relation) added to Code Scheme Editor.
+
+- Question Item editor added Name field edit. Name on question item now used as
+label. 			
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
-  
+- Fixed Eclipse bug in treeviewer refresh. 
+ 
 -------------------------------------------------------------------------------
 Change Log Previous Releases
 -------------------------------------------------------------------------------
@@ -47,7 +63,3 @@ Known Issue
  empty DDIInstance.
  - Access to DDA database is troublesome on administration platform accessing 
  development database mirror.
- - Initial use of Dext project has to be tweeked to fit ddieditor 
- infrastructure and DDA integration.
- - A potential bug in CustomHashTable in eclipse jface results in ununiqe index 
- keys. A fix is provided.
