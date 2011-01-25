@@ -58,7 +58,7 @@ public class VariableSchemeDao implements IDao {
 	public void create(IModel model) throws DDIFtpException {
 		DdiManager.getInstance()
 				.createElement(model.getDocument(), model.getParentId(),
-						model.getParentVersion(), "VariableScheme");
+						model.getParentVersion(), "logicalproduct__LogicalProduct");
 	}
 
 	@Override
