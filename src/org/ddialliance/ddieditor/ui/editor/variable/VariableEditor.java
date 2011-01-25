@@ -240,8 +240,7 @@ public class VariableEditor extends Editor {
 															.getResult())
 													.getReference(), codeValue);
 								} catch (Exception e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+									showError(e1);
 								}
 							}
 						});
@@ -279,8 +278,7 @@ public class VariableEditor extends Editor {
 									NumericTypeCodeType.Enum.forInt(index),
 									ModelIdentifingType.Type_E.class);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							showError(e);
 						}
 					}
 				});
