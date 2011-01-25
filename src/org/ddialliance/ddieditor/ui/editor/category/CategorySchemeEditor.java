@@ -110,16 +110,16 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 		// Categories
 		// table viewer, table, table label provider, table content label
 		// provider
-		createLabel(getLabelDescriptionTabGroup(), "Categories and codes");
-
-		tableViewer = new TableViewer(getLabelDescriptionTabGroup(), SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.FULL_SELECTION | SWT.BORDER);
-		tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		tableViewer.setContentProvider(new CategoryTableContentProvider());
-		tableLabelProvider = new CategoryLabelProvider();
-		tableLabelProvider.createColumns(tableViewer);
-		tableViewer.setLabelProvider(tableLabelProvider);
-		tableViewer.setInput(items);
+//		createLabel(getLabelDescriptionTabGroup(), "Categories and codes");
+//
+//		tableViewer = new TableViewer(getLabelDescriptionTabGroup(), SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
+//				| SWT.FULL_SELECTION | SWT.BORDER);
+//		tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		tableViewer.setContentProvider(new CategoryTableContentProvider());
+//		tableLabelProvider = new CategoryLabelProvider();
+//		tableLabelProvider.createColumns(tableViewer);
+//		tableViewer.setLabelProvider(tableLabelProvider);
+//		tableViewer.setInput(items);
 	}
 
 	/**
