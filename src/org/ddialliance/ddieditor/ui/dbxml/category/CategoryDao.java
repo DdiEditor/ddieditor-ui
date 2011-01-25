@@ -43,7 +43,7 @@ public class CategoryDao implements IDao {
 		IModel model = getModel(id, version, parentId, parentVersion);
 		DdiManager.getInstance().deleteElement(model.getDocument(),
 				model.getParentId(), model.getParentVersion(),
-				"logicalproduct__LogicalProduct");
+				"CategoryScheme");
 	}
 
 	@Override
