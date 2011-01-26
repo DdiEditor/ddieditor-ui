@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,13 +13,14 @@ import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LabelType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
-import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.SequenceDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectDragListener;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.instrument.Sequence;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
@@ -28,6 +28,7 @@ import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.TreeMenu;
+import org.ddialliance.ddieditor.ui.view.TreeMenuProvider;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -42,6 +43,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -95,8 +98,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			controlConstructMap = DdiManager.getInstance()
 					.getControlConstructsLightasMap();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			showError(e);
 		}
 
 		// items to feed table
@@ -325,8 +327,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 							PersistenceManager.getInstance()
 									.getWorkingResource(), null);
 				} catch (DDIFtpException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					showError(e);
 				}
 			}
 			// remove
@@ -387,8 +388,39 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 				column.getColumn().setText(titles[i]);
 				column.getColumn().setWidth(widths[i]);
 				column.getColumn().setResizable(true);
-				// column.setEditingSupport(new TableEditingSupport(viewer, i));
 			}
+
+			final String resourceid = ((EditorInput) getEditorInput())
+					.getResourceId();
+			table.addMouseListener(new MouseListener() {
+				@Override
+				public void mouseUp(MouseEvent e) {
+					// do nothing
+				}
+
+				@Override
+				public void mouseDown(MouseEvent e) {
+					// do noting
+				}
+
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					TableItem[] items = ((Table) e.getSource()).getSelection();
+					for (int i = 0; i < items.length; i++) {
+						LightXmlObjectType lightXmlObject = (LightXmlObjectType) items[i]
+								.getData();
+						try {
+							TreeMenuProvider.defineInputAndOpenEditor(
+									ElementType.getElementType(lightXmlObject
+											.getElement()),
+									ElementType.CONCEPT_SCHEME, lightXmlObject,
+									EditorModeType.EDIT, resourceid, null);
+						} catch (DDIFtpException e1) {
+							showError(e1);
+						}
+					}
+				}
+			});
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			table.pack();
