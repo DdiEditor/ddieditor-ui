@@ -393,6 +393,6 @@ public class SequenceflowView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		// do nothing
+		parent.setFocus();
 	}
 }
