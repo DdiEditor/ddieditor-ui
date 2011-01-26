@@ -362,6 +362,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	@Override
 	public void setFocus() {
+		composite.setFocus();
+		
 		// TODO hmm a lot ..., for tracking change who is calling who ...
 		if (false) {// if (log.isDebugEnabled()) {
 			Throwable t = new Throwable();
