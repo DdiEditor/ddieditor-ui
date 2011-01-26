@@ -404,6 +404,11 @@
                name="MergeDDI3">
          </command>
          <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.TreeOrTableMenuShortcut"
+               id="org.ddialliance.ddieditor.ui.command.TreeOrTableMenuShortcut"
+               name="TreeOrTableMenuShortcut">
+         </command>
+         <command
                defaultHandler="org.ddialliance.ddieditor.ui.command.TestCommand"
                id="org.ddialliance.ddieditor.ui.command.TestCommand"
                name="Test">
@@ -621,5 +626,10 @@
 			contextId="org.eclipse.ui.contexts.window"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="CTRL+2"/>
+			
+		<key commandId="org.ddialliance.ddieditor.ui.command.TreeOrTableMenuShortcut"
+			contextId="org.eclipse.ui.contexts.window"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="CTRL+Q"/>
       </extension>
 </plugin>
