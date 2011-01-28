@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DateTimeDomainDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DateTimeDomainType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.LiteralTextDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.LiteralTextType;
@@ -29,7 +31,6 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextDomainType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.ui.editor.question.ResponseTypeDetail.RESPONSE_TYPES;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
@@ -47,6 +48,11 @@ public class QuestionItem extends Model {
 	private QuestionItemDocument doc;
 	private String originalLanguageCode = null;
 
+	// Note: RESPONSE_TYPES is used as index in RESPONSE_TYPE_LABELS
+	public enum RESPONSE_TYPES {
+		UNDEFINED, CODE, TEXT, NUMERIC, DATE, CATEGORY, GEOGRAPHIC
+	}
+	
 	/**
 	 * Constructor
 	 * 
@@ -242,8 +248,10 @@ public class QuestionItem extends Model {
 			ndt.setType(null);
 			return ndt;
 		} else if (responseType == RESPONSE_TYPES.DATE) {
-			// TODO Support Date
-			return null;
+			DateTimeDomainType type = (DateTimeDomainType) rt.substitute(
+					DateTimeDomainDocument.type.getDocumentElementName(), DateTimeDomainType.type);
+			type.setType(null);
+			return type;
 		} else if (responseType == RESPONSE_TYPES.CATEGORY) {
 			// TODO Support Category
 			return null;

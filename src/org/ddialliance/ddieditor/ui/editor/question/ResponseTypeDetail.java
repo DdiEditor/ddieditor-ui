@@ -23,10 +23,11 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextDomainType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.editor.FilteredItemsSelection;
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;
 import org.ddialliance.ddieditor.ui.editor.Editor.FIELD_TYPE;
+import org.ddialliance.ddieditor.ui.editor.FilteredItemsSelection;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
+import org.ddialliance.ddieditor.ui.model.question.QuestionItem.RESPONSE_TYPES;
 import org.ddialliance.ddieditor.ui.model.reference.ResponseTypeReference;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -76,11 +77,6 @@ public class ResponseTypeDetail {
 			Messages.getString("ResponseTypeDetail.label.Date"),
 			Messages.getString("ResponseTypeDetail.label.Category"),
 			Messages.getString("ResponseTypeDetail.label.Geographic") };
-
-	// Note: RESPONSE_TYPES is used as index in RESPONSE_TYPE_LABELS
-	public enum RESPONSE_TYPES {
-		UNDEFINED, CODE, TEXT, NUMERIC, DATE, CATEGORY, GEOGRAPHIC
-	};
 
 	static private final String[] NUMERIC_TYPES = {
 			Messages.getString("ResponseTypeDetail.label.Integer"),
