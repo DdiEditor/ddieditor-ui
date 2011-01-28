@@ -3,6 +3,7 @@ package org.ddialliance.ddieditor.ui.view;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlCursor.TokenType;
 import org.apache.xmlbeans.XmlObject;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -19,6 +20,12 @@ public class XmlObjectComparer implements IElementComparer {
 			// if (log.isDebugEnabled() && result) {
 			// log.debug(result + "\n" + a + "\n" + b);
 			// }
+			if (a instanceof LightXmlObjectType
+					&& b instanceof LightXmlObjectType) {
+				return result
+						&& ((LightXmlObjectType) a).getId().equals(
+								((LightXmlObjectType) b).getId());
+			}
 			return result;
 		}
 		return a.equals(b);
