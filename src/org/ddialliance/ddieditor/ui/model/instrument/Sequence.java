@@ -1,8 +1,8 @@
 package org.ddialliance.ddieditor.ui.model.instrument;
 
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType.Enum;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SequenceDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SpecificSequenceType;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType.Enum;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.CommandType;
 import org.ddialliance.ddieditor.ui.model.Model;
 

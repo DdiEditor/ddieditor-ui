@@ -24,7 +24,7 @@ public class CategoryView extends View {
 				Messages.getString("CategoryView.label.categoryLabel.Category"),
 				ElementType.CATEGORY_SCHEME,
 				Messages
-						.getString("CategoryView.label.categoryTreeGroup.CategoryStructure"));
+						.getString("CategoryView.label.categoryTreeGroup.CategoryStructure"), ID);
 	}
 	
 	@Override

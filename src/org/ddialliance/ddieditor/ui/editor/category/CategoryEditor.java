@@ -24,7 +24,7 @@ public class CategoryEditor extends LabelDescriptionEditor {
 		super(
 				Messages.getString("CategoryEditor.label.categoryEditorLabel.CategoryEditor"),
 				Messages.getString("CategoryEditor.label.useTheEditorLabel.Description"),
-				Messages.getString("CategoryEditor.label.CategoryTabItem"));
+				Messages.getString("CategoryEditor.label.CategoryTabItem"), ID);
 		dao = (IDao) new CategoryDao();
 	}
 

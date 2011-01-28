@@ -9,8 +9,6 @@ import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.QuestionConstructDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.editor.Editor.EditorIdentification;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericselectionlistener.GenericComboSelectionListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
@@ -40,7 +38,7 @@ public class QuestionConstructEditor extends Editor {
 
 	public QuestionConstructEditor() {
 		super(Messages.getString("QuestionConstructEditor.label"), Messages
-				.getString("QuestionConstructEditor.label.Description"));
+				.getString("QuestionConstructEditor.label.Description"), ID);
 		this.dao = new QuestionConstructDao();
 	}
 

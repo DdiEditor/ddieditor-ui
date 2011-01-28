@@ -43,7 +43,7 @@ public class StatementItemEditor extends Editor implements
 				Messages
 						.getString("StatementItemEditor.label.StatementItemEditorLabel.StatementItemEditor"),
 				Messages
-						.getString("StatementItemEditor.label.useTheEditorLabel.Description"));
+						.getString("StatementItemEditor.label.useTheEditorLabel.Description"), ID);
 		dao = new StatementItemDao();
 	}
 

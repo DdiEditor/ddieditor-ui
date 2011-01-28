@@ -32,7 +32,7 @@ public class RepeatWhileEditor extends Editor {
 	public RepeatWhileEditor() {
 		super(
 				Messages.getString("RepeatWhileEditor.label.RepeatWhileEditorLabel.RepeatWhileEditor"),
-				Messages.getString("RepeatWhileEditor.label.useTheEditorLabel.Description"));
+				Messages.getString("RepeatWhileEditor.label.useTheEditorLabel.Description"), ID);
 		this.dao = new RepeatWhileDao();
 	}
 

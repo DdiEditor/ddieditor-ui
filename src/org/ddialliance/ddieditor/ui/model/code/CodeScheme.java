@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeType;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.SchemeReferenceType;

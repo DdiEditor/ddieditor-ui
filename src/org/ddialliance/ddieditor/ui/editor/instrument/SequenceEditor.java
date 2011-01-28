@@ -80,7 +80,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 
 	public SequenceEditor() {
 		super(Messages.getString("SequenceEditor.label"), Messages
-				.getString("SequenceEditor.description"));
+				.getString("SequenceEditor.description"), ID);
 		this.dao = new SequenceDao();
 	}
 

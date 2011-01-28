@@ -15,7 +15,7 @@ public class ControlConstructSchemeEditor extends LabelDescriptionEditor {
 		super(Messages
 				.getString("ControlConstructSchemeEditor.label"), Messages
 				.getString("ControlConstructSchemeEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("ControlConstructSchemeEditor.label.ConceptSchemeTabItem"));
+				.getString("ControlConstructSchemeEditor.label.ConceptSchemeTabItem"), ID);
 		dao = (IDao) new ControlConstructSchemeDao();
 	}
 

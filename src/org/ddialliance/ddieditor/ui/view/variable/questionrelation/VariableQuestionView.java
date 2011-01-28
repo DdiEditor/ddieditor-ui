@@ -77,13 +77,15 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-//TODO separate logic code into model layer !!!
-public class VariableQuestionView extends ViewPart {
+
+public class VariableQuestionView extends ViewPart  implements IPropertyListener {
+	// TODO separate logic code into model layer !!!
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.variable.questionrelation.VariableQuestionView";
 	public static final String TABLE_VIEWER_FREE_ID = "free-question";
 	public static final String TABLE_VIEWER_QUEI_VARI_REL_ID = "question-variable-relation";
@@ -511,6 +513,14 @@ public class VariableQuestionView extends ViewPart {
 		toolbarManager.add(applyChange);
 		toolbarManager.add(resourceChooser);
 		toolbarManager.add(zoomReset);
+	}
+	
+	public void refreshView() {
+		if (combo.getSelectionIndex() < 0) {
+			// nothing to do
+			return;
+		}
+		loadInItems();
 	}
 
 	private final void intCombo() throws Exception {
@@ -1138,5 +1148,11 @@ public class VariableQuestionView extends ViewPart {
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// noting to do
 		}
+	}
+
+	@Override
+	public void propertyChanged(Object source, int propId) {
+		// TODO Auto-generated method stub
+		
 	}
 }

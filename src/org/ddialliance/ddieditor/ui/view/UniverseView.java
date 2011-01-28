@@ -14,6 +14,6 @@ public class UniverseView extends View {
 				.getString("UniverseView.label.universeNavigationLabel.UniverseNavigation"), Messages
 				.getString("UniverseView.label.selectLabel.NavigatorDescription"), Messages
 				.getString("UniverseView.label.universeLabel.Universe"), ElementType.UNIVERSE_SCHEME, Messages
-				.getString("UniverseView.label.universeTreeGroup.UniverseStructure"));
+				.getString("UniverseView.label.universeTreeGroup.UniverseStructure"), ID);
 	}
 }

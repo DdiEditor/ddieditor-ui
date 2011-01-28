@@ -8,6 +8,6 @@ public class VariableView extends View {
 	public VariableView() {
 		super(ViewContentType.VariableContent, Messages.getString("VariableView.label.navigation"), Messages
 				.getString("VariableView.label.selectLabel.NavigatorDescription"), Messages
-				.getString("VariableView.label.label.VariableScheme"), ElementType.VARIABLE_SCHEME, "");
+				.getString("VariableView.label.label.VariableScheme"), ElementType.VARIABLE_SCHEME, "", ID);
 	}
 }

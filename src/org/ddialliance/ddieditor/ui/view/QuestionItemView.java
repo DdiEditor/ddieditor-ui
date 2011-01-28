@@ -21,7 +21,7 @@ public class QuestionItemView extends View {
 				Messages.getString("QuestionItemView.label.selectLabel.NavigatorDescription"),
 				Messages.getString("QuestionItemView.label.questionItemLabel.QuestionItem"),
 				ElementType.QUESTION_SCHEME,
-				Messages.getString("QuestionItemView.label.questionItemsTreeGroup.QuestionItemStructure"));
+				Messages.getString("QuestionItemView.label.questionItemsTreeGroup.QuestionItemStructure"), ID);
 	}
 
 	@Override

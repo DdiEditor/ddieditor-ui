@@ -8,12 +8,9 @@ package org.ddialliance.ddieditor.ui.editor.question;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
@@ -23,12 +20,12 @@ import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
-import org.ddialliance.ddieditor.ui.model.question.QuestionItem.RESPONSE_TYPES;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
+import org.ddialliance.ddieditor.ui.model.question.QuestionItem.RESPONSE_TYPES;
 import org.ddialliance.ddieditor.ui.model.question.ResponseTypeReference;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DynamicTextTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
@@ -81,7 +78,7 @@ public class QuestionItemEditor extends Editor implements ISelectionListener {
 				Messages
 						.getString("QuestionItemEditor.label.questionItemEditorLabel.QuestionItemEditor"),
 				Messages
-						.getString("QuestionItemEditor.label.useTheEditorLabel.Description"));
+						.getString("QuestionItemEditor.label.useTheEditorLabel.Description"), ID);
 		super.dao = new QuestionItemDao();
 	}
 

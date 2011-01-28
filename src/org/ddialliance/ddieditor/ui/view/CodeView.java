@@ -19,6 +19,6 @@ public class CodeView extends View {
 				Messages.getString("CodeView.label.codeLabel.Code"),
 				ElementType.CODE_SCHEME,
 				Messages
-						.getString("CodeView.label.codeTreeGroup.CodeStructure"));
+						.getString("CodeView.label.codeTreeGroup.CodeStructure"), ID);
 	}
 }

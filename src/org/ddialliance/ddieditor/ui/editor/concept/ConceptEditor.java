@@ -31,7 +31,7 @@ public class ConceptEditor extends LabelDescriptionEditor {
 						.getString("ConceptEditor.label.ConceptEditorLabel.ConceptEditor"),
 				Messages
 						.getString("ConceptEditor.label.useTheEditorLabel.Description"),
-				Messages.getString("ConceptEditor.label.ConceptTabItem"));
+				Messages.getString("ConceptEditor.label.ConceptTabItem"), ID);
 		super.dao = new ConceptDao();
 	}
 

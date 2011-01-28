@@ -21,7 +21,7 @@ public class FileEditor extends Editor  implements IAutoChangePerspective {
 				Messages
 						.getString("ddi3file.editor.title"),
 				Messages
-						.getString("ddi3file.editor.description"));
+						.getString("ddi3file.editor.description"), ID);
 	}
 	
 	@Override

@@ -29,7 +29,7 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 		super(Messages
 				.getString("ConceptSchemeEditor.label.ConceptSchemeEditorLabel.ConceptSchemeEditor"), Messages
 				.getString("ConceptSchemeEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("ConceptSchemeEditor.label.ConceptSchemeTabItem"));
+				.getString("ConceptSchemeEditor.label.ConceptSchemeTabItem"), ID);
 		dao = (IDao) new ConceptSchemeDao();
 	}
 

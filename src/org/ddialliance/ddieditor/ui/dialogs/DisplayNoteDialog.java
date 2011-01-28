@@ -29,7 +29,7 @@ public class DisplayNoteDialog extends Dialog {
 		this.getShell().setText(title);
 
 		// group
-		Editor editor = new Editor();
+		Editor editor = new Editor("");
 		Group swtGroup = editor.createGroup(parent, group);
 		swtGroup.setLayoutData(new GridData(800, 400));
 

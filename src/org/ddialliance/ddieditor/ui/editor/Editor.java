@@ -38,9 +38,8 @@ import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
-import org.ddialliance.ddieditor.ui.view.InfoView;
 import org.ddialliance.ddieditor.ui.view.Messages;
-import org.ddialliance.ddieditor.ui.view.View;
+import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -78,7 +77,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -88,13 +86,9 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 /**
@@ -105,7 +99,8 @@ import org.eclipse.ui.part.EditorPart;
 public class Editor extends EditorPart implements IAutoChangePerspective {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
 
-	public static final String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
+//	public static String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
+	public String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
 	public EditorStatus editorStatus = new EditorStatus();
 
 	private String title = "";
@@ -132,10 +127,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 * Default constructor. Usage to gain access to create widget methods <br>
 	 * Note: Builds an empty editor input.
 	 */
-	public Editor() {
+	public Editor(String editorID) {
 		// editorInput = new EditorInput(null, null, null, null, null,
 		// null);
-
+		this.ID = editorID;
 	}
 
 	/**
@@ -145,10 +140,13 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 *            title
 	 * @param description
 	 *            description
+	 * @param editorID
+	 *            ID of extending editor
 	 */
-	public Editor(String title, String description) {
+	public Editor(String title, String description, String editorID) {
 		this.title = title;
 		this.description = description;
+		this.ID = editorID;
 	}
 
 	public IModel getModel() {
@@ -235,7 +233,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 		String toolTip = Messages.getString(editorInput.getElementType()
 				.getDisplayMessageEntry());
-		setTitleToolTip(toolTip); 
+		setTitleToolTip(toolTip);
 		// TODO i18n
 	}
 
@@ -341,9 +339,11 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					Messages.getString("Editor.mess.ErrorDuringSave"), e);
 			return;
 		}
+		
+		// add views to refresh list
+		ViewManager.getInstance().addViewsToRefresh(ID);
 		editorStatus.clearChanged();
-		updateParentView();
-		updateInfoView();
+//		updateParentView();
 	}
 
 	@Override
@@ -419,28 +419,28 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	/**
 	 * Update Info View - if it exists in active page - else ignore update
 	 */
-	private void updateInfoView() {
-
-		IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench()
-				.getWorkbenchWindows();
-		IWorkbenchPage[] iPages = workbenchWindows[0].getPages();
-		if (iPages.length > 1) {
-			log.error("Nbr. pages per window (only one is expected): "
-					+ iPages.length);
-		}
-		IViewPart iViewPart = iPages[0].findView(InfoView.ID);
-		if (iViewPart != null) {
-			((View) iViewPart).refreshView();
-		}
-	}
+//	private void updateInfoView() {
+//
+//		IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench()
+//				.getWorkbenchWindows();
+//		IWorkbenchPage[] iPages = workbenchWindows[0].getPages();
+//		if (iPages.length > 1) {
+//			log.error("Nbr. pages per window (only one is expected): "
+//					+ iPages.length);
+//		}
+//		IViewPart iViewPart = iPages[0].findView(InfoView.ID);
+//		if (iViewPart != null) {
+//			((View) iViewPart).refreshView();
+//		}
+//	}
 
 	/**
 	 * Update parent view by firing a property change event
 	 */
-	public void updateParentView() {
-		// update view
-		firePropertyChange(IEditorPart.PROP_INPUT);
-	}
+//	public void updateParentView() {
+//		// update view
+//		firePropertyChange(IEditorPart.PROP_INPUT);
+//	}
 
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		// do nothing
@@ -692,15 +692,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 		labelText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				if (log.isDebugEnabled()) {
-					log.debug("SimpleElement: "
-							+ labelDescription.getClass().getName());
-				}
 				try {
 					labelDescription.setDisplayLabel(labelText.getText());
 				} catch (DDIFtpException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					showError(e1);
 				}
 				editorStatus.setChanged();
 			}

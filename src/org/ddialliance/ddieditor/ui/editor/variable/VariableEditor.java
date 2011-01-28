@@ -62,7 +62,7 @@ public class VariableEditor extends Editor {
 	public VariableEditor() {
 		super(
 				Messages.getString("VariableEditor.label"),
-				Messages.getString("VariableEditor.label.useTheEditorLabel.Description"));
+				Messages.getString("VariableEditor.label.useTheEditorLabel.Description"), ID);
 		this.dao = new VariableDao();
 	}
 

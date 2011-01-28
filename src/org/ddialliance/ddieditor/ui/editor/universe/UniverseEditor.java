@@ -19,7 +19,7 @@ public class UniverseEditor  extends LabelDescriptionEditor {
 		super(Messages
 				.getString("UniverseEditor.label.universeEditorLabel.UniverseEditor"), Messages
 				.getString("UniverseEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("UniverseEditor.label.UniverseTabItem"));
+				.getString("UniverseEditor.label.UniverseTabItem"), ID);
 		dao = (IDao) new UniverseDao();
 	}
 

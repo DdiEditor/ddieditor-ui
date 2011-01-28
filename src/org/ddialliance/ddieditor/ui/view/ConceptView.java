@@ -19,6 +19,6 @@ public class ConceptView extends View {
 				Messages.getString("ConceptView.label.conceptLabel.Concept"),
 				ElementType.CONCEPT_SCHEME,
 				Messages
-						.getString("ConceptView.label.conceptTreeGroup.ConceptStructure"));
+						.getString("ConceptView.label.conceptTreeGroup.ConceptStructure"), ID);
 	}
 }

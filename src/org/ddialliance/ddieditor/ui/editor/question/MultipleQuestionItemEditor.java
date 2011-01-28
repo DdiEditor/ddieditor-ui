@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SpecificSequenceType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
@@ -15,7 +14,6 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.Text
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericselectionlistener.GenericComboSelectionListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
-import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.question.MultipleQuestionItem;
@@ -67,7 +65,7 @@ public class MultipleQuestionItemEditor extends Editor implements ISelectionList
 				Messages
 						.getString("MultipleQuestionItemEditor.label.multipleQuestionItemEditorLabel.MultipleQuestionItemEditor"),
 				Messages
-						.getString("MultipleQuestionItemEditor.label.useTheEditorLabel.Description"));
+						.getString("MultipleQuestionItemEditor.label.useTheEditorLabel.Description"), ID);
 		super.dao = new MultipleQuestionItemDao();
 	}
 

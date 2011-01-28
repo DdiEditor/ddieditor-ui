@@ -13,6 +13,8 @@ import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.Activator;
+import org.ddialliance.ddieditor.ui.dbxml.category.CategoryDao;
+import org.ddialliance.ddieditor.ui.dbxml.category.CategorySchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
@@ -478,6 +480,20 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						break;
+					case CATEGORY:
+						new CategoryDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
+						log.debug("Deleted!");
+						break;
+					case CATEGORY_SCHEME:
+						new CategorySchemeDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
+						log.debug("Deleted!");
 						break;
 					case INSTRUMENT:
 						new InstrumentDao().delete(lightXmlObject.getId(),

@@ -3,8 +3,6 @@ package org.ddialliance.ddieditor.ui.view.variable.questionrelation;
 import java.util.Iterator;
 
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransferVO;
 import org.ddialliance.ddieditor.ui.view.XmlObjectComparer;
 import org.ddialliance.ddieditor.ui.view.variable.questionrelation.VariableQuestionView.FreeQuestionTableContentProvider;
 import org.ddialliance.ddieditor.ui.view.variable.questionrelation.VariableQuestionView.QuestionVariableContentProvider;

@@ -21,7 +21,6 @@ import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.Instrument;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
-import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -51,7 +50,7 @@ public class InstrumentEditor extends Editor {
 				Messages
 						.getString("InstrumentEditor.label.InstrumentEditorLabel.InstrumentEditor"),
 				Messages
-						.getString("InstrumentEditor.label.useTheEditorLabel.Description"));
+						.getString("InstrumentEditor.label.useTheEditorLabel.Description"), ID);
 
 		dao = new InstrumentDao();
 	}

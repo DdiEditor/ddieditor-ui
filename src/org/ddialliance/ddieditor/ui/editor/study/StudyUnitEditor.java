@@ -88,7 +88,7 @@ public class StudyUnitEditor extends Editor implements ISelectionListener {
 				Messages
 						.getString("StudyUnitEditor.label.StudyUnitEditorLabel.StudyUnitEditor"),
 				Messages
-						.getString("StudyUnitEditor.label.useTheEditorLabel.Description"));
+						.getString("StudyUnitEditor.label.useTheEditorLabel.Description"), ID);
 		this.dao = new StudyUnitDao();
 	}
 

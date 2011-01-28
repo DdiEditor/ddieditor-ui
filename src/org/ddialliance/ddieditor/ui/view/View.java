@@ -18,6 +18,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -26,7 +28,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.internal.actions.HelpContentsAction;
@@ -77,10 +78,12 @@ public class View extends ViewPart implements IPropertyListener {
 	 * @param subElements
 	 *            List of Pop-up Menu Labels e.g. "Question Scheme",
 	 *            "Question Item" If null no Pop-up Menu is created.
+	 * @param viewID
+	 * 			  ID of extending view.
 	 */
 	public View(ViewContentType viewContentType, String viewTitle,
 			String viewDescr, String viewEntityName, ElementType rootElement,
-			String viewTreeLabel) {
+			String viewTreeLabel, String viewID) {
 
 		this.viewContentType = viewContentType;
 		this.viewTitle = viewTitle;
@@ -88,6 +91,7 @@ public class View extends ViewPart implements IPropertyListener {
 		this.viewEntityName = viewEntityName;
 		this.viewTreeLabel = viewTreeLabel;
 		this.rootElement = rootElement;
+		this.ID = viewID;
 	}
 
 	@Override
@@ -122,7 +126,12 @@ public class View extends ViewPart implements IPropertyListener {
 		if (log.isDebugEnabled()) {
 			log.debug("Generic createPartControl called");
 		}
-
+		parent.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				// check if refresh is needed		
+				ViewManager.getInstance().refesh(ID);
+			}
+		});
 		parent.setLayout(new GridLayout());
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 
@@ -145,9 +154,8 @@ public class View extends ViewPart implements IPropertyListener {
 
 		final Label selectLabel = new Label(titleComposite, SWT.WRAP);
 		selectLabel.setRedraw(true);
-		final GridData gd_selectLabel = new GridData(SWT.FILL, SWT.CENTER,
-				true, false);
-		selectLabel.setLayoutData(gd_selectLabel);
+		selectLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+				true, false));
 		selectLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
 		selectLabel.setText(viewDescr);
 
@@ -187,9 +195,8 @@ public class View extends ViewPart implements IPropertyListener {
 				SWT.COLOR_WHITE));
 		final GridLayout gridLayout = new GridLayout();
 		treeGroup.setLayout(gridLayout);
-		final GridData gd_treeGroup = new GridData(SWT.FILL, SWT.FILL, true,
-				true, 2, 1);
-		treeGroup.setLayoutData(gd_treeGroup);
+		treeGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 2, 1));
 		treeGroup.setText(viewTreeLabel);
 
 		// Define TreeViewer
@@ -211,8 +218,7 @@ public class View extends ViewPart implements IPropertyListener {
 
 		// Define Tree
 		tree = treeViewer.getTree();
-		final GridData gd_tree = new GridData(SWT.FILL, SWT.FILL, true, true);
-		tree.setLayoutData(gd_tree);
+		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		// Define Tree Pop-up Menu
 		TreeMenuProvider treeMenuProvider = new TreeMenuProvider(treeViewer,
@@ -286,7 +292,7 @@ public class View extends ViewPart implements IPropertyListener {
 
 		menuManager.add(helpContentsAction);
 	}
-
+	
 	@Override
 	public void setFocus() {
 		// enable access to tree from keyboard
@@ -295,8 +301,8 @@ public class View extends ViewPart implements IPropertyListener {
 
 	@Override
 	public void propertyChanged(Object source, int propId) {
-		if (propId == IEditorPart.PROP_INPUT) {
-			refreshView();
-		}
+//		if (propId == IEditorPart.PROP_INPUT) {
+//			refreshView();
+//		}
 	}
 }

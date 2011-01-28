@@ -36,7 +36,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 
 	public LoopEditor() {
 		super(Messages.getString("LoopEditor.label"), Messages
-				.getString("LoopEditor.label.Description"));
+				.getString("LoopEditor.label.Description"), ID);
 		this.dao = new LoopDao();
 	}
 

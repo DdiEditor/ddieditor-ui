@@ -37,7 +37,7 @@ public class ComputationItemEditor extends Editor {
 				Messages
 						.getString("ComputationItemEditor.label.ComputationItemEditorLabel.ComputationItemEditor"),
 				Messages
-						.getString("ComputationItemEditor.label.useTheEditorLabel.Description"));
+						.getString("ComputationItemEditor.label.useTheEditorLabel.Description"), ID);
 		this.dao = new ComputationItemDao();
 	}
 

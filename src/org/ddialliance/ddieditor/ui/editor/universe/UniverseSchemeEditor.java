@@ -26,7 +26,7 @@ public class UniverseSchemeEditor extends LabelDescriptionEditor {
 				Messages
 						.getString("UniverseSchemeEditor.label.useTheEditorLabel.Description"),
 				Messages
-						.getString("UniverseSchemeEditor.label.UniverseSchemeTabItem"));
+						.getString("UniverseSchemeEditor.label.UniverseSchemeTabItem"), ID);
 		dao = (IDao) new UniverseSchemeDao();
 	}
 

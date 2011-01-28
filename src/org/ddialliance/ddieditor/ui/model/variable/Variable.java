@@ -2,7 +2,6 @@ package org.ddialliance.ddieditor.ui.model.variable;
 
 import java.math.BigInteger;
 
-import org.apache.xmlbeans.XmlOptions;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.VariableDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateTimeRepresentationType;
@@ -21,7 +20,6 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
-import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 
 public class Variable extends Model {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Variable.class);

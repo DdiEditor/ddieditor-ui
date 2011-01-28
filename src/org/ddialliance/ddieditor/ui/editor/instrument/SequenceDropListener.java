@@ -194,10 +194,6 @@ public class SequenceDropListener extends ViewerDropAdapter {
 		boolean result = LightXmlObjectTransfer.getInstance().isSupportedType(
 				transferType)
 				&& target instanceof LightXmlObjectType;
-		if (!result) {
-			log.warn("Not validating, target: " + target + ", transferType: "
-					+ transferType.type);
-		}
 		return result;
 	}
 

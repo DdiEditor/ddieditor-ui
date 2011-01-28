@@ -1,13 +1,11 @@
 package org.ddialliance.ddieditor.ui.editor.instrument;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.RepeatUntilDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
@@ -17,7 +15,6 @@ import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.RepeatUntil;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
-import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.eclipse.swt.custom.StyledText;
@@ -39,7 +36,7 @@ public class RepeatUntilEditor extends Editor {
 				Messages
 						.getString("RepeatUntilEditor.label.RepeatUntilEditorLabel.RepeatUntilEditor"),
 				Messages
-						.getString("RepeatUntilEditor.label.useTheEditorLabel.Description"));
+						.getString("RepeatUntilEditor.label.useTheEditorLabel.Description"), ID);
 		this.dao = new RepeatUntilDao();
 	}
 

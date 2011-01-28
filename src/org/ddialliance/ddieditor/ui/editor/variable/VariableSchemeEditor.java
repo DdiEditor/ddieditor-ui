@@ -15,7 +15,7 @@ public class VariableSchemeEditor extends LabelDescriptionEditor {
 		super(
 				Messages.getString("VariableSchemeEditor.label"),
 				Messages.getString("VariableSchemeEditor.label.useTheEditorLabel.Description"),
-				Messages.getString("VariableScheme"));
+				Messages.getString("VariableScheme"), ID);
 		dao = (IDao) new VariableSchemeDao();
 	}
 

@@ -20,6 +20,6 @@ public class InfoView extends View {
 				.getString("InfoView.label.titleLabel.DDIOverview"), Messages
 				.getString("InfoView.label.selectLabel.Description"), Messages
 				.getString("InfoView.label.maskLabel.Id"),  ElementType.FILE, Messages
-				.getString("InfoView.label.treeGroup.DDIStructure"));
+				.getString("InfoView.label.treeGroup.DDIStructure"), ID);
 	}
 }

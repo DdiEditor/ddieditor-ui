@@ -1,7 +1,7 @@
 package org.ddialliance.ddieditor.ui.view;
 
-import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectDragListener;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -16,7 +16,7 @@ public class InstrumentView extends View {
 				Messages.getString("InstrumentView.label.navigation"),
 				Messages.getString("InstrumentView.label.selectLabel.NavigatorDescription"),
 				Messages.getString("InstrumentView.label.label.Instrument"),
-				ElementType.CONTROL_CONSTRUCT_SCHEME, "");
+				ElementType.CONTROL_CONSTRUCT_SCHEME, "", ID);
 	}
 
 	@Override

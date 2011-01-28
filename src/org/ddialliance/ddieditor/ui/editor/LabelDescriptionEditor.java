@@ -1,7 +1,6 @@
 package org.ddialliance.ddieditor.ui.editor;
 
 import org.ddialliance.ddieditor.ui.model.ILabelDescription;
-import org.ddialliance.ddieditor.ui.model.LabelDescription;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -9,7 +8,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -26,9 +24,10 @@ public class LabelDescriptionEditor extends Editor {
 	private TableViewer tableViewer;
 	
 	public LabelDescriptionEditor(String headerEditorTitle,
-			String headerEditorDescr, String editorEntityName) {
-		super(headerEditorTitle, headerEditorDescr);
+			String headerEditorDescr, String editorEntityName, String editorID) {
+		super(headerEditorTitle, headerEditorDescr, editorID);
 		this.editorEntityName = editorEntityName;
+		this.ID = editorID;
 	}
 
 	/**

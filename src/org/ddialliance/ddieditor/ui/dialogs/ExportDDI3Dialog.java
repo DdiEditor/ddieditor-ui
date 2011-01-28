@@ -39,7 +39,7 @@ public class ExportDDI3Dialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		// dialog setup
-		Editor editor = new Editor();
+		Editor editor = new Editor("");
 		Group group = editor.createGroup(parent, Messages
 				.getString("ExportDDI3Action.properties"));
 		group.setLayoutData(new GridData(500, 150));

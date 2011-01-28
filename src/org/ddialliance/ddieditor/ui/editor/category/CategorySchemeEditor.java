@@ -38,7 +38,6 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IEditorInput;
@@ -83,7 +82,7 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 	public CategorySchemeEditor() {
 		super(Messages.getString("CategorySchemeEditor.label.categorySchemeEditorLabel.CategorySchemeEditor"), Messages
 				.getString("CategorySchemeEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("CategorySchemeEditor.label.CategorySchemeTabItem"));
+				.getString("CategorySchemeEditor.label.CategorySchemeTabItem"), ID);
 		dao = (IDao) new CategorySchemeDao();
 	}
 

@@ -87,6 +87,7 @@ public class LightXmlObjectDragListener implements DragSourceListener {
 				// log.debug("is here ?");
 			}
 
+			log.debug("Data: "+result[0].lightXmlObject);
 			event.data = result;
 		}
 		// log.debug("Doing return ;- )");

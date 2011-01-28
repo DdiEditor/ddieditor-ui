@@ -54,7 +54,7 @@ public class ProfileEditor extends Editor {
 	private String enabled, disabled;
 
 	public ProfileEditor(String headerEditorTitle, String headerEditorDescr) {
-		super(headerEditorTitle, headerEditorDescr);
+		super(headerEditorTitle, headerEditorDescr, ID);
 		enabled = Messages.getString("enabled");
 		disabled = Messages.getString("disabled");
 	}

@@ -27,7 +27,7 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 		super(Messages
 				.getString("QuestionSchemeEditor.label.QuestionSchemeEditorLabel.QuestionSchemeEditor"), Messages
 				.getString("QuestionSchemeEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("QuestionSchemeEditor.label.QuestionSchemeTabItem"));
+				.getString("QuestionSchemeEditor.label.QuestionSchemeTabItem"), ID);
 		dao = new QuestionSchemeDao();
 	}
 

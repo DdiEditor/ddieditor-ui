@@ -8,7 +8,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.dnd.TextTransfer;
 
 public class CodeDragListener  implements DragSourceListener {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, LightXmlObjectDragListener.class);
