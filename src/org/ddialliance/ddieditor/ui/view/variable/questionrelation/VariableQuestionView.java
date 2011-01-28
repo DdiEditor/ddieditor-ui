@@ -6,6 +6,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DateTimeDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.NumericDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeRepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateTimeRepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.ExternalCategoryRepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericRepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextDomainType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.UserIDType;
 import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
 import org.ddialliance.ddieditor.model.DdiManager;
@@ -25,9 +35,12 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXml
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
+import org.ddialliance.ddieditor.ui.model.question.QuestionItem.RESPONSE_TYPES;
 import org.ddialliance.ddieditor.ui.model.variable.Variable;
+import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddieditor.ui.view.TreeMenu;
 import org.ddialliance.ddieditor.ui.view.TreeMenuProvider;
 import org.ddialliance.ddieditor.ui.view.XmlObjectComparer;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -50,6 +63,7 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -59,12 +73,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+//TODO separate logic code into model layer !!!
 public class VariableQuestionView extends ViewPart {
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.variable.questionrelation.VariableQuestionView";
 	public static final String TABLE_VIEWER_FREE_ID = "free-question";
@@ -84,11 +102,13 @@ public class VariableQuestionView extends ViewPart {
 
 	String selectedResource;
 
+	private Composite parent;
+
 	private Combo combo;
 
 	private List<VariableQuestionRelation> relItems = new ArrayList<VariableQuestionRelation>();
 
-	List<LightXmlObjectType> freeItems = new ArrayList<LightXmlObjectType>();
+	private List<LightXmlObjectType> freeItems = new ArrayList<LightXmlObjectType>();
 
 	private TableViewer relTableViewer;
 
@@ -108,8 +128,15 @@ public class VariableQuestionView extends ViewPart {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						ReferenceResolution queiRef = null;
+						String variValRep = null;
+						String queiRespDoma = null;
+						QuestionItem quei = null;
+
 						for (VariableQuestionRelation variQueiRel : relItems) {
 							queiRef = null;
+							variValRep = null;
+							queiRespDoma = null;
+							quei = null;
 
 							// check the values
 							if (variQueiRel.quei != null) {
@@ -119,8 +146,22 @@ public class VariableQuestionView extends ViewPart {
 								// vari name
 								String variName = null;
 								for (CustomType cus : getCustomListbyType(
-										variQueiRel.vari, "Name")) {
+										variQueiRel.vari, VARI_NAME)) {
 									variName = XmlBeansUtil
+											.getTextOnMixedElement(cus);
+								}
+
+								// vari rep value
+								for (CustomType cus : getCustomListbyType(
+										variQueiRel.vari, VARI_VAL_REP)) {
+									variValRep = XmlBeansUtil
+											.getTextOnMixedElement(cus);
+								}
+
+								// quei rep domain
+								for (CustomType cus : getCustomListbyType(
+										variQueiRel.quei, QUEI_RESP_DOMA)) {
+									queiRespDoma = XmlBeansUtil
 											.getTextOnMixedElement(cus);
 								}
 
@@ -135,23 +176,25 @@ public class VariableQuestionView extends ViewPart {
 										if (variName != null
 												&& !variName
 														.equals(variPseudoId)) {
-											setPseudoVariIdOnQuei(
+											quei = setPseudoVariIdOnQuei(
 													variQueiRel.quei, variName);
 										} else {
 											continue;
 										}
 									}
 								}
+
 								if (variPseudoId == null) {
-									setPseudoVariIdOnQuei(variQueiRel.quei,
-											variName);
+									quei = setPseudoVariIdOnQuei(
+											variQueiRel.quei, variName);
 								}
 							}
 
 							// set vari quei ref
+							Variable vari = null;
 							String queiId = null;
 							for (CustomType cus : getCustomListbyType(
-									variQueiRel.vari, "QuestionReference")) {
+									variQueiRel.vari, VARI_QUEI_REF)) {
 								queiId = XmlBeansUtil
 										.getTextOnMixedElement(cus);
 								break;
@@ -159,13 +202,59 @@ public class VariableQuestionView extends ViewPart {
 							if (queiId == null && queiRef == null) {
 								continue;
 							} else if (queiId != null && queiRef == null) {
-								deleteQueiRefOnVari(variQueiRel);
+								vari = deleteQueiRefOnVari(variQueiRel);
 							} else if (queiId == null && queiRef != null) {
-								setQueiRefOnVari(variQueiRel);
+								vari = setQueiRefOnVari(variQueiRel);
 							} else if (!queiRef.getId().equals(queiId)) {
-								setQueiRefOnVari(variQueiRel);
+								vari = setQueiRefOnVari(variQueiRel);
+							}
+
+							// change quei resp domain
+							if (variValRep != null && queiRef != null) {
+								if (vari == null) {
+									try {
+										vari = getVariable(variQueiRel);
+									} catch (Exception e1) {
+										Editor.showError(e1, ID, getSite());
+									}
+								}
+
+								if (!(variValRep.equals(queiRespDoma))) {
+									if (quei == null) {
+										try {
+											quei = getQuestionItem(variQueiRel.quei);
+										} catch (Exception e1) {
+											Editor.showError(e1, ID, getSite());
+										}
+									}
+									changeRespDomain(vari, quei);
+								}
 							}
 						}
+
+						// refresh
+						loadInItems();
+					}
+
+					@Override
+					public void widgetDefaultSelected(SelectionEvent e) {
+						// do nothing
+					}
+
+					QuestionItem getQuestionItem(LightXmlObjectType quei)
+							throws Exception {
+						QuestionItemDao dao = new QuestionItemDao();
+						dao.setParentElementType(ElementType.QUESTION_SCHEME);
+						QuestionItem model = null;
+						model = dao.getModel(quei.getId(), quei.getVersion(),
+								quei.getParentId(), quei.getParentVersion());
+						if (model == null) {
+							dao.setParentElementType(ElementType.MULTIPLE_QUESTION_ITEM);
+							model = dao.getModel(quei.getId(),
+									quei.getVersion(), quei.getParentId(),
+									quei.getParentVersion());
+						}
+						return model;
 					}
 
 					/**
@@ -176,22 +265,13 @@ public class VariableQuestionView extends ViewPart {
 					 *            question item
 					 * @param variName
 					 *            variable name
+					 * @return the changed question item
 					 */
-					void setPseudoVariIdOnQuei(LightXmlObjectType quei,
+					QuestionItem setPseudoVariIdOnQuei(LightXmlObjectType quei,
 							String variName) {
-						QuestionItemDao dao = new QuestionItemDao();
-						dao.setParentElementType(ElementType.QUESTION_SCHEME);
-						QuestionItem model;
+						QuestionItem model = null;
 						try {
-							model = dao.getModel(quei.getId(),
-									quei.getVersion(), quei.getParentId(),
-									quei.getParentVersion());
-							if (model == null) {
-								dao.setParentElementType(ElementType.MULTIPLE_QUESTION_ITEM);
-								model = dao.getModel(quei.getId(),
-										quei.getVersion(), quei.getParentId(),
-										quei.getParentVersion());
-							}
+							model = getQuestionItem(quei);
 
 							UserIDType userId = null;
 							for (UserIDType userIdTmp : model.getDocument()
@@ -210,11 +290,26 @@ public class VariableQuestionView extends ViewPart {
 								userId.setType(Ddi3NamespaceHelper.QUEI_VAR_USER_ID_TYPE);
 							}
 							userId.setStringValue(variName);
-							dao.update(model);
+							new QuestionItemDao().update(model);
 							// TODO refresh open editor
+
+							return model;
 						} catch (Exception e) {
 							Editor.showError(e, variName, getSite());
 						}
+						return model;
+					}
+
+					Variable getVariable(VariableQuestionRelation variQueiRel)
+							throws Exception {
+
+						VariableDao dao = new VariableDao();
+						Variable model = null;
+						model = dao.getModel(variQueiRel.vari.getId(),
+								variQueiRel.vari.getVersion(),
+								variQueiRel.vari.getParentId(),
+								variQueiRel.vari.getParentVersion());
+						return model;
 					}
 
 					/**
@@ -223,23 +318,22 @@ public class VariableQuestionView extends ViewPart {
 					 * 
 					 * @param variQueiRel
 					 *            containing the variable and question item
+					 * @return variable
 					 */
-					void setQueiRefOnVari(VariableQuestionRelation variQueiRel) {
-						VariableDao dao = new VariableDao();
+					Variable setQueiRefOnVari(
+							VariableQuestionRelation variQueiRel) {
+						Variable model = null;
 						try {
-							Variable model = dao.getModel(
-									variQueiRel.vari.getId(),
-									variQueiRel.vari.getVersion(),
-									variQueiRel.vari.getParentId(),
-									variQueiRel.vari.getParentVersion());
+							model = getVariable(variQueiRel);
 							model.setCreate(true);
 							model.executeChange(variQueiRel.quei,
 									ModelIdentifingType.Type_A.class);
-							dao.update(model);
+							new VariableDao().update(model);
 							// TODO refresh open editor
 						} catch (Exception e) {
 							Editor.showError(e, ID, getSite());
 						}
+						return model;
 					}
 
 					/**
@@ -248,31 +342,103 @@ public class VariableQuestionView extends ViewPart {
 					 * 
 					 * @param variQueiRel
 					 *            containing the variable and question item
+					 * @return variable
 					 */
-					void deleteQueiRefOnVari(
+					Variable deleteQueiRefOnVari(
 							VariableQuestionRelation variQueiRel) {
-						VariableDao dao = new VariableDao();
+						Variable model = null;
 						try {
-							Variable model = dao.getModel(
-									variQueiRel.vari.getId(),
-									variQueiRel.vari.getVersion(),
-									variQueiRel.vari.getParentId(),
-									variQueiRel.vari.getParentVersion());
+							model = getVariable(variQueiRel);
 							if (!model.getDocument().getVariable()
 									.getQuestionReferenceList().isEmpty()) {
 								model.getDocument().getVariable()
 										.getQuestionReferenceList().remove(0);
-								dao.update(model);
+								new VariableDao().update(model);
 								// TODO refresh open editor
 							}
 						} catch (Exception e) {
 							Editor.showError(e, ID, getSite());
 						}
+						return model;
 					}
 
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-						// do nothing
+					void changeRespDomain(Variable vari, QuestionItem quei) {
+						// clean quei domain
+						if (quei.getResponseDomain() != null) {
+							quei.setResponseDomain(RESPONSE_TYPES.UNDEFINED, "");
+						}
+
+						Object repImpl = vari.getRepresentation()
+								.getValueRepresentation();
+						// CodeRepresentation
+						if (repImpl instanceof CodeRepresentationType) {
+							ReferenceType codeSchemeRef = ((CodeRepresentationType) repImpl)
+									.getCodeSchemeReference();
+							CodeDomainType rep = (CodeDomainType) quei
+									.setResponseDomain(RESPONSE_TYPES.CODE, "");
+							rep.setCodeSchemeReference(codeSchemeRef);
+						}
+						// NumericRepresentation
+						else if (repImpl instanceof NumericRepresentationType) {
+							NumericDomainType queiRep = (NumericDomainType) quei
+									.setResponseDomain(RESPONSE_TYPES.NUMERIC,
+											"");
+							queiRep.setType(((NumericRepresentationType) vari
+									.getRepresentation()
+									.getValueRepresentation()).getType());
+							queiRep.setDecimalPositions(vari
+									.getNumericDecimalPosition());
+						}
+						// TextRepresentation
+						else if (repImpl instanceof TextRepresentationType) {
+							// quei rep domain
+							TextDomainType queiRep = (TextDomainType) quei
+									.setResponseDomain(RESPONSE_TYPES.TEXT, "");
+
+							// min length
+							if (vari.getMinLength() != null) {
+								queiRep.setMinLength(vari.getMinLength());
+							}
+
+							// max length
+							if (vari.getMaxLength() != null) {
+								queiRep.setMaxLength(vari.getMaxLength());
+							}
+
+							// regx
+							if (vari.getRegx() != null) {
+								queiRep.setRegExp(vari.getRegx());
+							}
+						}
+						// DateTimeRepresentation
+						else if (repImpl instanceof DateTimeRepresentationType) {
+							// quei rep domain
+							DateTimeDomainType queiRep = (DateTimeDomainType) quei
+									.setResponseDomain(RESPONSE_TYPES.DATE, "");
+
+							// format
+							if (vari.getFormat() != null) {
+								queiRep.setFormat(vari.getFormat());
+							}
+
+							// date time type
+							if (vari.getDateTimeType() != null) {
+								queiRep.setType(vari.getDateTimeType());
+							}
+						}
+
+						// ExternalCategoryRepresentation
+						else if (repImpl instanceof ExternalCategoryRepresentationType) {
+							// TODO external category representation
+						}
+
+						// update quei
+						try {
+							new QuestionItemDao().update(quei);
+						} catch (Exception e) {
+							Editor.showError(e, ID, getSite());
+						}
+
 					}
 				});
 				return b;
@@ -316,7 +482,7 @@ public class VariableQuestionView extends ViewPart {
 						// TODO load in items and reflect changes keeping done
 						// edit!
 						// 1 load items
-						// 2 compare with local lists, implement changs [add,
+						// 2 compare with local lists, implement changes [add,
 						// remove]
 					}
 
@@ -444,8 +610,9 @@ public class VariableQuestionView extends ViewPart {
 			// note 'variable -> question relation' has precedence over
 			// 'questions user id -> variable id'
 			String variPseudoId = null;
-			for (Iterator iterator = lightQuei.iterator(); iterator.hasNext();) {
-				LightXmlObjectType quei = (LightXmlObjectType) iterator.next();
+			for (Iterator<LightXmlObjectType> iterator = lightQuei.iterator(); iterator
+					.hasNext();) {
+				LightXmlObjectType quei = iterator.next();
 				// user id
 				for (CustomType cus : getCustomListbyType(quei, "UserID")) {
 					if (cus.getOption().equals(
@@ -477,14 +644,19 @@ public class VariableQuestionView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		// do nothing
+		parent.setFocus();
 	}
+
+	private enum PopupAction {
+		REMOVE, EDIT_QUESTION, EDIT_VARIABLE
+	};
 
 	@Override
 	public void createPartControl(Composite parent) {
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		parent.setLayout(gridLayout);
+		this.parent = parent;
 
 		XmlObjectComparer xmlObjectComparer = new XmlObjectComparer();
 
@@ -500,6 +672,53 @@ public class VariableQuestionView extends ViewPart {
 		relTableViewer.setLabelProvider(tableLabelProvider);
 		relTableViewer.setInput(relItems);
 		relTableViewer.setComparer(xmlObjectComparer);
+
+		// popup menu
+		final Menu menu = new Menu(relTableViewer.getControl());
+
+		// menu edit
+		MenuItem editMenuItem = new MenuItem(menu, SWT.CASCADE);
+		editMenuItem
+				.setText(Messages.getString("View.label.editMenuItem.Edit"));
+		editMenuItem.setImage(ResourceManager.getPluginImage(
+				Activator.getDefault(), "icons/editor_area.gif"));
+
+		Menu editsubmenu = new Menu(editMenuItem);
+		MenuItem subeditquei = new MenuItem(editsubmenu, SWT.NONE);
+		subeditquei.setText(Messages
+				.getString("variablequestionview.popupmenu.editquestion"));
+		subeditquei.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				popupMenuAction(PopupAction.EDIT_QUESTION);
+			}
+		});
+
+		MenuItem subeditvari = new MenuItem(editsubmenu, SWT.NONE);
+		subeditvari.setText(Messages
+				.getString("variablequestionview.popupmenu.editvariable"));
+		subeditvari.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				popupMenuAction(PopupAction.EDIT_VARIABLE);
+			}
+		});
+
+		editMenuItem.setMenu(editsubmenu);
+
+		// menu remove
+		MenuItem removeMenuItem = new MenuItem(menu, SWT.NONE);
+		removeMenuItem.setText(Messages
+				.getString("variablequestionview.popupmenu.removequestion"));
+		removeMenuItem.setImage(ResourceManager.getPluginImage(
+				Activator.getDefault(), "icons/delete_obj.gif"));
+		removeMenuItem.setSelection(true);
+
+		removeMenuItem.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				popupMenuAction(PopupAction.REMOVE);
+			}
+		});
+
+		relTableViewer.getControl().setMenu(menu);
 
 		// free questions
 		freeTableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
@@ -540,6 +759,70 @@ public class VariableQuestionView extends ViewPart {
 		freeTableViewer.addDropSupport(operations, variQueiRelTransferTypes,
 				new VariableQuestionFreeDropListener(freeTableViewer,
 						relTableViewer));
+	}
+
+	private void popupMenuAction(PopupAction action) {
+		TableItem[] tableItems = relTableViewer.getTable().getSelection();
+		// guard
+		if (tableItems.length <= 0) {
+			DialogUtil.errorDialog(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getShell(), ID, null, null,
+					new DDIFtpException());
+			return;
+		}
+
+		boolean update = false;
+		for (int i = 0; i < tableItems.length; i++) {
+			VariableQuestionRelation selected = (VariableQuestionRelation) tableItems[i]
+					.getData();
+
+			// edit
+			if (action.equals(PopupAction.EDIT_QUESTION)
+					&& selected.quei != null) {
+				try {
+					TreeMenu.defineInputAndOpenEditor(null,
+							ElementType.QUESTION_SCHEME, selected.quei,
+							EditorModeType.EDIT, PersistenceManager
+									.getInstance().getWorkingResource(), null);
+				} catch (DDIFtpException e) {
+					Editor.showError(e, ID, getSite());
+				}
+			} else if (action.equals(PopupAction.EDIT_VARIABLE)) {
+				try {
+					TreeMenu.defineInputAndOpenEditor(null,
+							ElementType.VARIABLE_SCHEME, selected.vari,
+							EditorModeType.EDIT, PersistenceManager
+									.getInstance().getWorkingResource(), null);
+				} catch (DDIFtpException e) {
+					Editor.showError(e, ID, getSite());
+				}
+			}
+			// remove
+			else if (action.equals(PopupAction.REMOVE)) {
+				if (selected.quei != null) {
+					XmlObjectComparer comparer = new XmlObjectComparer();
+					for (VariableQuestionRelation variQueiRel : relItems) {
+
+						if (comparer.equals(variQueiRel.vari, selected.vari)) {
+							freeItems.add(variQueiRel.quei);
+							variQueiRel.quei = null;
+
+							break;
+						}
+					}
+				}
+				relTableViewer.refresh();
+				freeTableViewer.refresh();
+			} else {
+				Editor.showError(new DDIFtpException(action
+						+ " not supported.", new Throwable()), ID, getSite());
+			}
+		}
+
+		// update
+		if (update) {
+			relTableViewer.refresh(true);
+		}
 	}
 
 	/**
@@ -588,7 +871,6 @@ public class VariableQuestionView extends ViewPart {
 				public void mouseDoubleClick(MouseEvent e) {
 					TableItem[] items = ((Table) e.getSource()).getSelection();
 					for (int i = 0; i < items.length; i++) {
-						System.out.println(items[i]);
 						VariableQuestionRelation variQueirel = (VariableQuestionRelation) items[i]
 								.getData();
 
