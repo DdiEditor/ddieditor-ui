@@ -29,7 +29,7 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.Referen
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
-import org.ddialliance.ddieditor.ui.model.reference.ResponseTypeReference;
+import org.ddialliance.ddieditor.ui.model.question.ResponseTypeReference;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DynamicTextTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
