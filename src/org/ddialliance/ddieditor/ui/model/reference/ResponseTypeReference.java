@@ -1,6 +1,6 @@
 package org.ddialliance.ddieditor.ui.model.reference;
 
-import org.ddialliance.ddieditor.ui.editor.question.ResponseTypeDetail.RESPONSE_TYPES;
+import org.ddialliance.ddieditor.ui.model.question.QuestionItem.RESPONSE_TYPES;
 
 public class ResponseTypeReference {
 
