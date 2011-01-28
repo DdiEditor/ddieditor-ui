@@ -1,4 +1,4 @@
-package org.ddialliance.ddieditor.ui.model.reference;
+package org.ddialliance.ddieditor.ui.model.question;
 
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem.RESPONSE_TYPES;
 
@@ -11,8 +11,9 @@ public class ResponseTypeReference {
 	 * Constructor
 	 * 
 	 * @param label
-	 * 			Label of Combo Box
-	 * @param org.ddialliance.ddieditor.ui.editor.ResponseType.RESPONSE_TYPES
+	 *            Label of Combo Box
+	 * @param org
+	 *            .ddialliance.ddieditor.ui.editor.ResponseType.RESPONSE_TYPES
 	 */
 	public ResponseTypeReference(String label, RESPONSE_TYPES representationType) {
 		this.label = label;
