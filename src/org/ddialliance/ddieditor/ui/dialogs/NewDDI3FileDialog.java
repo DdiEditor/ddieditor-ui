@@ -23,7 +23,7 @@ public class NewDDI3FileDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		// dialog setup
-		Editor editor = new Editor("");
+		Editor editor = new Editor();
 		Group group = editor.createGroup(parent, Messages
 				.getString("newddi3fileaction.dialog.group"));
 		group.setLayoutData(new GridData(500, 150));

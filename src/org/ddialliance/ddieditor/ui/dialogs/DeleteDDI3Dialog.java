@@ -30,7 +30,7 @@ public class DeleteDDI3Dialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		// dialog setup
-		Editor editor = new Editor("");
+		Editor editor = new Editor();
 		Group group = editor.createGroup(parent, Messages
 				.getString("deleteddi3resourceaction.dialog.group"));
 		group.setLayoutData(new GridData(400, 100));
