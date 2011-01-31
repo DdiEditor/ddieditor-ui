@@ -89,7 +89,7 @@ public class StatementItemDao implements IDao {
 	 */
 	public void create(IModel model) throws DDIFtpException {
 		DdiManager.getInstance().createElement(model.getDocument(),
-				model.getParentId(), model.getParentVersion(), "StatementItem");
+				model.getParentId(), model.getParentVersion(), "ControlConstructScheme");
 	}
 
 	/*
