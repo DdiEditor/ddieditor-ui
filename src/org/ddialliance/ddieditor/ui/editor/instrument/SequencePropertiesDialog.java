@@ -53,16 +53,17 @@ public class SequencePropertiesDialog extends Dialog {
 				.getString("editor.label.description"));
 
 		try {
+			// label
 			Text txt = editor.createLabelInput(group2, Messages
 					.getString("editor.label.label"), modelImpl.getDocument()
 					.getSequence().getLabelList(), modelImpl.getDocument()
 					.getSequence().getId());
-
 			editor.createTranslation(group2, Messages
 					.getString("editor.button.translate"), modelImpl
 					.getDocument().getSequence().getLabelList(),
 					new LabelTdI(), "", txt);
 
+			// description
 			StyledText styledText = editor.createStructuredStringInput(group2,
 					Messages.getString("editor.label.description"), modelImpl
 							.getDocument().getSequence().getDescriptionList(),

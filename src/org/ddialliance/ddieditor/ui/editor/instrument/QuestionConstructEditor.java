@@ -15,6 +15,7 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.Referen
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.instrument.QuestionConstruct;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
+import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
@@ -111,23 +112,23 @@ public class QuestionConstructEditor extends Editor {
 				getEditorIdentification()));
 
 		// description tab
-		// name
 		TabItem tabItem2 = createTabItem(Messages
 				.getString("editor.label.description"));
 		Group group2 = createGroup(tabItem2, Messages
 				.getString("editor.label.description"));
 
 		try {
+			// label
 			Text txt = createLabelInput(group2, Messages
 					.getString("editor.label.label"), modelImpl.getDocument()
 					.getQuestionConstruct().getLabelList(), modelImpl
 					.getDocument().getControlConstruct().getId());
-
 			createTranslation(group2, Messages
 					.getString("editor.button.translate"), modelImpl
 					.getDocument().getControlConstruct().getLabelList(),
-					new NameTdI(), "", txt);
+					new LabelTdI(), "", txt);
 
+			// description
 			StyledText styledText = createStructuredStringInput(group2,
 					Messages.getString("editor.label.description"), modelImpl
 							.getDocument().getControlConstruct()

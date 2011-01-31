@@ -49,7 +49,7 @@ public class SequenceMenuPopupAddDialog extends Dialog {
 		this.getShell().setText(title);
 
 		// group
-		Editor editor = new Editor(SequenceEditor.ID);
+		Editor editor = new Editor();
 		Group group = editor.createGroup(parent, label);
 		group.setLayoutData(new GridData(800, 400));
 

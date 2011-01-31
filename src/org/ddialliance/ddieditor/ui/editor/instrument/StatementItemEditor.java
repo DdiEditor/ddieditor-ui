@@ -131,11 +131,11 @@ public class StatementItemEditor extends Editor implements
 				.getString("editor.label.description"));
 
 		try {
-			// name
-			Text txt = createLabelInput(group2, Messages.getString("editor.label.name"), modelImpl.getDocument()
+			// label
+			Text txt = createLabelInput(group2, Messages.getString("editor.label.label"), modelImpl.getDocument()
 					.getStatementItem().getLabelList(), modelImpl.getDocument().getStatementItem().getId());
 			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
-					.getStatementItem().getConstructNameList(), new LabelTdI(), "", txt);
+					.getStatementItem().getLabelList(), new LabelTdI(), "", txt);
 
 			// description
 			StyledText styledText = createStructuredStringInput(group2, Messages.getString("editor.label.description"),

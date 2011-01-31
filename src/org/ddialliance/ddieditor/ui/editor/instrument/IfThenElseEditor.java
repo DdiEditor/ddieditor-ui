@@ -150,12 +150,13 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 				.getString("editor.label.description"));
 
 		try {
-			Text txt = createNameInput(group2, Messages.getString("editor.label.label"), modelImpl.getDocument()
-					.getIfThenElse().getConstructNameList(), modelImpl.getDocument().getIfThenElse().getId());
-
+			// label
+			Text txt = createLabelInput(group2, Messages.getString("editor.label.label"), modelImpl.getDocument()
+					.getIfThenElse().getLabelList(), modelImpl.getDocument().getIfThenElse().getId());
 			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
-					.getIfThenElse().getConstructNameList(), new LabelTdI(), "", txt);
+					.getIfThenElse().getLabelList(), new LabelTdI(), "", txt);
 
+			// description
 			StyledText styledText = createStructuredStringInput(group2, Messages.getString("editor.label.description"),
 					modelImpl.getDocument().getIfThenElse().getDescriptionList(), modelImpl.getDocument()
 							.getIfThenElse().getId());
