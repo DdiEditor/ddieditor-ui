@@ -99,8 +99,8 @@ import org.eclipse.ui.part.EditorPart;
 public class Editor extends EditorPart implements IAutoChangePerspective {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
 
-//	public static String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
-	public String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
+    public static String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
+    private final String ORG_ID = ID;
 	public EditorStatus editorStatus = new EditorStatus();
 
 	private String title = "";
@@ -127,10 +127,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 * Default constructor. Usage to gain access to create widget methods <br>
 	 * Note: Builds an empty editor input.
 	 */
-	public Editor(String editorID) {
+	public Editor() {
 		// editorInput = new EditorInput(null, null, null, null, null,
 		// null);
-		this.ID = editorID;
 	}
 
 	/**
@@ -142,6 +141,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 *            description
 	 * @param editorID
 	 *            ID of extending editor
+
 	 */
 	public Editor(String title, String description, String editorID) {
 		this.title = title;
@@ -339,11 +339,13 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					Messages.getString("Editor.mess.ErrorDuringSave"), e);
 			return;
 		}
-		
+
 		// add views to refresh list
-		ViewManager.getInstance().addViewsToRefresh(ID);
+		if (!ID.equals(ORG_ID)) {
+			ViewManager.getInstance().addViewsToRefresh(ID);
+			ViewManager.getInstance().refesh();
+		}
 		editorStatus.clearChanged();
-//		updateParentView();
 	}
 
 	@Override
@@ -363,7 +365,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	@Override
 	public void setFocus() {
 		composite.setFocus();
-		
+
 		// TODO hmm a lot ..., for tracking change who is calling who ...
 		if (false) {// if (log.isDebugEnabled()) {
 			Throwable t = new Throwable();
@@ -414,36 +416,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 		DialogUtil.errorDialog(site.getShell(), ID, null,
 				ddiFtpException.getMessage(), ddiFtpException);
-	}
-
-	/**
-	 * Update Info View - if it exists in active page - else ignore update
-	 */
-//	private void updateInfoView() {
-//
-//		IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench()
-//				.getWorkbenchWindows();
-//		IWorkbenchPage[] iPages = workbenchWindows[0].getPages();
-//		if (iPages.length > 1) {
-//			log.error("Nbr. pages per window (only one is expected): "
-//					+ iPages.length);
-//		}
-//		IViewPart iViewPart = iPages[0].findView(InfoView.ID);
-//		if (iViewPart != null) {
-//			((View) iViewPart).refreshView();
-//		}
-//	}
-
-	/**
-	 * Update parent view by firing a property change event
-	 */
-//	public void updateParentView() {
-//		// update view
-//		firePropertyChange(IEditorPart.PROP_INPUT);
-//	}
-
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		// do nothing
 	}
 
 	// -----------------------------------------------------------------------
@@ -932,7 +904,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				labelText,
 				structuredString == null ? "" : XmlBeansUtil
 						.getTextOnMixedElement(structuredString),
-				structuredString == null ? Boolean.TRUE : Boolean.FALSE);
+				structuredString == null ? Boolean.TRUE
+						: Boolean.FALSE);
 
 		if (structuredString == null) {
 			structuredString = StructuredStringType.Factory.newInstance();
@@ -1224,16 +1197,17 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				.getSystemColor(SWT.COLOR_WHITE));
 		label.setText(labelText);
 
-		return createTextAreaInput(group, initText);
+		return createTextAreaInput(group, initText, isNew);
 	}
 
-	public StyledText createTextAreaInput(Group group, String initText) {
+	public StyledText createTextAreaInput(Group group, String initText, Boolean isNew) {
 		StyledText styledText = new StyledText(group, SWT.WRAP | SWT.V_SCROLL
 				| SWT.BORDER);
 		styledText.setText(initText);
 		final GridData gd_Text = new GridData(GridData.FILL_BOTH);
 		styledText.setLayoutData(gd_Text);
 		setControl(styledText);
+		styledText.setData(NEW_ITEM, isNew);
 		return styledText;
 	}
 
