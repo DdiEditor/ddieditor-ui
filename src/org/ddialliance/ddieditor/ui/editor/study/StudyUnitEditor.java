@@ -58,7 +58,7 @@ import org.eclipse.ui.PartInitException;
 /**
  * Study unit editor
  */
-public class StudyUnitEditor extends Editor implements ISelectionListener {
+public class StudyUnitEditor extends Editor {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			StudyUnitEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor";
