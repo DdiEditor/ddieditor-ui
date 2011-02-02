@@ -52,7 +52,7 @@ import org.eclipse.ui.PartInitException;
  * Multi Question Item Editor
  */
 
-public class MultipleQuestionItemEditor extends Editor implements ISelectionListener {
+public class MultipleQuestionItemEditor extends Editor {
 
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			MultipleQuestionItemEditor.class);
