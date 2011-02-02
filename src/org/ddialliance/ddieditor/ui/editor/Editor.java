@@ -54,7 +54,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -86,7 +85,6 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
@@ -128,8 +126,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 * Note: Builds an empty editor input.
 	 */
 	public Editor() {
-		// editorInput = new EditorInput(null, null, null, null, null,
-		// null);
 	}
 
 	/**
@@ -788,9 +784,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return button;
 	}
 
-	public Button createCheckBox(Group group, String label, String buttonText) {
-		createLabel(group, label);
-		Button check = new Button(group, SWT.CHECK);
+	public Button createCheckBox(Composite composite, String label, String buttonText) {
+		createLabel(composite, label);
+		Button check = new Button(composite, SWT.CHECK);
 		check.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		check.setText(buttonText);
 		check.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
@@ -798,8 +794,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return check;
 	}
 
-	public Combo createCombo(Group group, String[] options) {
-		final Combo combo = new Combo(group, SWT.READ_ONLY);
+	public Combo createCombo(Composite composite, String[] options) {
+		final Combo combo = new Combo(composite, SWT.READ_ONLY);
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
 		combo.setItems(options);
