@@ -72,7 +72,7 @@ public class ViewManager {
 		editorWiews.put(UniverseSchemeEditor.ID, new ArrayList<String>(Arrays.asList(InfoView.ID, UniverseView.ID)));
 		editorWiews.put(UniverseEditor.ID, new ArrayList<String>(Arrays.asList(UniverseView.ID)));
 		editorWiews.put(VariableSchemeEditor.ID, new ArrayList<String>(Arrays.asList(InfoView.ID, VariableView.ID)));
-		editorWiews.put(VariableEditor.ID, new ArrayList<String>(Arrays.asList(VariableView.ID)));
+		editorWiews.put(VariableEditor.ID, new ArrayList<String>(Arrays.asList(VariableView.ID, VariableQuestionView.ID)));
 	}
 
 	public static synchronized ViewManager getInstance() {
@@ -88,6 +88,18 @@ public class ViewManager {
 		List<String> viewList = editorWiews.get(editorID);
 		return viewList;
 	}
+	
+	private IWorkbenchPage getActivePage() {
+
+		IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
+				.getWorkbenchWindows();
+		IWorkbenchPage page = null;
+		for (int i = 0; i < windows.length; i++) {
+			page = windows[i].getActivePage();
+		}
+		return page;
+
+	}
 
 	public void addViewsToRefresh(String editorID) {
 		
@@ -95,32 +107,26 @@ public class ViewManager {
 		List<String> views = getViewsOfEditor(editorID);
 		for (int i = 0; i < views.size(); i++) {
 			viewUpdateList.add(views.get(i));
+			// refresh visible views
 		}
 	}
 	
-	public void refesh(String iD) {
+	public void refesh() {
+		// Get active page
+		IWorkbenchPage page = getActivePage();
+		if (page == null) {
+			return;
+		}
+		// Get views of the active page
+		IViewReference[] activeViewRefs = page.getViewReferences();
+		// Refresh these views if there are in update list
 		for (Iterator<String> iterator = viewUpdateList.iterator(); iterator
 				.hasNext();) {
 			String updateViewID = iterator.next();
-
-			// find views
-			IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
-					.getWorkbenchWindows();
-			IWorkbenchPage page = null;
-			for (int i = 0; i < windows.length; i++) {
-				page = windows[i].getActivePage();
-			}
-
-			// guard
-			if (page == null) {
-				return;
-			}
-
-			// refresh views
-			IViewReference[] viewRefs = page.getViewReferences();
-			for (int j = 0; j < viewRefs.length; j++) {
-				IViewPart viewPart = page.findView(viewRefs[j].getId());
-				if (viewPart != null && viewRefs[j].getId().equals(updateViewID) &&
+			for (int i = 0; i < activeViewRefs.length; i++) {
+				IViewReference activeViewRef = activeViewRefs[i];
+				IViewPart viewPart = page.findView(activeViewRef.getId());
+				if (viewPart != null && activeViewRef.getId().equals(updateViewID) &&
 						(viewPart instanceof View || viewPart instanceof VariableQuestionView)) {
 					RefreshRunnable longJob = new RefreshRunnable(viewPart);
 					BusyIndicator.showWhile(PlatformUI.getWorkbench()
@@ -148,6 +154,7 @@ public class ViewManager {
 		public void run() {
 			if (part instanceof View) {
 				((View) part).refreshView();
+				((View) part).setFocus();
 			} else if (part instanceof VariableQuestionView) {
 				((VariableQuestionView) part).refreshView();
 			}
