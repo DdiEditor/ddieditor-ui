@@ -76,14 +76,13 @@ public class CodeDropListener extends ViewerDropAdapter {
 
 		// 1. determine insert position
 		int relativePosition = -1;
+		log.debug("Relative position: "+getCurrentLocation());
 		if (getCurrentLocation() == LOCATION_BEFORE) {
 			relativePosition = 0;
 		} else if (getCurrentLocation() == LOCATION_AFTER) {
 			relativePosition = 1;
 		} else if (getCurrentLocation() == LOCATION_ON) {
-			relativePosition = 1;
-			// Temp. - DISABLE LOCATION_ON !!!!!!!!!!!!!!!!!
-			return false;
+			relativePosition = 0;
 		} else if (getCurrentLocation() == LOCATION_NONE) {
 			return false;
 		}
@@ -93,18 +92,17 @@ public class CodeDropListener extends ViewerDropAdapter {
 		Object selectedLightXmlObject = getCurrentTarget();
 		int insertPosition = -2;
 		for (int i = 0; i < table.getItems().length; i++) {
-			// log.debug("items Data(" + i + "):" +
-			// table.getItems()[i].getData());
-			// log.debug("selectedLightXmlObject: " + selectedLightXmlObject);
-			String currentId = XmlBeansUtil.getXmlAttributeValue((String) table.getItems()[i].getData().toString(),
-					"id=\"");
+			log.debug("items Data(" + i + "):" + table.getItems()[i].getData());
+			log.debug("selectedLightXmlObject: " + selectedLightXmlObject);
+			String currentId = XmlBeansUtil.getXmlAttributeValue(
+					(String) table.getItems()[i].getData().toString(), "id=\"");
 			if (sourceId.equals(currentId)) {
 				sourceFound = true;
 			}
 			if (table.getItems()[i].getData().equals(selectedLightXmlObject)) {
 				insertPosition = i + relativePosition;
-				// log.debug("relativePosition: " + relativePosition);
-				// log.debug("insertPosition: " + insertPosition);
+				log.debug("relativePosition: " + relativePosition);
+				log.debug("insertPosition: " + insertPosition);
 				break;
 			}
 		}
