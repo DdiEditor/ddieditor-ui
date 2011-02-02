@@ -129,7 +129,7 @@ public class View extends ViewPart implements IPropertyListener {
 		parent.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
 				// check if refresh is needed		
-				ViewManager.getInstance().refesh(ID);
+				ViewManager.getInstance().refesh();
 			}
 		});
 		parent.setLayout(new GridLayout());
