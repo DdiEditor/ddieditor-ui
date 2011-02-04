@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 0.7.1
+Product Version: 0.7.2
 Release Data: 2011-01-28
 
 -------------------------------------------------------------------------------
@@ -9,13 +9,7 @@ What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-- When a DDI element is saved the releated view are updated. The views are 
-updated when made vissible.
-- Bug in Questions View: If more Question Scheme exist, all Question Items 
-has shown below all Question Schemes.
-- It is now possible to delete Category Schemes
-- It is now possible to delete Categories
-- Instrument editors: Label and Description is now saved.
+- Refresh after update by editor now works with more active editors.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
