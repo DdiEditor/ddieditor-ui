@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DDIInstance xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="ddi:instance:3_1"
+  xsi:schemaLocation="ddi:instance:3_1 http://www.ddialliance.org/sites/default/files/schema/ddi3.1/instance.xsd"
+  id="1288857614690" agency="dk.dda" version="1.0.0" versionDate="2010-11-04T09:00:14.690+01:00">
+  <VersionResponsibility xmlns="ddi:reusable:3_1">ddajvj</VersionResponsibility>
+  <VersionRationale xmlns="ddi:reusable:3_1" translated="false" translatable="true" xml:lang="da"
+    >Version: 1.0.0, date: 2010-11-04T09:00:14.690+01:00</VersionRationale>
+  <StudyUnit xmlns="ddi:studyunit:3_1" id="40" agency="dk.dda" version="1.0.0"
+    versionDate="2010-11-04T09:00:55.065+01:00">
+    <VersionResponsibility xmlns="ddi:reusable:3_1">ddajvj</VersionResponsibility>
+    <VersionRationale xmlns="ddi:reusable:3_1" translated="false" translatable="true" xml:lang="da"
+      >Version: 1.0.0, date: 2010-11-04T09:00:55.065+01:00</VersionRationale>
+    <Citation xmlns="ddi:reusable:3_1">
+      <Title xmlns="ddi:reusable:3_1">Arbejdsmiljøundersøgelsen, 1973.</Title>
+      <Creator xmlns="ddi:reusable:3_1">K.W. Redder, Ole Svane og Poul Westergård,
+        Socialforskningsinstituttet.</Creator>
+      <Publisher xmlns="ddi:reusable:3_1" translated="false" translatable="true" xml:lang="da">Dansk
+        Data Arkiv</Publisher>
+      <Publisher xmlns="ddi:reusable:3_1" translated="true" translatable="false" xml:lang="eng"
+        >Danish Data Archive</Publisher>
+      <PublicationDate xmlns="ddi:reusable:3_1">
+        <SimpleDate xmlns="ddi:reusable:3_1">1978-03-01T00:00:00.000+01:00</SimpleDate>
+      </PublicationDate>
+    </Citation>
+    <Abstract xmlns="ddi:studyunit:3_1" id="1288857655137">
+      <Content xmlns="ddi:reusable:3_1" translated="false" translatable="true" xml:lang="da">
+        <p xmlns="http://www.w3.org/1999/xhtml">Undersøgelsen er en kortlægning af, hvorledes
+          medlemmer af de til LO knyttede fagforeninger/forbund oplever deres arbejdsmiljø. Det
+          udsendte spørgeskema indeholder spørgsmål om tidligere arbejde og uddybende spørgsmål
+          angående det nuværende arbejde (hvor længe personen har haft samme arbejde, hvilke gener
+          der er forbundet med arbejdet, om beskyttelsesmidler er påbudt og benyttes, om trivsel og
+          stress i arbejdet). Spørgeskemaets sidste 40 spørgsmål omhandler personens eventuelle
+          sygdomme og lidelser, og en uddybning af om personen mener at årsagen til eventuelle
+          lidelser eller sygdomme skal findes i eller udenfor arbejdet</p>
+      </Content>
+    </Abstract>
+    <UniverseReference xmlns="ddi:reusable:3_1">
+      <ID xmlns="ddi:reusable:3_1">1288857655355</ID>
+    </UniverseReference>
+    <FundingInformation xmlns="ddi:reusable:3_1">
+      <AgencyOrganizationReference xmlns="ddi:reusable:3_1">
+        <ID xmlns="ddi:reusable:3_1">12218</ID>
+      </AgencyOrganizationReference>
+    </FundingInformation>
+    <Purpose xmlns="ddi:studyunit:3_1" id="1288857655168">
+      <Content xmlns="ddi:reusable:3_1" translated="false" translatable="true" xml:lang="da">Se
+        abstract</Content>
+    </Purpose>
+    <KindOfData xmlns="ddi:studyunit:3_1">Spørgeskemaundersøgelse</KindOfData>
+    <ConceptualComponent xmlns="ddi:conceptualcomponent:3_1" id="1288857655340" agency="dk.dda"
+      version="1.0.0" versionDate="2010-11-04T09:00:55.340+01:00">
+      <VersionResponsibility xmlns="ddi:reusable:3_1">ddajvj</VersionResponsibility>
+      <VersionRationale xmlns="ddi:reusable:3_1" translated="false" translatable="true"
+        xml:lang="da">Version: 1.0.0, date: 2010-11-04T09:00:55.340+01:00</VersionRationale>
+      <UniverseScheme xmlns="ddi:conceptualcomponent:3_1" id="1288857655348" agency="dk.dda"
+        version="1.0.0" versionDate="2010-11-04T09:00:55.349+01:00">
+        <VersionResponsibility xmlns="ddi:reusable:3_1">ddajvj</VersionResponsibility>
+        <VersionRationale xmlns="ddi:reusable:3_1" translated="false" translatable="true"
+          xml:lang="da">Version: 1.0.0, date: 2010-11-04T09:00:55.349+01:00</VersionRationale>
+        <Universe xmlns="ddi:conceptualcomponent:3_1" id="1288857655355" version="1.0.0"
+          versionDate="2010-11-04T09:00:55.355+01:00">
+          <VersionResponsibility xmlns="ddi:reusable:3_1">ddajvj</VersionResponsibility>
+          <VersionRationale xmlns="ddi:reusable:3_1" translated="false" translatable="true"
+            xml:lang="da">Version: 1.0.0, date: 2010-11-04T09:00:55.355+01:00</VersionRationale>
+          <Label xmlns="ddi:reusable:3_1" translated="false" translatable="true" xml:lang="da"
+            >Beskæftigelse</Label>
+          <HumanReadable xmlns="ddi:conceptualcomponent:3_1" translated="false" translatable="true"
+            xml:lang="da">
+            <p xmlns="http://www.w3.org/1999/xhtml">Medlemmer af et antal fagforeninger/fagforbund i
+              Danmark 1973.</p>
+          </HumanReadable>
+          <MachineReadable xmlns="ddi:conceptualcomponent:3_1">
+            <Code xmlns="ddi:reusable:3_1" programmingLanguage="dda.journal.sd_alm.universe_alm"
+            >11</Code>
+          </MachineReadable>
+        </Universe>
+      </UniverseScheme>
+    </ConceptualComponent>
+    <Archive xmlns="ddi:archive:3_1" id="1288857655396" agency="dk.dda" version="1.0.0"
+      versionDate="2010-11-04T09:00:55.396+01:00">
+      <VersionResponsibility xmlns="ddi:reusable:3_1">ddajvj</VersionResponsibility>
+      <VersionRationale xmlns="ddi:reusable:3_1" translated="false" translatable="true"
+        xml:lang="da">Version: 1.0.0, date: 2010-11-04T09:00:55.396+01:00</VersionRationale>
+      <ArchiveSpecific xmlns="ddi:archive:3_1">
+        <ArchiveOrganizationReference xmlns="ddi:archive:3_1">
+          <ID xmlns="ddi:reusable:3_1">00613</ID>
+        </ArchiveOrganizationReference>
+        <DefaultAccess xmlns="ddi:archive:3_1" id="1288857655626">
+          <AccessTypeName xmlns="ddi:archive:3_1" translated="false" translatable="false"
+            xml:lang="da">01</AccessTypeName>
+          <AccessConditions xmlns="ddi:archive:3_1" translated="false" translatable="true"
+            xml:lang="da">Fri adgang</AccessConditions>
+        </DefaultAccess>
+      </ArchiveSpecific>
+      <OrganizationScheme xmlns="ddi:archive:3_1" id="1288857655404" agency="dk.dda" version="1.0.0"
+        versionDate="2010-11-04T09:00:55.405+01:00">
+        <VersionResponsibility xmlns="ddi:reusable:3_1">ddajvj</VersionResponsibility>
+        <VersionRationale xmlns="ddi:reusable:3_1" translated="false" translatable="true"
+          xml:lang="da">Version: 1.0.0, date: 2010-11-04T09:00:55.405+01:00</VersionRationale>
+        <Organization xmlns="ddi:archive:3_1" id="12218" version="1.0.0"
+          versionDate="2010-11-04T09:00:55.497+01:00">
+          <VersionResponsibility xmlns="ddi:reusable:3_1">ddajvj</VersionResponsibility>
+          <VersionRationale xmlns="ddi:reusable:3_1" translated="false" translatable="true"
+            xml:lang="da">Version: 1.0.0, date: 2010-11-04T09:00:55.497+01:00</VersionRationale>
+          <OrganizationName xmlns="ddi:archive:3_1" translated="false" translatable="false"
+            xml:lang="da">Arbejdsministeriet</OrganizationName>
+          <Location xmlns="ddi:archive:3_1" id="1288857655560">
+            <Address xmlns="ddi:archive:3_1">
+              <Line xmlns="ddi:archive:3_1">Laksegade 19</Line>
+              <City xmlns="ddi:archive:3_1">KØBENHAVN K</City>
+              <Postal xmlns="ddi:archive:3_1">1063</Postal>
+            </Address>
+            <Country xmlns="ddi:archive:3_1" codeClass="ISO-3166">DK</Country>
+          </Location>
+        </Organization>
+        <Organization xmlns="ddi:archive:3_1" id="00613">
+          <OrganizationName xmlns="ddi:archive:3_1" translated="false" translatable="false"
+            xml:lang="da">Dansk Data Arkiv</OrganizationName>
+          <Location xmlns="ddi:archive:3_1" id="1288857655595">
+            <Address xmlns="ddi:archive:3_1">
+              <Line xmlns="ddi:archive:3_1">Islandsgade 10</Line>
+              <City xmlns="ddi:archive:3_1">ODENSE C</City>
+              <Postal xmlns="ddi:archive:3_1">5000</Postal>
+            </Address>
+            <Country xmlns="ddi:archive:3_1" codeClass="ISO-3166">DK</Country>
+            <Telephone xmlns="ddi:archive:3_1">66113010</Telephone>
+          </Location>
+        </Organization>
+      </OrganizationScheme>
+    </Archive>
+  </StudyUnit>
+</DDIInstance>
