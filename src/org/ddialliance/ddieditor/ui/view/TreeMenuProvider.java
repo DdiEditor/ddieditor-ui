@@ -546,11 +546,13 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						break;
 					case VARIABLE:
 						new VariableDao().delete(lightXmlObject.getId(),
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						break;
 					default:
 						DDIFtpException e = new DDIFtpException(
 								"Editor type not supported: " + entityType,
