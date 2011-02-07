@@ -7,6 +7,7 @@ import org.ddialliance.ddiftp.util.LanguageUtil;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -21,9 +22,10 @@ public class DdiEditorUiPreferencePage extends FieldEditorPreferencePage
 
 	@Override
 	public void createFieldEditors() {
-		ComboFieldEditor comboFieldEditor = new ComboFieldEditor(PreferenceConstants.DDIEDITORUI_LANGUAGE,
-				"&Default language used in user interface:", LanguageUtil
-						.getAvailableLanguages(), getFieldEditorParent());
+		ComboFieldEditor comboFieldEditor = new ComboFieldEditor(
+				PreferenceConstants.DDIEDITORUI_LANGUAGE,
+				"&Default language used in user interface:",
+				LanguageUtil.getAvailableLanguages(), getFieldEditorParent());
 		comboFieldEditor.load();
 		addField(comboFieldEditor);
 
@@ -31,6 +33,14 @@ public class DdiEditorUiPreferencePage extends FieldEditorPreferencePage
 				PreferenceConstants.AUTO_CHANGE_PERSPECTIVE, "&"
 						+ Messages.getString("pref.autotoggle.field"),
 				getFieldEditorParent()));
+
+		// table font size
+		ComboFieldEditor comboFontEditor = new ComboFieldEditor(
+				PreferenceConstants.FONT_SIZE_TABLE_SIZE,
+				Messages.getString("pref.tablefontsize"), PreferenceConstants.FONT_SIZE_LIST,
+				getFieldEditorParent());
+		comboFieldEditor.load();
+		addField(comboFontEditor);
 	}
 
 	@Override
