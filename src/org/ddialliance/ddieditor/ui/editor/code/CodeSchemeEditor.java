@@ -77,43 +77,50 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 public class CodeSchemeEditor extends Editor {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeSchemeEditor.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			CodeSchemeEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor";
 	CodeScheme modelImpl;
 	private TableViewer tableViewer;
 	CodeLabelProvider tableLabelProvider;
 	private List items = new ArrayList(); // (Codes
-	public static final String CODE_CATEGORY_REL_ID = "code-cat-rel-id"; 
+	public static final String CODE_CATEGORY_REL_ID = "code-cat-rel-id";
+
 	private enum PopupAction {
 		ADD, REMOVE
 	};
 
 	public CodeSchemeEditor() {
-		super(Messages
-				.getString("CodeSchemeEditor.label.CodeSchemeEditorLabel.CodeSchemeEditor"), Messages
-				.getString("CodeSchemeEditor.label.useTheEditorLabel.Description"), ID);
+		super(
+				Messages.getString("CodeSchemeEditor.label.CodeSchemeEditorLabel.CodeSchemeEditor"),
+				Messages.getString("CodeSchemeEditor.label.useTheEditorLabel.Description"),
+				ID);
 		dao = (IDao) new CodeSchemeDao();
 	}
-	
+
 	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
 		super.init(site, input);
 		modelImpl = (CodeScheme) model;
-		
+
 		List<CodeType> codes = modelImpl.getCodes();
-		
+
 		// Code value in Light Xml Object:
 		// LightXmlObjectType.label: CodeType.value
 		// LightXmlObjectType.Id: CodeType.Id
 		for (int i = 0; i < codes.size(); i++) {
-			LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory.newInstance();
-			XmlBeansUtil.setTextOnMixedElement(lightXmlObject.addNewLabel(), codes.get(i).getValue());
-			lightXmlObject.setId(codes.get(i).getCategoryReference().getIDList().get(0).getStringValue());
+			LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory
+					.newInstance();
+			XmlBeansUtil.setTextOnMixedElement(lightXmlObject.addNewLabel(),
+					codes.get(i).getValue());
+			lightXmlObject.setId(codes.get(i).getCategoryReference()
+					.getIDList().get(0).getStringValue());
 			lightXmlObject.setElement(CODE_CATEGORY_REL_ID);
 			items.add(lightXmlObject);
 		}
 	}
-	
+
 	private void popupMenuAction(PopupAction action) {
 		TableItem[] tableItems = tableViewer.getTable().getSelection();
 		// guard
@@ -123,28 +130,34 @@ public class CodeSchemeEditor extends Editor {
 					new DDIFtpException());
 			return;
 		}
-		
+
 		boolean update = false;
 		for (int i = 0; i < tableItems.length; i++) {
-			LightXmlObjectType selectedLightXmlObject = (LightXmlObjectType) tableItems[i].getData();
+			LightXmlObjectType selectedLightXmlObject = (LightXmlObjectType) tableItems[i]
+					.getData();
 
 			if (action.equals(PopupAction.ADD)) {
 				try {
 					int insert = 0;
-					for (Iterator<LightXmlObjectType> iterator = items.iterator(); iterator.hasNext();insert++) {
+					for (Iterator<LightXmlObjectType> iterator = items
+							.iterator(); iterator.hasNext(); insert++) {
 						LightXmlObjectType lightXmlObject = iterator.next();
 						if (lightXmlObject.equals(selectedLightXmlObject)) {
 							update = true;
 							// add to table
-							LightXmlObjectType newLightXmlObject = LightXmlObjectType.Factory.newInstance();
+							LightXmlObjectType newLightXmlObject = LightXmlObjectType.Factory
+									.newInstance();
 							newLightXmlObject.setId("");
-							XmlBeansUtil.setTextOnMixedElement(newLightXmlObject.addNewLabel(), "");
+							XmlBeansUtil.setTextOnMixedElement(
+									newLightXmlObject.addNewLabel(), "");
 							items.add(insert, newLightXmlObject);
 							// add to document
 							CodeType code = CodeType.Factory.newInstance();
-							code.addNewCategoryReference().addNewID().setStringValue("");
+							code.addNewCategoryReference().addNewID()
+									.setStringValue("");
 							code.setValue("");
-							modelImpl.getDocument().getCodeScheme().getCodeList().add(insert,code);
+							modelImpl.getDocument().getCodeScheme()
+									.getCodeList().add(insert, code);
 							break;
 						}
 					}
@@ -156,10 +169,14 @@ public class CodeSchemeEditor extends Editor {
 			// remove
 			if (action.equals(PopupAction.REMOVE)) {
 				try {
-					for (Iterator<CodeType> iterator = modelImpl.getDocument().getCodeScheme().getCodeList().iterator(); iterator.hasNext();) {
+					for (Iterator<CodeType> iterator = modelImpl.getDocument()
+							.getCodeScheme().getCodeList().iterator(); iterator
+							.hasNext();) {
 						CodeType codeType = iterator.next();
 						// remove from document
-						if (selectedLightXmlObject.getId().equals(codeType.getCategoryReference().getIDList().get(0).getStringValue())) {
+						if (selectedLightXmlObject.getId().equals(
+								codeType.getCategoryReference().getIDList()
+										.get(0).getStringValue())) {
 							iterator.remove();
 							// remove from table
 							update = true;
@@ -176,7 +193,7 @@ public class CodeSchemeEditor extends Editor {
 			} else {
 				log.warn("Action not specified!");
 			}
-			
+
 			// update
 			if (update) {
 				tableViewer.refresh(true);
@@ -184,7 +201,7 @@ public class CodeSchemeEditor extends Editor {
 			}
 		}
 	}
-	
+
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
@@ -193,43 +210,50 @@ public class CodeSchemeEditor extends Editor {
 
 		// main tab
 		TabItem tabItem = createTabItem("Code Scheme");
-		Group group = createGroup(tabItem, Messages.getString("QuestionConstruct"));
-		
+		Group group = createGroup(tabItem,
+				Messages.getString("QuestionConstruct"));
+
 		// Default Category Scheme reference
-		
+
 		// - Get available Categori Schemes:
 		List<LightXmlObjectType> categorySchemeReferenceList = new ArrayList();
 
 		try {
-			categorySchemeReferenceList = new CategorySchemeDao().getLightXmlObject("", "",	"", "");
+			categorySchemeReferenceList = new CategorySchemeDao()
+					.getLightXmlObject("", "", "", "");
 		} catch (Exception e1) {
-			DialogUtil
-			.errorDialog(getEditorSite(), ID, null, e1.getMessage(), e1);
+			DialogUtil.errorDialog(getEditorSite(), ID, null, e1.getMessage(),
+					e1);
 		}
-		
-		ReferenceSelectionCombo refSelecCombo = createRefSelection(group,
+
+		ReferenceSelectionCombo refSelecCombo = createRefSelection(
+				group,
 				Messages.getString("CodeSchemeEditor.label.DefaultCategoryScheme"),
-				Messages.getString("CodeSchemeEditor.label.CategoryScheme"), modelImpl.getCategorySchemeReference(),
+				Messages.getString("CodeSchemeEditor.label.CategoryScheme"),
+				modelImpl.getCategorySchemeReference(),
 				categorySchemeReferenceList, false);
 
-		refSelecCombo.addSelectionListener(Messages.getString("CodeSchemeEditor.label.CategoryScheme"),
-				new CategorySchemeSelectionAdapter(refSelecCombo, modelImpl, ReferenceType.class,
-						getEditorIdentification()));
+		refSelecCombo.addSelectionListener(Messages
+				.getString("CodeSchemeEditor.label.CategoryScheme"),
+				new CategorySchemeSelectionAdapter(refSelecCombo, modelImpl,
+						ReferenceType.class, getEditorIdentification()));
 
 		// Categories
 		// table viewer, table, table label provider, table content label
 		// provider
-		createLabel(group, Messages.getString("CodeSchemeEditor.label.CategoriesAndCodes"));
+		createLabel(group,
+				Messages.getString("CodeSchemeEditor.label.CategoriesAndCodes"));
 
-		tableViewer = new TableViewer(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.FULL_SELECTION | SWT.BORDER);
-		tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		tableViewer = new TableViewer(group, SWT.MULTI | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		tableViewer.getTable().setLayoutData(
+				new GridData(SWT.FILL, SWT.FILL, true, true));
 		tableViewer.setContentProvider(new CodeTableContentProvider());
 		tableLabelProvider = new CodeLabelProvider();
 		tableLabelProvider.createColumns(tableViewer);
 		tableViewer.setLabelProvider(tableLabelProvider);
 		tableViewer.setInput(items);
-		
+
 		// dnd difs
 		int operations = DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT;
 		Transfer[] transferTypes = new Transfer[] { LightXmlObjectTransfer
@@ -269,48 +293,62 @@ public class CodeSchemeEditor extends Editor {
 				popupMenuAction(PopupAction.REMOVE);
 			}
 		});
-		
+
 		// menu enumerate
-//		final MenuItem enumerateMenuItem = new MenuItem(menu, SWT.NONE);
-//		enumerateMenuItem.setText("Enumerate");
-//		enumerateMenuItem.setImage(ResourceManager.getPluginImage(
-//				Activator.getDefault(), "icons/new_wiz_obj.gif"));
-//		enumerateMenuItem.addSelectionListener(new SelectionAdapter() {
-//			public void widgetSelected(final SelectionEvent e) {
-//				popupMenuAction(PopupAction.ENUMERATE);
-//			}
-//		});
-		
+		// final MenuItem enumerateMenuItem = new MenuItem(menu, SWT.NONE);
+		// enumerateMenuItem.setText("Enumerate");
+		// enumerateMenuItem.setImage(ResourceManager.getPluginImage(
+		// Activator.getDefault(), "icons/new_wiz_obj.gif"));
+		// enumerateMenuItem.addSelectionListener(new SelectionAdapter() {
+		// public void widgetSelected(final SelectionEvent e) {
+		// popupMenuAction(PopupAction.ENUMERATE);
+		// }
+		// });
+
 		// support double clip to activate Category editor
-//		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
-//			public void doubleClick(final DoubleClickEvent event) {
-//				Object obj = ((StructuredSelection) event.getSelection()).getFirstElement();
-//				System.out.println(XmlBeansUtil.getXmlAttributeValue(event.getSelection().toString(), "id=\""));
-//				openEditor(tableViewer, currentView, EditorModeType.EDIT, null);
-//			}
-//		});
-		
+		// tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+		// public void doubleClick(final DoubleClickEvent event) {
+		// Object obj = ((StructuredSelection)
+		// event.getSelection()).getFirstElement();
+		// System.out.println(XmlBeansUtil.getXmlAttributeValue(event.getSelection().toString(),
+		// "id=\""));
+		// openEditor(tableViewer, currentView, EditorModeType.EDIT, null);
+		// }
+		// });
+
 		tableViewer.getControl().setMenu(menu);
-		
+
 		// description tab
 		// name
-		TabItem tabItem2 = createTabItem(Messages.getString("editor.label.description"));
-		Group group2 = createGroup(tabItem2, Messages.getString("editor.label.description"));
+		TabItem tabItem2 = createTabItem(Messages
+				.getString("editor.label.description"));
+		Group group2 = createGroup(tabItem2,
+				Messages.getString("editor.label.description"));
 
 		try {
-			Text txt = createLabelInput(group2, Messages.getString("editor.label.label"), modelImpl.getDocument()
-					.getCodeScheme().getLabelList(), modelImpl.getDocument().getCodeScheme().getId());
+			Text txt = createLabelInput(group2,
+					Messages.getString("editor.label.label"), modelImpl
+							.getDocument().getCodeScheme().getLabelList(),
+					modelImpl.getDocument().getCodeScheme().getId());
 
-			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
-					.getCodeScheme().getLabelList(), new NameTdI(), "", txt);
+			createTranslation(group2,
+					Messages.getString("editor.button.translate"), modelImpl
+							.getDocument().getCodeScheme().getLabelList(),
+					new NameTdI(), "", txt);
 
-			StyledText styledText = createStructuredStringInput(group2, Messages.getString("editor.label.description"),
-					modelImpl.getDocument().getCodeScheme().getDescriptionList(), modelImpl.getDocument()
+			StyledText styledText = createStructuredStringInput(group2,
+					Messages.getString("editor.label.description"),
+					modelImpl.getDocument().getCodeScheme()
+							.getDescriptionList(), modelImpl.getDocument()
 							.getCodeScheme().getId());
-			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
-					.getCodeScheme().getDescriptionList(), new DescriptionTdI(), "", styledText);
+			createTranslation(group2,
+					Messages.getString("editor.button.translate"),
+					modelImpl.getDocument().getCodeScheme()
+							.getDescriptionList(), new DescriptionTdI(), "",
+					styledText);
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
+			DialogUtil
+					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
 
 		// id tab
@@ -321,11 +359,12 @@ public class CodeSchemeEditor extends Editor {
 
 		editorStatus.clearChanged();
 	}
-	
+
 	/**
 	 * Label provider
 	 */
-	public class CodeLabelProvider extends LabelProvider implements ITableLabelProvider {
+	public class CodeLabelProvider extends LabelProvider implements
+			ITableLabelProvider {
 		/**
 		 * Creates table columns
 		 * 
@@ -336,11 +375,12 @@ public class CodeSchemeEditor extends Editor {
 			Table table = viewer.getTable();
 			String[] titles = {
 					// 0=Value, 1=Category
-					"Value" ,"Category" };
+					"Value", "Category" };
 			int[] widths = { 200, 375, 225 };
 			int[] style = { SWT.RIGHT, SWT.LEFT, SWT.LEFT };
 			for (int i = 0; i < titles.length; i++) {
-				TableViewerColumn column = new TableViewerColumn(viewer, style[i]);
+				TableViewerColumn column = new TableViewerColumn(viewer,
+						style[i]);
 				column.getColumn().setText(titles[i]);
 				column.getColumn().setWidth(widths[i]);
 				column.getColumn().setResizable(true);
@@ -367,7 +407,8 @@ public class CodeSchemeEditor extends Editor {
 			switch (columnIndex) {
 			// 0=value, 1=Category label
 			case 0:
-				return XmlBeansUtil.getTextOnMixedElement(codeCateRel.getLabelList().get(0));
+				return XmlBeansUtil.getTextOnMixedElement(codeCateRel
+						.getLabelList().get(0));
 			case 1:
 				// convert category id to category label
 				LightXmlObjectType xml = null;
@@ -393,7 +434,7 @@ public class CodeSchemeEditor extends Editor {
 			}
 		}
 	}
-	
+
 	/**
 	 * Content provider
 	 */
@@ -403,25 +444,32 @@ public class CodeSchemeEditor extends Editor {
 			try {
 				if (items.size() == 0) {
 					// check if default category scheme is specified
-					SchemeReferenceType categoryScheme = modelImpl.getCategorySchemeReference();
+					SchemeReferenceType categoryScheme = modelImpl
+							.getCategorySchemeReference();
 					if (categoryScheme == null) {
 						return items.toArray();
 					}
 
 					// - use it
-					String categorySchemeId = modelImpl.getCategorySchemeReference().getIDList().get(0)
+					String categorySchemeId = modelImpl
+							.getCategorySchemeReference().getIDList().get(0)
 							.getStringValue();
 
-					List<LightXmlObjectType> cats = new CategoryDao().getLightXmlObject("", "", categorySchemeId, "");
+					List<LightXmlObjectType> cats = new CategoryDao()
+							.getLightXmlObject("", "", categorySchemeId, "");
 
 					// Code value in Light Xml Object:
 					// LightXmlObjectType.label: CodeType.value
 					// LightXmlObjectType.Id: CodeType.Id
 					for (int i = 0; i < cats.size(); i++) {
-						modelImpl.addCode(XmlBeansUtil.getXmlAttributeValue(cats.get(i).xmlText(), "id=\""),
+						modelImpl.addCode(XmlBeansUtil.getXmlAttributeValue(
+								cats.get(i).xmlText(), "id=\""), Integer
+								.toString(i));
+						LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory
+								.newInstance();
+						XmlBeansUtil.setTextOnMixedElement(
+								lightXmlObject.addNewLabel(),
 								Integer.toString(i));
-						LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory.newInstance();
-						XmlBeansUtil.setTextOnMixedElement(lightXmlObject.addNewLabel(), Integer.toString(i));
 						lightXmlObject.setId(cats.get(i).getId());
 						lightXmlObject.setElement(CODE_CATEGORY_REL_ID);
 						items.add(lightXmlObject);
@@ -486,7 +534,7 @@ public class CodeSchemeEditor extends Editor {
 
 		@Override
 		protected boolean canEdit(Object element) {
-			log.debug("Can edit: "+ element.getClass().getName());
+			log.debug("Can edit: " + element.getClass().getName());
 			if (column == 0) {
 				return true;
 			}
@@ -495,8 +543,8 @@ public class CodeSchemeEditor extends Editor {
 
 		@Override
 		protected CellEditor getCellEditor(Object element) {
-			if (editor==null) {
-				log.debug("Editor null: "+ element.getClass().getName());
+			if (editor == null) {
+				log.debug("Editor null: " + element.getClass().getName());
 			}
 			ICellEditorListener listener = new CellEditorListener(editor,
 					editorStatus, column);
@@ -506,13 +554,14 @@ public class CodeSchemeEditor extends Editor {
 
 		@Override
 		protected Object getValue(Object element) {
-			//log.debug("Column: " + this.column);
+			// log.debug("Column: " + this.column);
 			switch (this.column) {
 			// code value
 			case 0:
 				LightXmlObjectType lightXmlObject = (LightXmlObjectType) element;
-				return XmlBeansUtil.getTextOnMixedElement(lightXmlObject.getLabelList().get(0));
-			// Category reference
+				return XmlBeansUtil.getTextOnMixedElement(lightXmlObject
+						.getLabelList().get(0));
+				// Category reference
 			case 1:
 				// Not editable - use drag and drop instead
 				return "";
@@ -524,12 +573,13 @@ public class CodeSchemeEditor extends Editor {
 
 		@Override
 		public void setValue(Object element, Object value) {
-			
+
 			switch (this.column) {
 			// code value
 			case 0:
 				LightXmlObjectType lightXmlObject = (LightXmlObjectType) element;
-				XmlBeansUtil.setTextOnMixedElement(lightXmlObject.getLabelList().get(0), (String) value);
+				XmlBeansUtil.setTextOnMixedElement(lightXmlObject
+						.getLabelList().get(0), (String) value);
 				// update Code Scheme Document
 				Table table = (Table) ((TableViewer) getViewer()).getControl();
 				int j = -1;
@@ -540,17 +590,19 @@ public class CodeSchemeEditor extends Editor {
 				}
 				if (j != -1) {
 					try {
-						modelImpl.getDocument().getCodeScheme().getCodeList().get(j).setValue((String) value);
+						modelImpl.getDocument().getCodeScheme().getCodeList()
+								.get(j).setValue((String) value);
 					} catch (DDIFtpException e) {
 						showError(e);
 					}
 				} else {
 					DDIFtpException e1 = new DDIFtpException(
-							Messages.getString("CodeSchemeEditor.mass.CorrespondingCodeNotFound"), new Throwable());
+							Messages.getString("CodeSchemeEditor.mass.CorrespondingCodeNotFound"),
+							new Throwable());
 					showError(e1);
 				}
 				break;
-				// Category reference
+			// Category reference
 			case 1:
 				// Not editable - use drag and drop instead
 				break;
@@ -561,11 +613,12 @@ public class CodeSchemeEditor extends Editor {
 		}
 	}
 
-	
-	private class CategorySchemeSelectionAdapter extends ReferenceSelectionAdapter {
+	private class CategorySchemeSelectionAdapter extends
+			ReferenceSelectionAdapter {
 
-		public CategorySchemeSelectionAdapter(ReferenceSelectionCombo refSelecCombo, IModel model, Class type,
-				EditorIdentification editorIdentification) {
+		public CategorySchemeSelectionAdapter(
+				ReferenceSelectionCombo refSelecCombo, IModel model,
+				Class type, EditorIdentification editorIdentification) {
 			super(refSelecCombo, model, type, editorIdentification);
 		}
 
@@ -576,14 +629,14 @@ public class CodeSchemeEditor extends Editor {
 		}
 	}
 
-
 	public String getPreferredPerspectiveId() {
 		return CodesPerspective.ID;
 	}
 
 	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages.getString("perspective.switch.dialogtext"), Messages
-				.getString("perspective.codes"));
+		return MessageFormat.format(
+				Messages.getString("perspective.switch.dialogtext"),
+				Messages.getString("perspective.codes"));
 	}
 
 	public Viewer getViewer() {
