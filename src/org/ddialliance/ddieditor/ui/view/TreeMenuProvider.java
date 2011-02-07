@@ -22,6 +22,7 @@ import org.ddialliance.ddieditor.ui.dbxml.instrument.ControlConstructSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.IfThenElseDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.LoopDao;
+import org.ddialliance.ddieditor.ui.dbxml.instrument.QuestionConstructDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.SequenceDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.StatementItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.MultipleQuestionItemDao;
@@ -498,6 +499,12 @@ public class TreeMenuProvider extends TreeMenu {
 						break;
 					case INSTRUMENT:
 						new InstrumentDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
+						break;
+					case QUESTION_CONSTRUCT:
+						new QuestionConstructDao().delete(lightXmlObject.getId(),
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
