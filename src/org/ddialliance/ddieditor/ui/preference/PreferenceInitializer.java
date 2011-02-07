@@ -24,6 +24,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 		// ddieditor-ui
 		store.setDefault(PreferenceConstants.DDIEDITORUI_LANGUAGE, "da");
+		store.setDefault(PreferenceConstants.FONT_SIZE_TABLE_SIZE, 1);
 
 		// ddieditor
 		store.setDefault(PreferenceConstants.DDIEDITOR_DBXML_HOME, "");
@@ -31,5 +32,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		// auto change perspective
 		store.setDefault(PreferenceConstants.AUTO_CHANGE_PERSPECTIVE, "false");
+		
 	}
 }
