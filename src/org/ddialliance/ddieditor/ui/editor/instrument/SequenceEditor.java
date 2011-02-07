@@ -421,6 +421,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 					}
 				}
 			});
+			Editor.resizeTableFont(table);
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			table.pack();
