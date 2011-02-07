@@ -346,6 +346,7 @@ public class CodeSchemeEditor extends Editor {
 				column.getColumn().setResizable(true);
 				column.setEditingSupport(new TableEditingSupport(viewer, i));
 			}
+			Editor.resizeTableFont(table);
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			table.pack();
