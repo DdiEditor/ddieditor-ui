@@ -50,29 +50,68 @@ public class ViewManager {
 
 	private ViewManager() {
 		// Initialise views of editor:
-		editorWiews.put(CategorySchemeEditor.ID, new ArrayList<String>(Arrays.asList(InfoView.ID, CategoryView.ID)));	
-		editorWiews.put(CategoryEditor.ID, new ArrayList<String>(Arrays.asList(CategoryView.ID)));
-		editorWiews.put(CodeSchemeEditor.ID, new ArrayList<String>(Arrays.asList(InfoView.ID, CodeView.ID)));
-		editorWiews.put(ConceptSchemeEditor.ID, new ArrayList<String>(Arrays.asList(InfoView.ID, ConceptView.ID)));
-		editorWiews.put(ConceptEditor.ID, new ArrayList<String>(Arrays.asList(ConceptView.ID)));
-		editorWiews.put(ComputationItemEditor.ID, new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
-		editorWiews.put(ControlConstructSchemeEditor.ID, new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
-		editorWiews.put(IfThenElseEditor.ID, new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
-		editorWiews.put(InstrumentEditor.ID, new ArrayList<String>(Arrays.asList(InfoView.ID, InstrumentView.ID)));
-		editorWiews.put(LoopEditor.ID, new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
-		editorWiews.put(QuestionConstructEditor.ID, new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
-		editorWiews.put(RepeatUntilEditor.ID, new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
-		editorWiews.put(RepeatWhileEditor.ID, new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
-		editorWiews.put(SequenceEditor.ID, new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
-		editorWiews.put(StatementItemEditor.ID, new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
-		editorWiews.put(QuestionSchemeEditor.ID, new ArrayList<String>(Arrays.asList(InfoView.ID, QuestionItemView.ID)));
-		editorWiews.put(MultipleQuestionItemEditor.ID, new ArrayList<String>(Arrays.asList(QuestionItemView.ID)));
-		editorWiews.put(QuestionItemEditor.ID, new ArrayList<String>(Arrays.asList(QuestionItemView.ID, VariableQuestionView.ID)));
-		editorWiews.put(StudyUnitEditor.ID, new ArrayList<String>(Arrays.asList(InfoView.ID)));
-		editorWiews.put(UniverseSchemeEditor.ID, new ArrayList<String>(Arrays.asList(InfoView.ID, UniverseView.ID)));
-		editorWiews.put(UniverseEditor.ID, new ArrayList<String>(Arrays.asList(UniverseView.ID)));
-		editorWiews.put(VariableSchemeEditor.ID, new ArrayList<String>(Arrays.asList(InfoView.ID, VariableView.ID)));
-		editorWiews.put(VariableEditor.ID, new ArrayList<String>(Arrays.asList(VariableView.ID, VariableQuestionView.ID)));
+		editorWiews.put(
+				CategorySchemeEditor.ID,
+				new ArrayList<String>(Arrays.asList(InfoView.ID,
+						CategoryView.ID)));
+		editorWiews.put(CategoryEditor.ID,
+				new ArrayList<String>(Arrays.asList(CategoryView.ID)));
+		editorWiews.put(CodeSchemeEditor.ID,
+				new ArrayList<String>(Arrays.asList(InfoView.ID, CodeView.ID)));
+		editorWiews.put(
+				ConceptSchemeEditor.ID,
+				new ArrayList<String>(Arrays
+						.asList(InfoView.ID, ConceptView.ID)));
+		editorWiews.put(ConceptEditor.ID,
+				new ArrayList<String>(Arrays.asList(ConceptView.ID)));
+		editorWiews.put(ComputationItemEditor.ID,
+				new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
+		editorWiews.put(ControlConstructSchemeEditor.ID, new ArrayList<String>(
+				Arrays.asList(InstrumentView.ID)));
+		editorWiews.put(IfThenElseEditor.ID,
+				new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
+		editorWiews.put(
+				InstrumentEditor.ID,
+				new ArrayList<String>(Arrays.asList(InfoView.ID,
+						InstrumentView.ID)));
+		editorWiews.put(LoopEditor.ID,
+				new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
+		editorWiews.put(QuestionConstructEditor.ID, new ArrayList<String>(
+				Arrays.asList(InstrumentView.ID)));
+		editorWiews.put(RepeatUntilEditor.ID,
+				new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
+		editorWiews.put(RepeatWhileEditor.ID,
+				new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
+		editorWiews.put(SequenceEditor.ID,
+				new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
+		editorWiews.put(StatementItemEditor.ID,
+				new ArrayList<String>(Arrays.asList(InstrumentView.ID)));
+		editorWiews.put(
+				QuestionSchemeEditor.ID,
+				new ArrayList<String>(Arrays.asList(InfoView.ID,
+						QuestionItemView.ID)));
+		editorWiews.put(MultipleQuestionItemEditor.ID, new ArrayList<String>(
+				Arrays.asList(QuestionItemView.ID)));
+		editorWiews.put(
+				QuestionItemEditor.ID,
+				new ArrayList<String>(Arrays.asList(QuestionItemView.ID,
+						VariableQuestionView.ID)));
+		editorWiews.put(StudyUnitEditor.ID,
+				new ArrayList<String>(Arrays.asList(InfoView.ID)));
+		editorWiews.put(
+				UniverseSchemeEditor.ID,
+				new ArrayList<String>(Arrays.asList(InfoView.ID,
+						UniverseView.ID)));
+		editorWiews.put(UniverseEditor.ID,
+				new ArrayList<String>(Arrays.asList(UniverseView.ID)));
+		editorWiews.put(
+				VariableSchemeEditor.ID,
+				new ArrayList<String>(Arrays.asList(InfoView.ID,
+						VariableView.ID)));
+		editorWiews.put(
+				VariableEditor.ID,
+				new ArrayList<String>(Arrays.asList(VariableView.ID,
+						VariableQuestionView.ID)));
 	}
 
 	public static synchronized ViewManager getInstance() {
@@ -82,13 +121,7 @@ public class ViewManager {
 		}
 		return instance;
 	}
-	
-	private List<String> getViewsOfEditor(String editorID) {
-		// Get views of editor:
-		List<String> viewList = editorWiews.get(editorID);
-		return viewList;
-	}
-	
+
 	private IWorkbenchPage getActivePage() {
 
 		IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
@@ -101,16 +134,26 @@ public class ViewManager {
 
 	}
 
-	public void addViewsToRefresh(String editorID) {
-		
+	public void addViewsToRefresh(String editorId) {
 		// add view to refresh list
-		List<String> views = getViewsOfEditor(editorID);
-		for (int i = 0; i < views.size(); i++) {
-			viewUpdateList.add(views.get(i));
-			// refresh visible views
+		if (editorWiews.containsKey(editorId)) {
+			for (String viewId : editorWiews.get(editorId)) {
+				viewUpdateList.add(viewId);
+			}	
 		}
 	}
-	
+
+	/**
+	 * Add a list of editor ids identifying views to refresh
+	 * @param editorIds list of editor ids
+	 */
+	public void addViewsToRefresh(String[] editorIds) {
+		// add view to refresh list
+		for (int i = 0; i < editorIds.length; i++) {
+			addViewsToRefresh(editorIds[i]);
+		}
+	}
+
 	public void refesh() {
 		// Get active page
 		IWorkbenchPage page = getActivePage();
@@ -126,20 +169,22 @@ public class ViewManager {
 			for (int i = 0; i < activeViewRefs.length; i++) {
 				IViewReference activeViewRef = activeViewRefs[i];
 				IViewPart viewPart = page.findView(activeViewRef.getId());
-				if (viewPart != null && activeViewRef.getId().equals(updateViewID) &&
-						(viewPart instanceof View || viewPart instanceof VariableQuestionView)) {
+				if (viewPart != null
+						&& activeViewRef.getId().equals(updateViewID)
+						&& (viewPart instanceof View || viewPart instanceof VariableQuestionView)) {
 					RefreshRunnable longJob = new RefreshRunnable(viewPart);
 					BusyIndicator.showWhile(PlatformUI.getWorkbench()
 							.getDisplay(), longJob);
 					iterator.remove();
 					if (log.isDebugEnabled()) {
-						log.debug("View refreshed: "+ viewPart.getClass().getName());
+						log.debug("View refreshed: "
+								+ viewPart.getClass().getName());
 					}
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Runnable wrapping view refresh to enable RCP busy indicator
 	 */
