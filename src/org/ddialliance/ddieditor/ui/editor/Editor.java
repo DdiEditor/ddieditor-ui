@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CaseIdentificationDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
@@ -19,6 +20,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.VersionRationaleDocument;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
+import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dialogs.TranslationDialog;
@@ -35,6 +37,7 @@ import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
+import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
@@ -54,6 +57,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -78,6 +82,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.swt.widgets.Widget;
@@ -98,7 +103,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
 
     public static String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
-    private final String ORG_ID = ID;
+    private static final String ORG_ID = ID;
 	public EditorStatus editorStatus = new EditorStatus();
 
 	private String title = "";
@@ -1220,7 +1225,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return browser;
 	}
 
-	public Font getFont(String name, int height, int style) {
+	public static Font getFont(String name, int height, int style) {
 		FontRegistry reg = JFaceResources.getFontRegistry();
 		Font returnedFont = reg.defaultFont();
 		FontDescriptor fdesc = FontDescriptor.createFrom(name, height, style);
@@ -1359,5 +1364,33 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public static void verifyField(FIELD_TYPE digit, VerifyEvent e,
 			IWorkbenchPartSite site) {
 		verifyField(digit, e, (IEditorSite) site);
+	}
+
+	public static void resizeTableFont(Table table) {
+		// read in prefs on table font size 
+		int size = new Integer(Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.FONT_SIZE_TABLE_SIZE)).intValue();
+		// resize table font
+		int fontSize;
+		switch (size) {
+		case 1:
+			fontSize = 8;
+			break;
+		case 2:
+			fontSize = 10;
+			break;
+		case 3:
+			fontSize = 12;
+			break;
+		default:
+			fontSize = 8;
+			break;
+		}
+		table.setFont(getFont("Arial Narrow", fontSize, SWT.NORMAL));
+		return;
+	}
+
+	public static void resizeColumn(TableViewerColumn column) {
+		// TODO Auto-generated method stub
+		
 	}
 }
