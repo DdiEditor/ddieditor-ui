@@ -44,13 +44,15 @@ public class IfThenElse extends Model {
 
 		// question reference
 		if (type.equals(ModelIdentifingType.Type_B.class)) {
-			ModelAccessor.setReference(doc.getIfThenElse().getIfCondition().getSourceQuestionReferenceList(),
+			ModelAccessor.setReference(doc.getIfThenElse().getIfCondition()
+					.getSourceQuestionReferenceList(),
 					getIfQuestionReference(), (LightXmlObjectType) value);
 		}
 
 		// then reference
 		if (type.equals(ModelIdentifingType.Type_C.class)) {
-			ModelAccessor.setReference(doc.getIfThenElse().getThenConstructReference(), (LightXmlObjectType) value);
+			ModelAccessor.setReference(getThenReference(),
+					(LightXmlObjectType) value);
 		}
 
 		// else reference
@@ -58,18 +60,19 @@ public class IfThenElse extends Model {
 			if (((LightXmlObjectType) value).getId().equals("")) {
 				doc.getIfThenElse().unsetElseConstructReference();
 			} else {
-				ModelAccessor.setReference(getElseReference(), (LightXmlObjectType) value);
+				ModelAccessor.setReference(getElseReference(),
+						(LightXmlObjectType) value);
 			}
 		}
 	}
 
 	@Override
 	public void validate() throws Exception {
-		// TODO Auto-generated method stub
 		super.validate();
-		if (doc.getIfThenElse().getThenConstructReference().getIDList().isEmpty()) {
-			System.out.println("Warning");
-			throw new Exception(Messages.getString("IfThenElse.mess.MandatoryThenReferenceHasNotBeenSpecified")); //$NON-NLS-1$
+		if (doc.getIfThenElse().getThenConstructReference().getIDList()
+				.isEmpty()) {
+			throw new Exception(
+					Messages.getString("IfThenElse.mess.MandatoryThenReferenceHasNotBeenSpecified")); //$NON-NLS-1$
 		}
 	}
 
