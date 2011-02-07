@@ -29,7 +29,8 @@ import org.eclipse.swt.widgets.TableItem;
  */
 public class CodeDropListener extends ViewerDropAdapter {
 	String ID = CodeDropListener.class.getName();
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, CodeDropListener.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			CodeDropListener.class);
 
 	CodeSchemeEditor codeSchemeEditor;
 	CodeTableContentProvider ctcp;
@@ -37,7 +38,8 @@ public class CodeDropListener extends ViewerDropAdapter {
 	public CodeDropListener(CodeSchemeEditor codeSchemeEditor) {
 		super(codeSchemeEditor.getViewer());
 		this.codeSchemeEditor = codeSchemeEditor;
-		ctcp = ((CodeSchemeEditor.CodeTableContentProvider) ((TableViewer) getViewer()).getContentProvider());
+		ctcp = ((CodeSchemeEditor.CodeTableContentProvider) ((TableViewer) getViewer())
+				.getContentProvider());
 	}
 
 	@Override
@@ -61,9 +63,11 @@ public class CodeDropListener extends ViewerDropAdapter {
 		// TODO Element type not defined for move -
 		// transfers[0].lightXmlObject.getElement() is null!
 		if (transfers[0].lightXmlObject.getElement() != null
-				&& !transfers[0].lightXmlObject.getElement().equals(CodeSchemeEditor.CODE_CATEGORY_REL_ID) &&
-				!transfers[0].lightXmlObject.getElement().equals("Category")) {
-			log.warn("Only Categories supported: "+transfers[0].lightXmlObject.getElement());
+				&& !transfers[0].lightXmlObject.getElement().equals(
+						CodeSchemeEditor.CODE_CATEGORY_REL_ID)
+				&& !transfers[0].lightXmlObject.getElement().equals("Category")) {
+			log.warn("Only Categories supported: "
+					+ transfers[0].lightXmlObject.getElement());
 			return false;
 		}
 		Table table = (Table) ((TableViewer) getViewer()).getControl();
@@ -76,7 +80,7 @@ public class CodeDropListener extends ViewerDropAdapter {
 
 		// 1. determine insert position
 		int relativePosition = -1;
-		log.debug("Relative position: "+getCurrentLocation());
+		log.debug("Relative position: " + getCurrentLocation());
 		if (getCurrentLocation() == LOCATION_BEFORE) {
 			relativePosition = 0;
 		} else if (getCurrentLocation() == LOCATION_AFTER) {
@@ -139,8 +143,8 @@ public class CodeDropListener extends ViewerDropAdapter {
 
 				// delete model xml (reference xml)
 				try {
-					codeSchemeEditor.modelImpl.getDocument().getCodeScheme().getCodeList()
-							.remove(reverseIndices[i].intValue());
+					codeSchemeEditor.modelImpl.getDocument().getCodeScheme()
+							.getCodeList().remove(reverseIndices[i].intValue());
 				} catch (DDIFtpException e) {
 					Editor.showError(e, ID, codeSchemeEditor.getSite());
 				}
@@ -159,35 +163,37 @@ public class CodeDropListener extends ViewerDropAdapter {
 		// 3. add item - Code based on transferred Category
 		for (int i = 0; i < transfers.length; i++) {
 			// add items ligth xml object
-			LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory.newInstance();
+			LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory
+					.newInstance();
 			String codeValue = "";
 			if (transfers[0].rcpPartId.equals(codeSchemeEditor.ID)) {
-				log.debug("***************************");
-				codeValue = XmlBeansUtil.getTextOnMixedElement(transfers[i].lightXmlObject.getLabelList().get(0));
+				codeValue = XmlBeansUtil
+						.getTextOnMixedElement(transfers[i].lightXmlObject
+								.getLabelList().get(0));
 			}
-			if (!transfers[0].rcpPartId.equals(codeSchemeEditor.ID) && getCurrentLocation() == LOCATION_ON) {
-				log.debug("***************************");
+			if (!transfers[0].rcpPartId.equals(codeSchemeEditor.ID)
+					&& getCurrentLocation() == LOCATION_ON) {
 				log.debug(insertPosition);
-				codeValue = XmlBeansUtil.getTextOnMixedElement(((LightXmlObjectType) ctcp.getItems()
-						.get(insertPosition)).getLabelList().get(0));
+				codeValue = XmlBeansUtil
+						.getTextOnMixedElement(((LightXmlObjectType) ctcp
+								.getItems().get(insertPosition)).getLabelList()
+								.get(0));
 			}
-			log.debug("***************************");
 			// new lightXmlObject
-			XmlBeansUtil.setTextOnMixedElement(lightXmlObject.addNewLabel(), codeValue);
-			lightXmlObject.setId(XmlBeansUtil.getXmlAttributeValue(transfers[i].lightXmlObject.xmlText(), "id=\""));
+			XmlBeansUtil.setTextOnMixedElement(lightXmlObject.addNewLabel(),
+					codeValue);
+			lightXmlObject.setId(XmlBeansUtil.getXmlAttributeValue(
+					transfers[i].lightXmlObject.xmlText(), "id=\""));
 			lightXmlObject.setElement(CodeSchemeEditor.CODE_CATEGORY_REL_ID);
 			if (log.isDebugEnabled()) {
 				log.debug(lightXmlObject);
 			}
-			log.debug("***************************");
 
 			// add table item
 			TableItem item = new TableItem(table, SWT.NONE, insertPosition);
 			item.setData(lightXmlObject);
 
 			// add to table (Light XML Object)
-			System.out.println("1: "+ctcp.getItems().size());
-			System.err.println("2: "+insertPosition);
 			if (getCurrentLocation() == LOCATION_ON) {
 				ctcp.getItems().set(insertPosition, lightXmlObject);
 			} else {
@@ -195,12 +201,18 @@ public class CodeDropListener extends ViewerDropAdapter {
 			}
 			// add to model
 			CodeType codeType = CodeType.Factory.newInstance();
-			codeType.addNewCategoryReference().addNewID()
-					.setStringValue(XmlBeansUtil.getXmlAttributeValue(transfers[i].lightXmlObject.xmlText(), "id=\""));
+			codeType.addNewCategoryReference()
+					.addNewID()
+					.setStringValue(
+							XmlBeansUtil.getXmlAttributeValue(
+									transfers[i].lightXmlObject.xmlText(),
+									"id=\""));
 			String value = null;
 			if (getCurrentLocation() == LOCATION_ON) {
-				LightXmlObjectType xml = (LightXmlObjectType) ctcp.getItems().get(insertPosition);
-				value = XmlBeansUtil.getTextOnMixedElement(xml.getLabelList().get(0));
+				LightXmlObjectType xml = (LightXmlObjectType) ctcp.getItems()
+						.get(insertPosition);
+				value = XmlBeansUtil.getTextOnMixedElement(xml.getLabelList()
+						.get(0));
 			} else {
 				value = "";
 			}
@@ -208,15 +220,18 @@ public class CodeDropListener extends ViewerDropAdapter {
 
 			try {
 				if (getCurrentLocation() == LOCATION_ON) {
-					codeSchemeEditor.modelImpl.getDocument().getCodeScheme().getCodeList()
-							.set(insertPosition, codeType);
+					codeSchemeEditor.modelImpl.getDocument().getCodeScheme()
+							.getCodeList().set(insertPosition, codeType);
 				} else {
-					codeSchemeEditor.modelImpl.getDocument().getCodeScheme().getCodeList()
-							.add(insertPosition, codeType);
+					codeSchemeEditor.modelImpl.getDocument().getCodeScheme()
+							.getCodeList().add(insertPosition, codeType);
 				}
 			} catch (DDIFtpException e) {
 				Editor.showError(
-						new DDIFtpException(Messages.getString("CodeSchemeEditor.mess.CodeSchemeRetreiveError"), e), ID, codeSchemeEditor.getSite());;
+						new DDIFtpException(
+								Messages.getString("CodeSchemeEditor.mess.CodeSchemeRetreiveError"),
+								e), ID, codeSchemeEditor.getSite());
+				;
 				return false;
 			}
 		}
@@ -226,11 +241,16 @@ public class CodeDropListener extends ViewerDropAdapter {
 			if (log.isDebugEnabled()) {
 				try {
 					log.debug("Table updated, codes: "
-							+ codeSchemeEditor.modelImpl.getDocument().getCodeScheme().getCodeList().size()
-							+ ", table: " + table.getItemCount() + ", contentProvider: " + ctcp.getItems().size());
+							+ codeSchemeEditor.modelImpl.getDocument()
+									.getCodeScheme().getCodeList().size()
+							+ ", table: " + table.getItemCount()
+							+ ", contentProvider: " + ctcp.getItems().size());
 				} catch (DDIFtpException e) {
 					Editor.showError(
-							new DDIFtpException(Messages.getString("CodeSchemeEditor.mess.CodeSchemeRetreiveError"), e), ID, codeSchemeEditor.getSite());;
+							new DDIFtpException(
+									Messages.getString("CodeSchemeEditor.mess.CodeSchemeRetreiveError"),
+									e), ID, codeSchemeEditor.getSite());
+					;
 					return false;
 				}
 			}
@@ -244,13 +264,24 @@ public class CodeDropListener extends ViewerDropAdapter {
 	}
 
 	@Override
-	public boolean validateDrop(Object target, int operation, TransferData transferType) {
-		boolean result = LightXmlObjectTransfer.getInstance().isSupportedType(transferType);
+	public boolean validateDrop(Object target, int operation,
+			TransferData transferType) {
+		boolean result = LightXmlObjectTransfer.getInstance().isSupportedType(
+				transferType);
+		log.debug("target: " + target);
+		log.debug("operation: " + operation);
+		log.debug("transfertype: " + transferType);
 		if (target instanceof LightXmlObjectType) {
 			LightXmlObjectType lightXmlObject = (LightXmlObjectType) target;
+			log.debug("lightXmlObject: " + lightXmlObject.xmlText());
+			log.debug("lightXmlObject: " + lightXmlObject.getClass());
+			log.debug("lightXmlObject: " + lightXmlObject.getElement());
 			if (lightXmlObject.getElement() != null) {
-				result = result && (lightXmlObject.getElement().equals(CodeSchemeEditor.CODE_CATEGORY_REL_ID) || lightXmlObject.getElement().equals("Catetory"));
-				log.debug("LightXmlObjectType: "+lightXmlObject.getElement());
+				result = result
+						&& (lightXmlObject.getElement().equals(
+								CodeSchemeEditor.CODE_CATEGORY_REL_ID) || lightXmlObject
+								.getElement().equals("Catetory"));
+				log.debug("LightXmlObjectType: " + lightXmlObject.getElement());
 				log.debug("IsSupportedType: " + result);
 				return result;
 			}
