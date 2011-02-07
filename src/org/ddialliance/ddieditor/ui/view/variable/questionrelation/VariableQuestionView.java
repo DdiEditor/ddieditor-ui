@@ -862,6 +862,7 @@ public class VariableQuestionView extends ViewPart  implements IPropertyListener
 				column.getColumn().setResizable(true);
 				// column.setEditingSupport(new TableEditingSupport(viewer, i));
 			}
+			Editor.resizeTableFont(table);
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			table.pack();
@@ -1038,6 +1039,7 @@ public class VariableQuestionView extends ViewPart  implements IPropertyListener
 				column.getColumn().setResizable(true);
 				// column.setEditingSupport(new TableEditingSupport(viewer, i));
 			}
+			Editor.resizeTableFont(table);
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			table.pack();
