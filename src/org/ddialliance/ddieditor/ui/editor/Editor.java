@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType;
-import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CaseIdentificationDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
@@ -80,6 +79,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
@@ -92,6 +92,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 /**
@@ -102,8 +103,8 @@ import org.eclipse.ui.part.EditorPart;
 public class Editor extends EditorPart implements IAutoChangePerspective {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
 
-    public static String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
-    private static final String ORG_ID = ID;
+	public static String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
+	private final String ORG_ID = ID;
 	public EditorStatus editorStatus = new EditorStatus();
 
 	private String title = "";
@@ -142,7 +143,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 *            description
 	 * @param editorID
 	 *            ID of extending editor
-
 	 */
 	public Editor(String title, String description, String editorID) {
 		this.title = title;
@@ -392,30 +392,66 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	/**
-	 * Ui error display, if exception not ddi exception then one is created
+	 * Create error dialog displaying exception
 	 * 
 	 * @param e
 	 *            exception to display
 	 */
 	public void showError(Exception e) {
-		DDIFtpException ddiFtpException = null;
-		if (!(e instanceof DDIFtpException)) {
-			ddiFtpException = new DDIFtpException(e);
-		} else {
-			ddiFtpException = (DDIFtpException) e;
-		}
-		DialogUtil.errorDialog(getSite().getShell(), ID, null,
-				ddiFtpException.getMessage(), ddiFtpException);
+		showError(e, ID, getSite().getShell());
 	}
 
-	public static void showError(Exception e, String ID, IWorkbenchPartSite site) {
+	/**
+	 * Create error dialog displaying exception
+	 * 
+	 * @param e
+	 *            exception to display
+	 * @param id
+	 *            of view part causing exception
+	 * @param site
+	 *            ui parent
+	 */
+	public static void showError(Exception e, String id, IWorkbenchPartSite site) {
+		showError(e, id, site.getShell());
+	}
+
+	/**
+	 * Create error dialog displaying exception <br>
+	 * <br>
+	 * The parent ui part is not accessible a shell parent for the dialog is
+	 * retrieved from display active shell.
+	 * 
+	 * @param e
+	 *            exception to display
+	 * @param id
+	 *            of view part causing exception
+	 */
+	public static void showError(Exception e, String id) {
+		showError(e, id, PlatformUI.getWorkbench().getDisplay()
+				.getActiveShell());
+	}
+
+	private static void showError(Exception e, String id, Shell shell) {
+		// exception
 		DDIFtpException ddiFtpException = null;
 		if (!(e instanceof DDIFtpException)) {
 			ddiFtpException = new DDIFtpException(e);
 		} else {
 			ddiFtpException = (DDIFtpException) e;
 		}
-		DialogUtil.errorDialog(site.getShell(), ID, null,
+
+		// id
+		if (id == null || id.equals("")) {
+			id = "Not defined";
+		}
+
+		// shell
+		if (shell == null) {
+			shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+		}
+
+		// dialog
+		DialogUtil.errorDialog(shell, ID, e.getMessage(),
 				ddiFtpException.getMessage(), ddiFtpException);
 	}
 
@@ -789,7 +825,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return button;
 	}
 
-	public Button createCheckBox(Composite composite, String label, String buttonText) {
+	public Button createCheckBox(Composite composite, String label,
+			String buttonText) {
 		createLabel(composite, label);
 		Button check = new Button(composite, SWT.CHECK);
 		check.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -905,8 +942,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				labelText,
 				structuredString == null ? "" : XmlBeansUtil
 						.getTextOnMixedElement(structuredString),
-				structuredString == null ? Boolean.TRUE
-						: Boolean.FALSE);
+				structuredString == null ? Boolean.TRUE : Boolean.FALSE);
 
 		if (structuredString == null) {
 			structuredString = StructuredStringType.Factory.newInstance();
@@ -1201,7 +1237,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		return createTextAreaInput(group, initText, isNew);
 	}
 
-	public StyledText createTextAreaInput(Group group, String initText, Boolean isNew) {
+	public StyledText createTextAreaInput(Group group, String initText,
+			Boolean isNew) {
 		StyledText styledText = new StyledText(group, SWT.WRAP | SWT.V_SCROLL
 				| SWT.BORDER);
 		styledText.setText(initText);
@@ -1367,8 +1404,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public static void resizeTableFont(Table table) {
-		// read in prefs on table font size 
-		int size = new Integer(Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.FONT_SIZE_TABLE_SIZE)).intValue();
+		// read in prefs on table font size
+		int size = new Integer(Activator.getDefault().getPreferenceStore()
+				.getString(PreferenceConstants.FONT_SIZE_TABLE_SIZE))
+				.intValue();
 		// resize table font
 		int fontSize;
 		switch (size) {
@@ -1391,6 +1430,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	public static void resizeColumn(TableViewerColumn column) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
