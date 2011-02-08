@@ -1,9 +1,5 @@
 package org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection;
 
-/**
- * Generic Filtered Items Section.
- * 
- */
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,12 +26,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 
+/**
+ * Generic Filtered Items Section
+ */
 public class ReferenceSelectionCombo {
 	Composite parentCodeComposite;
 	ComboViewer comboViewer;
 	Button browseButton;
 	LightXmlObjectType result;
-	List<LightXmlObjectType> m_referenceList; // reference list with prefixed empty item
+	List<LightXmlObjectType> m_referenceList; // reference list with prefixed
+												// empty item
 	boolean isNew;
 
 	public ReferenceSelectionCombo(boolean isNew) {
@@ -43,12 +43,12 @@ public class ReferenceSelectionCombo {
 	}
 
 	public Combo getCombo() {
-		if (comboViewer!=null) {
+		if (comboViewer != null) {
 			return comboViewer.getCombo();
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Create Part Control i.e. create labels, field and browse button
 	 * 
@@ -68,7 +68,8 @@ public class ReferenceSelectionCombo {
 		this.parentCodeComposite = parentCodeComposite;
 		// prefix reference list with 'empty' LigthXmlObject
 		List<LightXmlObjectType> addedWithEmpty = new ArrayList<LightXmlObjectType>();
-		LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory.newInstance();
+		LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory
+				.newInstance();
 		lightXmlObject.setId("");
 		LabelType labelType = lightXmlObject.addNewLabel();
 		XmlBeansUtil.setTextOnMixedElement(labelType, "");
@@ -135,13 +136,15 @@ public class ReferenceSelectionCombo {
 		comboViewer.getCombo().setData(Editor.NEW_ITEM, isNew);
 
 		comboViewer.setInput(this.m_referenceList);
-				
+
 		// Select preIdValue:
 		int index = 0;
-		for (Iterator iterator = this.m_referenceList.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = this.m_referenceList.iterator(); iterator
+				.hasNext();) {
 			LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) iterator
 					.next();
-			if (lightXmlObjectType.getId() != null && lightXmlObjectType.getId().equals(preIdValue)) {
+			if (lightXmlObjectType.getId() != null
+					&& lightXmlObjectType.getId().equals(preIdValue)) {
 				break;
 			}
 			index++;
@@ -158,7 +161,7 @@ public class ReferenceSelectionCombo {
 	}
 
 	/**
-	 * Add selection listener
+	 * Add selection listener with call back to the added selection listener
 	 * 
 	 * @param Title
 	 *            of FilteredItemsSelectionDialog
@@ -169,17 +172,21 @@ public class ReferenceSelectionCombo {
 
 		comboViewer.getCombo().addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				result = m_referenceList.get(comboViewer.getCombo().getSelectionIndex());
+				result = getReferenceList().get(
+						comboViewer.getCombo().getSelectionIndex());
 			}
 		});
-		comboViewer.getCombo().addSelectionListener(selectionListener);
+
+		if (selectionListener != null) {
+			comboViewer.getCombo().addSelectionListener(selectionListener);
+		}
 
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				Shell shell = new Shell();
 
 				FilteredItemsSelectionDialog dialog = new ReferenceSelectionPopUp(
-						shell, title, m_referenceList, false, false);
+						shell, title, getReferenceList(), false, false);
 
 				dialog.setInitialPattern(comboViewer.getCombo()
 						.getSelectionIndex() == -1 ? "**" : comboViewer
@@ -190,7 +197,7 @@ public class ReferenceSelectionCombo {
 				result = (LightXmlObjectType) dialog.getFirstResult();
 				if (result != null) {
 					int index = 0;
-					for (Iterator iterator = m_referenceList.iterator(); iterator
+					for (Iterator iterator = getReferenceList().iterator(); iterator
 							.hasNext();) {
 						LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) iterator
 								.next();
@@ -203,7 +210,10 @@ public class ReferenceSelectionCombo {
 				}
 			}
 		});
-		browseButton.addSelectionListener(selectionListener);
+
+		if (selectionListener != null) {
+			browseButton.addSelectionListener(selectionListener);
+		}
 	}
 
 	/**
@@ -213,5 +223,9 @@ public class ReferenceSelectionCombo {
 	 */
 	public LightXmlObjectType getResult() {
 		return result;
+	}
+
+	private List<LightXmlObjectType> getReferenceList() {
+		return m_referenceList;
 	}
 }
