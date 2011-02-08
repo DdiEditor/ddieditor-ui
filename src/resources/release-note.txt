@@ -10,6 +10,10 @@ What's New
 User interface
 Item ID:    Description:
 - Refresh after update by editor now works with more active editors.
+- The user may now control the font size of tables (via Window->Preferences) to
+make it easier to make drag and drop.
+- Now possible to delete all Instrumentation elements.
+- More Question Items may now be imported via the Wiki interface.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
