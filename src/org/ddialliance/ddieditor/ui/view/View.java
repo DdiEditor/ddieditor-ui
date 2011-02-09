@@ -79,7 +79,7 @@ public class View extends ViewPart implements IPropertyListener {
 	 *            List of Pop-up Menu Labels e.g. "Question Scheme",
 	 *            "Question Item" If null no Pop-up Menu is created.
 	 * @param viewID
-	 * 			  ID of extending view.
+	 *            ID of extending view.
 	 */
 	public View(ViewContentType viewContentType, String viewTitle,
 			String viewDescr, String viewEntityName, ElementType rootElement,
@@ -128,7 +128,7 @@ public class View extends ViewPart implements IPropertyListener {
 		}
 		parent.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
-				// check if refresh is needed		
+				// check if refresh is needed
 				ViewManager.getInstance().refesh();
 			}
 		});
@@ -154,8 +154,8 @@ public class View extends ViewPart implements IPropertyListener {
 
 		final Label selectLabel = new Label(titleComposite, SWT.WRAP);
 		selectLabel.setRedraw(true);
-		selectLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false));
+		selectLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false));
 		selectLabel.setBackground(SWTResourceManager.getColor(230, 230, 250));
 		selectLabel.setText(viewDescr);
 
@@ -195,8 +195,8 @@ public class View extends ViewPart implements IPropertyListener {
 				SWT.COLOR_WHITE));
 		final GridLayout gridLayout = new GridLayout();
 		treeGroup.setLayout(gridLayout);
-		treeGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true, 2, 1));
+		treeGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2,
+				1));
 		treeGroup.setText(viewTreeLabel);
 
 		// Define TreeViewer
@@ -256,8 +256,7 @@ public class View extends ViewPart implements IPropertyListener {
 
 		refreshAction = new Action("Refresh") {
 			public void run() {
-				treeViewer.refresh();
-				treeViewer.getTree().setFocus();
+				refreshView();
 			}
 		};
 
@@ -292,7 +291,7 @@ public class View extends ViewPart implements IPropertyListener {
 
 		menuManager.add(helpContentsAction);
 	}
-	
+
 	@Override
 	public void setFocus() {
 		// enable access to tree from keyboard
@@ -301,8 +300,8 @@ public class View extends ViewPart implements IPropertyListener {
 
 	@Override
 	public void propertyChanged(Object source, int propId) {
-//		if (propId == IEditorPart.PROP_INPUT) {
-//			refreshView();
-//		}
+		// if (propId == IEditorPart.PROP_INPUT) {
+		// refreshView();
+		// }
 	}
 }
