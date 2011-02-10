@@ -2,7 +2,7 @@
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
 Product Version: 0.7.2
-Release Data: 2011-01-28
+Release Data: 2011-02-10
 
 -------------------------------------------------------------------------------
 What's New
@@ -14,6 +14,7 @@ Item ID:    Description:
 - Now possible to delete all Instrumentation elements.
 - More Question Items may now be imported via the Wiki interface.
 - Instrumentation view now refreshes properly.
+- A new Preview Tab Item is now added to all editors.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
