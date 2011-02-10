@@ -149,6 +149,9 @@ public class QuestionConstructEditor extends Editor {
 		// xml tab
 		createXmlTab(modelImpl);
 
+		// preview tab
+		createPreviewTab(modelImpl);
+
 		editorStatus.clearChanged();
 	}
 

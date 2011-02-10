@@ -327,7 +327,9 @@ public class QuestionItemEditor extends Editor {
 		// ddi xml tab
 		createXmlTab(modelImpl);
 
-		// Clean dirt from initialization
+		// preview tab
+		createPreviewTab(modelImpl);
+
 		editorStatus.clearChanged();
 	}
 

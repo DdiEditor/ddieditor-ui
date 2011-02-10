@@ -506,6 +506,9 @@ public class StudyUnitEditor extends Editor {
 
 		createXmlTab(modelImpl);
 
+		// preview tab
+		createPreviewTab(modelImpl);
+
 		// Clean dirt from initialization
 		editorStatus.clearChanged();
 	}

@@ -7,6 +7,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType;
@@ -28,6 +35,7 @@ import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.DDITabItemAction;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.PreviewTabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.PropertyTabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.TabFolderListener;
 import org.ddialliance.ddieditor.ui.model.ElementType;
@@ -118,6 +126,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public static String CONTROL_ID = "control_id";
 	public static String TAB_ID = "id";
 	public static String DDI_TAB_ID = "ddi";
+	public static String PREVIEW_TAB_ID = "preview";
 	public static String PROPERTY_TAB_ID = "property";
 
 	protected IModel model;
@@ -658,6 +667,36 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			}
 		}
 		return styledText;
+	}
+
+	public void createPreviewTab(IModel model) {
+		TabItem tabItem = createTabItem(Messages
+				.getString("editor.tabitem.preview"));
+		Group group = createGroup(tabItem,
+				Messages.getString("editor.group.preview"));
+		Browser browser = createBrowser(group, Messages.getString("editor.label.preview"));
+		
+		// update on tab item click
+		tabItem.setData(TAB_ID, PREVIEW_TAB_ID);
+		PreviewTabItemAction action;
+		try {
+			action = new PreviewTabItemAction(PREVIEW_TAB_ID, model, browser);
+		} catch (DDIFtpException e) {
+			DialogUtil.errorDialog(group.getShell(), ID,
+					"Error on get display lable", e.getMessage(), e);
+			return;
+		}
+		Listener[] list = getTabFolder().getListeners(SWT.Selection);
+		Object obj = null;
+		for (int i = 0; i < list.length; i++) {
+			if (list[i] instanceof TypedListener) {
+				obj = ((TypedListener) list[i]).getEventListener();
+				if (obj instanceof TabFolderListener) {
+					((TabFolderListener) obj).actionMap.put(PREVIEW_TAB_ID, action);
+				}
+				break;
+			}
+		}
 	}
 
 	public void createLabelDescriptionTab(Composite parent,

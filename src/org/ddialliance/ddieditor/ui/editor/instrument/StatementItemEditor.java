@@ -152,7 +152,10 @@ public class StatementItemEditor extends Editor implements
 		createPropertiesTab(getTabFolder());
 
 		// xml tab
-		createXmlTab(model);
+		createXmlTab(modelImpl);
+
+		// preview tab
+		createPreviewTab(modelImpl);
 
 		editorStatus.clearChanged();
 	}

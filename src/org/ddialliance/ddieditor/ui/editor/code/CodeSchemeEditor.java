@@ -356,6 +356,9 @@ public class CodeSchemeEditor extends Editor {
 
 		// xml tab
 		createXmlTab(modelImpl);
+		
+		// preview tab
+		createPreviewTab(modelImpl);
 
 		editorStatus.clearChanged();
 	}

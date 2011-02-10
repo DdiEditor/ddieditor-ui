@@ -45,6 +45,7 @@ public class LabelDescriptionEditor extends Editor {
 				simpleElement);
 		createPropertiesTab(getTabFolder());
 		createXmlTab(simpleElement);
+		createPreviewTab(simpleElement);
 		// Clean dirt from initialization
 		editorStatus.clearChanged();
 	}
