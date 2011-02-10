@@ -9,6 +9,7 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
+import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -35,8 +36,7 @@ class TreeLabelProvider extends LabelProvider {
 							lightXmlObjectType.getLabelList());
 					return XmlBeansUtil.getTextOnMixedElement((XmlObject) obj);
 				} catch (DDIFtpException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Editor.showError(e, getClass().getName());
 				}
 			} else {
 				// No label specified - use ID instead:
@@ -60,17 +60,27 @@ class TreeLabelProvider extends LabelProvider {
 				return ((ConceptualElement) element).getValue().getId();
 			}
 		} else if (element instanceof MaintainableLightLabelQueryResult) {
-			// TODO refactor MaintainableLightLabelQueryResult to include labels
-			// for target element
-			StringBuilder result = new StringBuilder();
-			result.append(((MaintainableLightLabelQueryResult) element)
-					.getMaintainableTarget());
-			if (((MaintainableLightLabelQueryResult) element).getId() != null) {
-				result.append(": ");
-				result.append(((MaintainableLightLabelQueryResult) element)
-						.getId());
+			MaintainableLightLabelQueryResult mLightLabelQueryResult = (MaintainableLightLabelQueryResult) element;
+			if (!mLightLabelQueryResult.getLabelList().isEmpty()) {
+				String labelResult = mLightLabelQueryResult.getId();
+				try {
+					labelResult = XmlBeansUtil
+							.getTextOnMixedElement((XmlObject) XmlBeansUtil
+									.getDefaultLangElement(mLightLabelQueryResult
+											.getLabelList()));
+				} catch (DDIFtpException e) {
+					Editor.showError(e, getClass().getName());
+				}
+				return labelResult;
+			} else {
+				StringBuilder idResult = new StringBuilder();
+				idResult.append(mLightLabelQueryResult.getMaintainableTarget());
+				if (mLightLabelQueryResult.getId() != null) {
+					idResult.append(": ");
+					idResult.append(mLightLabelQueryResult.getId());
+				}
+				return idResult.toString();
 			}
-			return result.toString();
 		}
 		// java.util.List
 		else if (element instanceof List<?>) {
@@ -82,15 +92,18 @@ class TreeLabelProvider extends LabelProvider {
 					return label;
 				}
 			} else {
-				// System.out.println("Empty list");
+				DDIFtpException e = new DDIFtpException("Empty list",
+						new Throwable());
+				Editor.showError(e, getClass().getName());
 			}
 		}
 
 		// guard
 		else {
 			if (log.isWarnEnabled()) {
-				log.warn(element.getClass().getName() + "is not supported",
-						new Throwable());
+				DDIFtpException e = new DDIFtpException(element.getClass()
+						.getName() + "is not supported", new Throwable());
+				Editor.showError(e, getClass().getName());
 			}
 		}
 		return new String();
