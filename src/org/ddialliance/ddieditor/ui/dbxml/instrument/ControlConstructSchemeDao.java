@@ -55,7 +55,7 @@ public class ControlConstructSchemeDao implements IDao {
 	public void create(IModel model) throws DDIFtpException {
 		DdiManager.getInstance().createElement(model.getDocument(),
 				model.getParentId(), model.getParentVersion(),
-				"ControlConstructScheme");
+				"datacollection__DataCollection");
 	}
 
 	@Override
@@ -69,6 +69,6 @@ public class ControlConstructSchemeDao implements IDao {
 		ControlConstructScheme model = getModel(id, version, parentId, parentVersion);
 		DdiManager.getInstance().deleteElement(model.getDocument(),
 				model.getParentId(), model.getParentVersion(),
-				"ControlConstructScheme");
+				"datacollection__DataCollection");
 	}
 }
