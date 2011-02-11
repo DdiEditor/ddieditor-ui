@@ -60,27 +60,12 @@ class TreeLabelProvider extends LabelProvider {
 				return ((ConceptualElement) element).getValue().getId();
 			}
 		} else if (element instanceof MaintainableLightLabelQueryResult) {
-			MaintainableLightLabelQueryResult mLightLabelQueryResult = (MaintainableLightLabelQueryResult) element;
-			if (!mLightLabelQueryResult.getLabelList().isEmpty()) {
-				String labelResult = mLightLabelQueryResult.getId();
-				try {
-					labelResult = XmlBeansUtil
-							.getTextOnMixedElement((XmlObject) XmlBeansUtil
-									.getDefaultLangElement(mLightLabelQueryResult
-											.getLabelList()));
-				} catch (DDIFtpException e) {
-					Editor.showError(e, getClass().getName());
-				}
-				return labelResult;
-			} else {
-				StringBuilder idResult = new StringBuilder();
-				idResult.append(mLightLabelQueryResult.getMaintainableTarget());
-				if (mLightLabelQueryResult.getId() != null) {
-					idResult.append(": ");
-					idResult.append(mLightLabelQueryResult.getId());
-				}
-				return idResult.toString();
+			try {
+				return ((MaintainableLightLabelQueryResult) element).getTargetLabel();
+			} catch (DDIFtpException e) {
+				Editor.showError(e, getClass().getName());
 			}
+			return "";
 		}
 		// java.util.List
 		else if (element instanceof List<?>) {

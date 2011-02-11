@@ -8,10 +8,12 @@ import java.util.List;
 
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.category.CategoryDao;
 import org.ddialliance.ddieditor.ui.dbxml.category.CategorySchemeDao;
@@ -316,6 +318,9 @@ public class TreeMenuProvider extends TreeMenu {
 	}
 
 	private void deleteItem(EditorModeType mode) {
+		boolean doOpenConfirm = true;
+		boolean doDelete = false;
+
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		if (obj instanceof DDIResourceType) {
@@ -340,6 +345,20 @@ public class TreeMenuProvider extends TreeMenu {
 			obj = ce.getValue();
 		}
 
+		// MaintainableLightLabelQueryResult
+		if (obj instanceof MaintainableLightLabelQueryResult) {
+			doOpenConfirm = false;
+			if (DialogUtil.deleteDialogMll(currentView.getSite().getShell(),
+					Messages.getString("ConfirmTitle"),
+					(MaintainableLightLabelQueryResult) obj)) {
+				doDelete = true;
+			}
+
+			LightXmlObjectType result = ((MaintainableLightLabelQueryResult) obj)
+					.getMaintainableTargetAsLightXmlObject();
+			obj = result;
+		}
+
 		if (obj instanceof LightXmlObjectType) {
 			LightXmlObjectType lightXmlObject = (LightXmlObjectType) obj;
 			ElementType entityType = null;
@@ -355,11 +374,19 @@ public class TreeMenuProvider extends TreeMenu {
 								Messages.getString("View.mess.EditorNewError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
 			}
 
-			if (MessageDialog.openConfirm(currentView.getSite().getShell(),
-					Messages.getString("ConfirmTitle"), MessageFormat.format(
-							Messages.getString("View.mess.ConfirmDeletion"),
-							entityType.getTranslatedDisplayMessageEntry(),
-							lightXmlObject.getId()))) {
+			if (doOpenConfirm) {
+				doDelete = MessageDialog
+						.openConfirm(
+								currentView.getSite().getShell(),
+								Messages.getString("ConfirmTitle"),
+								MessageFormat.format(
+										Messages.getString("View.mess.ConfirmDeletion"),
+										entityType
+												.getTranslatedDisplayMessageEntry(),
+										lightXmlObject.getId()));
+			}
+			
+			if (doDelete) {
 				try {
 					InputSelection inputSelection = defineSelection(treeViewer,
 							currentView.ID);
@@ -504,7 +531,8 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getParentVersion());
 						break;
 					case QUESTION_CONSTRUCT:
-						new QuestionConstructDao().delete(lightXmlObject.getId(),
+						new QuestionConstructDao().delete(
+								lightXmlObject.getId(),
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
