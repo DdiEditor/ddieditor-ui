@@ -274,16 +274,16 @@ public class CodeSchemeEditor extends Editor {
 		Menu menu = new Menu(tableViewer.getControl());
 
 		// menu add
-//		final MenuItem addMenuItem = new MenuItem(menu, SWT.CASCADE);
-//		addMenuItem.setSelection(true);
-//		addMenuItem.setText(Messages.getString("View.label.addMenuItem.Add"));
-//		addMenuItem.setImage(ResourceManager.getPluginImage(
-//				Activator.getDefault(), "icons/new_wiz.gif"));
-//		addMenuItem.addSelectionListener(new SelectionAdapter() {
-//			public void widgetSelected(final SelectionEvent e) {
-//				popupMenuAction(PopupAction.ADD);
-//			}
-//		});
+		// final MenuItem addMenuItem = new MenuItem(menu, SWT.CASCADE);
+		// addMenuItem.setSelection(true);
+		// addMenuItem.setText(Messages.getString("View.label.addMenuItem.Add"));
+		// addMenuItem.setImage(ResourceManager.getPluginImage(
+		// Activator.getDefault(), "icons/new_wiz.gif"));
+		// addMenuItem.addSelectionListener(new SelectionAdapter() {
+		// public void widgetSelected(final SelectionEvent e) {
+		// popupMenuAction(PopupAction.ADD);
+		// }
+		// });
 
 		// menu remove
 		final MenuItem removeMenuItem = new MenuItem(menu, SWT.NONE);
