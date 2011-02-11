@@ -1,5 +1,9 @@
 package org.ddialliance.ddieditor.ui.util;
 
+import java.text.MessageFormat;
+
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
+import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.eclipse.core.runtime.IStatus;
@@ -68,13 +72,42 @@ public class DialogUtil {
 		return MessageDialog.openConfirm(PlatformUI.getWorkbench().getDisplay()
 				.getActiveShell(), title, message);
 	}
-	
+
 	public static void infoDialog(Shell shell, String pluginId, String title,
 			String infoMessage) {
 		if (title == null) {
 			title = Messages.getString("InfoTitle");
 		}
-		
+
 		MessageDialog.openInformation(shell, title, infoMessage);
+	}
+
+	/**
+	 * Confirm delete dialog for maintainable light label objects
+	 * 
+	 * @param shell
+	 *            to open in
+	 * @param title
+	 *            of dialog
+	 * @param mLightLabelQueryResult
+	 *            to delete
+	 * @return confirmation
+	 */
+	public static boolean deleteDialogMll(Shell shell, String title,
+			MaintainableLightLabelQueryResult mLightLabelQueryResult) {
+		try {
+			return MessageDialog
+					.openConfirm(
+							shell,
+							title,
+							MessageFormat.format(
+									Messages.getString("View.mess.ConfirmDeletionMaintainableLightLabelQueryResult"),
+									mLightLabelQueryResult.getTargetLabel(),
+									mLightLabelQueryResult
+											.getSubElementLabels()));
+		} catch (DDIFtpException e) {
+			Editor.showError(e, DialogUtil.class.getName());
+		}
+		return false;
 	}
 }
