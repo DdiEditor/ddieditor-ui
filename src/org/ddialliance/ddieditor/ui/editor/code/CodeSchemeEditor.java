@@ -87,7 +87,9 @@ public class CodeSchemeEditor extends Editor {
 	public static final String CODE_CATEGORY_REL_ID = "code-cat-rel-id";
 
 	private enum PopupAction {
-		ADD, REMOVE
+		// TODO Add has been removed because drop category does not work for empty code (value, category).
+//		ADD, REMOVE
+		REMOVE
 	};
 
 	public CodeSchemeEditor() {
@@ -136,36 +138,37 @@ public class CodeSchemeEditor extends Editor {
 			LightXmlObjectType selectedLightXmlObject = (LightXmlObjectType) tableItems[i]
 					.getData();
 
-			if (action.equals(PopupAction.ADD)) {
-				try {
-					int insert = 0;
-					for (Iterator<LightXmlObjectType> iterator = items
-							.iterator(); iterator.hasNext(); insert++) {
-						LightXmlObjectType lightXmlObject = iterator.next();
-						if (lightXmlObject.equals(selectedLightXmlObject)) {
-							update = true;
-							// add to table
-							LightXmlObjectType newLightXmlObject = LightXmlObjectType.Factory
-									.newInstance();
-							newLightXmlObject.setId("");
-							XmlBeansUtil.setTextOnMixedElement(
-									newLightXmlObject.addNewLabel(), "");
-							items.add(insert, newLightXmlObject);
-							// add to document
-							CodeType code = CodeType.Factory.newInstance();
-							code.addNewCategoryReference().addNewID()
-									.setStringValue("");
-							code.setValue("");
-							modelImpl.getDocument().getCodeScheme()
-									.getCodeList().add(insert, code);
-							break;
-						}
-					}
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				}
-			} else
+			// TODO Add has been removed because drop category does not work for empty code (value, category).
+//			if (action.equals(PopupAction.ADD)) {
+//				try {
+//					int insert = 0;
+//					for (Iterator<LightXmlObjectType> iterator = items
+//							.iterator(); iterator.hasNext(); insert++) {
+//						LightXmlObjectType lightXmlObject = iterator.next();
+//						if (lightXmlObject.equals(selectedLightXmlObject)) {
+//							update = true;
+//							// add to table
+//							LightXmlObjectType newLightXmlObject = LightXmlObjectType.Factory
+//									.newInstance();
+//							newLightXmlObject.setId("");
+//							XmlBeansUtil.setTextOnMixedElement(
+//									newLightXmlObject.addNewLabel(), "");
+//							items.add(insert, newLightXmlObject);
+//							// add to document
+//							CodeType code = CodeType.Factory.newInstance();
+//							code.addNewCategoryReference().addNewID()
+//									.setStringValue("");
+//							code.setValue("");
+//							modelImpl.getDocument().getCodeScheme()
+//									.getCodeList().add(insert, code);
+//							break;
+//						}
+//					}
+//				} catch (Exception e) {
+//					// TODO: handle exception
+//					e.printStackTrace();
+//				}
+//			} else
 			// remove
 			if (action.equals(PopupAction.REMOVE)) {
 				try {
@@ -271,16 +274,16 @@ public class CodeSchemeEditor extends Editor {
 		Menu menu = new Menu(tableViewer.getControl());
 
 		// menu add
-		final MenuItem addMenuItem = new MenuItem(menu, SWT.CASCADE);
-		addMenuItem.setSelection(true);
-		addMenuItem.setText(Messages.getString("View.label.addMenuItem.Add"));
-		addMenuItem.setImage(ResourceManager.getPluginImage(
-				Activator.getDefault(), "icons/new_wiz.gif"));
-		addMenuItem.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				popupMenuAction(PopupAction.ADD);
-			}
-		});
+//		final MenuItem addMenuItem = new MenuItem(menu, SWT.CASCADE);
+//		addMenuItem.setSelection(true);
+//		addMenuItem.setText(Messages.getString("View.label.addMenuItem.Add"));
+//		addMenuItem.setImage(ResourceManager.getPluginImage(
+//				Activator.getDefault(), "icons/new_wiz.gif"));
+//		addMenuItem.addSelectionListener(new SelectionAdapter() {
+//			public void widgetSelected(final SelectionEvent e) {
+//				popupMenuAction(PopupAction.ADD);
+//			}
+//		});
 
 		// menu remove
 		final MenuItem removeMenuItem = new MenuItem(menu, SWT.NONE);
