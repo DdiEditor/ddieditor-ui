@@ -1,14 +1,20 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
+<<<<<<< .mine
+Product Version: 0.7.3
+Release Data: 2011-02-10
+=======
 Product Version: 0.7.2++
 Release Data: 2011-02
+>>>>>>> .r2253
 
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
+- Add pop-up menu point has been removed from Code table of the Code Scheme Editor. Use drag and drop of Cagetory instead to create new Code objects.  
 - ControlConstructSchemes in Instrumentation view now supports labels.
  
 -------------------------------------------------------------------------------  
