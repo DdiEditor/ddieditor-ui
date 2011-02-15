@@ -47,9 +47,10 @@ public class ViewManager {
 	private static Hashtable<String, List<String>> editorWiews = new Hashtable<String, List<String>>();
 	private static ViewManager instance;
 	private List<String> viewUpdateList;
+	private static final String ALL_EDITORS = "all_editors";
 
 	private ViewManager() {
-		// Initialise views of editor:
+		// Views of a given editor
 		editorWiews.put(
 				CategorySchemeEditor.ID,
 				new ArrayList<String>(Arrays.asList(InfoView.ID,
@@ -112,6 +113,12 @@ public class ViewManager {
 				VariableEditor.ID,
 				new ArrayList<String>(Arrays.asList(VariableView.ID,
 						VariableQuestionView.ID)));
+		editorWiews.put(
+				ALL_EDITORS,
+				new ArrayList<String>(Arrays.asList(InfoView.ID,
+						CategoryView.ID, CodeView.ID, ConceptView.ID,
+						InstrumentView.ID, QuestionItemView.ID,
+						UniverseView.ID, VariableView.ID)));
 	}
 
 	public static synchronized ViewManager getInstance() {
@@ -139,18 +146,29 @@ public class ViewManager {
 		if (editorWiews.containsKey(editorId)) {
 			for (String viewId : editorWiews.get(editorId)) {
 				viewUpdateList.add(viewId);
-			}	
+			}
 		}
 	}
 
 	/**
 	 * Add a list of editor ids identifying views to refresh
-	 * @param editorIds list of editor ids
+	 * 
+	 * @param editorIds
+	 *            list of editor ids
 	 */
 	public void addViewsToRefresh(String[] editorIds) {
 		// add view to refresh list
 		for (int i = 0; i < editorIds.length; i++) {
 			addViewsToRefresh(editorIds[i]);
+		}
+	}
+
+	public void addAllViewsToRefresh() {
+		// add all views to refresh list
+		if (editorWiews.containsKey(ALL_EDITORS)) {
+			for (String viewId : editorWiews.get(ALL_EDITORS)) {
+				viewUpdateList.add(viewId);
+			}
 		}
 	}
 
