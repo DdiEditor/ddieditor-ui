@@ -7,7 +7,13 @@ import java.text.MessageFormat;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.filesystem.FilesystemManager;
+import org.ddialliance.ddieditor.ui.editor.category.CategoryEditor;
+import org.ddialliance.ddieditor.ui.editor.instrument.InstrumentEditor;
+import org.ddialliance.ddieditor.ui.editor.instrument.QuestionConstructEditor;
+import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
+import org.ddialliance.ddieditor.ui.editor.universe.UniverseEditor;
 import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -86,8 +92,9 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 			}
 		}
 		
-		// refresh view
-		CommandHelper.refreshViews();
+		// refresh views
+		ViewManager.getInstance().addAllViewsToRefresh();
+		ViewManager.getInstance().refesh();
 		return null;
 	}
 }

@@ -10,6 +10,7 @@ import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.persistenceaccess.filesystem.FilesystemManager;
 import org.ddialliance.ddieditor.ui.dialogs.NewDDI3FileDialog;
+import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -74,7 +75,8 @@ public class NewDDI3File extends org.eclipse.core.commands.AbstractHandler {
 		}
 
 		// update info view
-		CommandHelper.refreshViews();
+		ViewManager.getInstance().addAllViewsToRefresh();
+		ViewManager.getInstance().refesh();
 		return null;
 	}
 }

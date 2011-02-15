@@ -7,6 +7,7 @@ import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -57,29 +58,8 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		}
 
 		// refresh view
-		CommandHelper.refreshViews();
-
-		// comment out as refresh view can not run in non ui thread :- (  
-		
-		// PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
-		// new IRunnableWithProgress() {
-		// @Override
-		// public void run(IProgressMonitor monitor)
-		// throws InvocationTargetException,
-		// InterruptedException {
-		// try {
-		// int tasks = resources.size() + 1;
-		// monitor.beginTask("Deleting DDI3 resources", tasks);
-		//
-		// monitor.worked(1);
-		// } catch (Exception e) {
-		// throw new InvocationTargetException(e);
-		// } finally {
-		// monitor.done();
-		// }
-		// }
-		// });
-
+		ViewManager.getInstance().addAllViewsToRefresh();
+		ViewManager.getInstance().refesh();
 		return null;
 	}
 }
