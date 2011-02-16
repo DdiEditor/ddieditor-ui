@@ -12,12 +12,14 @@ import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.LiteralTextDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.LiteralTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.MultipleQuestionItemDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionGroupType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionTextDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SpecificSequenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SubQuestionSequenceDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.TextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.ConceptReferenceDocumentImpl;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.MultipleQuestionItemTypeImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.QuestionGroupTypeImpl;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.SubQuestionSequenceDocumentImpl;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -206,7 +208,7 @@ public class MultipleQuestionItem extends Model {
 			ReflectionUtil.invokeMethod(type, "setQuestionTextArray", false, new Object[] { getQuestionTextAsArray() });
 
 			// subquestions
-			((MultipleQuestionItemTypeImpl )type).setSubQuestions(null);
+			((MultipleQuestionItemTypeImpl )type).setSubQuestions(QuestionGroupType.Factory.newInstance());
 		} catch (Exception e) {
 			throw new DDIFtpException(e);
 		}
