@@ -112,7 +112,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Editor.class);
 
 	public static String ID = "org.ddialliance.ddieditor.ui.editor.Editor";
-	private final String ORG_ID = ID;
+	private final String ORG_ID = "org.ddialliance.ddieditor.ui.editor.Editor";
 	public EditorStatus editorStatus = new EditorStatus();
 
 	private String title = "";
