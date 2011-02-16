@@ -32,7 +32,7 @@ public class ModelAccessor {
 	
 	public static ReferenceType setReference(List<?> refList, ReferenceType reference,
 			LightXmlObjectType refered) {
-		if (refered.getId().equals("")) {
+		if (refered != null && refered.getId().equals("")) {
 			if (!refList.isEmpty()) {
 				refList.remove(0);
 			}
