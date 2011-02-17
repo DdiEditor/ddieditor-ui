@@ -139,6 +139,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	/**
 	 * Default constructor. Usage to gain access to create widget methods <br>
 	 * Note: Builds an empty editor input.
+	 * @wbp.parser.constructor
 	 */
 	public Editor() {
 	}
