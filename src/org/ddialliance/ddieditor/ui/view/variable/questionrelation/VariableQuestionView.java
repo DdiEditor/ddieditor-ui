@@ -733,7 +733,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 		freeTableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		freeTableViewer.getTable().setLayoutData(
-				new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
+				new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		freeTableViewer
 				.setContentProvider(new FreeQuestionTableContentProvider());
 
@@ -861,6 +861,9 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 				column.getColumn().setWidth(widths[i]);
 				column.getColumn().setResizable(true);
 			}
+			table.setHeaderVisible(true);
+			table.setLinesVisible(true);
+			table.pack();
 			Editor.resizeTableFont(table);
 
 			table.addMouseListener(new MouseListener() {
@@ -1034,6 +1037,9 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 				column.getColumn().setWidth(widths[i]);
 				column.getColumn().setResizable(true);
 			}
+			table.setHeaderVisible(true);
+			table.setLinesVisible(true);
+			table.pack();
 			Editor.resizeTableFont(table);
 
 			table.addMouseListener(new MouseListener() {
