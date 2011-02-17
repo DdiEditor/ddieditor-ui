@@ -83,8 +83,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-
-public class VariableQuestionView extends ViewPart  implements IPropertyListener {
+public class VariableQuestionView extends ViewPart implements IPropertyListener {
 	// TODO separate logic code into model layer !!!
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.variable.questionrelation.VariableQuestionView";
 	public static final String TABLE_VIEWER_FREE_ID = "free-question";
@@ -514,7 +513,7 @@ public class VariableQuestionView extends ViewPart  implements IPropertyListener
 		toolbarManager.add(resourceChooser);
 		toolbarManager.add(zoomReset);
 	}
-	
+
 	public void refreshView() {
 		if (combo.getSelectionIndex() < 0) {
 			// nothing to do
@@ -824,8 +823,9 @@ public class VariableQuestionView extends ViewPart  implements IPropertyListener
 				relTableViewer.refresh();
 				freeTableViewer.refresh();
 			} else {
-				Editor.showError(new DDIFtpException(action
-						+ " not supported.", new Throwable()), ID, getSite());
+				Editor.showError(new DDIFtpException(
+						action + " not supported.", new Throwable()), ID,
+						getSite());
 			}
 		}
 
@@ -860,12 +860,8 @@ public class VariableQuestionView extends ViewPart  implements IPropertyListener
 				column.getColumn().setText(titles[i]);
 				column.getColumn().setWidth(widths[i]);
 				column.getColumn().setResizable(true);
-				// column.setEditingSupport(new TableEditingSupport(viewer, i));
 			}
 			Editor.resizeTableFont(table);
-			table.setHeaderVisible(true);
-			table.setLinesVisible(true);
-			table.pack();
 
 			table.addMouseListener(new MouseListener() {
 				@Override
@@ -1037,12 +1033,8 @@ public class VariableQuestionView extends ViewPart  implements IPropertyListener
 				column.getColumn().setText(titles[i]);
 				column.getColumn().setWidth(widths[i]);
 				column.getColumn().setResizable(true);
-				// column.setEditingSupport(new TableEditingSupport(viewer, i));
 			}
 			Editor.resizeTableFont(table);
-			table.setHeaderVisible(true);
-			table.setLinesVisible(true);
-			table.pack();
 
 			table.addMouseListener(new MouseListener() {
 				@Override
@@ -1155,6 +1147,6 @@ public class VariableQuestionView extends ViewPart  implements IPropertyListener
 	@Override
 	public void propertyChanged(Object source, int propId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
