@@ -46,8 +46,12 @@ public class XmlObjectComparer implements IElementComparer {
 			List<?> aa = (List<?>) a;
 			List<?> bb = (List<?>) b;
 			if (aa.size() == bb.size()) {
+				// empty list
+				if (aa.isEmpty()&&bb.isEmpty()) {
+					return true;
+				}
 				// list<xmlobject>
-				if ((!(aa.isEmpty()) && (aa.get(0) instanceof XmlObject))
+				else if ((!(aa.isEmpty()) && (aa.get(0) instanceof XmlObject))
 						&& (!(bb.isEmpty()) && (bb.get(0) instanceof XmlObject))) {
 					for (Iterator aaIter = aa.iterator(), bbIter = bb
 							.iterator(); aaIter.hasNext();) {
