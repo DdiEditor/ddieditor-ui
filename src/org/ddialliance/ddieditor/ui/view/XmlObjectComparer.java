@@ -8,6 +8,7 @@ import org.apache.xmlbeans.XmlCursor.TokenType;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
+import org.ddialliance.ddieditor.ui.view.variable.questionrelation.VariableQuestionRelation;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -40,11 +41,12 @@ public class XmlObjectComparer implements IElementComparer {
 					((MaintainableLightLabelQueryResult) b).getId());
 			return result;
 		}
-		// list<xmlobject>
+		// list<?>
 		else if (a instanceof List<?> && b instanceof List<?>) {
 			List<?> aa = (List<?>) a;
 			List<?> bb = (List<?>) b;
 			if (aa.size() == bb.size()) {
+				// list<xmlobject>
 				if ((!(aa.isEmpty()) && (aa.get(0) instanceof XmlObject))
 						&& (!(bb.isEmpty()) && (bb.get(0) instanceof XmlObject))) {
 					for (Iterator aaIter = aa.iterator(), bbIter = bb
@@ -54,6 +56,11 @@ public class XmlObjectComparer implements IElementComparer {
 							return false;
 						}
 					}
+				} // list<variable question relation>
+				else if ((!(aa.isEmpty()) && (aa.get(0) instanceof VariableQuestionRelation))
+						&& (!(bb.isEmpty()) && (bb.get(0) instanceof VariableQuestionRelation))) {
+					// quick fix, size is equal :- )
+					return true;
 				}
 			}
 			return result;
@@ -95,7 +102,7 @@ public class XmlObjectComparer implements IElementComparer {
 		// not to confuse, the hashcode method of mllqr resides in maintainable
 		// light label query result
 
-		// list<xmlobject> 
+		// list<xmlobject>
 		else if (element instanceof List<?>) {
 			List<?> eList = (List<?>) element;
 			if (!eList.isEmpty() && eList.get(0) instanceof XmlObject) {
