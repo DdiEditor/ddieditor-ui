@@ -177,8 +177,12 @@ public enum ElementType {
 			"", null), RECORD_LAYOUT_SCHEME("RecordLayoutScheme", null, null,
 			"rels", "RecordLayoutScheme.label", "", null), DATA_FILE_IDENTIFICATION(
 			"DataFileIdentification", null, null, "dafi",
-			"DataFileIdentification.label", "", null);
+			"DataFileIdentification.label", "", null), 
 
+	// reusable
+	SOFTWARE("Software", null, null, "sofw",
+			"Software.label", "", null);
+	
 	private String elementName;
 	private String perspectiveId;
 	private String editorId;
