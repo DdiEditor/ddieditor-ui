@@ -7,11 +7,6 @@ import java.text.MessageFormat;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.filesystem.FilesystemManager;
-import org.ddialliance.ddieditor.ui.editor.category.CategoryEditor;
-import org.ddialliance.ddieditor.ui.editor.instrument.InstrumentEditor;
-import org.ddialliance.ddieditor.ui.editor.instrument.QuestionConstructEditor;
-import org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor;
-import org.ddialliance.ddieditor.ui.editor.universe.UniverseEditor;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddiftp.util.Translator;
@@ -40,8 +35,8 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 
 		if (fileName != null) {
 			try {
-				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
-						new IRunnableWithProgress() {
+				PlatformUI.getWorkbench().getProgressService()
+						.busyCursorWhile(new IRunnableWithProgress() {
 							@Override
 							public void run(IProgressMonitor monitor)
 									throws InvocationTargetException,
@@ -52,9 +47,9 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 											"OpenFileAction.importingfile",
 											fileName), 3);
 
+									// initialize managers
 									PersistenceManager.getInstance();
-									DdiManager ddiManager = DdiManager
-											.getInstance();
+									DdiManager.getInstance();
 									monitor.worked(1);
 
 									// add resources
@@ -83,15 +78,14 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 					throwable = e;
 				}
 				String errMess = MessageFormat
-						.format(
-								Messages
-										.getString("OpenFileAction.mess.OpenFileError"), throwable.getMessage()); //$NON-NLS-1$
+						.format(Messages
+								.getString("OpenFileAction.mess.OpenFileError"), throwable.getMessage()); //$NON-NLS-1$
 				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
 						.getActiveShell(), Messages.getString("ErrorTitle"),
 						errMess);
 			}
 		}
-		
+
 		// refresh views
 		ViewManager.getInstance().addAllViewsToRefresh();
 		ViewManager.getInstance().refesh();
