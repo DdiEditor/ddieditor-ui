@@ -16,6 +16,8 @@ User interface
 Item ID:    Description:
 - Add pop-up menu point has been removed from Code table of the Code Scheme Editor. Use drag and drop of Cagetory instead to create new Code objects.  
 - ControlConstructSchemes in Instrumentation view now supports labels.
+- Import->Study Level Info does now import correct information from the Journal database.
+- All views are refreshed after import. 
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
