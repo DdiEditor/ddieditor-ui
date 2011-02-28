@@ -13,7 +13,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.xmlbeans.XmlOptions;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
@@ -49,12 +48,8 @@ public class PreviewTabItemAction extends TabItemAction {
 	@Override
 	public Object action() throws DDIFtpException {
 		// get xml
-		XmlOptions xmlOptions = new XmlOptions();
-        xmlOptions.setSaveOuter();
-        xmlOptions.setSaveAggressiveNamespaces();
-
 		String xml = DdiManager.getInstance().getDdi3NamespaceHelper()
-				.substitutePrefixesFromElements(model.getDocument().xmlText(xmlOptions));
+				.substitutePrefixesFromElements(model.getDocument().xmlText(DdiManager.getInstance().getXmloptions()));
 
 		// set display language:
 		transformer.setParameter("lang", LanguageUtil.getDisplayLanguage());
