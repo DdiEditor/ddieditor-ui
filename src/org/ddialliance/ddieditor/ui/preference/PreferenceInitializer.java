@@ -33,5 +33,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// auto change perspective
 		store.setDefault(PreferenceConstants.AUTO_CHANGE_PERSPECTIVE, "false");
 		
+		// confirm DDI Editor exit
+		store.setDefault(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT, "false");
 	}
 }

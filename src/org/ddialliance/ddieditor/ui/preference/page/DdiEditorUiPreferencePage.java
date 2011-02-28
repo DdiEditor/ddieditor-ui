@@ -34,6 +34,11 @@ public class DdiEditorUiPreferencePage extends FieldEditorPreferencePage
 						+ Messages.getString("pref.autotoggle.field"),
 				getFieldEditorParent()));
 
+		addField(new BooleanFieldEditor(
+				PreferenceConstants.CONFIRM_DDIEDITOR_EXIT, "&"
+						+ Messages.getString("pref.confirm.ddieditor.exit"),
+				getFieldEditorParent()));
+
 		// table font size
 		ComboFieldEditor comboFontEditor = new ComboFieldEditor(
 				PreferenceConstants.FONT_SIZE_TABLE_SIZE,
