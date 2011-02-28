@@ -47,7 +47,6 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
 	@Override
 	public boolean preShutdown() {
-		System.out.println("preShutdown called!");
 		// check preferences
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		if (!store.getBoolean(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT)) {
@@ -59,7 +58,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 				.openYesNoQuestion(
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 								.getShell(),
-						Messages.getString("ExitDDIEditor"),
+						Messages.getString("ExitDDIEditor.dialog.title"),
 						Messages.getString("ExitDDIEditor.dialog.mess.DoYouReallyWantToExitTheDDIEditor"),
 						Messages.getString("ExitDDIEditor.Dialog.label.ConfirmDDIEditorExit"),
 						store.getBoolean(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT),
