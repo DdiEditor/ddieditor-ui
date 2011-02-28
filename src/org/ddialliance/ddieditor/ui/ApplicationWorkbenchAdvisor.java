@@ -11,9 +11,15 @@ package org.ddialliance.ddieditor.ui;
  */
 
 import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
+import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
+import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.window.Window;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
@@ -40,10 +46,36 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	}
 
 	@Override
+	public boolean preShutdown() {
+		System.out.println("preShutdown called!");
+		// check preferences
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		if (!store.getBoolean(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT)) {
+			return true;
+		}
+
+		// always ask
+		MessageDialogWithToggle dialog = MessageDialogWithToggle
+				.openYesNoQuestion(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+								.getShell(),
+						Messages.getString("ExitDDIEditor"),
+						Messages.getString("ExitDDIEditor.dialog.mess.DoYouReallyWantToExitTheDDIEditor"),
+						Messages.getString("ExitDDIEditor.Dialog.label.ConfirmDDIEditorExit"),
+						store.getBoolean(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT),
+						null, PreferenceConstants.CONFIRM_DDIEDITOR_EXIT);
+		store.setValue(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT, dialog.getToggleState());
+		if (dialog.getReturnCode() == 2) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public void initialize(IWorkbenchConfigurer configurer) {
 		super.initialize(configurer);
 		if (log.isDebugEnabled()) {
-			log.debug("Initialize: "+configurer.toString());
+			log.debug("Initialize: " + configurer.toString());
 		}
 		configurer.setSaveAndRestore(true);
 	}
