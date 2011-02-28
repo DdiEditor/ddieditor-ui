@@ -12,6 +12,7 @@ Item ID:    Description:
 - ControlConstructSchemes in Instrumentation view now supports labels.
 - Import->Study Level Info does now import correct information from the Journal database.
 - All views are refreshed after import. 
+- Requestion for confirmation is given when File->Exit is chosen. 
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
