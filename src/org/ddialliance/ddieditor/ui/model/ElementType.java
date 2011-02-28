@@ -58,8 +58,7 @@ public enum ElementType {
 	FILE("", InfoPerspective.ID, FileEditor.ID, "", "ddi3file.label", "", null), MAINTAINABLE_LIGHTLABEL(
 			"", "", "", "", "", "", null),
 	// note
-	NOTE("Note", null, null, "note",
-			"Note.label", "", null),
+	NOTE("Note", null, null, "note", "Note.label", "", null),
 
 	// study unit
 	CONCEPTUAL_STUDY_UNIT("studyunit__StudyUnit", "", StudyUnitEditor.ID, "",
@@ -175,14 +174,14 @@ public enum ElementType {
 			"PhysicalStructureScheme.label", "", null), PHYSICAL_STRUCTURE(
 			"PhysicalStructure", null, null, "phst", "PhysicalStructure.label",
 			"", null), RECORD_LAYOUT_SCHEME("RecordLayoutScheme", null, null,
-			"rels", "RecordLayoutScheme.label", "", null), DATA_FILE_IDENTIFICATION(
+			"rels", "RecordLayoutScheme.label", "", null), RECORD_LAYOUT(
+			"RecordLayout", null, null, "rely", "RecordLayout.label", "", null), DATA_FILE_IDENTIFICATION(
 			"DataFileIdentification", null, null, "dafi",
-			"DataFileIdentification.label", "", null), 
+			"DataFileIdentification.label", "", null),
 
 	// reusable
-	SOFTWARE("Software", null, null, "sofw",
-			"Software.label", "", null);
-	
+	SOFTWARE("Software", null, null, "sofw", "Software.label", "", null);
+
 	private String elementName;
 	private String perspectiveId;
 	private String editorId;
