@@ -13,6 +13,7 @@ Item ID:    Description:
 - Import->Study Level Info does now import correct information from the Journal database.
 - All views are refreshed after import. 
 - Requestion for confirmation is given when File->Exit is chosen. 
+- Multiple Question Item editor now supports Name attribute
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
