@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SpecificSequenceType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
@@ -42,11 +43,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
-
 
 /**
  * Multi Question Item Editor
@@ -62,10 +62,9 @@ public class MultipleQuestionItemEditor extends Editor {
 
 	public MultipleQuestionItemEditor() {
 		super(
-				Messages
-						.getString("MultipleQuestionItemEditor.label.multipleQuestionItemEditorLabel.MultipleQuestionItemEditor"),
-				Messages
-						.getString("MultipleQuestionItemEditor.label.useTheEditorLabel.Description"), ID);
+				Messages.getString("MultipleQuestionItemEditor.label.multipleQuestionItemEditorLabel.MultipleQuestionItemEditor"),
+				Messages.getString("MultipleQuestionItemEditor.label.useTheEditorLabel.Description"),
+				ID);
 		super.dao = new MultipleQuestionItemDao();
 	}
 
@@ -76,21 +75,23 @@ public class MultipleQuestionItemEditor extends Editor {
 		TabFolder multiQuestionTabFolder = createTabFolder(getComposite_1());
 
 		// - Multiple Question Item Root Composite:
-		final Composite multiQuestionComposite = new Composite(multiQuestionTabFolder,
-				SWT.NONE);
-		multiQuestionComposite.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
+		final Composite multiQuestionComposite = new Composite(
+				multiQuestionTabFolder, SWT.NONE);
+		multiQuestionComposite.setBackground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_WHITE));
 		multiQuestionComposite.setLayout(new GridLayout());
 
 		// - Multiple Question Item Tab Item:
-		TabItem multiQuestionTabItem = new TabItem(multiQuestionTabFolder, SWT.NONE);
+		TabItem multiQuestionTabItem = new TabItem(multiQuestionTabFolder,
+				SWT.NONE);
 		multiQuestionTabItem.setControl(multiQuestionComposite);
 		multiQuestionTabItem
 				.setText(Messages
 						.getString("MultipleQuestionItemEditor.label.multipleQuestionTabItem.MultipleQuestionItem")); //$NON-NLS-1$
 
 		// - Multiple Question Item Group
-		final Group multiQuestionGroup = new Group(multiQuestionComposite, SWT.NONE);
+		final Group multiQuestionGroup = new Group(multiQuestionComposite,
+				SWT.NONE);
 		final GridData gd_questionGroup = new GridData(SWT.FILL, SWT.CENTER,
 				true, true);
 		gd_questionGroup.heightHint = 646;
@@ -101,8 +102,31 @@ public class MultipleQuestionItemEditor extends Editor {
 		final GridLayout gridLayout_1 = new GridLayout();
 		gridLayout_1.numColumns = 2;
 		multiQuestionGroup.setLayout(gridLayout_1);
-		multiQuestionGroup.setText("Multiple Question Item");
-		
+		multiQuestionGroup
+				.setText(Messages
+						.getString("MultipleQuestionItemEditor.label.MultipleQuestionItem"));
+
+		// Name
+		NameType name = null;
+		try {
+			name = modelImpl.getDocument().getMultipleQuestionItem()
+					.getMultipleQuestionItemNameList().size() == 0 ? null
+					: modelImpl.getDocument().getMultipleQuestionItem()
+							.getMultipleQuestionItemNameList().get(0);
+		} catch (DDIFtpException e2) {
+			String errMess = Messages
+					.getString("MultipleQuestionItemEditor.mess.NameRetrievalError"); //$NON-NLS-1$
+			ErrorDialog.openError(getSite().getShell(), Messages
+					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+					ID, 0, errMess, e2));
+		}
+
+		Text nameTxt = createTextInput(multiQuestionGroup,
+				Messages.getString("MultipleQuestionItemEditor.label.Name")
+						+ ":", name == null ? "" : name.getStringValue(), false);
+		nameTxt.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
+				NameType.class, getEditorIdentification()));
+
 		// Concept Reference:
 
 		// - Get available Concepts:
@@ -121,55 +145,64 @@ public class MultipleQuestionItemEditor extends Editor {
 		// - Create Concept Reference selection combobox
 		ReferenceSelectionCombo refSelecCombo = createRefSelection(
 				multiQuestionGroup,
-				Messages
-						.getString("MultipleQuestionItemEditor.label.conceptLabel.Concept")
+				Messages.getString("MultipleQuestionItemEditor.label.conceptLabel.Concept")
 						+ ":",
-				Messages
-						.getString("MultipleQuestionItemEditor.label.conceptLabel.Concept"),
+				Messages.getString("MultipleQuestionItemEditor.label.conceptLabel.Concept"),
 				modelImpl.getConceptReferenceType(), conceptReferenceList,
 				false);
-		refSelecCombo.addSelectionListener(Messages
-				.getString("MultipleQuestionItemEditor.label.conceptLabel.Concept"), new ReferenceSelectionAdapter(
-						refSelecCombo, model, ReferenceType.class,
-						getEditorIdentification()));
-		
+		refSelecCombo
+				.addSelectionListener(
+						Messages.getString("MultipleQuestionItemEditor.label.conceptLabel.Concept"),
+						new ReferenceSelectionAdapter(refSelecCombo, model,
+								ReferenceType.class, getEditorIdentification()));
+
 		// - SubQuestion Sequence combobox
 		String subQuestionSequence = modelImpl.getSubQuestionSequence() == null ? ""
-				: modelImpl.getSubQuestionSequence().getItemSequenceType().toString();
+				: modelImpl.getSubQuestionSequence().getItemSequenceType()
+						.toString();
 
-		Combo sequencecombo = createSequenceCombo(multiQuestionGroup, Messages
-				.getString("MultipleQuestionItemEditor.label.SubQuestionSequence"),
+		Combo sequencecombo = createSequenceCombo(
+				multiQuestionGroup,
+				Messages.getString("MultipleQuestionItemEditor.label.SubQuestionSequence"),
 				defineItemSequenceSelection(subQuestionSequence));
 
 		sequencecombo.addSelectionListener(new SequenceComboSelectionListener(
 				modelImpl, SpecificSequenceType.class,
 				getEditorIdentification()));
-		
+
 		// - Multiple Question Item Text
 		DynamicTextType multiQuestionText = null;
 		try {
 			if (modelImpl.getQuestionText() != null) {
-				multiQuestionText = (DynamicTextType) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(),
-						modelImpl.getQuestionText());
+				multiQuestionText = (DynamicTextType) XmlBeansUtil
+						.getLangElement(LanguageUtil.getDisplayLanguage(),
+								modelImpl.getQuestionText());
 			}
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
+			DialogUtil
+					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
 
-		StyledText multiQuestionTxt = createTextAreaInput(multiQuestionGroup, Messages
-				.getString("MultipleQuestionItemEditor.label.multipleQuestionItemTextLabel.MultipleQuestionItemText"), multiQuestionText == null ? ""
-				: XmlBeansUtil.getTextOnMixedElement(multiQuestionText.getTextList().get(0)), false);
+		StyledText multiQuestionTxt = createTextAreaInput(
+				multiQuestionGroup,
+				Messages.getString("MultipleQuestionItemEditor.label.multipleQuestionItemTextLabel.MultipleQuestionItemText"),
+				multiQuestionText == null ? "" : XmlBeansUtil
+						.getTextOnMixedElement(multiQuestionText.getTextList()
+								.get(0)), false);
 
-		multiQuestionTxt.addModifyListener(new TextStyledTextModyfiListener(modelImpl, ModelIdentifingType.Type_A.class,
+		multiQuestionTxt.addModifyListener(new TextStyledTextModyfiListener(
+				modelImpl, ModelIdentifingType.Type_A.class,
 				getEditorIdentification()));
 
 		try {
-			createTranslation(multiQuestionGroup, Messages.getString("editor.button.translate"),
-					modelImpl.getQuestionText(), new DynamicTextTdI(), "", multiQuestionTxt);
+			createTranslation(multiQuestionGroup,
+					Messages.getString("editor.button.translate"),
+					modelImpl.getQuestionText(), new DynamicTextTdI(), "",
+					multiQuestionTxt);
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
+			DialogUtil
+					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
-		
 
 		// Create Property Tab Item:
 		createPropertiesTab(multiQuestionTabFolder);
