@@ -45,6 +45,7 @@
     <d:DataCollection id="WLT_DC_1">
       <d:QuestionScheme id="QS">
         <d:MultipleQuestionItem id="Q0">
+          <d:MultipleQuestionItemName>Name of Multiple Question Item</d:MultipleQuestionItemName>
           <d:QuestionText>
             <d:LiteralText>
               <d:Text>Multple Question header text</d:Text>
