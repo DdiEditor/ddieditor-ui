@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlOptions;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.MultipleQuestionItemDocument;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -30,7 +29,8 @@ import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
  */
 
 public class MultipleQuestionItemDao implements IDao {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, MultipleQuestionItemDao.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			MultipleQuestionItemDao.class);
 
 	/**
 	 * Get Light MultipleQuestionItems List of the given Question Scheme
@@ -39,9 +39,11 @@ public class MultipleQuestionItemDao implements IDao {
 	 * @return List<LightXmlObjectType>
 	 * @throws Exception
 	 */
-	public List<LightXmlObjectType> getLightXmlObject(LightXmlObjectType parentQuestionScheme) throws Exception {
+	public List<LightXmlObjectType> getLightXmlObject(
+			LightXmlObjectType parentQuestionScheme) throws Exception {
 
-		return getLightXmlObject("", "", parentQuestionScheme.getId(), parentQuestionScheme.getParentVersion());
+		return getLightXmlObject("", "", parentQuestionScheme.getId(),
+				parentQuestionScheme.getParentVersion());
 	}
 
 	/**
@@ -53,18 +55,24 @@ public class MultipleQuestionItemDao implements IDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<LightXmlObjectType> getLightXmlObject(String id, String version, String parentId, String parentVersion)
+	public List<LightXmlObjectType> getLightXmlObject(String id,
+			String version, String parentId, String parentVersion)
 			throws Exception {
 
-		log.debug("MultipleQuestionItems.getItemsLight() - parent: " + parentId + "/" + parentVersion);
+		log.debug("MultipleQuestionItems.getItemsLight() - parent: " + parentId
+				+ "/" + parentVersion);
 
-		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager.getInstance().getMultipleQuestionItemsLight(id,
-				version, parentId, parentVersion).getLightXmlObjectList().getLightXmlObjectList();
+		List<LightXmlObjectType> lightXmlObjectTypeList = DdiManager
+				.getInstance()
+				.getMultipleQuestionItemsLight(id, version, parentId,
+						parentVersion).getLightXmlObjectList()
+				.getLightXmlObjectList();
 
 		if (log.isDebugEnabled()) {
 			boolean numbers;
 			if (numbers = lightXmlObjectTypeList.size() != 1) {
-				log.error("Unexpected numbers of Multiple Question Items:" + numbers);
+				log.error("Unexpected numbers of Multiple Question Items:"
+						+ numbers);
 			}
 			for (LightXmlObjectType l : lightXmlObjectTypeList) {
 				log.debug("Multiple Question Item Id: " + l.getId());
@@ -97,16 +105,17 @@ public class MultipleQuestionItemDao implements IDao {
 	 * @return QuestionItem
 	 * @throws Exception
 	 */
-	public MultipleQuestionItem create(String id, String version, String parentId, String parentVersion)
-			throws Exception {
+	public MultipleQuestionItem create(String id, String version,
+			String parentId, String parentVersion) throws Exception {
 		log.debug("MultipleQuestionItems.create()");
 
 		MaintainableLabelQueryResult maintainableLabelQueryResult = LabelDescriptionScheme
 				.createLabelDescriptionScheme("MultipleQuestionItem");
 
 		return new MultipleQuestionItem(maintainableLabelQueryResult.getId(),
-				maintainableLabelQueryResult.getVersion(), parentId, parentVersion, maintainableLabelQueryResult
-						.getAgency(), maintainableLabelQueryResult);
+				maintainableLabelQueryResult.getVersion(), parentId,
+				parentVersion, maintainableLabelQueryResult.getAgency(),
+				maintainableLabelQueryResult);
 	}
 
 	/**
@@ -123,13 +132,15 @@ public class MultipleQuestionItemDao implements IDao {
 	 * @return QuestionItem
 	 * @throws Exception
 	 */
-	public MultipleQuestionItem getModel(String id, String version, String parentId, String parentVersion)
-			throws Exception {
+	public MultipleQuestionItem getModel(String id, String version,
+			String parentId, String parentVersion) throws Exception {
 
-		MaintainableLabelQueryResult maintainableLabelQueryResult = DdiManager.getInstance()
-				.getMultipleQuestionItemLabel(id, version, parentId, parentVersion);
+		MaintainableLabelQueryResult maintainableLabelQueryResult = DdiManager
+				.getInstance().getMultipleQuestionItemLabel(id, version,
+						parentId, parentVersion);
 
-		return new MultipleQuestionItem(id, version, parentId, parentVersion, maintainableLabelQueryResult.getAgency(),
+		return new MultipleQuestionItem(id, version, parentId, parentVersion,
+				maintainableLabelQueryResult.getAgency(),
 				maintainableLabelQueryResult);
 
 		// MultipleQuestionItemDocument doc =
@@ -152,52 +163,65 @@ public class MultipleQuestionItemDao implements IDao {
 	 * @throws DDIFtpException
 	 */
 	public void create(IModel multipleQuestionItem) throws DDIFtpException {
-		log.debug("Create DBXML Multiple Question Item:\n" + multipleQuestionItem.getDocument() + " Parent Id: "
+		log.debug("Create DBXML Multiple Question Item:\n"
+				+ multipleQuestionItem.getDocument() + " Parent Id: "
 				+ multipleQuestionItem.getParentId());
-		MultipleQuestionItemDocument doc = (MultipleQuestionItemDocument) multipleQuestionItem.getDocument();
+		MultipleQuestionItemDocument doc = (MultipleQuestionItemDocument) multipleQuestionItem
+				.getDocument();
 		if (doc.getMultipleQuestionItem().getSubQuestions() == null) {
 			doc.getMultipleQuestionItem().addNewSubQuestions();
 		}
 		try {
-			DdiManager.getInstance().createElement(doc, multipleQuestionItem.getParentId(),
+			DdiManager.getInstance().createElement(doc,
+					multipleQuestionItem.getParentId(),
 					multipleQuestionItem.getParentVersion(), "QuestionScheme");
 		} catch (DDIFtpException e) {
-			log.error("Create DBXML Multiple Question Item error: " + e.getMessage());
+			log.error("Create DBXML Multiple Question Item error: "
+					+ e.getMessage());
 
 			throw new DDIFtpException(e.getMessage());
 		}
 	}
-	
-	private void cleanQuestionTexts(String id, String version, String parentId, String parentVersion) throws DDIFtpException {
-		
+
+	private void cleanQuestionTexts(String id, String version, String parentId,
+			String parentVersion) throws DDIFtpException {
+
 		List<MaintainableLabelUpdateElement> maintainableLabelUpdateElementList = new ArrayList<MaintainableLabelUpdateElement>();
 		MaintainableLabelQueryResult maintainableLabelQueryResult = DdiManager
-		.getInstance().getMultipleQuestionItemLabel(id, version, parentId, parentVersion);
+				.getInstance().getMultipleQuestionItemLabel(id, version,
+						parentId, parentVersion);
 
 		MaintainableLabelUpdateElement questionTextUpdateElement = null;
-		int nbrQuestionTextList = maintainableLabelQueryResult.getSubElement("QuestionText").length;
+		int nbrQuestionTextList = maintainableLabelQueryResult
+				.getSubElement("QuestionText").length;
 		// loop over all QuestionTextList elements:
 		for (int i = 0; i < nbrQuestionTextList; i++) {
 			questionTextUpdateElement = new MaintainableLabelUpdateElement();
 			questionTextUpdateElement.setLocalName("QuestionText");
-			questionTextUpdateElement.setCrudValue((i+1) * -1);
+			questionTextUpdateElement.setCrudValue((i + 1) * -1);
 			questionTextUpdateElement.setValue("");
 			maintainableLabelUpdateElementList.add(questionTextUpdateElement);
 		}
-//		System.out.println("Query Result length: "+maintainableLabelQueryResult.getSubElement("QuestionText").length);
-//		System.out.println("Label Update Element list size: "+maintainableLabelUpdateElementList.size());
-//		System.out.println("Query Result(0): "+maintainableLabelQueryResult.getSubElement("QuestionText")[0]);
-//		System.out.println("Query Result(1): "+maintainableLabelQueryResult.getSubElement("QuestionText")[1]);
-//		System.out.println("Label Update Element list: "+maintainableLabelUpdateElementList);
-		if (maintainableLabelQueryResult.getSubElement("QuestionText").length != maintainableLabelUpdateElementList.size()) {
-			throw new DDIFtpException("Internal error:\n"+maintainableLabelQueryResult.getSubElement("QuestionText").length+"\n"+
-					maintainableLabelUpdateElementList.size());
+		// System.out.println("Query Result length: "+maintainableLabelQueryResult.getSubElement("QuestionText").length);
+		// System.out.println("Label Update Element list size: "+maintainableLabelUpdateElementList.size());
+		// System.out.println("Query Result(0): "+maintainableLabelQueryResult.getSubElement("QuestionText")[0]);
+		// System.out.println("Query Result(1): "+maintainableLabelQueryResult.getSubElement("QuestionText")[1]);
+		// System.out.println("Label Update Element list: "+maintainableLabelUpdateElementList);
+		if (maintainableLabelQueryResult.getSubElement("QuestionText").length != maintainableLabelUpdateElementList
+				.size()) {
+			throw new DDIFtpException(
+					"Internal error:\n"
+							+ maintainableLabelQueryResult
+									.getSubElement("QuestionText").length
+							+ "\n" + maintainableLabelUpdateElementList.size());
 		}
 		if (maintainableLabelUpdateElementList.size() > 0) {
-			DdiManager.getInstance().updateMaintainableLabel(maintainableLabelQueryResult, maintainableLabelUpdateElementList);
+			DdiManager.getInstance().updateMaintainableLabel(
+					maintainableLabelQueryResult,
+					maintainableLabelUpdateElementList);
 		}
 	}
-	
+
 	private Object genCrudValue(int oldLength, int NewLength, int position) {
 		if (oldLength < 0 || NewLength < 0) {
 			log.error("Internal genCrudValue error: Negative length");
@@ -225,77 +249,110 @@ public class MultipleQuestionItemDao implements IDao {
 	 * @throws DDIFtpException
 	 */
 	public void update(IModel multiplequestionItem) throws DDIFtpException {
-		log.debug("Update DBXML Multiple Question Item:\n" + multiplequestionItem.getDocument());
-		
+		log.debug("Update DBXML Multiple Question Item:\n"
+				+ multiplequestionItem.getDocument());
+
 		// Remove all Multiple QuestionTexts
-		cleanQuestionTexts(multiplequestionItem.getId(), multiplequestionItem.getVersion(), 
-				multiplequestionItem.getParentId(), multiplequestionItem.getParentVersion());
+		cleanQuestionTexts(multiplequestionItem.getId(),
+				multiplequestionItem.getVersion(),
+				multiplequestionItem.getParentId(),
+				multiplequestionItem.getParentVersion());
 		MaintainableLabelQueryResult maintainableLabelQueryResult = DdiManager
-		.getInstance().getMultipleQuestionItemLabel(multiplequestionItem.getId(), multiplequestionItem.getVersion(), 
-				multiplequestionItem.getParentId(), multiplequestionItem.getParentVersion());
+				.getInstance().getMultipleQuestionItemLabel(
+						multiplequestionItem.getId(),
+						multiplequestionItem.getVersion(),
+						multiplequestionItem.getParentId(),
+						multiplequestionItem.getParentVersion());
 		List<MaintainableLabelUpdateElement> maintainableLabelUpdateElementList = new ArrayList<MaintainableLabelUpdateElement>();
-		MultipleQuestionItemDocument doc = (MultipleQuestionItemDocument)multiplequestionItem.getDocument();
-		
+		MultipleQuestionItemDocument doc = (MultipleQuestionItemDocument) multiplequestionItem
+				.getDocument();
+
 		// update Name to current value - only one is expected
 		MaintainableLabelUpdateElement nameUpdateElement = new MaintainableLabelUpdateElement();
 		nameUpdateElement.setLocalName("MultipleQuestionItemName");
-		int lengthOld = maintainableLabelQueryResult.getSubElement("MultipleQuestionItemName").length == 0 ? 0 : 
-			XmlBeansUtil.getTextOnMixedElement(maintainableLabelQueryResult.getSubElement("MultipleQuestionItemName")[0]).length();
-		int lengthNew = doc.getMultipleQuestionItem().getMultipleQuestionItemNameList().size() == 0 ? 0 :
-			doc.getMultipleQuestionItem().getMultipleQuestionItemNameList().get(0).getStringValue().length();
+		int lengthOld = maintainableLabelQueryResult
+				.getSubElement("MultipleQuestionItemName").length == 0 ? 0
+				: XmlBeansUtil.getTextOnMixedElement(
+						maintainableLabelQueryResult
+								.getSubElement("MultipleQuestionItemName")[0])
+						.length();
+		int lengthNew = doc.getMultipleQuestionItem()
+				.getMultipleQuestionItemNameList().size() == 0 ? 0 : doc
+				.getMultipleQuestionItem().getMultipleQuestionItemNameList()
+				.get(0).getStringValue().length();
 		Object CrudValue = genCrudValue(lengthOld, lengthNew, 1);
 		if (CrudValue != null) {
 			nameUpdateElement.setCrudValue((Integer) CrudValue);
-			nameUpdateElement.setValue(doc.getMultipleQuestionItem().getMultipleQuestionItemNameList().get(0)
-					.xmlText(DdiManager.getInstance().getXmloptions()));
+			nameUpdateElement.setValue(doc.getMultipleQuestionItem()
+					.getMultipleQuestionItemNameList().get(0)
+					.xmlText(DdiManager.getInstance().getXmlOptions()));
 			maintainableLabelUpdateElementList.add(nameUpdateElement);
 		}
 
 		// update ConceptReference to current value - only one is expected
 		MaintainableLabelUpdateElement conceptReferenceUpdateElement = new MaintainableLabelUpdateElement();
 		conceptReferenceUpdateElement.setLocalName("ConceptReference");
-		int lengthOld1 = maintainableLabelQueryResult.getSubElement("ConceptReference").length == 0 ? 0 : 
-			XmlBeansUtil.getTextOnMixedElement(maintainableLabelQueryResult.getSubElement("ConceptReference")[0]).length();
-		int lengthNew1 = doc.getMultipleQuestionItem().getConceptReferenceList().size() == 0 ? 0 :
-			doc.getMultipleQuestionItem().getConceptReferenceList().get(0).getIDList().get(0).getStringValue().length();
+		int lengthOld1 = maintainableLabelQueryResult
+				.getSubElement("ConceptReference").length == 0 ? 0
+				: XmlBeansUtil.getTextOnMixedElement(
+						maintainableLabelQueryResult
+								.getSubElement("ConceptReference")[0]).length();
+		int lengthNew1 = doc.getMultipleQuestionItem()
+				.getConceptReferenceList().size() == 0 ? 0 : doc
+				.getMultipleQuestionItem().getConceptReferenceList().get(0)
+				.getIDList().get(0).getStringValue().length();
 		Object CrudValue1 = genCrudValue(lengthOld, lengthNew, 1);
 		if (CrudValue != null) {
 			conceptReferenceUpdateElement.setCrudValue((Integer) CrudValue);
-			conceptReferenceUpdateElement.setValue(doc.getMultipleQuestionItem().getConceptReferenceList().get(0)
-					.xmlText(DdiManager.getInstance().getXmloptions()));
-			maintainableLabelUpdateElementList.add(conceptReferenceUpdateElement);
+			conceptReferenceUpdateElement.setValue(doc
+					.getMultipleQuestionItem().getConceptReferenceList().get(0)
+					.xmlText(DdiManager.getInstance().getXmlOptions()));
+			maintainableLabelUpdateElementList
+					.add(conceptReferenceUpdateElement);
 		}
 
 		// update SubQuestion Sequence to current value
 		MaintainableLabelUpdateElement SubQuestionSequenceUpdateElement = new MaintainableLabelUpdateElement();
 		SubQuestionSequenceUpdateElement.setLocalName("SubQuestionSequence");
-		lengthOld = maintainableLabelQueryResult.getSubElement("SubQuestionSequence").length == 0 ? 0 :
-			XmlBeansUtil.getTextOnMixedElement(maintainableLabelQueryResult.getSubElement("SubQuestionSequence")[0]).length();
-		lengthNew = doc.getMultipleQuestionItem().getSubQuestionSequence() == null ? 0 :
-			doc.getMultipleQuestionItem().getSubQuestionSequence().getItemSequenceType().toString().length();
+		lengthOld = maintainableLabelQueryResult
+				.getSubElement("SubQuestionSequence").length == 0 ? 0
+				: XmlBeansUtil.getTextOnMixedElement(
+						maintainableLabelQueryResult
+								.getSubElement("SubQuestionSequence")[0])
+						.length();
+		lengthNew = doc.getMultipleQuestionItem().getSubQuestionSequence() == null ? 0
+				: doc.getMultipleQuestionItem().getSubQuestionSequence()
+						.getItemSequenceType().toString().length();
 		CrudValue = genCrudValue(lengthOld, lengthNew, 1);
 		if (CrudValue != null) {
 			SubQuestionSequenceUpdateElement.setCrudValue((Integer) CrudValue);
-			SubQuestionSequenceUpdateElement.setValue(doc.getMultipleQuestionItem().getSubQuestionSequence().xmlText(
-					DdiManager.getInstance().getXmloptions()));
-			maintainableLabelUpdateElementList.add(SubQuestionSequenceUpdateElement);
+			SubQuestionSequenceUpdateElement.setValue(doc
+					.getMultipleQuestionItem().getSubQuestionSequence()
+					.xmlText(DdiManager.getInstance().getXmlOptions()));
+			maintainableLabelUpdateElementList
+					.add(SubQuestionSequenceUpdateElement);
 		}
 
 		// add Question Text
 		MaintainableLabelUpdateElement questionTextUpdateElement = null;
-		int nbrNewQuestionTextList = doc.getMultipleQuestionItem().getQuestionTextList().size();
+		int nbrNewQuestionTextList = doc.getMultipleQuestionItem()
+				.getQuestionTextList().size();
 		// loop over all QuestionTextList elements:
 		for (int i = 0; i < nbrNewQuestionTextList; i++) {
 			questionTextUpdateElement = new MaintainableLabelUpdateElement();
 			questionTextUpdateElement.setLocalName("QuestionText");
-			questionTextUpdateElement.setCrudValue(MaintainableLabelUpdateElement.NEW);
-			questionTextUpdateElement.setValue(doc.getMultipleQuestionItem().getQuestionTextList().get(i).xmlText(
-					DdiManager.getInstance().getXmloptions()));
+			questionTextUpdateElement
+					.setCrudValue(MaintainableLabelUpdateElement.NEW);
+			questionTextUpdateElement.setValue(doc.getMultipleQuestionItem()
+					.getQuestionTextList().get(i)
+					.xmlText(DdiManager.getInstance().getXmlOptions()));
 			maintainableLabelUpdateElementList.add(questionTextUpdateElement);
 		}
-		DdiManager.getInstance().updateMaintainableLabel(maintainableLabelQueryResult, maintainableLabelUpdateElementList);
+		DdiManager.getInstance().updateMaintainableLabel(
+				maintainableLabelQueryResult,
+				maintainableLabelUpdateElementList);
 
-//		multiplequestionItem.clearChanged();
+		// multiplequestionItem.clearChanged();
 	}
 
 	/**
@@ -312,12 +369,16 @@ public class MultipleQuestionItemDao implements IDao {
 	 *            Parent Version
 	 * @throws Exception
 	 */
-	public void delete(String id, String version, String parentId, String parentVersion) throws Exception {
+	public void delete(String id, String version, String parentId,
+			String parentVersion) throws Exception {
 		log.debug("Delete DBXML MultipleQuestion Item");
-		MultipleQuestionItem multipleQuestionItem = getModel(id, version, parentId, parentVersion);
+		MultipleQuestionItem multipleQuestionItem = getModel(id, version,
+				parentId, parentVersion);
 		try {
-			DdiManager.getInstance().deleteElement(multipleQuestionItem.getDocument(),
-					multipleQuestionItem.getParentId(), multipleQuestionItem.getParentVersion(), "QuestionScheme");
+			DdiManager.getInstance().deleteElement(
+					multipleQuestionItem.getDocument(),
+					multipleQuestionItem.getParentId(),
+					multipleQuestionItem.getParentVersion(), "QuestionScheme");
 		} catch (DDIFtpException e) {
 			log.error("Delete DBXML Question Item error: " + e.getMessage());
 
@@ -326,7 +387,8 @@ public class MultipleQuestionItemDao implements IDao {
 
 		if (log.isDebugEnabled()) {
 			multipleQuestionItem = null;
-			multipleQuestionItem = getModel(id, version, parentId, parentVersion);
+			multipleQuestionItem = getModel(id, version, parentId,
+					parentVersion);
 			if (multipleQuestionItem != null) {
 				log.error("****************** Multiple Question Item not deleted *****************");
 			}
