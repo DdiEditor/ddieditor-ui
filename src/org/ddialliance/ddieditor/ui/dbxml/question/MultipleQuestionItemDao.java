@@ -230,31 +230,39 @@ public class MultipleQuestionItemDao implements IDao {
 		// Remove all Multiple QuestionTexts
 		cleanQuestionTexts(multiplequestionItem.getId(), multiplequestionItem.getVersion(), 
 				multiplequestionItem.getParentId(), multiplequestionItem.getParentVersion());
-		
 		MaintainableLabelQueryResult maintainableLabelQueryResult = DdiManager
 		.getInstance().getMultipleQuestionItemLabel(multiplequestionItem.getId(), multiplequestionItem.getVersion(), 
 				multiplequestionItem.getParentId(), multiplequestionItem.getParentVersion());
-		
 		List<MaintainableLabelUpdateElement> maintainableLabelUpdateElementList = new ArrayList<MaintainableLabelUpdateElement>();
-
-		XmlOptions xmlOptions = new XmlOptions();
-        xmlOptions.setSaveOuter();
-        xmlOptions.setSaveAggressiveNamespaces();
-
 		MultipleQuestionItemDocument doc = (MultipleQuestionItemDocument)multiplequestionItem.getDocument();
 		
+		// update Name to current value - only one is expected
+		MaintainableLabelUpdateElement nameUpdateElement = new MaintainableLabelUpdateElement();
+		nameUpdateElement.setLocalName("MultipleQuestionItemName");
+		int lengthOld = maintainableLabelQueryResult.getSubElement("MultipleQuestionItemName").length == 0 ? 0 : 
+			XmlBeansUtil.getTextOnMixedElement(maintainableLabelQueryResult.getSubElement("MultipleQuestionItemName")[0]).length();
+		int lengthNew = doc.getMultipleQuestionItem().getMultipleQuestionItemNameList().size() == 0 ? 0 :
+			doc.getMultipleQuestionItem().getMultipleQuestionItemNameList().get(0).getStringValue().length();
+		Object CrudValue = genCrudValue(lengthOld, lengthNew, 1);
+		if (CrudValue != null) {
+			nameUpdateElement.setCrudValue((Integer) CrudValue);
+			nameUpdateElement.setValue(doc.getMultipleQuestionItem().getMultipleQuestionItemNameList().get(0)
+					.xmlText(DdiManager.getInstance().getXmloptions()));
+			maintainableLabelUpdateElementList.add(nameUpdateElement);
+		}
+
 		// update ConceptReference to current value - only one is expected
 		MaintainableLabelUpdateElement conceptReferenceUpdateElement = new MaintainableLabelUpdateElement();
 		conceptReferenceUpdateElement.setLocalName("ConceptReference");
-		int lengthOld = maintainableLabelQueryResult.getSubElement("ConceptReference").length == 0 ? 0 : 
+		int lengthOld1 = maintainableLabelQueryResult.getSubElement("ConceptReference").length == 0 ? 0 : 
 			XmlBeansUtil.getTextOnMixedElement(maintainableLabelQueryResult.getSubElement("ConceptReference")[0]).length();
-		int lengthNew = doc.getMultipleQuestionItem().getConceptReferenceList().size() == 0 ? 0 :
+		int lengthNew1 = doc.getMultipleQuestionItem().getConceptReferenceList().size() == 0 ? 0 :
 			doc.getMultipleQuestionItem().getConceptReferenceList().get(0).getIDList().get(0).getStringValue().length();
-		Object CrudValue = genCrudValue(lengthOld, lengthNew, 1);
+		Object CrudValue1 = genCrudValue(lengthOld, lengthNew, 1);
 		if (CrudValue != null) {
 			conceptReferenceUpdateElement.setCrudValue((Integer) CrudValue);
 			conceptReferenceUpdateElement.setValue(doc.getMultipleQuestionItem().getConceptReferenceList().get(0)
-					.xmlText(xmlOptions));
+					.xmlText(DdiManager.getInstance().getXmloptions()));
 			maintainableLabelUpdateElementList.add(conceptReferenceUpdateElement);
 		}
 
@@ -269,7 +277,7 @@ public class MultipleQuestionItemDao implements IDao {
 		if (CrudValue != null) {
 			SubQuestionSequenceUpdateElement.setCrudValue((Integer) CrudValue);
 			SubQuestionSequenceUpdateElement.setValue(doc.getMultipleQuestionItem().getSubQuestionSequence().xmlText(
-					xmlOptions));
+					DdiManager.getInstance().getXmloptions()));
 			maintainableLabelUpdateElementList.add(SubQuestionSequenceUpdateElement);
 		}
 
@@ -282,7 +290,7 @@ public class MultipleQuestionItemDao implements IDao {
 			questionTextUpdateElement.setLocalName("QuestionText");
 			questionTextUpdateElement.setCrudValue(MaintainableLabelUpdateElement.NEW);
 			questionTextUpdateElement.setValue(doc.getMultipleQuestionItem().getQuestionTextList().get(i).xmlText(
-					xmlOptions));
+					DdiManager.getInstance().getXmloptions()));
 			maintainableLabelUpdateElementList.add(questionTextUpdateElement);
 		}
 		DdiManager.getInstance().updateMaintainableLabel(maintainableLabelQueryResult, maintainableLabelUpdateElementList);
