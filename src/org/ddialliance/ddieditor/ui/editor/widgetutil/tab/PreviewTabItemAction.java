@@ -49,7 +49,7 @@ public class PreviewTabItemAction extends TabItemAction {
 	public Object action() throws DDIFtpException {
 		// get xml
 		String xml = DdiManager.getInstance().getDdi3NamespaceHelper()
-				.substitutePrefixesFromElements(model.getDocument().xmlText(DdiManager.getInstance().getXmloptions()));
+				.substitutePrefixesFromElements(model.getDocument().xmlText(DdiManager.getInstance().getXmlOptions()));
 
 		// set display language:
 		transformer.setParameter("lang", LanguageUtil.getDisplayLanguage());

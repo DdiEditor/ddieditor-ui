@@ -30,7 +30,7 @@ public class DDITabItemAction extends TabItemAction {
 				.getDdi3NamespaceHelper()
 				.substitutePrefixesFromElements(
 						model.getDocument().xmlText(
-								DdiManager.getInstance().getXmloptions())));
+								DdiManager.getInstance().getXmlOptions())));
 		return null;
 	}
 }
