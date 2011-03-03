@@ -17,9 +17,11 @@
                   id="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective" name="%perspective.name"> </perspective>
             <perspective class="org.ddialliance.ddieditor.ui.perspective.CodesPerspective"
                   id="org.ddialliance.ddieditor.ui.perspective.CodesPerspective" name="%perspective.name.0"> </perspective>
-            <perspective name="%perspective.name.2"
+            <perspective
                   class="org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective"
-                  id="org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective"> </perspective>
+                  icon="icons/question.png"
+                  id="org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective"
+                  name="%perspective.name.2"> </perspective>
             <perspective name="%perspective.name.3"
                   class="org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective"
                   id="org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective"
