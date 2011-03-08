@@ -1,23 +1,15 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.0
-Release Data: 2011-03-02
+Product Version: 1.0.1 Release Data: 2011-03-XX
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-- Add pop-up menu point has been removed from Code table of the Code Scheme 
-Editor. Use drag and drop of Cagetory instead to create new Code objects.  
-- ControlConstructSchemes in Instrumentation view now supports labels.
-- Import->Study Level Info does now import universes correctly.
-- All views are refreshed after import. 
-- Requestion for confirmation is given when File->Exit is chosen. 
-- Multiple Question Item editor now supports Name attribute.
-- Import questions as wiki text bug fix.
-- Variable question view bug fix.
-- SPSS import now has wizard. 
+ DDIE-35 Question Variable Relation -> apply. The relation between variable and 
+ question is done.
+ DDIE-40 Import Questions, nullpoiter exception on empty reference selection.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
