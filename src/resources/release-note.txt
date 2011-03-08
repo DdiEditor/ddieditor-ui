@@ -10,6 +10,7 @@ Item ID:    Description:
  DDIE-35 Question Variable Relation -> apply. The relation between variable and 
  question is done.
  DDIE-40 Import Questions, nullpoiter exception on empty reference selection.
+ DDIE-41 Geografisk Univers and Stikproeveunivers added as universe and sub-universe
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
