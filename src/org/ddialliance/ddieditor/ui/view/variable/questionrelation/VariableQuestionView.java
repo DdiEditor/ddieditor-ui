@@ -618,10 +618,13 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 			// questions user id -> variable id
 			// note 'variable -> question relation' has precedence over
 			// 'questions user id -> variable id'
+			boolean assigned = false;
 			String variPseudoId = null;
 			for (Iterator<LightXmlObjectType> iterator = lightQuei.iterator(); iterator
 					.hasNext();) {
 				LightXmlObjectType quei = iterator.next();
+				assigned = false;
+
 				// user id
 				for (CustomType cus : getCustomListbyType(quei, "UserID")) {
 					if (cus.getOption().equals(
@@ -629,19 +632,33 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 						variPseudoId = XmlBeansUtil.getTextOnMixedElement(cus);
 						if (variPseudoId != null) {
 							for (VariableQuestionRelation variQueiRel : relItems) {
-								if (variQueiRel.quei == null
-										&& variQueiRel.vari.getId().equals(
-												variPseudoId)) {
-									variQueiRel.quei = quei;
-									iterator.remove();
+								if (variQueiRel.quei == null) {
+									String variName = null;
+									for (CustomType cusName : getCustomListbyType(
+											variQueiRel.vari, "Name")) {
+										variName = XmlBeansUtil
+												.getTextOnMixedElement(cusName);
+										if (variName != null
+												&& variName
+														.equals(variPseudoId)) {
+											variQueiRel.quei = (LightXmlObjectType) quei
+													.copy();
+											assigned = true;
+											break;
+										}
+									}
+								}
+								if (assigned) {
 									break;
 								}
 							}
 						}
 					}
 				}
+				if (assigned) {
+					iterator.remove();
+				}
 			}
-
 			// refresh
 			freeItems = lightQuei;
 			relTableViewer.refresh();
