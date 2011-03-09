@@ -11,6 +11,7 @@ Item ID:    Description:
  question is done.
  DDIE-40 Import Questions, nullpoiter exception on empty reference selection.
  DDIE-41 Geografisk Univers and Stikproeveunivers added as universe and sub-universe
+     -   DDI Manager cach size decremented.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
