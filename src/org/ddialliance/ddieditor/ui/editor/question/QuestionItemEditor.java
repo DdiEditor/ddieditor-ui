@@ -58,7 +58,6 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
 
 /**
@@ -75,10 +74,9 @@ public class QuestionItemEditor extends Editor {
 
 	public QuestionItemEditor() {
 		super(
-				Messages
-						.getString("QuestionItemEditor.label.questionItemEditorLabel.QuestionItemEditor"),
-				Messages
-						.getString("QuestionItemEditor.label.useTheEditorLabel.Description"), ID);
+				Messages.getString("QuestionItemEditor.label.questionItemEditorLabel.QuestionItemEditor"),
+				Messages.getString("QuestionItemEditor.label.useTheEditorLabel.Description"),
+				ID);
 		super.dao = new QuestionItemDao();
 	}
 
@@ -115,14 +113,18 @@ public class QuestionItemEditor extends Editor {
 		gridLayout_1.numColumns = 2;
 		questionGroup.setLayout(gridLayout_1);
 		questionGroup.setText("Question Item");
-		
+
 		// Name
-		NameType name = modelImpl.getDocument().getQuestionItem().getQuestionItemNameList().size() == 0 ? 
-				null : modelImpl.getDocument().getQuestionItem().getQuestionItemNameList().get(0);
-		
-		Text nameTxt = createTextInput(questionGroup, Messages.getString("QuestionItemEditor.label.Name") + ":",
+		NameType name = modelImpl.getDocument().getQuestionItem()
+				.getQuestionItemNameList().size() == 0 ? null : modelImpl
+				.getDocument().getQuestionItem().getQuestionItemNameList()
+				.get(0);
+
+		Text nameTxt = createTextInput(questionGroup,
+				Messages.getString("QuestionItemEditor.label.Name") + ":",
 				name == null ? "" : name.getStringValue(), false);
-		nameTxt.addModifyListener(new TextStyledTextModyfiListener(modelImpl, NameType.class, getEditorIdentification()));
+		nameTxt.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
+				NameType.class, getEditorIdentification()));
 
 		// Concept Reference:
 
@@ -141,20 +143,26 @@ public class QuestionItemEditor extends Editor {
 		}
 
 		// - Create Concept Reference selection combobox
-		ReferenceSelectionCombo refSelecCombo = createRefSelection(questionGroup,
-				Messages.getString("QuestionItemEditor.label.conceptLabel.Concept") + ":",
+		ReferenceSelectionCombo refSelecCombo = createRefSelection(
+				questionGroup,
+				Messages.getString("QuestionItemEditor.label.conceptLabel.Concept")
+						+ ":",
 				Messages.getString("QuestionItemEditor.label.conceptLabel.Concept"),
-				modelImpl.getConceptReferenceType(), conceptReferenceList, false);
-		
-		refSelecCombo.addSelectionListener(Messages.getString("QuestionItemEditor.label.conceptLabel.Concept"),
-				new ReferenceSelectionAdapter(refSelecCombo, model, ReferenceType.class, getEditorIdentification()));
+				modelImpl.getConceptReferenceType(), conceptReferenceList,
+				false);
+
+		refSelecCombo.addSelectionListener(Messages
+				.getString("QuestionItemEditor.label.conceptLabel.Concept"),
+				new ReferenceSelectionAdapter(refSelecCombo, model,
+						ReferenceType.class, getEditorIdentification()));
 
 		// - Question Text
 		DynamicTextType questionText = null;
 		try {
 			if (modelImpl.getQuestionText() != null) {
-				questionText = (DynamicTextType) XmlBeansUtil
-						.getLangElement(LanguageUtil.getDisplayLanguage(), modelImpl.getQuestionText());
+				questionText = (DynamicTextType) XmlBeansUtil.getLangElement(
+						LanguageUtil.getDisplayLanguage(),
+						modelImpl.getQuestionText());
 			}
 		} catch (DDIFtpException e) {
 			DialogUtil
@@ -163,8 +171,7 @@ public class QuestionItemEditor extends Editor {
 
 		StyledText questionTxt = createTextAreaInput(
 				questionGroup,
-				Messages
-						.getString("QuestionItemEditor.label.questionTextLabel.QuestionText"),
+				Messages.getString("QuestionItemEditor.label.questionTextLabel.QuestionText"),
 				questionText == null ? "" : XmlBeansUtil
 						.getTextOnMixedElement(questionText.getTextList()
 								.get(0)), false);
@@ -174,9 +181,10 @@ public class QuestionItemEditor extends Editor {
 				getEditorIdentification()));
 
 		try {
-			createTranslation(questionGroup, Messages
-					.getString("editor.button.translate"), modelImpl
-					.getQuestionText(), new DynamicTextTdI(), "", questionTxt);
+			createTranslation(questionGroup,
+					Messages.getString("editor.button.translate"),
+					modelImpl.getQuestionText(), new DynamicTextTdI(), "",
+					questionTxt);
 		} catch (DDIFtpException e) {
 			DialogUtil
 					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
@@ -251,9 +259,8 @@ public class QuestionItemEditor extends Editor {
 				responseDomainRef = modelImpl.getResponseDomain();
 			} catch (Exception e1) {
 				String errMess = MessageFormat
-						.format(
-								Messages
-										.getString("QuestionItemEditor.mess.ResponseDomainReferenceRetrievalError"), e1.getMessage()); //$NON-NLS-1$
+						.format(Messages
+								.getString("QuestionItemEditor.mess.ResponseDomainReferenceRetrievalError"), e1.getMessage()); //$NON-NLS-1$
 				ErrorDialog.openError(getSite().getShell(), Messages
 						.getString("ErrorTitle"), null, new Status(
 						IStatus.ERROR, ID, 0, errMess, e1));
@@ -293,15 +300,14 @@ public class QuestionItemEditor extends Editor {
 					RepresentationType repType = modelImpl.setResponseDomain(
 							rt, "");
 					if (repType == null) {
-						String errMess = MessageFormat
-								.format(
-										Messages
-												.getString("QuestionItemEditor.mess.QuestionItemResponseTypeNotSupported"),
-										ResponseTypeDetail
-												.getResponseTypeLabel(rt)); //$NON-NLS-1$
-						ErrorDialog.openError(getSite().getShell(), Messages
-								.getString("ErrorTitle"), null, new Status(
-								IStatus.ERROR, ID, 0, errMess, null),
+						String errMess = MessageFormat.format(
+								Messages.getString("QuestionItemEditor.mess.QuestionItemResponseTypeNotSupported"),
+								ResponseTypeDetail.getResponseTypeLabel(rt)); //$NON-NLS-1$
+						ErrorDialog.openError(
+								getSite().getShell(),
+								Messages.getString("ErrorTitle"),
+								null,
+								new Status(IStatus.ERROR, ID, 0, errMess, null),
 								IStatus.ERROR);
 						responseComboViewer.getCombo().select(0);
 						responseTypeDetail.dispose();
