@@ -30,7 +30,7 @@ public class ComputationItem extends Model {
 			getUntilCondition().setProgrammingLanguage((String) value);
 		}
 
-		// question reference
+		// variable reference
 		if (type.equals(ModelIdentifingType.Type_B.class)) {
 			IdentificationManager.getInstance().addReferenceInformation(
 					getAssignedVariableReference(), (LightXmlObjectType) value);
