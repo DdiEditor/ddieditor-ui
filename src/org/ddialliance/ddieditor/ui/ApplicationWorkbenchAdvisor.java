@@ -18,7 +18,6 @@ import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.window.Window;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -63,7 +62,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 						Messages.getString("ExitDDIEditor.Dialog.label.ConfirmDDIEditorExit"),
 						store.getBoolean(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT),
 						null, PreferenceConstants.CONFIRM_DDIEDITOR_EXIT);
-		store.setValue(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT, dialog.getToggleState());
+		store.setValue(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT,
+				dialog.getToggleState());
 		if (dialog.getReturnCode() == 2) {
 			return true;
 		}
