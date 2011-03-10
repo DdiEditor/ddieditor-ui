@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
 
 /**
@@ -85,10 +84,9 @@ public class StudyUnitEditor extends Editor {
 	 */
 	public StudyUnitEditor() {
 		super(
-				Messages
-						.getString("StudyUnitEditor.label.StudyUnitEditorLabel.StudyUnitEditor"),
-				Messages
-						.getString("StudyUnitEditor.label.useTheEditorLabel.Description"), ID);
+				Messages.getString("StudyUnitEditor.label.StudyUnitEditorLabel.StudyUnitEditor"),
+				Messages.getString("StudyUnitEditor.label.useTheEditorLabel.Description"),
+				ID);
 		this.dao = new StudyUnitDao();
 	}
 
@@ -352,8 +350,7 @@ public class StudyUnitEditor extends Editor {
 		abstractStyledText.setLayoutData(gd_originalStudyUnitTextStyledText);
 		abstractStyledText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				modelImpl
-						.setAbstractContent(abstractStyledText.getText(), "da");
+				modelImpl.setAbstractContent(abstractStyledText.getText(), "da");
 				editorStatus.setChanged();
 			}
 		});
@@ -368,8 +365,7 @@ public class StudyUnitEditor extends Editor {
 		// - Universe Reference Group
 		Group grpStudyUniverseReference = createGroup(
 				tbtmUniverseReference,
-				Messages
-						.getString("StudyUnitEditor.label.StudyUniverseReference"));
+				Messages.getString("StudyUnitEditor.label.StudyUniverseReference"));
 
 		createLabel(grpStudyUniverseReference, "Universes");
 		uniRefTable = new Table(grpStudyUniverseReference, SWT.VIRTUAL
@@ -416,8 +412,9 @@ public class StudyUnitEditor extends Editor {
 		TabItem tbtmFunding = new TabItem(tabFolder, SWT.NONE);
 		tbtmFunding
 				.setText(Messages.getString("StudyUnitEditor.label.Funding"));
-		Group grpFunding = createGroup(tbtmFunding, Messages
-				.getString("StudyUnitEditor.label.StudyFundingInformation"));
+		Group grpFunding = createGroup(
+				tbtmFunding,
+				Messages.getString("StudyUnitEditor.label.StudyFundingInformation"));
 		createLabel(grpFunding, "Funding");
 
 		// Funding Information
@@ -520,9 +517,9 @@ public class StudyUnitEditor extends Editor {
 
 	@Override
 	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages
-				.getString("perspective.switch.dialogtext"), Messages
-				.getString("perspective.overview"));
+		return MessageFormat.format(
+				Messages.getString("perspective.switch.dialogtext"),
+				Messages.getString("perspective.overview"));
 	}
 
 	public void opdateUniRefTable(String[] uniRefIds) {
@@ -557,8 +554,11 @@ public class StudyUnitEditor extends Editor {
 			item.setText(0, "" + lightXmlObject.getId());
 			try {
 				if (lightXmlObject.getLabelList().size() > 0) {
-					item.setText(1, XmlBeansUtil.getTextOnMixedElement((XmlObject) XmlBeansUtil.getLangElement(
-							LanguageUtil.getDisplayLanguage(), lightXmlObject.getLabelList())));
+					item.setText(1, XmlBeansUtil
+							.getTextOnMixedElement((XmlObject) XmlBeansUtil
+									.getLangElement(
+											LanguageUtil.getDisplayLanguage(),
+											lightXmlObject.getLabelList())));
 				}
 			} catch (DDIFtpException e) {
 				e.printStackTrace();
@@ -590,10 +590,11 @@ public class StudyUnitEditor extends Editor {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			// guard
 			// TODO
-			if (lightXmlObjectDoc.getLightXmlObjectList().getLightXmlObjectList().isEmpty()) {
+			if (lightXmlObjectDoc.getLightXmlObjectList()
+					.getLightXmlObjectList().isEmpty()) {
 				return;
 			}
 			LightXmlObjectType lightXmlObject = lightXmlObjectDoc
@@ -605,9 +606,9 @@ public class StudyUnitEditor extends Editor {
 			try {
 				item.setText(1, XmlBeansUtil
 						.getTextOnMixedElement((XmlObject) XmlBeansUtil
-								.getLangElement(LanguageUtil
-										.getDisplayLanguage(), lightXmlObject
-										.getLabelList())));
+								.getLangElement(
+										LanguageUtil.getDisplayLanguage(),
+										lightXmlObject.getLabelList())));
 			} catch (DDIFtpException e) {
 				e.printStackTrace();
 			}
