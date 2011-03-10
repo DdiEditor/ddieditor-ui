@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
@@ -404,7 +406,7 @@ public class StudyUnitEditor extends Editor {
 		}
 
 		try {
-			opdateUniRefTable(modelImpl.getUniverseRefId());
+			updateUniRefTable();
 		} catch (DDIFtpException e) {
 			String errMess = Messages
 					.getString("StudyUnitEditor.mess.SetUniverseRefError"); //$NON-NLS-1$
@@ -529,7 +531,10 @@ public class StudyUnitEditor extends Editor {
 				Messages.getString("perspective.overview"));
 	}
 
-	public void opdateUniRefTable(String[] uniRefIds) {
+	public void updateUniRefTable() throws DDIFtpException {
+
+		String[] uniRefIds = modelImpl.getUniverseRefId();
+
 		// clear file formats
 		TableItem[] items = null;
 		try {
@@ -545,6 +550,7 @@ public class StudyUnitEditor extends Editor {
 		for (int i = 0; i < uniRefIds.length; i++) {
 			LightXmlObjectListDocument lightXmlList = null;
 			try {
+				// get Universe
 				lightXmlList = DdiManager.getInstance().getUniversesLight(
 						uniRefIds[i], null, null, null);
 			} catch (Exception e) {
@@ -566,8 +572,34 @@ public class StudyUnitEditor extends Editor {
 									.getLangElement(
 											LanguageUtil.getDisplayLanguage(),
 											lightXmlObject.getLabelList())));
+					// get sub-universe - if any exist
+					UniverseDocument universeDoc = DdiManager.getInstance()
+							.getUniverse(lightXmlObject.getId(),
+									lightXmlObject.getVersion(),
+									lightXmlObject.getParentId(),
+									lightXmlObject.getParentVersion());
+					List<UniverseType> subUniverseList = universeDoc
+							.getUniverse().getSubUniverseList();
+					for (UniverseType universeType : subUniverseList) {
+						item = new TableItem(uniRefTable, SWT.NONE);
+						item.setText(0, "" + universeType.getId());
+						if (universeType.getLabelList().size() > 0) {
+							item.setText(
+									1,
+									"\t"
+											+ XmlBeansUtil
+													.getTextOnMixedElement((XmlObject) XmlBeansUtil.getLangElement(
+															LanguageUtil
+																	.getDisplayLanguage(),
+															universeType
+																	.getLabelList())));
+						}
+					}
 				}
 			} catch (DDIFtpException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			item.setData(lightXmlObject);
