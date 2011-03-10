@@ -1,11 +1,20 @@
 package org.ddialliance.ddieditor.ui.model.universe;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddieditor.model.DdiManager;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLabelQueryResult;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.LabelDescription;
+import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 
 public class Universe extends LabelDescription implements IModel {
 	private UniverseDocument doc;
@@ -24,6 +33,34 @@ public class Universe extends LabelDescription implements IModel {
 			this.doc = doc;
 		}
 		this.type = doc.getUniverse();
+	}
+
+	public List<String> getStudyUnitReference() throws Exception {
+
+		LightXmlObjectListDocument listDoc = DdiManager.getInstance()
+				.getStudyUnitsLight("", "", "", "");
+
+		List<LightXmlObjectType> listLightXmlObjectListType = listDoc
+				.getLightXmlObjectList().getLightXmlObjectList();
+
+		List<String> result = new ArrayList<String>();
+		// for each Study Unit
+		for (LightXmlObjectType lightXmlObjectType : listLightXmlObjectListType) {
+			MaintainableLabelQueryResult studyUnitMaintainableLabel = DdiManager
+					.getInstance().getStudyLabel(lightXmlObjectType.getId(),
+							lightXmlObjectType.getVersion(),
+							lightXmlObjectType.getParentId(),
+							lightXmlObjectType.getParentVersion());
+			XmlObject[] xmlObjs = studyUnitMaintainableLabel
+					.getSubElement("UniverseReference");
+			// for each Universe Reference
+			for (XmlObject xmlObject : xmlObjs) {
+				String universeRef = XmlBeansUtil
+						.getTextOnMixedElement(xmlObject);
+				result.add(universeRef);
+			}
+		}
+		return result;
 	}
 
 	public LabelType setDisplayLabel(String string) {
