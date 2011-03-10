@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
@@ -385,7 +384,7 @@ public class TreeMenuProvider extends TreeMenu {
 												.getTranslatedDisplayMessageEntry(),
 										lightXmlObject.getId()));
 			}
-			
+
 			if (doDelete) {
 				try {
 					InputSelection inputSelection = defineSelection(treeViewer,
