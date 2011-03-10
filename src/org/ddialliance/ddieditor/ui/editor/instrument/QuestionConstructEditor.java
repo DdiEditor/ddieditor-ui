@@ -16,7 +16,6 @@ import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.instrument.QuestionConstruct;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
-import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -58,17 +57,17 @@ public class QuestionConstructEditor extends Editor {
 
 		// main tab
 		TabItem tabItem = createTabItem(Messages.getString("QuestionConstruct"));
-		Group group = createGroup(tabItem, Messages
-				.getString("QuestionConstruct"));
+		Group group = createGroup(tabItem,
+				Messages.getString("QuestionConstruct"));
 
 		// QuestionReference - id
 		try {
-			questionRefList = DdiManager.getInstance().getQuestionItemsLight(
-					null, null, null, null).getLightXmlObjectList()
-					.getLightXmlObjectList();
+			questionRefList = DdiManager.getInstance()
+					.getQuestionItemsLight(null, null, null, null)
+					.getLightXmlObjectList().getLightXmlObjectList();
 		} catch (Exception e) {
-			DialogUtil.errorDialog(getSite().getShell(), ID, null, e
-					.getMessage(), e);
+			DialogUtil.errorDialog(getSite().getShell(), ID, null,
+					e.getMessage(), e);
 		}
 		ReferenceSelectionCombo questionRefSelectCombo = createRefSelection(
 				group, Messages.getString("IfThenElse.editor.ifquestionref"),
@@ -81,8 +80,9 @@ public class QuestionConstructEditor extends Editor {
 						getEditorIdentification()));
 
 		// ResponseUnit
-		createLabel(group, Messages
-				.getString("QuestionConstructEditor.label.ResponseUnit"));
+		createLabel(
+				group,
+				Messages.getString("QuestionConstructEditor.label.ResponseUnit"));
 		String[] options = new String[QuestionConstruct.ResponceUnit.values().length + 1];
 		options[0] = "";
 		for (int i = 0; i < QuestionConstruct.ResponceUnit.values().length; i++) {
@@ -90,8 +90,8 @@ public class QuestionConstructEditor extends Editor {
 					.getLabel();
 		}
 		Combo responseUnitCombo = createCombo(group, options);
-		if (modelImpl.getResponseUnitConverted()!=null) {
-			responseUnitCombo.select(modelImpl.getResponseUnitConverted());	
+		if (modelImpl.getResponseUnitConverted() != null) {
+			responseUnitCombo.select(modelImpl.getResponseUnitConverted());
 		}
 		responseUnitCombo
 				.addSelectionListener(new ResponceUnitSelectionListener(
@@ -103,8 +103,9 @@ public class QuestionConstructEditor extends Editor {
 				: modelImpl.getResponseSequence().getItemSequenceType()
 						.toString();
 
-		Combo sequencecombo = createSequenceCombo(group, Messages
-				.getString("QuestionConstructEditor.label.ResponseSequence"),
+		Combo sequencecombo = createSequenceCombo(
+				group,
+				Messages.getString("QuestionConstructEditor.label.ResponseSequence"),
 				defineItemSequenceSelection(responseSequence));
 
 		sequencecombo.addSelectionListener(new SequenceComboSelectionListener(
@@ -114,19 +115,20 @@ public class QuestionConstructEditor extends Editor {
 		// description tab
 		TabItem tabItem2 = createTabItem(Messages
 				.getString("editor.label.description"));
-		Group group2 = createGroup(tabItem2, Messages
-				.getString("editor.label.description"));
+		Group group2 = createGroup(tabItem2,
+				Messages.getString("editor.label.description"));
 
 		try {
 			// label
-			Text txt = createLabelInput(group2, Messages
-					.getString("editor.label.label"), modelImpl.getDocument()
-					.getQuestionConstruct().getLabelList(), modelImpl
-					.getDocument().getControlConstruct().getId());
-			createTranslation(group2, Messages
-					.getString("editor.button.translate"), modelImpl
-					.getDocument().getControlConstruct().getLabelList(),
-					new LabelTdI(), "", txt);
+			Text txt = createLabelInput(group2,
+					Messages.getString("editor.label.label"), modelImpl
+							.getDocument().getQuestionConstruct()
+							.getLabelList(), modelImpl.getDocument()
+							.getControlConstruct().getId());
+			createTranslation(group2,
+					Messages.getString("editor.button.translate"),
+					modelImpl.getDocument().getControlConstruct()
+							.getLabelList(), new LabelTdI(), "", txt);
 
 			// description
 			StyledText styledText = createStructuredStringInput(group2,
@@ -134,10 +136,11 @@ public class QuestionConstructEditor extends Editor {
 							.getDocument().getControlConstruct()
 							.getDescriptionList(), modelImpl.getDocument()
 							.getQuestionConstruct().getId());
-			createTranslation(group2, Messages
-					.getString("editor.button.translate"), modelImpl
-					.getDocument().getControlConstruct().getDescriptionList(),
-					new DescriptionTdI(), "", styledText);
+			createTranslation(group2,
+					Messages.getString("editor.button.translate"), modelImpl
+							.getDocument().getControlConstruct()
+							.getDescriptionList(), new DescriptionTdI(), "",
+					styledText);
 		} catch (DDIFtpException e) {
 			DialogUtil
 					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
