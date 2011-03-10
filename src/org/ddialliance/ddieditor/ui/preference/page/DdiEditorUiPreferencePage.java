@@ -7,7 +7,6 @@ import org.ddialliance.ddiftp.util.LanguageUtil;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -42,8 +41,8 @@ public class DdiEditorUiPreferencePage extends FieldEditorPreferencePage
 		// table font size
 		ComboFieldEditor comboFontEditor = new ComboFieldEditor(
 				PreferenceConstants.FONT_SIZE_TABLE_SIZE,
-				Messages.getString("pref.tablefontsize"), PreferenceConstants.FONT_SIZE_LIST,
-				getFieldEditorParent());
+				Messages.getString("pref.tablefontsize"),
+				PreferenceConstants.FONT_SIZE_LIST, getFieldEditorParent());
 		comboFieldEditor.load();
 		addField(comboFontEditor);
 	}
