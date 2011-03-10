@@ -124,6 +124,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	protected IModel model;
 	protected IDao dao;
+	protected EditorInput editorInput;
+
 
 	protected Group labelDescriptionTabGroup; // May be used for expanding Label
 
@@ -161,7 +163,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		setSite(site);
-		EditorInput editorInput = (EditorInput) input;
+		this.editorInput = (EditorInput) input;
 
 		// working resource
 		try {
@@ -727,6 +729,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		labelText.setLayoutData(gd_labelText);
 		try {
 			labelText.setText(labelDescription.getDisplayLabel());
+			if (this.editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+				labelText.setEnabled(false);
+			}
 		} catch (DDIFtpException e) {
 			DialogUtil.errorDialog(group.getShell(), ID,
 					"Error on get display lable", e.getMessage(), e);
@@ -768,6 +773,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				| SWT.V_SCROLL | SWT.BORDER);
 		try {
 			simpleDescrStyledText.setText(labelDescription.getDisplayDescr());
+			if (this.editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+				simpleDescrStyledText.setEnabled(false);
+			}
 		} catch (DDIFtpException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
