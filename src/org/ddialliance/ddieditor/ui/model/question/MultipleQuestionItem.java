@@ -248,7 +248,7 @@ public class MultipleQuestionItem extends Model {
 			}
 
 			// Name
-			if (names != null) {
+			if (names.size() > 0) {
 				((MultipleQuestionItemTypeImpl) type)
 						.setMultipleQuestionItemNameArray(new NameType[] { getNameType() });
 			}
