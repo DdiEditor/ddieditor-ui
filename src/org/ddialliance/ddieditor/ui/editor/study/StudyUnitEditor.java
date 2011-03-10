@@ -13,6 +13,8 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.studyunit.StudyUnitDao;
 import org.ddialliance.ddieditor.ui.editor.DateTimeWidget;
 import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.editor.EditorInput;
+import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.table.TableColumnSort;
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
@@ -95,6 +97,11 @@ public class StudyUnitEditor extends Editor {
 			throws PartInitException {
 		super.init(site, input);
 		this.modelImpl = (StudyUnit) model;
+
+		// TODO Only disable editing if it is a DDA installation
+		// Disable editing of Study unit - update should be done in Stud Jour.
+		EditorInput editorInput = (EditorInput) input;
+		editorInput.setEditorMode(EditorModeType.VIEW);
 	}
 
 	@Override
