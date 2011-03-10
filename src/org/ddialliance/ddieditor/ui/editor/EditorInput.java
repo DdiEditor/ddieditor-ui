@@ -164,7 +164,7 @@ public class EditorInput implements IEditorInput {
 		this.parentEntityType = parentElementType;
 	}
 
-	protected ElementType getParentElementType() {
+	public ElementType getParentElementType() {
 		return this.parentEntityType;
 	}
 
