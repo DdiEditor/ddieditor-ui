@@ -7,11 +7,12 @@ What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-    -       Universes referenced by a Study Unit are not allowed to be modified.
-            by the DDI Editor as the information derives from the Journal DB.
-    -       Universes and releated sub-universes are listed in the Study Unit
-            Editor.
-    -		The Study Unit Editor now always run in a view only mode.
+ - Universes referenced by a Study Unit are not allowed to be modified by the
+ DDI Editor as the information derives from the Journal DB.
+ - Universes and releated sub-universes are listed in the Study Unit Editor.
+ - The Study Unit Editor now always run in a view only mode.
+ - Qustion import now support uppercase and lowercase v as variable name 
+ reference. 
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
