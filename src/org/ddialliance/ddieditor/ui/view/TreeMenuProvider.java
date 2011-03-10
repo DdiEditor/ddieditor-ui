@@ -19,6 +19,7 @@ import org.ddialliance.ddieditor.ui.dbxml.category.CategorySchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.instrument.ComputationItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.ControlConstructSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.IfThenElseDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.InstrumentDao;
@@ -567,7 +568,11 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
 						break;
-
+					case COMPUTATION_ITEM:
+						new ComputationItemDao().delete(lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
 					case VARIABLE_SCHEME:
 						new VariableSchemeDao().delete(lightXmlObject.getId(),
 								lightXmlObject.getVersion(),
