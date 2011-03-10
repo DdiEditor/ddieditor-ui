@@ -1,17 +1,17 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.1 Release Data: 2011-03-09
+Product Version: 1.0.2 Release Data: 2011-03-xx
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
- DDIE-35 Question Variable Relation -> apply. The relation between variable and 
- question is done.
- DDIE-40 Import Questions, nullpoiter exception on empty reference selection.
- DDIE-41 Geografisk Univers and Stikproeveunivers added as universe and sub-universe
-     -   DDI Manager cach size decremented.
+    -       Universes referenced by a Study Unit are not allowed to be modified.
+            by the DDI Editor as the information derives from the Journal DB.
+    -       Universes and releated sub-universes are listed in the Study Unit
+            Editor.
+    -		The Study Unit Editor now always run in a view only mode.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
