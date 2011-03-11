@@ -11,13 +11,19 @@ Item ID:    Description:
  DDI Editor as the information derives from the Journal DB.
  - Universes and releated sub-universes are listed in the Study Unit Editor.
  - The Study Unit Editor now always run in a view only mode.
- - Qustion import now support uppercase and lowercase v as variable name 
+ - Question import now support uppercase and lowercase v as variable name 
  reference. 
+ - Question import now supports statement item and computation item
+ - Sequence Flow now supports statement item and computation item
+ - Now supports access to DDA database. Import of study level information from 
+ SDSkriv.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
- 
+ - Enviroment variable DDIEDITOR_HOME
+ - Depends on dll file to access AD db login on win32.
+  
 -------------------------------------------------------------------------------
 Change Log Previous Releases
 -------------------------------------------------------------------------------
@@ -31,7 +37,9 @@ See http://172.20.33.20:8080/devwiki/en/Installation
 -------------------------------------------------------------------------------
 Uninstalling
 -------------------------------------------------------------------------------
-Remove installation directory e.g. C:\Programmer\ddieditor
+ - Remove installation directory e.g. C:\Programmer\ddieditor
+ - Remove enviroment variable DDIEDITOR_HOME
+ - Remove from enviroment variable: %DDIEDITOR_HOME%\resources\native-libs
 
 -------------------------------------------------------------------------------
 Bug reporting
@@ -41,7 +49,4 @@ See http://172.20.33.20:8080/jtrac
 -------------------------------------------------------------------------------
 Known Issue
 -------------------------------------------------------------------------------
- - Importing study level information only fully works for XML, containing an 
- empty DDIInstance.
- - Access to DDA database is troublesome on administration platform accessing 
- development database mirror.
+ - None
