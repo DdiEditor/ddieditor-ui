@@ -8,7 +8,8 @@ import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 
-public class MouseFigureAction extends MouseMotionListener.Stub implements MouseListener {
+public class MouseFigureAction extends MouseMotionListener.Stub implements
+		MouseListener {
 	public MouseFigureAction(IFigure figure) {
 		figure.addMouseMotionListener(this);
 		figure.addMouseListener(this);
@@ -20,11 +21,9 @@ public class MouseFigureAction extends MouseMotionListener.Stub implements Mouse
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		System.out.println(e);
 	}
 
 	public void mouseDoubleClicked(MouseEvent e) {
-		System.out.println(e);
 	}
 
 	public void mousePressed(MouseEvent e) {

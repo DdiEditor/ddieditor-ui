@@ -289,7 +289,10 @@ public class SequenceflowView extends ViewPart {
 			// ref to cc
 			LightXmlObjectType cc = allCcsMap
 					.get(new ReferenceResolution(ccRef).getId());
-
+			if (cc == null) { // TODO nullpointer guard
+				continue;
+			}
+			
 			// figure
 			ActivityFigure current = figureFactory.createControlConstruct(cc);
 			new MouseFigureAction(current);
@@ -298,6 +301,8 @@ public class SequenceflowView extends ViewPart {
 				current.setBounds(new Rectangle(x, y, width, height));
 				increaseY(current.getBounds());
 
+				// special cases
+				// if then else
 				if (current instanceof IfThenElseFigure) {
 					chart.add(current);
 					createConnections(prev, current);

@@ -14,6 +14,7 @@ import org.ddialliance.ddieditor.ui.dbxml.instrument.IfThenElseDao;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.instrument.IfThenElse;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
+import org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.ComputationFigure;
 import org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.IfThenElseFigure;
 import org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.QuestionConstructFigure;
 import org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.SequenceFigure;
@@ -50,11 +51,13 @@ public class FigureFactory {
 			return createSequenceFigure(lightXmlObject);
 		} else if (elmentType.equals(ElementType.STATEMENT_ITEM)) {
 			return createStatementItemFigure(lightXmlObject);
+		} else if (this.elmentType.equals(ElementType.COMPUTATION_ITEM)) {
+			return createComputationFigure(lightXmlObject);
 		}
 		return null;
 	}
 
-	public QuestionConstructFigure createQuestionConstructFigure(
+	private QuestionConstructFigure createQuestionConstructFigure(
 			LightXmlObjectType lightXmlObject) throws DDIFtpException {
 		// label
 		QuestionConstructFigure figure = new QuestionConstructFigure(
@@ -64,7 +67,7 @@ public class FigureFactory {
 		return figure;
 	}
 
-	public IfThenElseFigure createIfThenElseFigure(
+	private IfThenElseFigure createIfThenElseFigure(
 			LightXmlObjectType lightXmlObject) throws DDIFtpException {
 		// label
 		IfThenElseFigure figure = new IfThenElseFigure(getHeaderLabel(),
@@ -112,9 +115,8 @@ public class FigureFactory {
 		}
 	}
 
-	public SequenceFigure createSequenceFigure(LightXmlObjectType lightXmlObject)
+	private SequenceFigure createSequenceFigure(LightXmlObjectType lightXmlObject)
 			throws DDIFtpException {
-		// label
 		SequenceFigure figure = new SequenceFigure(getHeaderLabel(),
 				getAttributeLabels(lightXmlObject), lightXmlObject);
 
@@ -123,8 +125,15 @@ public class FigureFactory {
 
 	private StatementItemFigure createStatementItemFigure(
 			LightXmlObjectType lightXmlObject) throws DDIFtpException {
-		// label
 		StatementItemFigure figure = new StatementItemFigure(getHeaderLabel(),
+				getAttributeLabels(lightXmlObject), lightXmlObject);
+
+		return figure;
+	}
+
+	private ComputationFigure createComputationFigure(
+			LightXmlObjectType lightXmlObject) throws DDIFtpException {
+		ComputationFigure figure = new ComputationFigure(getHeaderLabel(),
 				getAttributeLabels(lightXmlObject), lightXmlObject);
 
 		return figure;
@@ -189,6 +198,8 @@ public class FigureFactory {
 			imagePath = "icons/instrument-icon/SubProcess.gif";
 		} else if (this.elmentType.equals(ElementType.STATEMENT_ITEM)) {
 			imagePath = "icons/instrument-icon/DataObject.gif";
+		} else if (this.elmentType.equals(ElementType.COMPUTATION_ITEM)) {
+			imagePath = "icons/instrument-icon/task.gif";
 		}
 		return ResourceManager.getPluginImageDescriptor(Activator.getDefault(),
 				imagePath).createImage();
