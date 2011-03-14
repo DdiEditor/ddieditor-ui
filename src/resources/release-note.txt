@@ -13,10 +13,10 @@ Item ID:    Description:
  - The Study Unit Editor now always run in a view only mode.
  - Question import now support uppercase and lowercase v as variable name 
  reference. 
- - Question import now supports statement item and computation item
- - Sequence Flow now supports statement item and computation item
- - Now supports access to DDA database. Import of study level information from 
- SDSkriv.
+ - Question import now supports statement item and computation item.
+ - Sequence Flow now supports statement item and computation item.
+ - Import of study level information from SDSkriv in production env.
+ - Variable view now suports variable name and label as variable label text.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
