@@ -632,6 +632,6 @@
 		<key commandId="org.ddialliance.ddieditor.ui.command.TreeOrTableMenuShortcut"
 			contextId="org.eclipse.ui.contexts.window"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			sequence="CTRL+Q"/>
+			sequence="CTRL+3"/>
       </extension>
 </plugin>
