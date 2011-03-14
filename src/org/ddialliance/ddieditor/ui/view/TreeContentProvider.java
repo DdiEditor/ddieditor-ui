@@ -24,6 +24,7 @@ import org.ddialliance.ddieditor.ui.dbxml.question.MultipleQuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseSchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.variable.VariableDao;
 import org.ddialliance.ddieditor.ui.dbxml.variable.VariableSchemeDao;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
@@ -281,12 +282,10 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				}
 				// variable scheme
 				else if (lightXmlTypeLocalname.equals("VariableScheme")) {
-					contentList = DdiManager
-							.getInstance()
-							.getVariablesLight(null, null,
+					contentList = new VariableDao()
+							.getLightXmlObjectPlus(null, null,
 									lightXmlObjectType.getId(),
 									lightXmlObjectType.getVersion())
-							.getLightXmlObjectList().getLightXmlObjectList()
 							.toArray();
 				}
 				// guard

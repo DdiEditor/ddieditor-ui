@@ -5,12 +5,14 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
+import org.ddialliance.ddieditor.model.lightxmlobject.CustomType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
+import org.ddialliance.ddieditor.util.LightXmlObjectUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -28,20 +30,47 @@ class TreeLabelProvider extends LabelProvider {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof LightXmlObjectType) {
-			LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) element;
-			if (lightXmlObjectType.getLabelList().size() > 0) {
+			LightXmlObjectType lightXmlObject = (LightXmlObjectType) element;
+			if (lightXmlObject.getElement().equals("Variable")) {
+				// System.out.println("here");
+				StringBuilder result = new StringBuilder();
+				// name
+				for (CustomType cus : LightXmlObjectUtil.getCustomListbyType(
+						lightXmlObject, "Name")) {
+					result.append(XmlBeansUtil.getTextOnMixedElement(cus));
+				}
+
+				// label
+				try {
+					String l = XmlBeansUtil
+							.getTextOnMixedElement((XmlObject) XmlBeansUtil
+									.getDefaultLangElement(lightXmlObject
+											.getLabelList()));
+					if (l != null || l.equals("")) {
+						result.append(" ");
+						result.append(l);
+					}
+
+				} catch (Exception e) {
+					Editor.showError(e, getClass().getName(), null);
+				}
+				return result.toString();
+
+			}
+			if (lightXmlObject.getLabelList().size() > 0) {
 				try {
 					Object obj = XmlBeansUtil.getLangElement(
 							LanguageUtil.getDisplayLanguage(),
-							lightXmlObjectType.getLabelList());
+							lightXmlObject.getLabelList());
 					return XmlBeansUtil.getTextOnMixedElement((XmlObject) obj);
 				} catch (DDIFtpException e) {
 					Editor.showError(e, getClass().getName());
 				}
+
 			} else {
 				// No label specified - use ID instead:
-				return lightXmlObjectType.getElement() + ": "
-						+ lightXmlObjectType.getId();
+				return lightXmlObject.getElement() + ": "
+						+ lightXmlObject.getId();
 			}
 		} else if (element instanceof DDIResourceType) {
 			return ((DDIResourceType) element).getOrgName();
@@ -61,7 +90,8 @@ class TreeLabelProvider extends LabelProvider {
 			}
 		} else if (element instanceof MaintainableLightLabelQueryResult) {
 			try {
-				return ((MaintainableLightLabelQueryResult) element).getTargetLabel();
+				return ((MaintainableLightLabelQueryResult) element)
+						.getTargetLabel();
 			} catch (DDIFtpException e) {
 				Editor.showError(e, getClass().getName());
 			}
