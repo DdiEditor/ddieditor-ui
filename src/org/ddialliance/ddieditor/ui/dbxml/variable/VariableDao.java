@@ -29,6 +29,14 @@ public class VariableDao implements IDao {
 		return DdiManager.getInstance().getVariablesLight(id, version, parentId, parentVersion).getLightXmlObjectList()
 				.getLightXmlObjectList();
 	}
+	
+	public List<LightXmlObjectType> getLightXmlObjectPlus(String id,
+			String version, String parentId, String parentVersion)
+			throws Exception {
+		return DdiManager.getInstance()
+				.getVariablesLightPlus(id, version, parentId, parentVersion)
+				.getLightXmlObjectList().getLightXmlObjectList();
+	}
 
 	@Override
 	public Variable getModel(String id, String version, String parentId, String parentVersion) throws Exception {
