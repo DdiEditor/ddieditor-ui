@@ -31,7 +31,8 @@
       <linux icon="/ddieditor-ui/icons/dda_logo_32.xpm"/>
       <solaris/>
       <win useIco="false">
-         <bmp/>
+         <bmp
+            winMediumHigh="/ddieditor-ui/icons/dda_logo_32.bmp"/>
       </win>
    </launcher>
 
@@ -76,10 +77,10 @@
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.gef"/>
-      <plugin id="org.eclipse.gmf.runtime.common.core"/>
-      <plugin id="org.eclipse.gmf.runtime.common.ui"/>
-      <plugin id="org.eclipse.gmf.runtime.draw2d.ui"/>
-      <plugin id="org.eclipse.gmf.runtime.draw2d.ui.render"/>
+      <plugin id="org.eclipse.gmf.runtime.common.core" fragment=""/>
+      <plugin id="org.eclipse.gmf.runtime.common.ui" fragment=""/>
+      <plugin id="org.eclipse.gmf.runtime.draw2d.ui" fragment=""/>
+      <plugin id="org.eclipse.gmf.runtime.draw2d.ui.render" fragment=""/>
       <plugin id="org.eclipse.help"/>
       <plugin id="org.eclipse.jface"/>
       <plugin id="org.eclipse.jface.databinding"/>
