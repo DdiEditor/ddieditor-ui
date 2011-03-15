@@ -9,19 +9,19 @@ User interface
 Item ID:    Description:
  - Universes referenced by a Study Unit are not allowed to be modified by the
  DDI Editor as the information derives from the Journal DB.
- - Universes and releated sub-universes are listed in the Study Unit Editor.
+ - Universes and related sub-universes are listed in the Study Unit Editor.
  - The Study Unit Editor now always run in a view only mode.
- - Question import now support uppercase and lowercase v as variable name 
+ - Question import now support upper case and lower case v as variable name 
  reference. 
  - Question import now supports statement item and computation item.
  - Sequence Flow now supports statement item and computation item.
  - Import of study level information from SDSkriv in production env.
- - Variable view now suports variable name and label as variable label text.
+ - Variable view now supports variable name and label as variable label text.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
- - Enviroment variable DDIEDITOR_HOME
+ - Environment variable DDIEDITOR_HOME
  - Depends on dll file to access AD db login on win32.
   
 -------------------------------------------------------------------------------
@@ -38,8 +38,8 @@ See http://172.20.33.20:8080/devwiki/en/Installation
 Uninstalling
 -------------------------------------------------------------------------------
  - Remove installation directory e.g. C:\Programmer\ddieditor
- - Remove enviroment variable DDIEDITOR_HOME
- - Remove from enviroment variable: %DDIEDITOR_HOME%\resources\native-libs
+ - Remove environment variable DDIEDITOR_HOME
+ - Remove from environment variable: %DDIEDITOR_HOME%\resources\native-libs
 
 -------------------------------------------------------------------------------
 Bug reporting
