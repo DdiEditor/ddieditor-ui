@@ -54,6 +54,11 @@ class TreeLabelProvider extends LabelProvider {
 				} catch (Exception e) {
 					Editor.showError(e, getClass().getName(), null);
 				}
+				
+				if (result.length()==0) {
+					result.append(lightXmlObject.getElement() + ": "
+							+ lightXmlObject.getId());
+				}
 				return result.toString();
 
 			}
