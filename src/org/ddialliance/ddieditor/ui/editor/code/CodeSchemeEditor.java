@@ -1,15 +1,5 @@
 package org.ddialliance.ddieditor.ui.editor.code;
 
-/**
- * Code Scheme Editor.
- * 
- */
-/*
- * $Author$ 
- * $Date$ 
- * $Revision$
- */
-
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -76,6 +66,9 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+/**
+ * Code Scheme Editor
+ */
 public class CodeSchemeEditor extends Editor {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			CodeSchemeEditor.class);
@@ -87,8 +80,9 @@ public class CodeSchemeEditor extends Editor {
 	public static final String CODE_CATEGORY_REL_ID = "code-cat-rel-id";
 
 	private enum PopupAction {
-		// TODO Add has been removed because drop category does not work for empty code (value, category).
-//		ADD, REMOVE
+		// TODO Add has been removed because drop category does not work for
+		// empty code (value, category).
+		// ADD, REMOVE
 		REMOVE
 	};
 
@@ -138,37 +132,38 @@ public class CodeSchemeEditor extends Editor {
 			LightXmlObjectType selectedLightXmlObject = (LightXmlObjectType) tableItems[i]
 					.getData();
 
-			// TODO Add has been removed because drop category does not work for empty code (value, category).
-//			if (action.equals(PopupAction.ADD)) {
-//				try {
-//					int insert = 0;
-//					for (Iterator<LightXmlObjectType> iterator = items
-//							.iterator(); iterator.hasNext(); insert++) {
-//						LightXmlObjectType lightXmlObject = iterator.next();
-//						if (lightXmlObject.equals(selectedLightXmlObject)) {
-//							update = true;
-//							// add to table
-//							LightXmlObjectType newLightXmlObject = LightXmlObjectType.Factory
-//									.newInstance();
-//							newLightXmlObject.setId("");
-//							XmlBeansUtil.setTextOnMixedElement(
-//									newLightXmlObject.addNewLabel(), "");
-//							items.add(insert, newLightXmlObject);
-//							// add to document
-//							CodeType code = CodeType.Factory.newInstance();
-//							code.addNewCategoryReference().addNewID()
-//									.setStringValue("");
-//							code.setValue("");
-//							modelImpl.getDocument().getCodeScheme()
-//									.getCodeList().add(insert, code);
-//							break;
-//						}
-//					}
-//				} catch (Exception e) {
-//					// TODO: handle exception
-//					e.printStackTrace();
-//				}
-//			} else
+			// TODO Add has been removed because drop category does not work for
+			// empty code (value, category).
+			// if (action.equals(PopupAction.ADD)) {
+			// try {
+			// int insert = 0;
+			// for (Iterator<LightXmlObjectType> iterator = items
+			// .iterator(); iterator.hasNext(); insert++) {
+			// LightXmlObjectType lightXmlObject = iterator.next();
+			// if (lightXmlObject.equals(selectedLightXmlObject)) {
+			// update = true;
+			// // add to table
+			// LightXmlObjectType newLightXmlObject = LightXmlObjectType.Factory
+			// .newInstance();
+			// newLightXmlObject.setId("");
+			// XmlBeansUtil.setTextOnMixedElement(
+			// newLightXmlObject.addNewLabel(), "");
+			// items.add(insert, newLightXmlObject);
+			// // add to document
+			// CodeType code = CodeType.Factory.newInstance();
+			// code.addNewCategoryReference().addNewID()
+			// .setStringValue("");
+			// code.setValue("");
+			// modelImpl.getDocument().getCodeScheme()
+			// .getCodeList().add(insert, code);
+			// break;
+			// }
+			// }
+			// } catch (Exception e) {
+			// // TODO: handle exception
+			// e.printStackTrace();
+			// }
+			// } else
 			// remove
 			if (action.equals(PopupAction.REMOVE)) {
 				try {
@@ -359,7 +354,7 @@ public class CodeSchemeEditor extends Editor {
 
 		// xml tab
 		createXmlTab(modelImpl);
-		
+
 		// preview tab
 		createPreviewTab(modelImpl);
 
@@ -430,7 +425,6 @@ public class CodeSchemeEditor extends Editor {
 					showError(e2);
 					return "";
 				}
-				log.debug(xml);
 				return XmlBeansUtil.getTextOnMixedElement(xml);
 			default:
 				DDIFtpException e = new DDIFtpException(
