@@ -62,7 +62,8 @@ public class VariableEditor extends Editor {
 	public VariableEditor() {
 		super(
 				Messages.getString("VariableEditor.label"),
-				Messages.getString("VariableEditor.label.useTheEditorLabel.Description"), ID);
+				Messages.getString("VariableEditor.label.useTheEditorLabel.Description"),
+				ID);
 		this.dao = new VariableDao();
 	}
 
@@ -467,7 +468,7 @@ public class VariableEditor extends Editor {
 							.getStringValue(), false);
 			nameText.addModifyListener(new TextStyledTextModyfiListener(model,
 					NameType.class, getEditorIdentification()));
-			
+
 			Text txt = createLabelInput(descriptionGroup,
 					Messages.getString("editor.label.label"), modelImpl
 							.getDocument().getVariable().getLabelList(),
@@ -496,7 +497,7 @@ public class VariableEditor extends Editor {
 
 		// xml tab
 		createXmlTab(modelImpl);
-		
+
 		// preview tab
 		createPreviewTab(modelImpl);
 
@@ -506,9 +507,13 @@ public class VariableEditor extends Editor {
 	public static void changeCodeRepresentationCodeValues(
 			ReferenceType codeSchemeRef, Label codeValue) throws Exception {
 		ReferenceResolution refRes = new ReferenceResolution(codeSchemeRef);
-		CodeSchemeDocument codeScheme = DdiManager.getInstance().getCodeScheme(
-				refRes.getId(), null, null, null);
-		StringBuilder codeValues = new StringBuilder();
+		CodeSchemeDocument codeScheme = getCodeScheme(refRes);
+		StringBuilder codeValues = new StringBuilder("");
+		if (codeScheme == null) {
+			throw new DDIFtpException("Code Scheme, with ID: " + refRes.getId()
+					+ " is not found!", new Throwable());
+		}
+
 		for (Iterator<CodeType> iterator = codeScheme.getCodeScheme()
 				.getCodeList().iterator(); iterator.hasNext();) {
 			codeValues.append(iterator.next().getValue());
@@ -517,5 +522,21 @@ public class VariableEditor extends Editor {
 			}
 		}
 		codeValue.setText(codeValues.toString());
+	}
+
+	private static CodeSchemeDocument getCodeScheme(ReferenceResolution refRes)
+			throws Exception {
+		List<LightXmlObjectType> codeSchemeRefList = DdiManager.getInstance()
+				.getCodeSchemesLight(null, null, null, null)
+				.getLightXmlObjectList().getLightXmlObjectList();
+		for (LightXmlObjectType lightXmlObject : codeSchemeRefList) {
+			if (lightXmlObject.getId().equals(refRes.getId())) {
+				return DdiManager.getInstance().getCodeScheme(
+						lightXmlObject.getId(), lightXmlObject.getVersion(),
+						lightXmlObject.getParentId(),
+						lightXmlObject.getParentVersion());
+			}
+		}
+		return null;
 	}
 }
