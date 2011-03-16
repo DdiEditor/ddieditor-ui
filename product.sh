@@ -97,13 +97,13 @@ cd ../jounal-study-info-export
 ant deploy-to-ddieditor-ui -f dda-build.xml
 cd ../ddieditor-ui/
 
+echo '--- Check db connection ---'
+vi bin/resources/hibernate/hibernate.cfg.xml
+
 echo '--- Copy ddieditor-line ---'
 cd ../ddieditor-line
 ant resource -f dda-build.xml
 ant deploy-to-ddieditor-ui -f dda-build.xml
-
-echo '--- Check db connection ---'
-vi bin/resources/hibernate/hibernate.cfg.xml
 
 echo '--- Copy ddieditor-spss setup ---'
 cd ../ddieditor-spss
