@@ -882,9 +882,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
 		combo.setItems(options);
-		if (options.length == 1) {
-			combo.select(0);
-		}
 		return combo;
 	}
 
