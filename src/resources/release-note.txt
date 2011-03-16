@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.2 Release Data: 2011-03-xx
+Product Version: 1.0.2 Release Data: 2011-03-16
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
@@ -21,8 +21,9 @@ Item ID:    Description:
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
- - Environment variable DDIEDITOR_HOME
+ - Enviroment variable DDIEDITOR_HOME added on win32.
  - Depends on dll file to access AD db login on win32.
+ - Eclipse RCP upgrade to 3.6.2 
   
 -------------------------------------------------------------------------------
 Change Log Previous Releases
