@@ -110,8 +110,12 @@ public class CodeSchemeEditor extends Editor {
 					.newInstance();
 			XmlBeansUtil.setTextOnMixedElement(lightXmlObject.addNewLabel(),
 					codes.get(i).getValue());
-			lightXmlObject.setId(codes.get(i).getCategoryReference()
-					.getIDList().get(0).getStringValue());
+			if (codes.get(i).getCategoryReference() != null) {
+				lightXmlObject.setId(codes.get(i).getCategoryReference()
+						.getIDList().get(0).getStringValue());
+			} else {
+				lightXmlObject.setId("");
+			}
 			lightXmlObject.setElement(CODE_CATEGORY_REL_ID);
 			items.add(lightXmlObject);
 		}
