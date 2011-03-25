@@ -233,6 +233,9 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 							}
 						}
 
+						// TODO vari.cods to quei.cats create relation
+						
+						
 						// refresh
 						loadInItems();
 					}
