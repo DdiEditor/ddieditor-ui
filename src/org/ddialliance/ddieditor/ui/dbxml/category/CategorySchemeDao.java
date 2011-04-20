@@ -33,6 +33,20 @@ public class CategorySchemeDao implements IDao {
 
 	@Override
 	public void create(IModel model) throws DDIFtpException {
+		if (model.getParentId() == null) {
+			List<LightXmlObjectType> logpList;
+			try {
+				logpList = DdiManager
+				.getInstance()
+				.getLogicalProductsLight(null, null, null, null)
+				.getLightXmlObjectList()
+				.getLightXmlObjectList();
+			} catch (Exception e) {
+				throw new DDIFtpException(e.getMessage());
+			}
+			model.setParentId(logpList.get(0).getId());
+			model.setParentVersion(logpList.get(0).getParentVersion());
+		}
 		DdiManager.getInstance().createElement(model.getDocument(),
 				model.getParentId(), model.getParentVersion(),
 				"logicalproduct__LogicalProduct");
