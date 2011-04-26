@@ -17,6 +17,7 @@ DDIE-59 Question import: The user is now able to type the path to the wiki file 
   c. References from Question Item to Code Scheme - is created.
   d. Reference from Code (of Code Scheme) to Category - is created.
 - SPSS import: Categories are no longer created.
+- Error corrected: No Concept specified in Multiple Question Item editor - generates update error.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
