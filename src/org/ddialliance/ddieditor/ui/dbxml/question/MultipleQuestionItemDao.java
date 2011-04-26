@@ -292,16 +292,16 @@ public class MultipleQuestionItemDao implements IDao {
 		// update ConceptReference to current value - only one is expected
 		MaintainableLabelUpdateElement conceptReferenceUpdateElement = new MaintainableLabelUpdateElement();
 		conceptReferenceUpdateElement.setLocalName("ConceptReference");
-		int lengthOld1 = maintainableLabelQueryResult
+		lengthOld = maintainableLabelQueryResult
 				.getSubElement("ConceptReference").length == 0 ? 0
 				: XmlBeansUtil.getTextOnMixedElement(
 						maintainableLabelQueryResult
 								.getSubElement("ConceptReference")[0]).length();
-		int lengthNew1 = doc.getMultipleQuestionItem()
+		lengthNew = doc.getMultipleQuestionItem()
 				.getConceptReferenceList().size() == 0 ? 0 : doc
 				.getMultipleQuestionItem().getConceptReferenceList().get(0)
 				.getIDList().get(0).getStringValue().length();
-		Object CrudValue1 = genCrudValue(lengthOld, lengthNew, 1);
+		CrudValue = genCrudValue(lengthOld, lengthNew, 1);
 		if (CrudValue != null) {
 			conceptReferenceUpdateElement.setCrudValue((Integer) CrudValue);
 			conceptReferenceUpdateElement.setValue(doc
