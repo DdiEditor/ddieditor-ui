@@ -7,8 +7,10 @@ What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-DDIE-58 SPSS import: The user is now able to type the path to the '.sav' and data file in the text input fields. The value is validated on CR.
 DDIE-59 Question import: The user is now able to type the path to the wiki file in the text input field. The value is validated on CR.
+DDIE-58 SPSS import: The user is now able to type the path to the '.sav' and data file in the text input fields. The value is validated on CR.
+DDIE-56 Busy Indicator: The Busy Indicator is given in connection with import of Study Unit informations.
+Other features:
 - General for all import functions: If only one resource is defined (only one DDI Instance), this resource is preselected in the import pop-ups.
 - Variable Question Relation view: View will now automatically propose a Variable/Question Item relation based on the variant number given in the wiki file.
 - Wiki interface:
