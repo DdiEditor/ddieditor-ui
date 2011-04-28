@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.5.2",
  org.eclipse.nebula.cwt;bundle-version="0.9.0",
  org.eclipse.nebula.widgets.cdatetime;bundle-version="0.14.0",
  org.eclipse.draw2d
-Bundle-Version: 0.6.0
+Bundle-Version: 0.7.0
 Bundle-SymbolicName: ddieditor-ui;singleton:=true
 Bundle-Name: %Bundle-Name
 Import-Package: 
@@ -27,7 +27,8 @@ Bundle-Activator: org.ddialliance.ddieditor.ui.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Danish Data Archive
 Bundle-Copyright: LGLP
-Export-Package: org.ddialliance.ddieditor.ui.dbxml.question,
+Export-Package: org.ddialliance.ddieditor.ui.dbxml.code,
+ org.ddialliance.ddieditor.ui.dbxml.question,
  org.ddialliance.ddieditor.ui.editor,
  org.ddialliance.ddieditor.ui.editor.category,
  org.ddialliance.ddieditor.ui.editor.code,
@@ -38,6 +39,7 @@ Export-Package: org.ddialliance.ddieditor.ui.dbxml.question,
  org.ddialliance.ddieditor.ui.editor.variable,
  org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection,
  org.ddialliance.ddieditor.ui.model,
+ org.ddialliance.ddieditor.ui.model.code,
  org.ddialliance.ddieditor.ui.model.instrument,
  org.ddialliance.ddieditor.ui.model.question,
  org.ddialliance.ddieditor.ui.perspective,
