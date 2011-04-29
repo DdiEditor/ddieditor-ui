@@ -171,14 +171,15 @@ public class CodeSchemeEditor extends Editor {
 			// remove
 			if (action.equals(PopupAction.REMOVE)) {
 				try {
+					String SelectedValue = XmlBeansUtil.getTextOnMixedElement(selectedLightXmlObject.getLabelList().get(0));
 					for (Iterator<CodeType> iterator = modelImpl.getDocument()
 							.getCodeScheme().getCodeList().iterator(); iterator
 							.hasNext();) {
 						CodeType codeType = iterator.next();
 						// remove from document
-						if (selectedLightXmlObject.getId().equals(
+						if (codeType.getCategoryReference() == null || selectedLightXmlObject.getId().equals(
 								codeType.getCategoryReference().getIDList()
-										.get(0).getStringValue())) {
+										.get(0).getStringValue()) && SelectedValue.equals(codeType.getValue())) {
 							iterator.remove();
 							// remove from table
 							update = true;
