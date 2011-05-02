@@ -13,6 +13,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -24,7 +25,11 @@ public class ExportDDI3File extends org.eclipse.core.commands.AbstractHandler {
 		// export input
 		final ExportDDI3Dialog exportDDI3Dialog = new ExportDDI3Dialog(
 				PlatformUI.getWorkbench().getDisplay().getActiveShell());
-		exportDDI3Dialog.open();
+		int returnCode = exportDDI3Dialog.open();
+		if (returnCode == Window.CANCEL) {
+			return null;
+		}
+
 
 		// do export
 		try {
