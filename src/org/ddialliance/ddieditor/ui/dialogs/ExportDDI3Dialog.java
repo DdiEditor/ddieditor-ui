@@ -60,21 +60,26 @@ public class ExportDDI3Dialog extends Dialog {
 		editor.createLabel(group, Messages
 				.getString("ExportDDI3Action.resource.choose"));
 		final Combo resouceCombo = editor.createCombo(group, comboOptions);
-		resouceCombo.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int selection = ((Combo) e.getSource()).getSelectionIndex();
-				fileNameText.setData(false);
-				fileNameText.setText(resouceCombo.getItem(selection));
-				ddiResource = resources.get(selection);
-			}
+		if (comboOptions.length == 1) {
+			resouceCombo.select(0);
+			ddiResource = resources.get(0);
+		} else {
+			resouceCombo.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					int selection = ((Combo) e.getSource()).getSelectionIndex();
+					fileNameText.setData(false);
+					fileNameText.setText(resouceCombo.getItem(selection));
+					ddiResource = resources.get(selection);
+				}
 
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// do nothing
-			}
-		});
-
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// do nothing
+				}
+			});
+		}
+		
 		// export path
 		editor.createLabel(group, Messages
 				.getString("ExportDDI3Action.filechooser.title"));
@@ -104,6 +109,10 @@ public class ExportDDI3Dialog extends Dialog {
 		fileNameText = editor.createTextInput(group, Messages
 				.getString("ExportDDI3Action.filename"), "", null);
 		fileNameText.setData(true);
+		if (comboOptions.length == 1) {
+			fileNameText.setData(false);
+			fileNameText.setText(resouceCombo.getItem(0));
+		}
 		fileNameText.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
