@@ -1,25 +1,17 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.3 Release Data: 2011-04-28
+Product Version: 1.0.4 Release Data: 2011-05-06
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-DDIE-59 Question import: The user is now able to type the path to the wiki file in the text input field. The value is validated on CR.
-DDIE-58 SPSS import: The user is now able to type the path to the '.sav' and data file in the text input fields. The value is validated on CR.
-DDIE-56 Busy Indicator: The Busy Indicator is given in connection with import of Study Unit informations.
+DDIE-64 Browse efter en fil: Validering af fil-sti aktiveres ved RETURN og TAB.
 Other features:
-- General for all import functions: If only one resource is defined (only one DDI Instance), this resource is preselected in the import pop-ups.
-- Variable Question Relation view: View will now automatically propose a Variable/Question Item relation based on the variant number given in the wiki file.
-- Wiki interface:
-  a. Category Schemes are created.
-  b. Categories are created.
-  c. References from Question Item to Code Scheme - is created.
-  d. Reference from Code (of Code Scheme) to Category - is created.
-- SPSS import: Categories are no longer created.
-- Error corrected: No Concept specified in Multiple Question Item editor - generates update error.
+- Error corrected: Search after Code Scheme ref. by Variable did fail with null 
+pointer exception if the representation of the variable was not a code 
+representation.
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
