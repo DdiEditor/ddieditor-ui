@@ -126,7 +126,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	protected IDao dao;
 	protected EditorInput editorInput;
 
-
 	protected Group labelDescriptionTabGroup; // May be used for expanding Label
 
 	// Description Tab content
@@ -134,6 +133,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	/**
 	 * Default constructor. Usage to gain access to create widget methods <br>
 	 * Note: Builds an empty editor input.
+	 * 
 	 * @wbp.parser.constructor
 	 */
 	public Editor() {
@@ -670,27 +670,32 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				.getString("editor.tabitem.preview"));
 		Group group = createGroup(tabItem,
 				Messages.getString("editor.group.preview"));
-		Browser browser = createBrowser(group, Messages.getString("editor.label.preview"));
-		
+		Browser browser = createBrowser(group,
+				Messages.getString("editor.label.preview"));
+
 		// update on tab item click
 		tabItem.setData(TAB_ID, PREVIEW_TAB_ID);
-		PreviewTabItemAction action;
-		try {
-			action = new PreviewTabItemAction(PREVIEW_TAB_ID, model, browser);
-		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(group.getShell(), ID,
-					"Error on get display lable", e.getMessage(), e);
-			return;
-		}
-		Listener[] list = getTabFolder().getListeners(SWT.Selection);
-		Object obj = null;
-		for (int i = 0; i < list.length; i++) {
-			if (list[i] instanceof TypedListener) {
-				obj = ((TypedListener) list[i]).getEventListener();
-				if (obj instanceof TabFolderListener) {
-					((TabFolderListener) obj).actionMap.put(PREVIEW_TAB_ID, action);
+		if (browser != null) {
+			PreviewTabItemAction action;
+			try {
+				action = new PreviewTabItemAction(PREVIEW_TAB_ID, model,
+						browser);
+			} catch (DDIFtpException e) {
+				DialogUtil.errorDialog(group.getShell(), ID,
+						"Error on get display lable", e.getMessage(), e);
+				return;
+			}
+			Listener[] list = getTabFolder().getListeners(SWT.Selection);
+			Object obj = null;
+			for (int i = 0; i < list.length; i++) {
+				if (list[i] instanceof TypedListener) {
+					obj = ((TypedListener) list[i]).getEventListener();
+					if (obj instanceof TabFolderListener) {
+						((TabFolderListener) obj).actionMap.put(PREVIEW_TAB_ID,
+								action);
+					}
+					break;
 				}
-				break;
 			}
 		}
 	}
@@ -1296,10 +1301,16 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public Browser createBrowser(Group group) {
-		Browser browser = new Browser(group, SWT.EMBEDDED | SWT.BORDER);
-		browser.setFont(getFont("Arial Narrow", 8, SWT.NORMAL));
-		final GridData gd_Text = new GridData(GridData.FILL_BOTH);
-		browser.setLayoutData(gd_Text);
+//		System.out.println(System.getProperty("java.library.path"));
+//		System.out.println(System
+//				.getProperty("org.eclipse.swt.browser.UseWebKitGTK"));
+//		Browser browser = new Browser(group, SWT.EMBEDDED | SWT.BORDER);
+		Browser browser = null;
+		if (browser != null) {
+			browser.setFont(getFont("Arial Narrow", 8, SWT.NORMAL));
+			final GridData gd_Text = new GridData(GridData.FILL_BOTH);
+			browser.setLayoutData(gd_Text);
+		}
 		return browser;
 	}
 

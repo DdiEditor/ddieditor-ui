@@ -190,7 +190,7 @@ public class QuestionItem extends Model {
 	 * Set Question Item Numeric Response Domain
 	 * 
 	 * @param type
-	 *            (integer or float)
+	 *            (integer, double or float)
 	 * @param decimalPosition
 	 *            (not used if integer)
 	 * @return RepresentationType
@@ -204,7 +204,7 @@ public class QuestionItem extends Model {
 		NumericDomainType ndt = (NumericDomainType) rt.substitute(NumericDomainDocument.type.getDocumentElementName(),
 				NumericDomainType.type);
 		ndt.setType(type);
-		if (type == NumericTypeCodeType.FLOAT) {
+		if (type == NumericTypeCodeType.DOUBLE || type == NumericTypeCodeType.FLOAT) {
 			if (decimalPosition != null) {
 				ndt.setDecimalPositions(decimalPosition);
 			}
