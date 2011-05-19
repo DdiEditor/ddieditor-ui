@@ -1,18 +1,14 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.4 Release Data: 2011-05-06
+Product Version: 1.0.5 Release Data: 2011-xx-xx
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-DDIE-64 Browse efter en fil: Validering af fil-sti aktiveres ved RETURN og TAB.
-Other features:
-- Error corrected: Search after Code Scheme ref. by Variable did fail with null 
-pointer exception if the representation of the variable was not a code 
-representation.
- 
+-	Error releated to Decimal Position Detail of Double and Float - has been 
+corrected. 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 Item ID:    Description:
