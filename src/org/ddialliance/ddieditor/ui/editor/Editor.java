@@ -1301,11 +1301,16 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public Browser createBrowser(Group group) {
-//		System.out.println(System.getProperty("java.library.path"));
-//		System.out.println(System
-//				.getProperty("org.eclipse.swt.browser.UseWebKitGTK"));
-//		Browser browser = new Browser(group, SWT.EMBEDDED | SWT.BORDER);
 		Browser browser = null;
+		// ubuntu-11.4 bug related debug
+		// System.out.println(System.getProperty("java.library.path"));
+		// System.out.println(System
+		// .getProperty("org.eclipse.swt.browser.UseWebKitGTK"));
+		try {
+			browser = new Browser(group, SWT.EMBEDDED | SWT.BORDER);
+		} catch (Exception e) {
+			log.fatal(e, new Throwable());
+		}
 		if (browser != null) {
 			browser.setFont(getFont("Arial Narrow", 8, SWT.NORMAL));
 			final GridData gd_Text = new GridData(GridData.FILL_BOTH);
