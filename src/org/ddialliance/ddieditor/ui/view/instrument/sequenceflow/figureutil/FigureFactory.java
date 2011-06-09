@@ -93,8 +93,10 @@ public class FigureFactory {
 				ReferenceType elze = ifThenElse.getElseReference();
 				if (elze != null) {
 					LightXmlObjectType elseLight = resolveCcReference(elze);
-					figure.elze = createControlConstruct(elseLight);
-					setIfThenElseLabel(figure.elze, "Else");
+					if (elseLight != null) { // guard
+						figure.elze = createControlConstruct(elseLight);
+						setIfThenElseLabel(figure.elze, "Else");
+					}
 				}
 
 				// TODO elseif in ddi-3.2
@@ -115,8 +117,8 @@ public class FigureFactory {
 		}
 	}
 
-	private SequenceFigure createSequenceFigure(LightXmlObjectType lightXmlObject)
-			throws DDIFtpException {
+	private SequenceFigure createSequenceFigure(
+			LightXmlObjectType lightXmlObject) throws DDIFtpException {
 		SequenceFigure figure = new SequenceFigure(getHeaderLabel(),
 				getAttributeLabels(lightXmlObject), lightXmlObject);
 
