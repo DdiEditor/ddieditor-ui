@@ -15,6 +15,7 @@ Application Infrastructure:
 Item ID:    Description:
 ddie-45	Fixed
 ddie-75 Fixed
+ddie-69 Fixed
 ddie-46 Fixed
   
 -------------------------------------------------------------------------------
