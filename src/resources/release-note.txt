@@ -8,16 +8,15 @@ What's New
 User interface
 Item ID:    Description:
 -	Error releated to Decimal Position Detail of Double and Float - has been 
-corrected. 
--------------------------------------------------------------------------------  
-Application Infrastructure:
--------------------------------------------------------------------------------
-Item ID:    Description:
+corrected.
 ddie-45	Fixed
 ddie-75 Fixed
 ddie-69 Fixed
 ddie-46 Fixed
-  
+-------------------------------------------------------------------------------  
+Application Infrastructure:
+-------------------------------------------------------------------------------
+Item ID:    Description:  
 -------------------------------------------------------------------------------
 Change Log Previous Releases
 -------------------------------------------------------------------------------
