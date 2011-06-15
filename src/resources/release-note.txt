@@ -1,18 +1,13 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.5 Release Data: 2011-xx-xx
+Product Version: 1.0.7 Release Data: 2011-06-15
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
--	Error releated to Decimal Position Detail of Double and Float - has been 
-corrected.
-ddie-45	Fixed
-ddie-75 Fixed
-ddie-69 Fixed
-ddie-46 Fixed
+- Errors in Import Question corrected.
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
