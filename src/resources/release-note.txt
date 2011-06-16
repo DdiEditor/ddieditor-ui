@@ -1,13 +1,14 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.7 Release Data: 2011-06-15
+Product Version: 1.0.8 Release Data: 2011-xx-xx
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-- Errors in Import Question corrected.
+DDIE-71 Missing Codes (f.eks. Uoplyst, Deltog ikke) vises nu sidste i listen af
+Codes i et Code Scheme.
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
