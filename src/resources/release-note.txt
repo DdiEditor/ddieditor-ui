@@ -9,6 +9,8 @@ User interface
 Item ID:    Description:
 DDIE-71 Missing Codes (f.eks. Uoplyst, Deltog ikke) vises nu sidste i listen af
 Codes i et Code Scheme.
+DDIE-81 Fix af DdieditorLine::Iftenelse opretes som Multiple Question Item
+
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
