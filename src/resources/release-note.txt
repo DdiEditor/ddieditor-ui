@@ -1,17 +1,13 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.8 Release Data: 2011-xx-xx
+Product Version: 1.0.9 Release Data: 2011-xx-xx
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-- Fix of missing question item labels under multiple question item in question 
-tree view.
-DDIE-71 Missing Codes (f.eks. Uoplyst, Deltog ikke) vises nu sidste i listen af
-Codes i et Code Scheme.
-DDIE-81 Fix af DdieditorLine::Iftenelse opretes som Multiple Question Item.
+- Added light validation of import line syntax
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
