@@ -8,6 +8,7 @@ What's New
 User interface
 Item ID:    Description:
 - Added light validation of import line syntax
+- Reference to Question Construct now inserted in ELSE part of IFTHENELSE.
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
