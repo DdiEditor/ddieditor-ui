@@ -9,6 +9,7 @@ User interface
 Item ID:    Description:
 - Added light validation of import line syntax
 - Reference to Question Construct now inserted in ELSE part of IFTHENELSE.
+DDIE-84 fixed
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
