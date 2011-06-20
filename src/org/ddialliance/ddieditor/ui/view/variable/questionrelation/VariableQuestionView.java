@@ -565,14 +565,14 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 
 		// set items to load table
 		try {
-			// variable plus
+			// variable plus	
 			List<LightXmlObjectType> lightVari = DdiManager.getInstance()
 					.getVariablesLightPlus(null, null, null, null)
 					.getLightXmlObjectList().getLightXmlObjectList();
 
-			// question plus
+			// question item plus
 			List<LightXmlObjectType> lightQuei = DdiManager.getInstance()
-					.getQuestionItemsLightPlus(null, null, null, null)
+					.getQuestionItemsLightPlus(true, null, null, null, null)
 					.getLightXmlObjectList().getLightXmlObjectList();
 
 			// variable -> question relation

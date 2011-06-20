@@ -82,7 +82,7 @@ public class QuestionItemDao implements IDao {
 		} else {
 			lightXmlObjectTypeList = DdiManager
 					.getInstance()
-					.getQuestionItemsLightPlus(id, version, parentId,
+					.getQuestionItemsLightPlus(false, id, version, parentId,
 							parentVersion).getLightXmlObjectList()
 					.getLightXmlObjectList();
 		}
