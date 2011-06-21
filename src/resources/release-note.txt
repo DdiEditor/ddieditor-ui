@@ -12,6 +12,7 @@ Item ID:    Description:
 DDIE-84 fixed
 DDIE-83 fixed
 DDIE-82 fixed
+- Added reopen of imported study info editor if open during import
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
@@ -42,4 +43,5 @@ See http://172.20.33.20:8080/jtrac
 -------------------------------------------------------------------------------
 Known Issue
 -------------------------------------------------------------------------------
- - None
+ - Study unit information import is under rework construction and can't 
+ expected to work properly.   
