@@ -1,18 +1,14 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.9 Release Data: 2011-06-21
+Product Version: 1.0.10 Release Data: 2011-xx-xx
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-- Added light validation of import line syntax
-- Reference to Question Construct now inserted in ELSE part of IFTHENELSE.
-DDIE-84 fixed
-DDIE-83 fixed
-DDIE-82 fixed
 - Added reopen of imported study info editor if open during import
+DDIE-86 fixed
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
