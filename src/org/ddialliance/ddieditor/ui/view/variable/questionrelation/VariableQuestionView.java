@@ -211,6 +211,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 							}
 
 							// change quei resp domain
+							// set concept on vari
 							if (variValRep != null && queiRef != null) {
 								if (vari == null) {
 									try {
@@ -228,16 +229,35 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 											Editor.showError(e1, ID, getSite());
 										}
 									}
+
+									// resp domain
 									changeRespDomain(vari, quei);
+
+									try {
+										// vari concept
+										setConcepts(vari, quei);
+									} catch (DDIFtpException e1) {
+										Editor.showError(e1, ID, getSite());
+									}
 								}
 							}
 						}
 
 						// TODO vari.cods to quei.cats create relation
-						
-						
+
 						// refresh
 						loadInItems();
+					}
+
+					private void setConcepts(Variable vari, QuestionItem quei)
+							throws DDIFtpException {
+						if (quei.getConceptReferenceType() != null) {
+							vari.getDocument()
+									.getVariable()
+									.setConceptReference(
+											quei.getConceptReferenceType());
+							new VariableDao().update(vari);
+						}
 					}
 
 					@Override
@@ -565,7 +585,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 
 		// set items to load table
 		try {
-			// variable plus	
+			// variable plus
 			List<LightXmlObjectType> lightVari = DdiManager.getInstance()
 					.getVariablesLightPlus(null, null, null, null)
 					.getLightXmlObjectList().getLightXmlObjectList();
@@ -905,6 +925,11 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 								.getData();
 
 						if (variQueirel.quei != null) {
+							// hack on //question item
+							if (variQueirel.quei.getElement().indexOf("//") > -1) {
+								variQueirel.quei.setElement(variQueirel.quei
+										.getElement().substring(2));
+							}
 							TreeMenuProvider.defineInputAndOpenEditor(
 									ElementType.QUESTION_ITEM,
 									ElementType.QUESTION_SCHEME,
