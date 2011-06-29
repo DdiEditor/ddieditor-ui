@@ -1,15 +1,13 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.10 Release Data: 2011-06-23
+Product Version: 1.0.11 Release Data: 2011-06-29
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-- Added reopen of imported study info editor if open during import
-DDIE-85 fixed
-DDIE-86 fixed
+- Is now again able to load Journal Study Unit information (problem related to reload SD).
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
