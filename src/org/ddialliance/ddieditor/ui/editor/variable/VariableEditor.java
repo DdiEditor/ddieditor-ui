@@ -316,7 +316,7 @@ public class VariableEditor extends Editor {
 				for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 					String missingValue = (String) iterator.next();
 					if (iterator.hasNext()) {
-						missingValues.append(missingValue+" ");
+						missingValues.append(missingValue + " ");
 					} else {
 						missingValues.append(missingValue);
 					}
@@ -331,9 +331,11 @@ public class VariableEditor extends Editor {
 						try {
 							String missing = ((Text) e.getSource()).getText();
 							// split string of space separated element into list
-						    List<String> tokens = Arrays.asList(missing.split("\\s+"));
-						    List<String> list = tokens.subList(0, tokens.size());
-							modelImpl.applyChange(list, ModelIdentifingType.Type_L.class);
+							List<String> tokens = Arrays.asList(missing
+									.split("\\s+"));
+							List<String> list = tokens.subList(0, tokens.size());
+							modelImpl.applyChange(list,
+									ModelIdentifingType.Type_L.class);
 						} catch (Exception e1) {
 							showError(e1);
 						}
