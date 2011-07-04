@@ -1,6 +1,7 @@
 package org.ddialliance.ddieditor.ui.model.variable;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.VariableDocument;
@@ -117,6 +118,17 @@ public class Variable extends Model {
 		return reference;
 	}
 
+	// missing value
+	public List getMissingValue() {
+		if (!(getValueRepresentation() instanceof NumericRepresentationType)) {
+			log.warn("Not setting NumericRepresentation.type as ValueRepresentation is of type: "
+					+ getValueRepresentation().getClass().getName());
+			return null;
+		}
+		return ((NumericRepresentationType) getValueRepresentation())
+				.getMissingValue();
+	}
+
 	// numeric rep
 	public BigInteger getNumericDecimalPosition() {
 		if (!(getValueRepresentation() instanceof NumericRepresentationType)) {
@@ -224,7 +236,8 @@ public class Variable extends Model {
 			ModelAccessor.setReference(ref, (LightXmlObjectType) value);
 		}
 
-		// numeric type
+		// numeric rep 
+		// type
 		if (type.equals(ModelIdentifingType.Type_E.class)) {
 			if (!(getValueRepresentation() instanceof NumericRepresentationType)) {
 				log.warn("Not setting NumericRepresentation.type as ValueRepresentation is of type: "
@@ -235,6 +248,7 @@ public class Variable extends Model {
 					.setType((NumericTypeCodeType.Enum) value);
 		}
 
+		// dec position
 		if (type.equals(ModelIdentifingType.Type_F.class)) {
 			if (!(getValueRepresentation() instanceof NumericRepresentationType)) {
 				log.warn("Not setting NumericRepresentation.type as ValueRepresentation is of type: "
@@ -322,6 +336,18 @@ public class Variable extends Model {
 					.forInt((Integer) value);
 			((DateTimeRepresentationType) getValueRepresentation())
 					.setType(dateTime);
+		}
+		
+		// numeric rep
+		// - missing values
+		if (type.equals(ModelIdentifingType.Type_L.class)) {
+			if (!(getValueRepresentation() instanceof NumericRepresentationType)) {
+				log.warn("Not setting NumericRepresentation.type as ValueRepresentation is of type: "
+						+ getValueRepresentation().getClass().getName());
+				return;
+			}
+			((NumericRepresentationType) getValueRepresentation())
+					.setMissingValue((List) value);
 		}
 	}
 
