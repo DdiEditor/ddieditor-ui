@@ -95,10 +95,11 @@ public class Variable extends Model {
 	public RepresentationType getValueRepresentation() {
 		org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.RepresentationType representation = doc
 				.getVariable().getRepresentation();
-		if (representation==null) {
+		if (representation == null) {
 			return null;
 		} else {
-			return doc.getVariable().getRepresentation().getValueRepresentation();			
+			return doc.getVariable().getRepresentation()
+					.getValueRepresentation();
 		}
 	}
 
@@ -201,7 +202,9 @@ public class Variable extends Model {
 		// question ref
 		if (type.equals(ModelIdentifingType.Type_A.class)) {
 			ReferenceType ref = getQuestionReference();
-			ModelAccessor.setReference(doc.getVariable().getQuestionReferenceList(), ref, (LightXmlObjectType) value);
+			ModelAccessor.setReference(doc.getVariable()
+					.getQuestionReferenceList(), ref,
+					(LightXmlObjectType) value);
 		}
 
 		// concept ref
@@ -236,7 +239,7 @@ public class Variable extends Model {
 			ModelAccessor.setReference(ref, (LightXmlObjectType) value);
 		}
 
-		// numeric rep 
+		// numeric rep
 		// type
 		if (type.equals(ModelIdentifingType.Type_E.class)) {
 			if (!(getValueRepresentation() instanceof NumericRepresentationType)) {
@@ -337,7 +340,7 @@ public class Variable extends Model {
 			((DateTimeRepresentationType) getValueRepresentation())
 					.setType(dateTime);
 		}
-		
+
 		// numeric rep
 		// - missing values
 		if (type.equals(ModelIdentifingType.Type_L.class)) {
