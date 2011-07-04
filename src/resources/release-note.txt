@@ -1,13 +1,14 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.11 Release Data: 2011-06-29
+Product Version: 1.0.12 Release Data: 2011-xx-xx
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-- Is now again able to load Journal Study Unit information (problem related to reload SD).
+DDIE-87 Missing Values now handled for Numeric Representation on Variables. 
+The list is shown in the Variable Editor.
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
