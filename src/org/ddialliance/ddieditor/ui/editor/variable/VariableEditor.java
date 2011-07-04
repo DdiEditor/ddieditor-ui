@@ -2,6 +2,7 @@ package org.ddialliance.ddieditor.ui.editor.variable;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -283,27 +284,61 @@ public class VariableEditor extends Editor {
 						}
 					}
 				});
-				Text numericDecimalPositionText = createTextInput(
-						representationGroup,
-						Messages.getString("VariableEditor.label.numericrepresentation.decimalpositions"),
-						modelImpl.getNumericDecimalPosition().toString(), false);
-				numericDecimalPositionText
-						.addModifyListener(new ModifyListener() {
-							@Override
-							public void modifyText(ModifyEvent e) {
-								editorStatus.setChanged();
+				if (!modelImpl.getNumericDecimalPosition().toString()
+						.equals("0")) {
+					Text numericDecimalPositionText = createTextInput(
+							representationGroup,
+							Messages.getString("VariableEditor.label.numericrepresentation.decimalpositions"),
+							modelImpl.getNumericDecimalPosition().toString(),
+							false);
+					numericDecimalPositionText
+							.addModifyListener(new ModifyListener() {
+								@Override
+								public void modifyText(ModifyEvent e) {
+									editorStatus.setChanged();
 
-								try {
-									BigInteger bigint = null;
-									bigint = new BigInteger(((Text) e
-											.getSource()).getText());
-									modelImpl.applyChange(bigint,
-											ModelIdentifingType.Type_F.class);
-								} catch (Exception e1) {
-									showError(e1);
+									try {
+										BigInteger bigint = null;
+										bigint = new BigInteger(((Text) e
+												.getSource()).getText());
+										modelImpl
+												.applyChange(
+														bigint,
+														ModelIdentifingType.Type_F.class);
+									} catch (Exception e1) {
+										showError(e1);
+									}
 								}
-							}
-						});
+							});
+				}
+				StringBuffer missingValues = new StringBuffer();
+				List list = modelImpl.getMissingValue();
+				for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+					String missingValue = (String) iterator.next();
+					if (iterator.hasNext()) {
+						missingValues.append(missingValue+" ");
+					} else {
+						missingValues.append(missingValue);
+					}
+				}
+				Text missingValueText = createTextInput(representationGroup,
+						"Missing Values", missingValues.toString(), false);
+				missingValueText.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						editorStatus.setChanged();
+
+						try {
+							String missing = ((Text) e.getSource()).getText();
+							// split string of space separated element into list
+						    List<String> tokens = Arrays.asList(missing.split("\\s+"));
+						    List<String> list = tokens.subList(0, tokens.size());
+							modelImpl.applyChange(list, ModelIdentifingType.Type_L.class);
+						} catch (Exception e1) {
+							showError(e1);
+						}
+					}
+				});
 			}
 			// TextRepresentation
 			if (repImpl instanceof TextRepresentationType) {
