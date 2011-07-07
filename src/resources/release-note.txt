@@ -7,6 +7,8 @@ What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
+DDIE-73 The order of Question Schemes, Category Schemes and Concepts now match
+the order given in the Wiki file.
 DDIE-87 Missing Values now handled for Numeric Representation on Variables. 
 The list is shown in the Variable Editor.
 -------------------------------------------------------------------------------  
