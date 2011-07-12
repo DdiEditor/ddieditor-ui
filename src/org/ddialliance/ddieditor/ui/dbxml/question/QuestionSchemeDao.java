@@ -132,10 +132,26 @@ public class QuestionSchemeDao implements IDao {
 
 	@Override
 	public void create(IModel questionScheme) throws DDIFtpException {
-		DdiManager.getInstance().createElement(questionScheme.getDocument(),
+		// stored at specific location
+		DdiManager.getInstance().createElement(
+				questionScheme.getDocument(),
 				questionScheme.getParentId(),
 				questionScheme.getParentVersion(),
-				"datacollection__DataCollection");
+				"datacollection__DataCollection",
+				// parent sub-elements
+				new String[] { "VersionResponsibility", "VersionRationale",
+						"DataCollectionModuleName", "Label", "Description", 
+						"Covarage", "OtherMaterial", "Note", "Methodology",   
+						"CollectionEvent", "QuestionScheme",
+						"ControlConstructScheme",
+						"InterviewerInstructionScheme", "Instrument",
+						"ProcessingEvent" },
+				// stop elements
+				new String[] { "ControlConstructScheme",
+						"InterviewerInstructionScheme", "Instrument",
+						"ProcessingEvent" },
+				// jump elements
+				new String[] {"CollectionEvent", "QuestionScheme"});
 	}
 
 	@Override
