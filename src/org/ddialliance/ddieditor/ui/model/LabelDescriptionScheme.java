@@ -282,6 +282,14 @@ public abstract class LabelDescriptionScheme extends Model implements IModel, IL
 					XmlBeansUtil.setTextOnMixedElement(label, text);
 					syncUpdatesWithMaintainableLabelUpdateElement(label, maintainableUpdateLabels);
 					return label;
+				}  else {
+					// remove label:
+					for (int i = 0; i < labels.size(); i++) {
+						if (label == labels.get(i)) {
+							labels.remove(i);
+							return null;
+						}
+					}
 				}
 			}
 		}
