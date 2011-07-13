@@ -1,18 +1,15 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.12 Release Data: 2012-07-13
+Product Version: 1.0.13 Release Data: 2012-xx-xx
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-DDIE-73 The order of Question Schemes, Category Schemes and Concepts now match
-the order given in the Wiki file.
-DDIE-87 Missing Values now handled for Numeric Representation on Variables. 
-The list is shown in the Variable Editor.
-DDIE-97 Extraction of veriable number now works for all numbers.
-- Problem Import Question view now provided.
+DDIE-78 It is now possible to blank out the label field of all Scheme editors
+without getting a subsequent save error.
+
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
