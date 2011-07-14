@@ -74,6 +74,9 @@ public enum ElementType {
 			"", Arrays.asList(ElementType.UNIVERSE)),
 
 	// conceptual component
+	CONCEPTUAL_COMPONENT("ConceptualComponent", null, null, "coco",
+			"ConceptualComponent.label", "", null),
+
 	// concept
 	CONCEPT("Concept", ConceptsPerspective.ID, ConceptEditor.ID, "conc",
 			"ConceptView.label.conceptLabel.Concept", "", null), CONCEPT_SCHEME(
