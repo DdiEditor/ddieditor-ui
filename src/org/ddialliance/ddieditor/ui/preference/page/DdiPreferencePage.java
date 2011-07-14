@@ -19,17 +19,27 @@ public class DdiPreferencePage extends FieldEditorPreferencePage implements
 	}
 
 	@Override
-	public void createFieldEditors() {		
-		addField(new StringFieldEditor(PreferenceConstants.DDI_AGENCY,
-				"&Agency:", getFieldEditorParent()));
+	public void createFieldEditors() {
+		// agency
+		StringFieldEditor agencyEditor = new StringFieldEditor(PreferenceConstants.DDI_AGENCY,
+				"&Agency:", getFieldEditorParent());
+		addField(agencyEditor);
+		
+		// default ddi lang
 		ComboFieldEditor comboFieldEditor = new ComboFieldEditor(PreferenceConstants.DDI_LANGUAGE,
 				"&Default language used when creating new human readable items:", LanguageUtil
 				.getAvailableLanguages(), getFieldEditorParent());
-		comboFieldEditor.load();
+		comboFieldEditor.load();		
 		addField(comboFieldEditor);
+		
+		// instrument program language
+		StringFieldEditor instProLangEditor = new StringFieldEditor(PreferenceConstants.DDI_INSTRUMENT_PROGRAM_LANG,
+				"&Instrument programmig language:", getFieldEditorParent());
+		addField(instProLangEditor);
 	}
 	
 	@Override
 	public void init(IWorkbench workbench) {
+		// do nothing
 	}
 }

@@ -9,6 +9,7 @@ public class PreferenceConstants {
 	// ddi
 	public static final String DDI_AGENCY = "ddi.agency";
 	public static final String DDI_LANGUAGE = "ddi.lang";
+	public static final String DDI_INSTRUMENT_PROGRAM_LANG = "ddi.inst.programlang";
 
 	// ddieditor-ui
 	public static final String DDIEDITORUI_LANGUAGE = "ddieditorui.language";

@@ -21,6 +21,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// ddi
 		store.setDefault(PreferenceConstants.DDI_AGENCY, "dk.dda");
 		store.setDefault(PreferenceConstants.DDI_LANGUAGE, "da");
+		store.setDefault(PreferenceConstants.DDI_INSTRUMENT_PROGRAM_LANG, "dk.dda.inst-0.1");
 
 		// ddieditor-ui
 		store.setDefault(PreferenceConstants.DDIEDITORUI_LANGUAGE, "da");
