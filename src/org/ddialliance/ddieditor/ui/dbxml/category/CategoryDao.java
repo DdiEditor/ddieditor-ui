@@ -32,9 +32,18 @@ public class CategoryDao implements IDao {
 
 	@Override
 	public void create(IModel model) throws DDIFtpException {
-		DdiManager.getInstance()
-				.createElement(model.getDocument(), model.getParentId(),
-						model.getParentVersion(), "CategoryScheme");
+		DdiManager.getInstance().createElement(model.getDocument(),
+				model.getParentId(),
+				model.getParentVersion(),
+				"CategoryScheme",
+				// parentSubElements - elements of parent
+				new String[] { "VersionRationale", "VersionResponsibility",
+						"Label", "Description",
+						"CategorySchemeReference", "CategoryGroup" },
+				// stopElements - do not search below ...
+				new String[] { },
+				// jumpElements - jump over elements
+				new String[] { "Category", });
 	}
 
 	@Override
