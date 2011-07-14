@@ -9,11 +9,13 @@ User interface
 Item ID:    Description:
 DDIE-78 It is now possible to blank out the label field of all Scheme editors
 without getting a subsequent save error.
+DDIE-66 Fixed, SD-reload
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
 Item ID:    Description:  
+
 -------------------------------------------------------------------------------
 Change Log Previous Releases
 -------------------------------------------------------------------------------
@@ -38,6 +40,4 @@ See http://172.20.33.20:8080/jtrac
 
 -------------------------------------------------------------------------------
 Known Issue
--------------------------------------------------------------------------------
- - Study unit information import is under rework construction and can't 
- expected to work properly.   
+------------------------------------------------------------------------------- 
