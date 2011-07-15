@@ -1,5 +1,6 @@
 package org.ddialliance.ddieditor.ui;
 
+import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -36,6 +37,8 @@ public class Activator extends AbstractUIPlugin {
 	 * )
 	 */
 	public void stop(BundleContext context) throws Exception {
+		PersistenceManager.getInstance().close();
+		
 		plugin = null;
 		super.stop(context);
 	}
