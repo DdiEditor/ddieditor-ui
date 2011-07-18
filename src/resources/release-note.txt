@@ -11,6 +11,7 @@ DDIE-78 It is now possible to blank out the label field of all Scheme editors
 without getting a subsequent save error.
 DDIE-66 Fixed, SD-reload
 DDIE-100 Fixed,	Frigiv Oracle Berkeley DB XML log-filer
+na Angivlse af editor element type som tooltip paa editor faneblad
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
