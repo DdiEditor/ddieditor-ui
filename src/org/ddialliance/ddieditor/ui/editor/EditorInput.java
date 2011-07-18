@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ddialliance.ddieditor.model.lightxmlobject.LabelType;
 import org.ddialliance.ddieditor.ui.model.ElementType;
+import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -185,7 +186,12 @@ public class EditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "DDI Editor";
+		String toolTip = "";
+		if (getElementType()!= null) {
+			toolTip = Messages.getString(getElementType()
+					.getDisplayMessageEntry());
+		}
+		return toolTip;
 	}
 
 	@Override
