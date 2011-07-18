@@ -237,10 +237,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				setPartName(model.getId());
 			}
 		}
-		String toolTip = Messages.getString(editorInput.getElementType()
-				.getDisplayMessageEntry());
-		setTitleToolTip(toolTip);
-		// TODO i18n
 	}
 
 	public void createPartControl(Composite parent) {
