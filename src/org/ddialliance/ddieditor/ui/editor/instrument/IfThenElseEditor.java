@@ -42,10 +42,9 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 
 	public IfThenElseEditor() {
 		super(
-				Messages
-						.getString("IfThenElseEditor.label.IfThenElseEditorLabel.IfThenElseEditor"),
-				Messages
-						.getString("IfThenElseEditor.label.useTheEditorLabel.Description"), ID);
+				Messages.getString("IfThenElseEditor.label.IfThenElseEditorLabel.IfThenElseEditor"),
+				Messages.getString("IfThenElseEditor.label.useTheEditorLabel.Description"),
+				ID);
 		this.dao = new IfThenElseDao();
 	}
 
@@ -65,15 +64,15 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 		// main tab
 		TabItem tabItem = createTabItem(Messages
 				.getString("IfThenElse.editor.tabdisplaytext"));
-		Group group = createGroup(tabItem, Messages
-				.getString("IfThenElse.editor.groupdisplaytext"));
+		Group group = createGroup(tabItem,
+				Messages.getString("IfThenElse.editor.groupdisplaytext"));
 
 		// if condition
 		Composite error = createErrorComposite(group, "");
 		ProgrammingLanguageCodeType ifProgrammingLanguageCode = modelImpl
 				.getIfCondition();
-		Text conditionTxt = createTextInput(group, Messages
-				.getString("IfThenElse.editor.if"),
+		Text conditionTxt = createTextInput(group,
+				Messages.getString("IfThenElse.editor.if"),
 				ifProgrammingLanguageCode == null ? ""
 						: ifProgrammingLanguageCode.getStringValue(), false);
 		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(
@@ -81,13 +80,11 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 				getEditorIdentification()));
 
 		// if condition lang
-		String programmingLanguage = ifProgrammingLanguageCode == null ? ""
+		String programmingLanguage = ifProgrammingLanguageCode == null ? getDefaultCodeProgrammingLanguage()
 				: ifProgrammingLanguageCode.getProgrammingLanguage();
-		if (programmingLanguage == null) {
-			programmingLanguage = "";
-		}
-		Text programmingLanguageTxt = createTextInput(group, Messages
-				.getString("StatementItem.editor.programlang"),
+
+		Text programmingLanguageTxt = createTextInput(group,
+				Messages.getString("StatementItem.editor.programlang"),
 				programmingLanguage, false);
 		programmingLanguageTxt
 				.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
@@ -96,12 +93,12 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 
 		// if question ref
 		try {
-			questionRefList = DdiManager.getInstance().getQuestionItemsLight(
-					null, null, null, null).getLightXmlObjectList()
-					.getLightXmlObjectList();
+			questionRefList = DdiManager.getInstance()
+					.getQuestionItemsLight(null, null, null, null)
+					.getLightXmlObjectList().getLightXmlObjectList();
 		} catch (Exception e) {
-			DialogUtil.errorDialog(getSite().getShell(), ID, null, e
-					.getMessage(), e);
+			DialogUtil.errorDialog(getSite().getShell(), ID, null,
+					e.getMessage(), e);
 		}
 		ReferenceSelectionCombo questionRefSelectCombo = createRefSelection(
 				group, Messages.getString("IfThenElse.editor.ifquestionref"),
@@ -116,29 +113,30 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 		// then ref
 		List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
 		try {
-			controlConstructRefList = DdiManager.getInstance().getControlConstructsLight();
+			controlConstructRefList = DdiManager.getInstance()
+					.getControlConstructsLight();
 		} catch (Exception e) {
 			showError(e);
-		}		
+		}
 
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(group,
-				Messages.getString("IfThenElse.editor.thenref"), Messages
-						.getString("IfThenElse.editor.thenref"), modelImpl
-						.getThenReference(), controlConstructRefList, false);
+				Messages.getString("IfThenElse.editor.thenref"),
+				Messages.getString("IfThenElse.editor.thenref"),
+				modelImpl.getThenReference(), controlConstructRefList, false);
 		thenRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.thenref"), new ReferenceSelectionAdapter(
-						thenRefSelectCombo, modelImpl,
+				.getString("IfThenElse.editor.thenref"),
+				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_C.class,
 						getEditorIdentification()));
 
 		// else ref
 		ReferenceSelectionCombo elseRefSelectCombo = createRefSelection(group,
-				Messages.getString("IfThenElse.editor.elseref"), Messages
-						.getString("IfThenElse.editor.elseref"), modelImpl
-						.getElseReference(), controlConstructRefList, false);
+				Messages.getString("IfThenElse.editor.elseref"),
+				Messages.getString("IfThenElse.editor.elseref"),
+				modelImpl.getElseReference(), controlConstructRefList, false);
 		elseRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.elseref"), new ReferenceSelectionAdapter(
-						elseRefSelectCombo, modelImpl,
+				.getString("IfThenElse.editor.elseref"),
+				new ReferenceSelectionAdapter(elseRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_D.class,
 						getEditorIdentification()));
 
@@ -146,25 +144,34 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 		// name
 		TabItem tabItem2 = createTabItem(Messages
 				.getString("editor.label.description"));
-		Group group2 = createGroup(tabItem2, Messages
-				.getString("editor.label.description"));
+		Group group2 = createGroup(tabItem2,
+				Messages.getString("editor.label.description"));
 
 		try {
 			// label
-			Text txt = createLabelInput(group2, Messages.getString("editor.label.label"), modelImpl.getDocument()
-					.getIfThenElse().getLabelList(), modelImpl.getDocument().getIfThenElse().getId());
-			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
-					.getIfThenElse().getLabelList(), new LabelTdI(), "", txt);
+			Text txt = createLabelInput(group2,
+					Messages.getString("editor.label.label"), modelImpl
+							.getDocument().getIfThenElse().getLabelList(),
+					modelImpl.getDocument().getIfThenElse().getId());
+			createTranslation(group2,
+					Messages.getString("editor.button.translate"), modelImpl
+							.getDocument().getIfThenElse().getLabelList(),
+					new LabelTdI(), "", txt);
 
 			// description
-			StyledText styledText = createStructuredStringInput(group2, Messages.getString("editor.label.description"),
-					modelImpl.getDocument().getIfThenElse().getDescriptionList(), modelImpl.getDocument()
+			StyledText styledText = createStructuredStringInput(group2,
+					Messages.getString("editor.label.description"),
+					modelImpl.getDocument().getIfThenElse()
+							.getDescriptionList(), modelImpl.getDocument()
 							.getIfThenElse().getId());
-			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
-					.getIfThenElse().getDescriptionList(), new DescriptionTdI(), "", styledText);
+			createTranslation(group2,
+					Messages.getString("editor.button.translate"),
+					modelImpl.getDocument().getIfThenElse()
+							.getDescriptionList(), new DescriptionTdI(), "",
+					styledText);
 		} catch (DDIFtpException e) {
 			DialogUtil
-			.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
+					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
 
 		// id tab
@@ -181,8 +188,9 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 
 	@Override
 	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages
-				.getString("perspective.switch.dialogtext"), Messages
-				.getString("perspective.instruments"));
+		return MessageFormat.format(
+				Messages.getString("perspective.switch.dialogtext"),
+				Messages.getString("perspective.instruments"));
 	}
+
 }

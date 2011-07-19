@@ -32,7 +32,8 @@ public class RepeatWhileEditor extends Editor {
 	public RepeatWhileEditor() {
 		super(
 				Messages.getString("RepeatWhileEditor.label.RepeatWhileEditorLabel.RepeatWhileEditor"),
-				Messages.getString("RepeatWhileEditor.label.useTheEditorLabel.Description"), ID);
+				Messages.getString("RepeatWhileEditor.label.useTheEditorLabel.Description"),
+				ID);
 		this.dao = new RepeatWhileDao();
 	}
 
@@ -68,11 +69,9 @@ public class RepeatWhileEditor extends Editor {
 				getEditorIdentification()));
 
 		// while condition lang
-		String programmingLanguage = ifProgrammingLanguageCode == null ? ""
+		String programmingLanguage = ifProgrammingLanguageCode == null ? getDefaultCodeProgrammingLanguage()
 				: ifProgrammingLanguageCode.getProgrammingLanguage();
-		if (programmingLanguage == null) {
-			programmingLanguage = "";
-		}
+
 		Text programmingLanguageTxt = createTextInput(group,
 				Messages.getString("RepeatWhile.editor.whileprogramlang"),
 				programmingLanguage, false);
@@ -95,8 +94,8 @@ public class RepeatWhileEditor extends Editor {
 				Messages.getString("RepeatWhile.editor.whileref"),
 				modelImpl.getWhileReference(), controlConstructRefList, false);
 		thenRefSelectCombo.addSelectionListener(Messages
-				.getString("RepeatWhile.editor.whileref"), new ReferenceSelectionAdapter(
-						thenRefSelectCombo, modelImpl,
+				.getString("RepeatWhile.editor.whileref"),
+				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
 

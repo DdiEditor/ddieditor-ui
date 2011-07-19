@@ -112,11 +112,9 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 				getEditorIdentification()));
 
 		// init value program lang
-		String appLangInitValue = initValue == null ? "" : initValue
-				.getProgrammingLanguage();
-		if (appLangInitValue == null) {
-			appLangInitValue = "";
-		}
+		String appLangInitValue = initValue == null ? getDefaultCodeProgrammingLanguage()
+				: initValue.getProgrammingLanguage();
+
 		Text appLangInitValueTxt = createTextInput(initValueGroup,
 				Messages.getString("LoopEditor.label.InitValue.programlang"),
 				appLangInitValue, false);

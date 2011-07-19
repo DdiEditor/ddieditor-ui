@@ -43,6 +43,7 @@ import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.ViewManager;
+import org.ddialliance.ddieditor.util.DdiEditorConfig;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -884,6 +885,16 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				1));
 		combo.setItems(options);
 		return combo;
+	}
+	
+	public String getDefaultCodeProgrammingLanguage() {
+		String programmingLanguage = "";
+		if (((EditorInput) getEditorInput()).mode
+				.equals(EditorInput.EditorModeType.NEW)) {
+			programmingLanguage = Activator.getDefault().getPreferenceStore()
+					.getString(DdiEditorConfig.DDI_INSTRUMENT_PROGRAM_LANG);
+		}
+		return programmingLanguage;
 	}
 
 	public static String[] getSequenceOptions() {

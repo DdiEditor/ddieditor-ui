@@ -34,10 +34,9 @@ public class ComputationItemEditor extends Editor {
 
 	public ComputationItemEditor() {
 		super(
-				Messages
-						.getString("ComputationItemEditor.label.ComputationItemEditorLabel.ComputationItemEditor"),
-				Messages
-						.getString("ComputationItemEditor.label.useTheEditorLabel.Description"), ID);
+				Messages.getString("ComputationItemEditor.label.ComputationItemEditorLabel.ComputationItemEditor"),
+				Messages.getString("ComputationItemEditor.label.useTheEditorLabel.Description"),
+				ID);
 		this.dao = new ComputationItemDao();
 	}
 
@@ -57,15 +56,15 @@ public class ComputationItemEditor extends Editor {
 		// main tab
 		TabItem tabItem = createTabItem(Messages
 				.getString("ComputationItem.editor.tabdisplaytext"));
-		Group group = createGroup(tabItem, Messages
-				.getString("ComputationItem.editor.groupdisplaytext"));
+		Group group = createGroup(tabItem,
+				Messages.getString("ComputationItem.editor.groupdisplaytext"));
 
 		// computation condition
 		Composite error = createErrorComposite(group, "");
 		ProgrammingLanguageCodeType ifProgrammingLanguageCode = modelImpl
 				.getUntilCondition();
-		Text conditionTxt = createTextInput(group, Messages
-				.getString("ComputationItem.editor.computation"),
+		Text conditionTxt = createTextInput(group,
+				Messages.getString("ComputationItem.editor.computation"),
 				ifProgrammingLanguageCode == null ? ""
 						: ifProgrammingLanguageCode.getStringValue(), false);
 		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(
@@ -73,13 +72,12 @@ public class ComputationItemEditor extends Editor {
 				getEditorIdentification()));
 
 		// computation condition lang
-		String programmingLanguage = ifProgrammingLanguageCode == null ? ""
+		String programmingLanguage = ifProgrammingLanguageCode == null ? getDefaultCodeProgrammingLanguage()
 				: ifProgrammingLanguageCode.getProgrammingLanguage();
-		if (programmingLanguage == null) {
-			programmingLanguage = "";
-		}
-		Text programmingLanguageTxt = createTextInput(group, Messages
-				.getString("ComputationItem.editor.computationprogramlang"),
+
+		Text programmingLanguageTxt = createTextInput(
+				group,
+				Messages.getString("ComputationItem.editor.computationprogramlang"),
 				programmingLanguage, false);
 		programmingLanguageTxt
 				.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
@@ -89,47 +87,56 @@ public class ComputationItemEditor extends Editor {
 		// variable ref
 		List<LightXmlObjectType> variableRefList = new ArrayList<LightXmlObjectType>();
 		try {
-			variableRefList = DdiManager.getInstance().getVariablesLight(null,
-					null, null, null).getLightXmlObjectList()
-					.getLightXmlObjectList();
+			variableRefList = DdiManager.getInstance()
+					.getVariablesLight(null, null, null, null)
+					.getLightXmlObjectList().getLightXmlObjectList();
 		} catch (Exception e) {
-			DialogUtil.errorDialog(getSite().getShell(), ID, null, e
-					.getMessage(), e);
+			DialogUtil.errorDialog(getSite().getShell(), ID, null,
+					e.getMessage(), e);
 		}
 
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(
 				group,
-				Messages
-						.getString("ComputationItem.editor.computationvariableref"),
-				Messages
-						.getString("ComputationItem.editor.computationvariableref"),
+				Messages.getString("ComputationItem.editor.computationvariableref"),
+				Messages.getString("ComputationItem.editor.computationvariableref"),
 				modelImpl.getAssignedVariableReference(), variableRefList,
 				false);
-		thenRefSelectCombo.addSelectionListener(Messages.getString("ComputationItem.editor.computationvariableref"),
-				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl, ModelIdentifingType.Type_B.class,
+		thenRefSelectCombo.addSelectionListener(Messages
+				.getString("ComputationItem.editor.computationvariableref"),
+				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,
+						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
 
 		// description tab
 		TabItem tabItem2 = createTabItem(Messages
 				.getString("editor.label.description"));
-		Group group2 = createGroup(tabItem2, Messages
-				.getString("editor.label.description"));
+		Group group2 = createGroup(tabItem2,
+				Messages.getString("editor.label.description"));
 
 		try {
-			Text txt = createLabelInput(group2, Messages.getString("editor.label.label"), modelImpl.getDocument()
-					.getComputationItem().getLabelList(), modelImpl.getDocument().getComputationItem().getId());
+			Text txt = createLabelInput(group2,
+					Messages.getString("editor.label.label"), modelImpl
+							.getDocument().getComputationItem().getLabelList(),
+					modelImpl.getDocument().getComputationItem().getId());
 
-			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
-					.getComputationItem().getLabelList(), new LabelTdI(), "", txt);
+			createTranslation(group2,
+					Messages.getString("editor.button.translate"), modelImpl
+							.getDocument().getComputationItem().getLabelList(),
+					new LabelTdI(), "", txt);
 
-			StyledText styledText = createStructuredStringInput(group2, Messages.getString("editor.label.description"),
-					modelImpl.getDocument().getComputationItem().getDescriptionList(), modelImpl.getDocument()
+			StyledText styledText = createStructuredStringInput(group2,
+					Messages.getString("editor.label.description"), modelImpl
+							.getDocument().getComputationItem()
+							.getDescriptionList(), modelImpl.getDocument()
 							.getComputationItem().getId());
-			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
-					.getComputationItem().getDescriptionList(), new DescriptionTdI(), "", styledText);
+			createTranslation(group2,
+					Messages.getString("editor.button.translate"), modelImpl
+							.getDocument().getComputationItem()
+							.getDescriptionList(), new DescriptionTdI(), "",
+					styledText);
 		} catch (DDIFtpException e) {
 			DialogUtil
-			.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
+					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
 
 		// id tab

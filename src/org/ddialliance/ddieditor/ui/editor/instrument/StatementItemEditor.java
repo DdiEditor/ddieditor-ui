@@ -40,10 +40,9 @@ public class StatementItemEditor extends Editor implements
 
 	public StatementItemEditor() {
 		super(
-				Messages
-						.getString("StatementItemEditor.label.StatementItemEditorLabel.StatementItemEditor"),
-				Messages
-						.getString("StatementItemEditor.label.useTheEditorLabel.Description"), ID);
+				Messages.getString("StatementItemEditor.label.StatementItemEditorLabel.StatementItemEditor"),
+				Messages.getString("StatementItemEditor.label.useTheEditorLabel.Description"),
+				ID);
 		dao = new StatementItemDao();
 	}
 
@@ -68,8 +67,8 @@ public class StatementItemEditor extends Editor implements
 		// main tab
 		TabItem tabItem = createTabItem(Messages
 				.getString("StatementItem.editor.tabdisplaytext"));
-		Group group = createGroup(tabItem, Messages
-				.getString("StatementItem.editor.groupdisplaytext"));
+		Group group = createGroup(tabItem,
+				Messages.getString("StatementItem.editor.groupdisplaytext"));
 
 		// statement
 		// text type in display text is one only by convention i ddi spec
@@ -79,13 +78,14 @@ public class StatementItemEditor extends Editor implements
 		try {
 			text = modelImpl.getText();
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(getSite().getShell(), ID, null, e
-					.getMessage(), e);
+			DialogUtil.errorDialog(getSite().getShell(), ID, null,
+					e.getMessage(), e);
 			return;
 		}
-		StyledText statementTxt = createTextAreaInput(group, Messages
-				.getString("StatementItem.editor.textarea"), text == null ? ""
-				: XmlBeansUtil.getTextOnMixedElement(text), false);
+		StyledText statementTxt = createTextAreaInput(group,
+				Messages.getString("StatementItem.editor.textarea"),
+				text == null ? "" : XmlBeansUtil.getTextOnMixedElement(text),
+				false);
 		statementTxt.addModifyListener(new TextStyledTextModyfiListener(model,
 				TextType.class, getEditorIdentification()));
 		createTranslation(
@@ -103,21 +103,20 @@ public class StatementItemEditor extends Editor implements
 			DialogUtil
 					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
-		Text conditionTxt = createTextInput(group, Messages
-				.getString("StatementItem.editor.code"),
+		Text conditionTxt = createTextInput(
+				group,
+				Messages.getString("StatementItem.editor.code"),
 				programmingLanguageCode == null ? "" : programmingLanguageCode
 						.getStringValue(), false);
 		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(model,
 				ProgrammingLanguageCodeType.class, getEditorIdentification()));
 
 		// app lang
-		String programmingLanguage = programmingLanguageCode == null ? ""
+		String programmingLanguage = programmingLanguageCode == null ? getDefaultCodeProgrammingLanguage()
 				: programmingLanguageCode.getProgrammingLanguage();
-		if (programmingLanguage == null) {
-			programmingLanguage = "";
-		}
-		Text programmingLanguageTxt = createTextInput(group, Messages
-				.getString("StatementItem.editor.programlang"),
+
+		Text programmingLanguageTxt = createTextInput(group,
+				Messages.getString("StatementItem.editor.programlang"),
 				programmingLanguage, false);
 		programmingLanguageTxt
 				.addModifyListener(new TextStyledTextModyfiListener(model,
@@ -127,22 +126,31 @@ public class StatementItemEditor extends Editor implements
 		// description tab
 		TabItem tabItem2 = createTabItem(Messages
 				.getString("editor.label.description"));
-		Group group2 = createGroup(tabItem2, Messages
-				.getString("editor.label.description"));
+		Group group2 = createGroup(tabItem2,
+				Messages.getString("editor.label.description"));
 
 		try {
 			// label
-			Text txt = createLabelInput(group2, Messages.getString("editor.label.label"), modelImpl.getDocument()
-					.getStatementItem().getLabelList(), modelImpl.getDocument().getStatementItem().getId());
-			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
-					.getStatementItem().getLabelList(), new LabelTdI(), "", txt);
+			Text txt = createLabelInput(group2,
+					Messages.getString("editor.label.label"), modelImpl
+							.getDocument().getStatementItem().getLabelList(),
+					modelImpl.getDocument().getStatementItem().getId());
+			createTranslation(group2,
+					Messages.getString("editor.button.translate"), modelImpl
+							.getDocument().getStatementItem().getLabelList(),
+					new LabelTdI(), "", txt);
 
 			// description
-			StyledText styledText = createStructuredStringInput(group2, Messages.getString("editor.label.description"),
-					modelImpl.getDocument().getStatementItem().getDescriptionList(), modelImpl.getDocument()
+			StyledText styledText = createStructuredStringInput(group2,
+					Messages.getString("editor.label.description"), modelImpl
+							.getDocument().getStatementItem()
+							.getDescriptionList(), modelImpl.getDocument()
 							.getStatementItem().getId());
-			createTranslation(group2, Messages.getString("editor.button.translate"), modelImpl.getDocument()
-					.getStatementItem().getDescriptionList(), new DescriptionTdI(), "", styledText);
+			createTranslation(group2,
+					Messages.getString("editor.button.translate"), modelImpl
+							.getDocument().getStatementItem()
+							.getDescriptionList(), new DescriptionTdI(), "",
+					styledText);
 		} catch (DDIFtpException e) {
 			DialogUtil
 					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
@@ -162,8 +170,8 @@ public class StatementItemEditor extends Editor implements
 
 	@Override
 	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages
-				.getString("perspective.switch.dialogtext"), Messages
-				.getString("perspective.instruments"));
+		return MessageFormat.format(
+				Messages.getString("perspective.switch.dialogtext"),
+				Messages.getString("perspective.instruments"));
 	}
 }
