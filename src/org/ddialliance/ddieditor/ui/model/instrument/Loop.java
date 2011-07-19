@@ -8,6 +8,7 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
+import org.ddialliance.ddieditor.util.DdiEditorConfig;
 
 /**
  * Structures a control construct which loops until a limiting condition is met.
@@ -79,7 +80,7 @@ public class Loop extends Model {
 			ModelAccessor.setReference(getControlConstructReference(),
 					(LightXmlObjectType) value);
 		}
-		
+
 		// loop variable reference
 		if (type.equals(ModelIdentifingType.Type_K.class)) {
 			// IdentificationManager.getInstance().addReferenceInformation(
@@ -134,11 +135,19 @@ public class Loop extends Model {
 		if (codeType == null) {
 			return null;
 		}
-		if (codeType.getCodeList().isEmpty()) {
-			return create ? codeType.addNewCode() : null;
+		if (create && codeType.getCodeList().isEmpty()) {
+			if (create) {
+				codeType.addNewCode();
+				codeType.getCodeList()
+						.get(0)
+						.setProgrammingLanguage(
+								DdiEditorConfig
+										.get(DdiEditorConfig.DDI_INSTRUMENT_PROGRAM_LANG));
+			}
 		} else {
 			return codeType.getCodeList().get(0);
 		}
+		return null;
 	}
 
 	public ReferenceType getQuestionReference(CodeType codeType) {
@@ -147,8 +156,7 @@ public class Loop extends Model {
 		}
 		ReferenceType ref = null;
 		if (codeType.getSourceQuestionReferenceList().isEmpty()) {
-			ref = create ? codeType. addNewSourceQuestionReference()
-					: null;
+			ref = create ? codeType.addNewSourceQuestionReference() : null;
 			return ref;
 		} else {
 			return codeType.getSourceQuestionReferenceList().get(0);

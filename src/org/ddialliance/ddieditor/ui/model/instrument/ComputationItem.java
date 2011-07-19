@@ -8,6 +8,7 @@ import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
+import org.ddialliance.ddieditor.util.DdiEditorConfig;
 
 public class ComputationItem extends Model {
 	ComputationItemDocument doc;
@@ -58,11 +59,19 @@ public class ComputationItem extends Model {
 		if (codeType == null) {
 			return null;
 		}
-		if (codeType.getCodeList().isEmpty()) {
-			return create ? codeType.addNewCode() : null;
+		if (create && codeType.getCodeList().isEmpty()) {
+			if (create) {
+				codeType.addNewCode();
+				codeType.getCodeList()
+						.get(0)
+						.setProgrammingLanguage(
+								DdiEditorConfig
+										.get(DdiEditorConfig.DDI_INSTRUMENT_PROGRAM_LANG));
+			}
 		} else {
 			return codeType.getCodeList().get(0);
 		}
+		return null;
 	}
 
 	public ReferenceType getAssignedVariableReference() {

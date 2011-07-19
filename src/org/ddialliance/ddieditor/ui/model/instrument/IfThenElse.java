@@ -9,6 +9,7 @@ import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddieditor.util.DdiEditorConfig;
 
 public class IfThenElse extends Model {
 	IfThenElseDocument doc;
@@ -30,9 +31,9 @@ public class IfThenElse extends Model {
 	public void executeChange(Object value, Class<?> type) throws Exception {
 		// ProgrammingLanguageCodeType
 		if (type.equals(ProgrammingLanguageCodeType.class)) {
-			getProgrammingLanguageCode(
-					getCodeType(doc.getIfThenElse().getIfCondition()))
-					.setStringValue((String) value);
+			ProgrammingLanguageCodeType pCode = getProgrammingLanguageCode(getCodeType(doc
+					.getIfThenElse().getIfCondition()));
+			pCode.setStringValue((String) value);
 		}
 
 		// ProgrammingLanguageCodeType/@programmingLanguage
@@ -114,11 +115,20 @@ public class IfThenElse extends Model {
 		if (codeType == null) {
 			return null;
 		}
-		if (codeType.getCodeList().isEmpty()) {
-			return create ? codeType.addNewCode() : null;
+
+		if (create && codeType.getCodeList().isEmpty()) {
+			if (create) {
+				codeType.addNewCode();
+				codeType.getCodeList()
+						.get(0)
+						.setProgrammingLanguage(
+								DdiEditorConfig
+										.get(DdiEditorConfig.DDI_INSTRUMENT_PROGRAM_LANG));
+			}
 		} else {
 			return codeType.getCodeList().get(0);
 		}
+		return null;
 	}
 
 	public ReferenceType getThenReference() {

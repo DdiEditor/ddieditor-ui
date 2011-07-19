@@ -15,6 +15,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
+import org.ddialliance.ddieditor.util.DdiEditorConfig;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
@@ -58,7 +59,8 @@ public class StatementItem extends Model {
 		}
 	}
 
-	public ProgrammingLanguageCodeType getProgrammingLanguageCode() throws DDIFtpException {
+	public ProgrammingLanguageCodeType getProgrammingLanguageCode()
+			throws DDIFtpException {
 		CodeType codeType = getCodeType();
 		if (codeType == null) {
 			return null;
@@ -82,11 +84,12 @@ public class StatementItem extends Model {
 		DynamicTextType dynamicText = null;
 		if (doc.getStatementItem().getDisplayTextList().isEmpty() && create) {
 			dynamicText = doc.getStatementItem().addNewDisplayText();
-			XmlBeansUtil.addTranslationAttributes(dynamicText, Translator
-					.getLocaleLanguage(), false, true);
+			XmlBeansUtil.addTranslationAttributes(dynamicText,
+					Translator.getLocaleLanguage(), false, true);
 		} else {
-			dynamicText = (DynamicTextType) XmlBeansUtil.getLangElement(LanguageUtil.getDisplayLanguage(), doc
-					.getStatementItem().getDisplayTextList());
+			dynamicText = (DynamicTextType) XmlBeansUtil.getLangElement(
+					LanguageUtil.getDisplayLanguage(), doc.getStatementItem()
+							.getDisplayTextList());
 		}
 		return dynamicText;
 	}
@@ -149,10 +152,22 @@ public class StatementItem extends Model {
 
 	public ProgrammingLanguageCodeType getProgrammingLanguageCode(
 			CodeType codeType) {
-		if (codeType.getCodeList().isEmpty()) {
-			return create ? codeType.addNewCode() : null;
+		if (codeType == null) {
+			return null;
+		}
+
+		if (create && codeType.getCodeList().isEmpty()) {
+			if (create) {
+				codeType.addNewCode();
+				codeType.getCodeList()
+						.get(0)
+						.setProgrammingLanguage(
+								DdiEditorConfig
+										.get(DdiEditorConfig.DDI_INSTRUMENT_PROGRAM_LANG));
+			}
 		} else {
 			return codeType.getCodeList().get(0);
 		}
+		return null;
 	}
 }
