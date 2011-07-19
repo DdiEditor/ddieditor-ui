@@ -18,6 +18,8 @@ DDIE-99	Import Question rapportere ikke manglende Categories
 Application Infrastructure:
 -------------------------------------------------------------------------------
 Item ID:    Description:  
+Refactor preferences to use and persist in files: ddieditor/ddiftp-app.properties, 
+ddieditor-ui/ddieditor-ui.properties
 
 -------------------------------------------------------------------------------
 Change Log Previous Releases
