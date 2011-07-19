@@ -21,22 +21,13 @@ public class DdiEditorUiPreferencePage extends FieldEditorPreferencePage
 
 	@Override
 	public void createFieldEditors() {
+		// ui language
 		ComboFieldEditor comboFieldEditor = new ComboFieldEditor(
 				PreferenceConstants.DDIEDITORUI_LANGUAGE,
 				"&Default language used in user interface:",
 				LanguageUtil.getAvailableLanguages(), getFieldEditorParent());
 		comboFieldEditor.load();
 		addField(comboFieldEditor);
-
-		addField(new BooleanFieldEditor(
-				PreferenceConstants.AUTO_CHANGE_PERSPECTIVE, "&"
-						+ Messages.getString("pref.autotoggle.field"),
-				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceConstants.CONFIRM_DDIEDITOR_EXIT, "&"
-						+ Messages.getString("pref.confirm.ddieditor.exit"),
-				getFieldEditorParent()));
 
 		// table font size
 		ComboFieldEditor comboFontEditor = new ComboFieldEditor(
@@ -45,6 +36,22 @@ public class DdiEditorUiPreferencePage extends FieldEditorPreferencePage
 				PreferenceConstants.FONT_SIZE_LIST, getFieldEditorParent());
 		comboFieldEditor.load();
 		addField(comboFontEditor);
+
+		// auto change perspective
+		BooleanFieldEditor autoChangePerspectiveFieldEditor = new BooleanFieldEditor(
+				PreferenceConstants.AUTO_CHANGE_PERSPECTIVE, "&"
+						+ Messages.getString("pref.autotoggle.field"),
+				getFieldEditorParent());
+		autoChangePerspectiveFieldEditor.load();
+		addField(autoChangePerspectiveFieldEditor);
+
+		// confirm exit
+		BooleanFieldEditor confirmExitFieldEditor = new BooleanFieldEditor(
+				PreferenceConstants.CONFIRM_DDIEDITOR_EXIT, "&"
+						+ Messages.getString("pref.confirm.ddieditor.exit"),
+				getFieldEditorParent());
+		confirmExitFieldEditor.load();
+		addField(confirmExitFieldEditor);
 	}
 
 	@Override
