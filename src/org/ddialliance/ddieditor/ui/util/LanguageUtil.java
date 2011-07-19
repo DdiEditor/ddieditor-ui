@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
+import org.ddialliance.ddieditor.util.DdiEditorConfig;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public class LanguageUtil {
@@ -40,7 +41,7 @@ public class LanguageUtil {
 	
 	public static String getOriginalLanguage() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		return store.getString(PreferenceConstants.DDI_LANGUAGE);
+		return store.getString(DdiEditorConfig.DDI_LANGUAGE);
 	}
 	
 	public static String getDisplayLanguage() {
