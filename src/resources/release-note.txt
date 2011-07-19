@@ -13,6 +13,7 @@ DDIE-66 Fixed, SD-reload
 DDIE-100 Fixed,	Frigiv Oracle Berkeley DB XML log-filer
 na Angivlse af editor element type som tooltip paa editor faneblad
 DDIE-99	Import Question rapportere ikke manglende Categories
+DDIE-92	Felt under IFTHENELSE Editoren
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
