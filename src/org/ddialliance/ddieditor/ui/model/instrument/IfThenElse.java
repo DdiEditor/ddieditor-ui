@@ -1,5 +1,7 @@
 package org.ddialliance.ddieditor.ui.model.instrument;
 
+import java.util.List;
+
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.IfThenElseDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
@@ -97,6 +99,27 @@ public class IfThenElse extends Model {
 		} else {
 			return codeType.getSourceQuestionReferenceList().get(0);
 		}
+	}
+
+	public List<ReferenceType> getIfQuestionReferences() {
+		CodeType codeType = getCodeType(doc.getIfThenElse().getIfCondition());
+		if (codeType == null) {
+			return null;
+		}
+		ReferenceType ref = null;
+		if (codeType.getSourceQuestionReferenceList().isEmpty()) {
+			ref = create ? codeType.addNewSourceQuestionReference() : null;
+			if (ref != null) {
+				ref.addNewID();
+			}
+		}
+		return codeType.getSourceQuestionReferenceList();
+	}
+
+	public void addNewQuestionReference(LightXmlObjectType lightXmlObject) {
+		ModelAccessor.setReference(
+				getCodeType(doc.getIfThenElse().getIfCondition())
+						.addNewSourceQuestionReference(), lightXmlObject);
 	}
 
 	public CodeType getCodeType(CodeType codeType) {
