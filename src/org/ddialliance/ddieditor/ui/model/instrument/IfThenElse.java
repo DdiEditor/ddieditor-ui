@@ -1,7 +1,6 @@
 package org.ddialliance.ddieditor.ui.model.instrument;
 
 import java.util.List;
-
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.IfThenElseDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
@@ -45,11 +44,11 @@ public class IfThenElse extends Model {
 					.setProgrammingLanguage((String) value);
 		}
 
-		// question reference
+		// add question reference
 		if (type.equals(ModelIdentifingType.Type_B.class)) {
-			ModelAccessor.setReference(doc.getIfThenElse().getIfCondition()
-					.getSourceQuestionReferenceList(),
-					getIfQuestionReference(), (LightXmlObjectType) value);
+			String id = ((LightXmlObjectType) value).getId();
+			ReferenceType questionRef = addNewIfQuestionReference();
+			questionRef.getIDList().get(0).setStringValue(id);
 		}
 
 		// then reference
@@ -100,6 +99,19 @@ public class IfThenElse extends Model {
 			return codeType.getSourceQuestionReferenceList().get(0);
 		}
 	}
+	
+	public ReferenceType addNewIfQuestionReference() {
+		CodeType codeType = getCodeType(doc.getIfThenElse().getIfCondition());
+		if (codeType == null) {
+			return null;
+		}
+		ReferenceType ref = null;
+		ref = codeType.addNewSourceQuestionReference();
+		if (ref != null) {
+			ref.addNewID();
+		}
+		return ref;
+	}
 
 	public List<ReferenceType> getIfQuestionReferences() {
 		CodeType codeType = getCodeType(doc.getIfThenElse().getIfCondition());
@@ -147,6 +159,7 @@ public class IfThenElse extends Model {
 						.setProgrammingLanguage(
 								DdiEditorConfig
 										.get(DdiEditorConfig.DDI_INSTRUMENT_PROGRAM_LANG));
+				return codeType.getCodeList().get(0);
 			}
 		} else {
 			return codeType.getCodeList().get(0);
