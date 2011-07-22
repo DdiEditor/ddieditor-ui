@@ -403,6 +403,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		showError(e, ID, getSite().getShell());
 	}
 
+	public void setEditorTabName(String name) {
+		setPartName(name);
+	}
+	
 	/**
 	 * Create error dialog displaying exception
 	 * 
@@ -743,6 +747,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			public void modifyText(final ModifyEvent e) {
 				try {
 					labelDescription.setDisplayLabel(labelText.getText());
+					setPartName(labelText.getText());
 				} catch (DDIFtpException e1) {
 					showError(e1);
 				}
@@ -978,7 +983,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 
 		text.addModifyListener(new LabelTypeModyfiListener(label, labelList,
-				editorStatus));
+				this));
 
 		return text;
 	}

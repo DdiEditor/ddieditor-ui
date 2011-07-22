@@ -20,6 +20,7 @@ import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
+import org.ddialliance.ddieditor.ui.editor.LabelTypeModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
@@ -125,6 +126,13 @@ public class QuestionItemEditor extends Editor {
 				name == null ? "" : name.getStringValue(), false);
 		nameTxt.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
 				NameType.class, getEditorIdentification()));
+		nameTxt.addModifyListener(new ModifyListener() {			
+			@Override
+			public void modifyText(ModifyEvent event) {
+				Text textTxt = ((Text) event.getSource());
+				setEditorTabName(textTxt.getText());
+			}
+		});
 
 		// Concept Reference:
 
