@@ -65,6 +65,9 @@ public class QuestionConstructEditor extends Editor {
 			questionRefList = DdiManager.getInstance()
 					.getQuestionItemsLight(null, null, null, null)
 					.getLightXmlObjectList().getLightXmlObjectList();
+			questionRefList.addAll(DdiManager.getInstance()
+					.getMultipleQuestionItemsLight(null, null, null, null)
+					.getLightXmlObjectList().getLightXmlObjectList());
 		} catch (Exception e) {
 			DialogUtil.errorDialog(getSite().getShell(), ID, null,
 					e.getMessage(), e);
