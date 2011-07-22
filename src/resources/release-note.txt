@@ -15,6 +15,7 @@ na Angivlse af editor element type som tooltip paa editor faneblad
 DDIE-99	Import Question rapportere ikke manglende Categories
 DDIE-92	Felt under IFTHENELSE Editoren
 na Ithenelse editor support for multiple question item references
+DDIE-95	Titel paa faneblad passer ikke med label
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
