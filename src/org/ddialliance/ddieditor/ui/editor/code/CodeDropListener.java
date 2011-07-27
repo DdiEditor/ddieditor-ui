@@ -282,6 +282,9 @@ public class CodeDropListener extends ViewerDropAdapter {
 								CodeSchemeEditor.CODE_CATEGORY_REL_ID) || lightXmlObject
 								.getElement().equals("Catetory"));
 				log.debug("LightXmlObjectType: " + lightXmlObject.getElement());
+				if (!result || codeSchemeEditor.defaultCategorySchemeDefined()) {
+					result = false;
+				}
 				log.debug("IsSupportedType: " + result);
 				return result;
 			}

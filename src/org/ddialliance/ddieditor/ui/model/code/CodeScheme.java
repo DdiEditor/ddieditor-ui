@@ -108,6 +108,9 @@ public class CodeScheme extends Model implements IModel {
 			if (ref == null) {
 				doc.getCodeScheme().addNewCategorySchemeReference().addNewID().setStringValue(id);
 			} else {
+				if (ref.getIDList().size() == 0) {
+					ref.addNewID();
+				}
 				ref.getIDList().get(0).setStringValue(id);
 			}
 		} else {
