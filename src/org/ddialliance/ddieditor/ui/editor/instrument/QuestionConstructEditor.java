@@ -6,6 +6,8 @@ import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SpecificSequenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.DdiManager;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.QuestionConstructDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
@@ -34,7 +36,7 @@ import org.eclipse.ui.PartInitException;
 public class QuestionConstructEditor extends Editor {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.instrument.QuestionConstructEditor";
 	QuestionConstruct modelImpl;
-	private List<LightXmlObjectType> questionRefList;
+	private List<LightXmlObjectType> xquestionRefList;
 
 	public QuestionConstructEditor() {
 		super(Messages.getString("QuestionConstructEditor.label"), Messages
@@ -61,13 +63,16 @@ public class QuestionConstructEditor extends Editor {
 				Messages.getString("QuestionConstruct"));
 
 		// QuestionReference - id
+		List<LightXmlObjectType> questionRefList;
+		List<LightXmlObjectType> mixedQuestionRefList = null;
 		try {
 			questionRefList = DdiManager.getInstance()
 					.getQuestionItemsLight(null, null, null, null)
 					.getLightXmlObjectList().getLightXmlObjectList();
-			questionRefList.addAll(DdiManager.getInstance()
-					.getMultipleQuestionItemsLight(null, null, null, null)
-					.getLightXmlObjectList().getLightXmlObjectList());
+			mixedQuestionRefList = DdiManager.getInstance()
+			.getMultipleQuestionItemsLight(null, null, null, null)
+			.getLightXmlObjectList().getLightXmlObjectList();
+			mixedQuestionRefList.addAll(questionRefList);
 		} catch (Exception e) {
 			DialogUtil.errorDialog(getSite().getShell(), ID, null,
 					e.getMessage(), e);
@@ -75,7 +80,7 @@ public class QuestionConstructEditor extends Editor {
 		ReferenceSelectionCombo questionRefSelectCombo = createRefSelection(
 				group, Messages.getString("IfThenElse.editor.ifquestionref"),
 				Messages.getString("IfThenElse.editor.ifquestionref"),
-				modelImpl.getQuestionReference(), questionRefList, false);
+				modelImpl.getQuestionReference(), mixedQuestionRefList, false);
 		questionRefSelectCombo.addSelectionListener(Messages
 				.getString("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(questionRefSelectCombo,
