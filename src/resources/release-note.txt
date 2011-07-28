@@ -16,6 +16,8 @@ DDIE-99	Import Question rapportere ikke manglende Categories
 DDIE-92	Felt under IFTHENELSE Editoren
 na Ithenelse editor support for multiple question item references
 DDIE-95	Titel paa faneblad passer ikke med label
+DDIE-101 Det er nu muligt at initiere Category referanser, på nye såvel som på
+eksisterende Code Schemes, ved at vælge et Default Category Scheme.
 DDIE-103 Question Construct Editor - kan kun refererer Question Items og ikke 
 Multiple Question Items
 
