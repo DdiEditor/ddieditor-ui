@@ -164,6 +164,7 @@ public class StatementItem extends Model {
 						.setProgrammingLanguage(
 								DdiEditorConfig
 										.get(DdiEditorConfig.DDI_INSTRUMENT_PROGRAM_LANG));
+				return codeType.getCodeList().get(0);
 			}
 		} else {
 			return codeType.getCodeList().get(0);
