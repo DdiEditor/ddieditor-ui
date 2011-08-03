@@ -1,24 +1,14 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.13 Release Data: 2012-08-02
+Product Version: 1.0.14 Release Data: 2011-xx-xx
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-DDIE-66 Fixed, SD-reload
-DDIE-100 Fixed,	Frigiv Oracle Berkeley DB XML log-filer
-na Angivlse af editor element type som tooltip paa editor faneblad
-DDIE-99	Import Question rapportere ikke manglende Categories
-DDIE-92	Felt under IFTHENELSE Editoren
-na Ithenelse editor support for multiple question item references
-DDIE-95	Titel paa faneblad passer ikke med label
-DDIE-101 Det er nu muligt at initiere Category referanser, på nye såvel som på
-eksisterende Code Schemes, ved at vælge et Default Category Scheme.
-DDIE-103 Question Construct Editor - kan kun refererer Question Items og ikke 
-Multiple Question Items
-
+- Understøtter nu simpel udskrift af et helt DDI 3.1 dokument. Printes via default
+browser.
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
