@@ -23,7 +23,6 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
-		System.out.println("PrintDDI3.execute()");
 		// select resource to print
 		final PrintDDI3Dialog printDDI3Dialog = new PrintDDI3Dialog(PlatformUI
 				.getWorkbench().getDisplay().getActiveShell());
@@ -32,7 +31,8 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 			return null;
 		}
 
-		// do print
+		// print the selected resource and pass it to the default browser with
+		// the DDI 3 style sheeet
 		try {
 			PlatformUI.getWorkbench().getProgressService()
 					.busyCursorWhile(new IRunnableWithProgress() {
@@ -49,7 +49,7 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 										.asyncExec(new Runnable() {
 											@Override
 											public void run() {
-												// export
+												// export the resource
 												File temp = null;
 												try {
 													temp = File
@@ -64,8 +64,16 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 																	printDDI3Dialog.ddiResource
 																			.getOrgName(),
 																	temp);
-													// TODO specify path to style sheet in XML document instead of copying it
-													FileUtils.copyFileToDirectory(new File("resources/ddi3_1.xsl"), new File(temp.getParent()));
+													// TODO specify path to
+													// style sheet in XML
+													// document instead of
+													// copying it
+													FileUtils
+															.copyFileToDirectory(
+																	new File(
+																			"resources/ddi3_1.xsl"),
+																	new File(
+																			temp.getParent()));
 												} catch (Exception e) {
 													MessageDialog
 															.openError(
@@ -76,8 +84,10 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 																	Messages.getString("PrintDDI3Action.mess.PrintDDI3Error"),
 																	e.getMessage());
 												}
-												// print
-												Program.launch(temp.getAbsolutePath());
+												// active the browser with the
+												// DDI document
+												Program.launch(temp
+														.getAbsolutePath());
 											}
 										});
 								monitor.worked(1);
