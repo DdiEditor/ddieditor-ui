@@ -32,8 +32,8 @@ public class NewDDI3File extends org.eclipse.core.commands.AbstractHandler {
 		NewDDI3FileDialog dialog = new NewDDI3FileDialog(PlatformUI
 				.getWorkbench().getDisplay().getActiveShell());
 		dialog.open();
-		if (dialog.fileName == null && dialog.fileName.equals("")) {
-			new DDIFtpException("file name null", new Throwable());
+		if (dialog.fileName != null && dialog.fileName.equals("")) {
+			throw new ExecutionException("file name null", new Throwable());
 		}
 
 		File file = new File(dialog.fileName);
