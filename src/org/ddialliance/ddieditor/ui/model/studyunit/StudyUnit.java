@@ -348,10 +348,12 @@ public class StudyUnit extends Model {
 		}
 
 		if (log.isDebugEnabled()) {
-			log
-					.debug("No matching International String found! International Strings: "
-							+ internationalStringTypes.toString()
-							+ " Language Code: " + languageCode);
+			StringBuffer languages = new StringBuffer();
+			for (InternationalStringType internationalStringType : internationalStringTypes) {
+				languages.append(internationalStringType.getLang() + ", ");
+			}
+			log.debug("No matching International String found! International Strings: "
+					+ languages.toString() + " Language Code: " + languageCode);
 		}
 		return false;
 	}
