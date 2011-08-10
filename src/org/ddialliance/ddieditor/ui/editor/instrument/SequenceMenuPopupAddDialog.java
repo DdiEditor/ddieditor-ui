@@ -7,7 +7,7 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.IModel;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -54,20 +54,22 @@ public class SequenceMenuPopupAddDialog extends Dialog {
 		group.setLayoutData(new GridData(800, 400));
 
 		// before - after
-		editor.createLabel(group, Messages
-				.getString("SequenceEditor.adddialog.beforeafterselection"));
-		combo = editor.createCombo(group, new String[] {
-				Messages.getString("SequenceEditor.adddialog.after"),
-				Messages.getString("SequenceEditor.adddialog.before") });
+		editor.createLabel(group, Translator
+				.trans("SequenceEditor.adddialog.beforeafterselection"));
+		combo = editor.createCombo(
+				group,
+				new String[] {
+						Translator.trans("SequenceEditor.adddialog.after"),
+						Translator.trans("SequenceEditor.adddialog.before") });
 		combo.select(0);
 
 		// selection
-		selectCombo = editor.createRefSelection(group, Messages
-				.getString("SequenceEditor.adddialog.label"), Messages
-				.getString("SequenceEditor.adddialog.label"),
+		selectCombo = editor.createRefSelection(group,
+				Translator.trans("SequenceEditor.adddialog.label"),
+				Translator.trans("SequenceEditor.adddialog.label"),
 				ReferenceType.Factory.newInstance(), refs, false);
-		selectCombo.addSelectionListener(Messages
-				.getString("SequenceEditor.adddialog.label"),
+		selectCombo.addSelectionListener(
+				Translator.trans("SequenceEditor.adddialog.label"),
 				new SelectionAdapter(this));
 
 		return null;

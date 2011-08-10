@@ -21,8 +21,8 @@ import org.ddialliance.ddieditor.ui.model.question.MultipleQuestionItem;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DynamicTextTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -62,8 +62,10 @@ public class MultipleQuestionItemEditor extends Editor {
 
 	public MultipleQuestionItemEditor() {
 		super(
-				Messages.getString("MultipleQuestionItemEditor.label.multipleQuestionItemEditorLabel.MultipleQuestionItemEditor"),
-				Messages.getString("MultipleQuestionItemEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("MultipleQuestionItemEditor.label.multipleQuestionItemEditorLabel.MultipleQuestionItemEditor"),
+				Translator
+						.trans("MultipleQuestionItemEditor.label.useTheEditorLabel.Description"),
 				ID);
 		super.dao = new MultipleQuestionItemDao();
 	}
@@ -86,8 +88,8 @@ public class MultipleQuestionItemEditor extends Editor {
 				SWT.NONE);
 		multiQuestionTabItem.setControl(multiQuestionComposite);
 		multiQuestionTabItem
-				.setText(Messages
-						.getString("MultipleQuestionItemEditor.label.multipleQuestionTabItem.MultipleQuestionItem")); //$NON-NLS-1$
+				.setText(Translator
+						.trans("MultipleQuestionItemEditor.label.multipleQuestionTabItem.MultipleQuestionItem")); //$NON-NLS-1$
 
 		// - Multiple Question Item Group
 		final Group multiQuestionGroup = new Group(multiQuestionComposite,
@@ -103,8 +105,8 @@ public class MultipleQuestionItemEditor extends Editor {
 		gridLayout_1.numColumns = 2;
 		multiQuestionGroup.setLayout(gridLayout_1);
 		multiQuestionGroup
-				.setText(Messages
-						.getString("MultipleQuestionItemEditor.label.MultipleQuestionItem"));
+				.setText(Translator
+						.trans("MultipleQuestionItemEditor.label.MultipleQuestionItem"));
 
 		// Name
 		NameType name = null;
@@ -114,16 +116,17 @@ public class MultipleQuestionItemEditor extends Editor {
 					: modelImpl.getDocument().getMultipleQuestionItem()
 							.getMultipleQuestionItemNameList().get(0);
 		} catch (DDIFtpException e2) {
-			String errMess = Messages
-					.getString("MultipleQuestionItemEditor.mess.NameRetrievalError"); //$NON-NLS-1$
-			ErrorDialog.openError(getSite().getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, errMess, e2));
+			String errMess = Translator
+					.trans("MultipleQuestionItemEditor.mess.NameRetrievalError"); //$NON-NLS-1$
+			ErrorDialog.openError(getSite().getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, errMess, e2));
 		}
 
-		Text nameTxt = createTextInput(multiQuestionGroup,
-				Messages.getString("MultipleQuestionItemEditor.label.Name")
-						+ ":", name == null ? "" : name.getStringValue(), false);
+		Text nameTxt = createTextInput(
+				multiQuestionGroup,
+				Translator.trans("MultipleQuestionItemEditor.label.Name") + ":",
+				name == null ? "" : name.getStringValue(), false);
 		nameTxt.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
 				NameType.class, getEditorIdentification()));
 
@@ -135,24 +138,27 @@ public class MultipleQuestionItemEditor extends Editor {
 			conceptReferenceList = new ConceptDao().getLightXmlObject("", "",
 					"", "");
 		} catch (Exception e1) {
-			String errMess = Messages
-					.getString("MultipleQuestionItemEditor.mess.ConceptRetrievalError"); //$NON-NLS-1$
-			ErrorDialog.openError(getSite().getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, errMess, e1));
+			String errMess = Translator
+					.trans("MultipleQuestionItemEditor.mess.ConceptRetrievalError"); //$NON-NLS-1$
+			ErrorDialog.openError(getSite().getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, errMess, e1));
 		}
 
 		// - Create Concept Reference selection combobox
 		ReferenceSelectionCombo refSelecCombo = createRefSelection(
 				multiQuestionGroup,
-				Messages.getString("MultipleQuestionItemEditor.label.conceptLabel.Concept")
+				Translator
+						.trans("MultipleQuestionItemEditor.label.conceptLabel.Concept")
 						+ ":",
-				Messages.getString("MultipleQuestionItemEditor.label.conceptLabel.Concept"),
+				Translator
+						.trans("MultipleQuestionItemEditor.label.conceptLabel.Concept"),
 				modelImpl.getConceptReferenceType(), conceptReferenceList,
 				false);
 		refSelecCombo
 				.addSelectionListener(
-						Messages.getString("MultipleQuestionItemEditor.label.conceptLabel.Concept"),
+						Translator
+								.trans("MultipleQuestionItemEditor.label.conceptLabel.Concept"),
 						new ReferenceSelectionAdapter(refSelecCombo, model,
 								ReferenceType.class, getEditorIdentification()));
 
@@ -163,7 +169,8 @@ public class MultipleQuestionItemEditor extends Editor {
 
 		Combo sequencecombo = createSequenceCombo(
 				multiQuestionGroup,
-				Messages.getString("MultipleQuestionItemEditor.label.SubQuestionSequence"),
+				Translator
+						.trans("MultipleQuestionItemEditor.label.SubQuestionSequence"),
 				defineItemSequenceSelection(subQuestionSequence));
 
 		sequencecombo.addSelectionListener(new SequenceComboSelectionListener(
@@ -185,7 +192,8 @@ public class MultipleQuestionItemEditor extends Editor {
 
 		StyledText multiQuestionTxt = createTextAreaInput(
 				multiQuestionGroup,
-				Messages.getString("MultipleQuestionItemEditor.label.multipleQuestionItemTextLabel.MultipleQuestionItemText"),
+				Translator
+						.trans("MultipleQuestionItemEditor.label.multipleQuestionItemTextLabel.MultipleQuestionItemText"),
 				multiQuestionText == null ? "" : XmlBeansUtil
 						.getTextOnMixedElement(multiQuestionText.getTextList()
 								.get(0)), false);
@@ -196,7 +204,7 @@ public class MultipleQuestionItemEditor extends Editor {
 
 		try {
 			createTranslation(multiQuestionGroup,
-					Messages.getString("editor.button.translate"),
+					Translator.trans("editor.button.translate"),
 					modelImpl.getQuestionText(), new DynamicTextTdI(), "",
 					multiQuestionTxt);
 		} catch (DDIFtpException e) {

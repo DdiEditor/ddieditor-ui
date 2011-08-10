@@ -11,15 +11,16 @@ package org.ddialliance.ddieditor.ui.view;
  */
 
 import org.ddialliance.ddieditor.ui.model.ElementType;
+import org.ddialliance.ddiftp.util.Translator;
 
 public class InfoView extends View {
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.InfoView";
 
 	public InfoView() {
-		super(ViewContentType.StudyContent, Messages
-				.getString("InfoView.label.titleLabel.DDIOverview"), Messages
-				.getString("InfoView.label.selectLabel.Description"), Messages
-				.getString("InfoView.label.maskLabel.Id"),  ElementType.FILE, Messages
-				.getString("InfoView.label.treeGroup.DDIStructure"), ID);
+		super(ViewContentType.StudyContent, Translator
+				.trans("InfoView.label.titleLabel.DDIOverview"), Translator
+				.trans("InfoView.label.selectLabel.Description"), Translator
+				.trans("InfoView.label.maskLabel.Id"), ElementType.FILE,
+				Translator.trans("InfoView.label.treeGroup.DDIStructure"), ID);
 	}
 }

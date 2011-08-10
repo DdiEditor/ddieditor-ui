@@ -12,10 +12,10 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.impl.LabelDocumentImpl;
 import org.ddialliance.ddieditor.ui.editor.BooleanCellEditor;
 import org.ddialliance.ddieditor.ui.editor.CellEditorListener;
 import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.LanguageUtil;
 import org.ddialliance.ddiftp.util.ReflectionUtil;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -107,8 +107,8 @@ public class TranslationDialog extends Dialog {
 		this.parentLabel = parentLabel;
 		this.parentWidget = parentWidget;
 		xmlOptions.setSavePrettyPrint();
-		enabled = Messages.getString("enabled");
-		disabled = Messages.getString("disabled");
+		enabled = Translator.trans("enabled");
+		disabled = Translator.trans("disabled");
 		updateLangUsed();
 	}
 
@@ -145,9 +145,11 @@ public class TranslationDialog extends Dialog {
 			if (xmlObject instanceof InternationalStringType) {
 				return ((InternationalStringType) xmlObject).getStringValue();
 			} else if (xmlObject instanceof StructuredStringType) {
-				return XmlBeansUtil.getTextOnMixedElement((StructuredStringType) xmlObject);
+				return XmlBeansUtil
+						.getTextOnMixedElement((StructuredStringType) xmlObject);
 			} else if (xmlObject instanceof LabelDocumentImpl) {
-				return XmlBeansUtil.getTextOnMixedElement((LabelDocumentImpl) xmlObject);
+				return XmlBeansUtil
+						.getTextOnMixedElement((LabelDocumentImpl) xmlObject);
 			}
 			throw createTypeException(xmlObject, new Throwable());
 		}
@@ -178,10 +180,11 @@ public class TranslationDialog extends Dialog {
 		return Boolean.parseBoolean(queryAttribute(obj, queries[1]));
 	}
 
-	public final void setXmlLang(Object obj, String lang) throws DDIFtpException, Exception {
+	public final void setXmlLang(Object obj, String lang)
+			throws DDIFtpException, Exception {
 		if (lang != null) {
 			ReflectionUtil.invokeMethod(obj, "setLang", false, lang);
-			
+
 		}
 	}
 
@@ -199,7 +202,8 @@ public class TranslationDialog extends Dialog {
 	/**
 	 * Add new element item to table
 	 * 
-	 * @param tableCount - number of already existing table items.
+	 * @param tableCount
+	 *            - number of already existing table items.
 	 * @return
 	 * @throws DDIFtpException
 	 */
@@ -209,7 +213,9 @@ public class TranslationDialog extends Dialog {
 			if (tableItemCount == 0) {
 				setTranslated(xml, false);
 				setTranslateable(xml, true);
-				setXmlLang(xml, org.ddialliance.ddieditor.ui.util.LanguageUtil.getOriginalLanguage());
+				setXmlLang(xml,
+						org.ddialliance.ddieditor.ui.util.LanguageUtil
+								.getOriginalLanguage());
 			} else {
 				setTranslated(xml, true);
 				setTranslateable(xml, false);
@@ -224,7 +230,7 @@ public class TranslationDialog extends Dialog {
 	public List<Object> getItems() {
 		return items;
 	}
-	
+
 	public Widget getParentWidget() {
 		return parentWidget;
 	}
@@ -238,8 +244,8 @@ public class TranslationDialog extends Dialog {
 	}
 
 	private final void showError(Exception e) {
-		new ErrorDialog(getShell(), ErrorDialog.DLG_IMG_MESSAGE_ERROR, e
-				.getMessage(), new Status(Status.ERROR, "", e.getMessage()), 0)
+		new ErrorDialog(getShell(), ErrorDialog.DLG_IMG_MESSAGE_ERROR,
+				e.getMessage(), new Status(Status.ERROR, "", e.getMessage()), 0)
 				.open();
 	}
 
@@ -249,7 +255,7 @@ public class TranslationDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		this.getShell().setText(
-				Messages.getString("translationdialog.tittle") + parentLabel);
+				Translator.trans("translationdialog.tittle") + parentLabel);
 
 		// root components
 		final Composite topComposite = new Composite(parent, SWT.NONE);
@@ -264,7 +270,7 @@ public class TranslationDialog extends Dialog {
 		topGroup.setLayout(new GridLayout());
 		topGroup.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		topGroup.setText(Messages.getString("translationdialog.topgroup")); //$NON-NLS-1$
+		topGroup.setText(Translator.trans("translationdialog.topgroup")); //$NON-NLS-1$
 
 		// table viewer, table, table label provider, table content label
 		// provider
@@ -292,7 +298,7 @@ public class TranslationDialog extends Dialog {
 		final Button addButton = new Button(addRemoveComposite, SWT.NONE);
 		addButton.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		addButton.setText(Messages.getString("translationdialog.button.add")); //$NON-NLS-1$
+		addButton.setText(Translator.trans("translationdialog.button.add")); //$NON-NLS-1$
 		addButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				Object newItem = null;
@@ -322,8 +328,8 @@ public class TranslationDialog extends Dialog {
 		final Button removeButton = new Button(addRemoveComposite, SWT.NONE);
 		removeButton.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		removeButton.setText(Messages
-				.getString("translationdialog.button.remove")); //$NON-NLS-1$
+		removeButton.setText(Translator
+				.trans("translationdialog.button.remove")); //$NON-NLS-1$
 		removeButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				ISelection selection = tableViewer.getSelection();
@@ -360,14 +366,12 @@ public class TranslationDialog extends Dialog {
 		public void createColumns(final TableViewer viewer) {
 			Table table = viewer.getTable();
 			String[] titles = {
-					Messages
-							.getString("translationdialog.tablecolumn.translate"),
-					Messages
-							.getString("translationdialog.tablecolumn.language"),
-					Messages
-							.getString("translationdialog.tablecolumn.translated"),
-					Messages
-							.getString("translationdialog.tablecolumn.translatable") };
+					Translator.trans("translationdialog.tablecolumn.translate"),
+					Translator.trans("translationdialog.tablecolumn.language"),
+					Translator
+							.trans("translationdialog.tablecolumn.translated"),
+					Translator
+							.trans("translationdialog.tablecolumn.translatable") };
 			// translationdialog.tablecolumn.preferred=Preferred
 			int[] widths = { 350, 100, 120, 50 };
 			for (int i = 0; i < titles.length; i++) {
@@ -421,8 +425,8 @@ public class TranslationDialog extends Dialog {
 				}
 			default:
 				DDIFtpException e = new DDIFtpException(
-						Messages
-								.getString("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
+						Translator
+								.trans("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
 				showError(e);
 			}
 			return "";
@@ -475,20 +479,21 @@ public class TranslationDialog extends Dialog {
 						SWT.SINGLE | SWT.V_SCROLL);
 				break;
 			case 1:
-				editor = new ComboBoxCellEditor(((TableViewer) viewer)
-						.getTable(), LanguageUtil
-						.getLanguages(availableLanguages), SWT.READ_ONLY);
+				editor = new ComboBoxCellEditor(
+						((TableViewer) viewer).getTable(),
+						LanguageUtil.getLanguages(availableLanguages),
+						SWT.READ_ONLY);
 				break;
 			case 2:
 				// translated
-				editor = new BooleanCellEditor(((TableViewer) viewer)
-						.getTable(), enabled, disabled);
+				editor = new BooleanCellEditor(
+						((TableViewer) viewer).getTable(), enabled, disabled);
 				editor.setValue(new Boolean(true));
 				break;
 			case 3:
 				// translatable
-				editor = new BooleanCellEditor(((TableViewer) viewer)
-						.getTable(), enabled, disabled);
+				editor = new BooleanCellEditor(
+						((TableViewer) viewer).getTable(), enabled, disabled);
 				break;
 			default:
 				editor = new TextCellEditor(((TableViewer) viewer).getTable());
@@ -553,7 +558,7 @@ public class TranslationDialog extends Dialog {
 
 		@Override
 		public void setValue(Object element, Object value) {
-			
+
 			switch (this.column) {
 			case 0:
 				try {
@@ -593,18 +598,18 @@ public class TranslationDialog extends Dialog {
 			getViewer().update(element, null);
 		}
 	}
-	
+
 	@Override
 	protected void okPressed() {
 		// do validation
-//		System.out.println("***** Items: "+items);
-//		List<XmlObject> xList = items;
-//		for (XmlObject xmlObject : xList) {
-//		}
+		// System.out.println("***** Items: "+items);
+		// List<XmlObject> xList = items;
+		// for (XmlObject xmlObject : xList) {
+		// }
 		// if validate
 		super.okPressed();
 	}
-	
+
 	@Override
 	protected boolean isResizable() {
 		return true;

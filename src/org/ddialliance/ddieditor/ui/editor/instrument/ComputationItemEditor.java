@@ -16,8 +16,8 @@ import org.ddialliance.ddieditor.ui.model.instrument.ComputationItem;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -34,8 +34,8 @@ public class ComputationItemEditor extends Editor {
 
 	public ComputationItemEditor() {
 		super(
-				Messages.getString("ComputationItemEditor.label.ComputationItemEditorLabel.ComputationItemEditor"),
-				Messages.getString("ComputationItemEditor.label.useTheEditorLabel.Description"),
+				Translator.trans("ComputationItemEditor.label.ComputationItemEditorLabel.ComputationItemEditor"),
+				Translator.trans("ComputationItemEditor.label.useTheEditorLabel.Description"),
 				ID);
 		this.dao = new ComputationItemDao();
 	}
@@ -54,17 +54,15 @@ public class ComputationItemEditor extends Editor {
 		createTabFolder(getComposite_1());
 
 		// main tab
-		TabItem tabItem = createTabItem(Messages
-				.getString("ComputationItem.editor.tabdisplaytext"));
+		TabItem tabItem = createTabItem(Translator.trans("ComputationItem.editor.tabdisplaytext"));
 		Group group = createGroup(tabItem,
-				Messages.getString("ComputationItem.editor.groupdisplaytext"));
+				Translator.trans("ComputationItem.editor.groupdisplaytext"));
 
 		// computation condition
-		Composite error = createErrorComposite(group, "");
 		ProgrammingLanguageCodeType ifProgrammingLanguageCode = modelImpl
 				.getUntilCondition();
 		Text conditionTxt = createTextInput(group,
-				Messages.getString("ComputationItem.editor.computation"),
+				Translator.trans("ComputationItem.editor.computation"),
 				ifProgrammingLanguageCode == null ? ""
 						: ifProgrammingLanguageCode.getStringValue(), false);
 		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(
@@ -77,7 +75,7 @@ public class ComputationItemEditor extends Editor {
 
 		Text programmingLanguageTxt = createTextInput(
 				group,
-				Messages.getString("ComputationItem.editor.computationprogramlang"),
+				Translator.trans("ComputationItem.editor.computationprogramlang"),
 				programmingLanguage, false);
 		programmingLanguageTxt
 				.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
@@ -97,40 +95,40 @@ public class ComputationItemEditor extends Editor {
 
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(
 				group,
-				Messages.getString("ComputationItem.editor.computationvariableref"),
-				Messages.getString("ComputationItem.editor.computationvariableref"),
+				Translator.trans("ComputationItem.editor.computationvariableref"),
+				Translator.trans("ComputationItem.editor.computationvariableref"),
 				modelImpl.getAssignedVariableReference(), variableRefList,
 				false);
-		thenRefSelectCombo.addSelectionListener(Messages
-				.getString("ComputationItem.editor.computationvariableref"),
+		thenRefSelectCombo.addSelectionListener(Translator
+				.trans("ComputationItem.editor.computationvariableref"),
 				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
 
 		// description tab
-		TabItem tabItem2 = createTabItem(Messages
-				.getString("editor.label.description"));
+		TabItem tabItem2 = createTabItem(Translator
+				.trans("editor.label.description"));
 		Group group2 = createGroup(tabItem2,
-				Messages.getString("editor.label.description"));
+				Translator.trans("editor.label.description"));
 
 		try {
 			Text txt = createLabelInput(group2,
-					Messages.getString("editor.label.label"), modelImpl
+					Translator.trans("editor.label.label"), modelImpl
 							.getDocument().getComputationItem().getLabelList(),
 					modelImpl.getDocument().getComputationItem().getId());
 
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"), modelImpl
+					Translator.trans("editor.button.translate"), modelImpl
 							.getDocument().getComputationItem().getLabelList(),
 					new LabelTdI(), "", txt);
 
 			StyledText styledText = createStructuredStringInput(group2,
-					Messages.getString("editor.label.description"), modelImpl
+					Translator.trans("editor.label.description"), modelImpl
 							.getDocument().getComputationItem()
 							.getDescriptionList(), modelImpl.getDocument()
 							.getComputationItem().getId());
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"), modelImpl
+					Translator.trans("editor.button.translate"), modelImpl
 							.getDocument().getComputationItem()
 							.getDescriptionList(), new DescriptionTdI(), "",
 					styledText);

@@ -13,12 +13,12 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.figureutil.ActivityFigure;
 import org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.figureutil.Chart;
 import org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.figureutil.ConnectionFigure;
 import org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.figureutil.FigureFactory;
 import org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.figureutil.MouseFigureAction;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.FreeformViewport;
@@ -170,7 +170,7 @@ public class SequenceflowView extends ViewPart {
 
 		// zoom in
 		Action zoomInAction = new Action(
-				Messages.getString("sequence.diagram.zoomin")) { //$NON-NLS-1$)
+				Translator.trans("sequence.diagram.zoomin")) { //$NON-NLS-1$)
 			public void run() {
 				if (chart.getScale() < 5d) {
 					chart.setScale(chart.getScale() + 0.1d);
@@ -183,7 +183,7 @@ public class SequenceflowView extends ViewPart {
 
 		// zoom out
 		Action zoomOutAction = new Action(
-				Messages.getString("sequence.diagram.zoomout")) { //$NON-NLS-1$)
+				Translator.trans("sequence.diagram.zoomout")) { //$NON-NLS-1$)
 			public void run() {
 				if (chart.getScale() > 0.1d) {
 					chart.setScale(chart.getScale() - 0.1d);
@@ -196,7 +196,7 @@ public class SequenceflowView extends ViewPart {
 
 		// zoom reset
 		Action zoomReset = new Action(
-				Messages.getString("sequence.diagram.zoomreset")) { //$NON-NLS-1$)
+				Translator.trans("sequence.diagram.zoomreset")) { //$NON-NLS-1$)
 			public void run() {
 				chart.setScale(1d);
 			}
@@ -205,7 +205,7 @@ public class SequenceflowView extends ViewPart {
 				Activator.getDefault(), "icons/instrument-icon/resetwdt.gif"));
 
 		// print
-		Action print = new Action(Messages.getString("sequence.diagram.print")) { //$NON-NLS-1$)
+		Action print = new Action(Translator.trans("sequence.diagram.print")) { //$NON-NLS-1$)
 			public void run() {
 				PrintDialog printDialog = new PrintDialog(parent.getShell(),
 						SWT.NONE);
@@ -292,7 +292,7 @@ public class SequenceflowView extends ViewPart {
 			if (cc == null) { // TODO nullpointer guard
 				continue;
 			}
-			
+
 			// figure
 			ActivityFigure current = figureFactory.createControlConstruct(cc);
 			new MouseFigureAction(current);

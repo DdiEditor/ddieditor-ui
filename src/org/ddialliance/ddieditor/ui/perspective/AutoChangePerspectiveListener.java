@@ -3,7 +3,7 @@ package org.ddialliance.ddieditor.ui.perspective;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -27,7 +27,7 @@ public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 			AutoChangePerspectiveListener.class);
 	final String KEY_TOGGLE = "perspective.toggle";
 	final String KEY_YES_NO = "perspective.open";
-	
+
 	@Override
 	public void partActivated(IWorkbenchPart part) {
 		// guard
@@ -65,12 +65,11 @@ public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 			// always ask
 			if (!propertyToggle) {
 				MessageDialogWithToggle dialog = MessageDialogWithToggle
-						.openYesNoQuestion(
-								part.getSite().getShell(),
-								Messages.getString("perspective.switch"),
+						.openYesNoQuestion(part.getSite().getShell(),
+								Translator.trans("perspective.switch"),
 								((IAutoChangePerspective) part)
 										.getPerspectiveSwitchDialogText(),
-								Messages.getString("perspective.switch.toogle"),
+								Translator.trans("perspective.switch.toogle"),
 								false, store, keyYesNo);
 				propertyYesNo = dialog.open();
 				store.setValue(keyToggle, dialog.getToggleState());
@@ -86,8 +85,8 @@ public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 						} catch (WorkbenchException e) {
 							DialogUtil.errorDialog(PlatformUI.getWorkbench()
 									.getActiveWorkbenchWindow().getShell(),
-									dedicatedPerspectiveId, null, e
-											.getMessage(), e);
+									dedicatedPerspectiveId, null,
+									e.getMessage(), e);
 						}
 					}
 				});
@@ -100,13 +99,16 @@ public class AutoChangePerspectiveListener implements IPartListener, IStartup {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.getActivePage().addPartListener(
+					PlatformUI
+							.getWorkbench()
+							.getActiveWorkbenchWindow()
+							.getActivePage()
+							.addPartListener(
 									new AutoChangePerspectiveListener());
 				} catch (Exception e) {
 					DialogUtil.errorDialog(PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow().getShell(), "", null, e
-							.getMessage(), e);
+							.getActiveWorkbenchWindow().getShell(), "", null,
+							e.getMessage(), e);
 				}
 			}
 		});

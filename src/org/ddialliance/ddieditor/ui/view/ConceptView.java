@@ -5,6 +5,7 @@ package org.ddialliance.ddieditor.ui.view;
  * 
  */
 import org.ddialliance.ddieditor.ui.model.ElementType;
+import org.ddialliance.ddiftp.util.Translator;
 
 public class ConceptView extends View {
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.ConceptView";
@@ -12,13 +13,14 @@ public class ConceptView extends View {
 	public ConceptView() {
 		super(
 				ViewContentType.ConceptContent,
-				Messages
-						.getString("ConceptView.label.conceptNavigationLabel.ConceptNavigation"),
-				Messages
-						.getString("ConceptView.label.selectLabel.NavigatorDescription"),
-				Messages.getString("ConceptView.label.conceptLabel.Concept"),
+				Translator
+						.trans("ConceptView.label.conceptNavigationLabel.ConceptNavigation"),
+				Translator
+						.trans("ConceptView.label.selectLabel.NavigatorDescription"),
+				Translator.trans("ConceptView.label.conceptLabel.Concept"),
 				ElementType.CONCEPT_SCHEME,
-				Messages
-						.getString("ConceptView.label.conceptTreeGroup.ConceptStructure"), ID);
+				Translator
+						.trans("ConceptView.label.conceptTreeGroup.ConceptStructure"),
+				ID);
 	}
 }

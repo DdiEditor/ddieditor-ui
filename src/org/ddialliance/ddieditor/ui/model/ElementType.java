@@ -36,8 +36,8 @@ import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
 import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
 import org.ddialliance.ddieditor.ui.perspective.UniversePerspective;
 import org.ddialliance.ddieditor.ui.perspective.VariablePerspective;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 
 /**
  * Type to bind DDI elements with Eclipse RCP via the following properties:
@@ -263,7 +263,7 @@ public enum ElementType {
 	 * @return translated message key
 	 */
 	public String getTranslatedDisplayMessageEntry() {
-		return Messages.getString(displayMessageEntry);
+		return Translator.trans(displayMessageEntry);
 	}
 
 	public String getWithOpen() {
@@ -284,7 +284,7 @@ public enum ElementType {
 		}
 		// not found
 		DDIFtpException e = new DDIFtpException(
-				Messages.getString("editor.editelement.notimplemented"),
+				Translator.trans("editor.editelement.notimplemented"),
 				new Object[] { elementName }, new Throwable());
 		throw e;
 	}
@@ -299,7 +299,7 @@ public enum ElementType {
 		}
 		// not found
 		DDIFtpException e = new DDIFtpException(
-				Messages.getString("editor.editelement.notimplemented"),
+				Translator.trans("editor.editelement.notimplemented"),
 				new Object[] { elementName }, new Throwable());
 		throw e;
 	}
@@ -314,7 +314,7 @@ public enum ElementType {
 		}
 		// not found
 		DDIFtpException e = new DDIFtpException(
-				Messages.getString("editor.editelement.notimplemented"),
+				Translator.trans("editor.editelement.notimplemented"),
 				new Object[] { elementName }, new Throwable());
 		throw e;
 	}
@@ -340,7 +340,7 @@ public enum ElementType {
 		}
 		// not found
 		throw new DDIFtpException(
-				Messages.getString("editor.editelement.notimplemented"),
+				Translator.trans("editor.editelement.notimplemented"),
 				new Object[] { conceptualType }, new Throwable());
 	}
 }

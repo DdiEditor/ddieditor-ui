@@ -20,8 +20,8 @@ import org.ddialliance.ddieditor.ui.editor.CellEditorListener;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.model.category.CategoryScheme;
 import org.ddialliance.ddieditor.ui.perspective.CategoryPerspective;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -58,7 +58,7 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 		public String getCategory() {
 			return category;
 		}
-		
+
 		public void setCategory(String category) {
 			this.category = category;
 		}
@@ -72,7 +72,8 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 		}
 	}
 
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, CategorySchemeEditor.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			CategorySchemeEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.category.CategorySchemeEditor";
 	private CategoryScheme modelImpl;
 	private TableViewer tableViewer;
@@ -80,14 +81,20 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 	private List items = new ArrayList();
 
 	public CategorySchemeEditor() {
-		super(Messages.getString("CategorySchemeEditor.label.categorySchemeEditorLabel.CategorySchemeEditor"), Messages
-				.getString("CategorySchemeEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("CategorySchemeEditor.label.CategorySchemeTabItem"), ID);
+		super(
+				Translator
+						.trans("CategorySchemeEditor.label.categorySchemeEditorLabel.CategorySchemeEditor"),
+				Translator
+						.trans("CategorySchemeEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("CategorySchemeEditor.label.CategorySchemeTabItem"),
+				ID);
 		dao = (IDao) new CategorySchemeDao();
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
 		super.init(site, input);
 		modelImpl = (CategoryScheme) model;
 		items.add(new CategoryCode("CAT_1", "CODE_1"));
@@ -98,8 +105,9 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 	}
 
 	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages.getString("perspective.switch.dialogtext"),
-				Messages.getString("perspective.category"));
+		return MessageFormat.format(
+				Translator.trans("perspective.switch.dialogtext"),
+				Translator.trans("perspective.category"));
 	}
 
 	@Override
@@ -109,22 +117,25 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 		// Categories
 		// table viewer, table, table label provider, table content label
 		// provider
-//		createLabel(getLabelDescriptionTabGroup(), "Categories and codes");
-//
-//		tableViewer = new TableViewer(getLabelDescriptionTabGroup(), SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
-//				| SWT.FULL_SELECTION | SWT.BORDER);
-//		tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		tableViewer.setContentProvider(new CategoryTableContentProvider());
-//		tableLabelProvider = new CategoryLabelProvider();
-//		tableLabelProvider.createColumns(tableViewer);
-//		tableViewer.setLabelProvider(tableLabelProvider);
-//		tableViewer.setInput(items);
+		// createLabel(getLabelDescriptionTabGroup(), "Categories and codes");
+		//
+		// tableViewer = new TableViewer(getLabelDescriptionTabGroup(),
+		// SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
+		// | SWT.FULL_SELECTION | SWT.BORDER);
+		// tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+		// true, true));
+		// tableViewer.setContentProvider(new CategoryTableContentProvider());
+		// tableLabelProvider = new CategoryLabelProvider();
+		// tableLabelProvider.createColumns(tableViewer);
+		// tableViewer.setLabelProvider(tableLabelProvider);
+		// tableViewer.setInput(items);
 	}
 
 	/**
 	 * Label provider
 	 */
-	public class CategoryLabelProvider extends LabelProvider implements ITableLabelProvider {
+	public class CategoryLabelProvider extends LabelProvider implements
+			ITableLabelProvider {
 		/**
 		 * Creates table columns
 		 * 
@@ -139,7 +150,8 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 			int[] widths = { 200, 375, 225 };
 			int[] style = { SWT.RIGHT, SWT.LEFT, SWT.LEFT };
 			for (int i = 0; i < titles.length; i++) {
-				TableViewerColumn column = new TableViewerColumn(viewer, style[i]);
+				TableViewerColumn column = new TableViewerColumn(viewer,
+						style[i]);
 				column.getColumn().setText(titles[i]);
 				column.getColumn().setWidth(widths[i]);
 				column.getColumn().setResizable(true);
@@ -157,8 +169,8 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 
 		@Override
 		public String getColumnText(Object element, int columnIndex) {
-//			LightXmlObjectType lightXmlObject = (LightXmlObjectType) element;
-//			LabelType label = null;
+			// LightXmlObjectType lightXmlObject = (LightXmlObjectType) element;
+			// LabelType label = null;
 
 			CategoryCode cc = (CategoryCode) items.get(0);
 			switch (columnIndex) {
@@ -169,7 +181,8 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 				return cc.getCode();
 			default:
 				DDIFtpException e = new DDIFtpException(
-						Messages.getString("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
+						Translator
+								.trans("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
 				showError(e);
 				return "";
 			}
@@ -179,7 +192,8 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 	/**
 	 * Content provider
 	 */
-	public class CategoryTableContentProvider implements IStructuredContentProvider {
+	public class CategoryTableContentProvider implements
+			IStructuredContentProvider {
 		@Override
 		public Object[] getElements(Object parent) {
 			return items.toArray();
@@ -221,10 +235,12 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 			// Create the correct editor based on the column index
 			switch (column) {
 			case 0:
-				editor = new TextCellEditor(((TableViewer) viewer).getTable(), SWT.SINGLE | SWT.V_SCROLL);
+				editor = new TextCellEditor(((TableViewer) viewer).getTable(),
+						SWT.SINGLE | SWT.V_SCROLL);
 				break;
 			case 1:
-				editor = new TextCellEditor(((TableViewer) viewer).getTable(), SWT.SINGLE | SWT.V_SCROLL);
+				editor = new TextCellEditor(((TableViewer) viewer).getTable(),
+						SWT.SINGLE | SWT.V_SCROLL);
 				break;
 			default:
 				editor = new TextCellEditor(((TableViewer) viewer).getTable());
@@ -239,7 +255,8 @@ public class CategorySchemeEditor extends LabelDescriptionEditor {
 
 		@Override
 		protected CellEditor getCellEditor(Object element) {
-			ICellEditorListener listener = new CellEditorListener(editor, editorStatus, column);
+			ICellEditorListener listener = new CellEditorListener(editor,
+					editorStatus, column);
 			editor.addListener(listener);
 			return editor;
 		}

@@ -5,6 +5,7 @@ package org.ddialliance.ddieditor.ui.view;
  * 
  */
 import org.ddialliance.ddieditor.ui.model.ElementType;
+import org.ddialliance.ddiftp.util.Translator;
 
 public class CodeView extends View {
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.CodeView";
@@ -12,13 +13,13 @@ public class CodeView extends View {
 	public CodeView() {
 		super(
 				ViewContentType.CodeContent,
-				Messages
-						.getString("CodeView.label.codeNavigationLabel.CodeNavigation"),
-				Messages
-						.getString("CodeView.label.selectLabel.NavigatorDescription"),
-				Messages.getString("CodeView.label.codeLabel.Code"),
-				ElementType.CODE_SCHEME,
-				Messages
-						.getString("CodeView.label.codeTreeGroup.CodeStructure"), ID);
+				Translator
+						.trans("CodeView.label.codeNavigationLabel.CodeNavigation"),
+				Translator
+						.trans("CodeView.label.selectLabel.NavigatorDescription"),
+				Translator.trans("CodeView.label.codeLabel.Code"),
+				ElementType.CODE_SCHEME, Translator
+						.trans("CodeView.label.codeTreeGroup.CodeStructure"),
+				ID);
 	}
 }

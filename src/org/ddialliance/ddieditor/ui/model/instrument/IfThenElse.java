@@ -1,6 +1,7 @@
 package org.ddialliance.ddieditor.ui.model.instrument;
 
 import java.util.List;
+
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.IfThenElseDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ProgrammingLanguageCodeType;
@@ -9,8 +10,8 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.util.DdiEditorConfig;
+import org.ddialliance.ddiftp.util.Translator;
 
 public class IfThenElse extends Model {
 	IfThenElseDocument doc;
@@ -74,7 +75,7 @@ public class IfThenElse extends Model {
 		if (doc.getIfThenElse().getThenConstructReference().getIDList()
 				.isEmpty()) {
 			throw new Exception(
-					Messages.getString("IfThenElse.mess.MandatoryThenReferenceHasNotBeenSpecified")); //$NON-NLS-1$
+					Translator.trans("IfThenElse.mess.MandatoryThenReferenceHasNotBeenSpecified")); //$NON-NLS-1$
 		}
 	}
 

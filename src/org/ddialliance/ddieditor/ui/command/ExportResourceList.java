@@ -3,8 +3,8 @@ package org.ddialliance.ddieditor.ui.command;
 import java.io.File;
 
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -16,8 +16,8 @@ public class ExportResourceList extends
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		DirectoryDialog dirChooser = new DirectoryDialog(PlatformUI
 				.getWorkbench().getDisplay().getActiveShell());
-		dirChooser.setText(Messages
-				.getString("ExportDDI3Action.filechooser.title"));
+		dirChooser.setText(Translator
+				.trans("ExportDDI3Action.filechooser.title"));
 		String path = dirChooser.open();
 		// TODO check for null or empty on path
 		try {

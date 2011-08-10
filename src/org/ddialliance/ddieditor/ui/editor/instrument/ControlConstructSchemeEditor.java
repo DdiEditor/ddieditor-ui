@@ -6,16 +6,19 @@ import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.ControlConstructSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 
 public class ControlConstructSchemeEditor extends LabelDescriptionEditor {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.instrument.ControlConstructSchemeEditor";
-	
+
 	public ControlConstructSchemeEditor() {
-		super(Messages
-				.getString("ControlConstructSchemeEditor.label"), Messages
-				.getString("ControlConstructSchemeEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("ControlConstructSchemeEditor.label.ConceptSchemeTabItem"), ID);
+		super(
+				Translator.trans("ControlConstructSchemeEditor.label"),
+				Translator
+						.trans("ControlConstructSchemeEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("ControlConstructSchemeEditor.label.ConceptSchemeTabItem"),
+				ID);
 		dao = (IDao) new ControlConstructSchemeDao();
 	}
 
@@ -24,7 +27,8 @@ public class ControlConstructSchemeEditor extends LabelDescriptionEditor {
 	}
 
 	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages.getString("perspective.switch.dialogtext"), Messages
-				.getString("perspective.concepts"));
+		return MessageFormat.format(
+				Translator.trans("perspective.switch.dialogtext"),
+				Translator.trans("perspective.concepts"));
 	}
 }

@@ -14,6 +14,7 @@ import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.util.LightXmlObjectUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -54,8 +55,8 @@ class TreeLabelProvider extends LabelProvider {
 				} catch (Exception e) {
 					Editor.showError(e, getClass().getName(), null);
 				}
-				
-				if (result.length()==0) {
+
+				if (result.length() == 0) {
 					result.append(lightXmlObject.getElement() + ": "
 							+ lightXmlObject.getId());
 				}
@@ -82,7 +83,7 @@ class TreeLabelProvider extends LabelProvider {
 		} else if (element instanceof StorageType) {
 			return ((StorageType) element).getId();
 		} else if (element instanceof ConceptualType) {
-			return Messages.getString(((ConceptualType) element).name());
+			return Translator.trans(((ConceptualType) element).name());
 		} else if (element instanceof ConceptualElement) {
 			List<org.ddialliance.ddieditor.model.lightxmlobject.LabelType> labels = ((ConceptualElement) element)
 					.getValue().getLabelList();

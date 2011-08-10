@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.IDType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.SchemeReferenceType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -28,8 +27,8 @@ import org.ddialliance.ddieditor.ui.model.translationdialoginput.NameTdI;
 import org.ddialliance.ddieditor.ui.perspective.CodesPerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -54,7 +53,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
@@ -91,8 +89,10 @@ public class CodeSchemeEditor extends Editor {
 
 	public CodeSchemeEditor() {
 		super(
-				Messages.getString("CodeSchemeEditor.label.CodeSchemeEditorLabel.CodeSchemeEditor"),
-				Messages.getString("CodeSchemeEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("CodeSchemeEditor.label.CodeSchemeEditorLabel.CodeSchemeEditor"),
+				Translator
+						.trans("CodeSchemeEditor.label.useTheEditorLabel.Description"),
 				ID);
 		dao = (IDao) new CodeSchemeDao();
 	}
@@ -123,7 +123,7 @@ public class CodeSchemeEditor extends Editor {
 			items.add(lightXmlObject);
 		}
 	}
-	
+
 	/**
 	 * Get ID of Default Category Scheme
 	 * 
@@ -131,26 +131,27 @@ public class CodeSchemeEditor extends Editor {
 	 */
 	private String getDefaultCategorySchemeID() {
 		SchemeReferenceType categoryScheme = modelImpl
-		.getCategorySchemeReference();
+				.getCategorySchemeReference();
 		if (categoryScheme == null || categoryScheme.getIDList().size() == 0) {
 			return null;
 		}
-		return XmlBeansUtil.getTextOnMixedElement(
-						categoryScheme.getIDList().get(0));
+		return XmlBeansUtil.getTextOnMixedElement(categoryScheme.getIDList()
+				.get(0));
 	}
 
 	/**
 	 * Check if Default Category Scheme is specified
+	 * 
 	 * @return boolean
 	 */
 	protected boolean defaultCategorySchemeDefined() {
 		String id = getDefaultCategorySchemeID();
-		if ( id == null || id.equals("") ) {
+		if (id == null || id.equals("")) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	private void popupMenuAction(PopupAction action) {
 		TableItem[] tableItems = tableViewer.getTable().getSelection();
 		// guard
@@ -206,11 +207,14 @@ public class CodeSchemeEditor extends Editor {
 									getEditorSite().getShell(),
 									ID,
 									null,
-									Messages.getString("CodeSchemeEditor.mess.DefaultCategorySchemeSpecifiedRemoveNotAllowed"));
+									Translator
+											.trans("CodeSchemeEditor.mess.DefaultCategorySchemeSpecifiedRemoveNotAllowed"));
 					return;
 				}
 				try {
-					String SelectedValue = XmlBeansUtil.getTextOnMixedElement(selectedLightXmlObject.getLabelList().get(0));
+					String SelectedValue = XmlBeansUtil
+							.getTextOnMixedElement(selectedLightXmlObject
+									.getLabelList().get(0));
 					// for all codes in code scheme:
 					for (Iterator<CodeType> iterator = modelImpl.getDocument()
 							.getCodeScheme().getCodeList().iterator(); iterator
@@ -258,7 +262,7 @@ public class CodeSchemeEditor extends Editor {
 		// main tab
 		TabItem tabItem = createTabItem("Code Scheme");
 		Group group = createGroup(tabItem,
-				Messages.getString("QuestionConstruct"));
+				Translator.trans("QuestionConstruct"));
 
 		// Default Category Scheme reference
 
@@ -273,23 +277,24 @@ public class CodeSchemeEditor extends Editor {
 					e1);
 		}
 
-		catSchemeRefCombo = createRefSelection(
-				group,
-				Messages.getString("CodeSchemeEditor.label.DefaultCategoryScheme"),
-				Messages.getString("CodeSchemeEditor.label.CategoryScheme"),
+		catSchemeRefCombo = createRefSelection(group,
+				Translator
+						.trans("CodeSchemeEditor.label.DefaultCategoryScheme"),
+				Translator.trans("CodeSchemeEditor.label.CategoryScheme"),
 				modelImpl.getCategorySchemeReference(),
 				categorySchemeReferenceList, false);
 
-		catSchemeRefCombo.addSelectionListener(Messages
-				.getString("CodeSchemeEditor.label.CategoryScheme"),
-				new CategorySchemeSelectionAdapter(catSchemeRefCombo, modelImpl,
-						ReferenceType.class, getEditorIdentification()));
+		catSchemeRefCombo.addSelectionListener(Translator
+				.trans("CodeSchemeEditor.label.CategoryScheme"),
+				new CategorySchemeSelectionAdapter(catSchemeRefCombo,
+						modelImpl, ReferenceType.class,
+						getEditorIdentification()));
 
 		// Categories
 		// table viewer, table, table label provider, table content label
 		// provider
 		createLabel(group,
-				Messages.getString("CodeSchemeEditor.label.CategoriesAndCodes"));
+				Translator.trans("CodeSchemeEditor.label.CategoriesAndCodes"));
 
 		tableViewer = new TableViewer(group, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
@@ -320,7 +325,7 @@ public class CodeSchemeEditor extends Editor {
 		// menu add
 		// final MenuItem addMenuItem = new MenuItem(menu, SWT.CASCADE);
 		// addMenuItem.setSelection(true);
-		// addMenuItem.setText(Messages.getString("View.label.addMenuItem.Add"));
+		// addMenuItem.setText(Translator.trans("View.label.addMenuItem.Add"));
 		// addMenuItem.setImage(ResourceManager.getPluginImage(
 		// Activator.getDefault(), "icons/new_wiz.gif"));
 		// addMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -331,8 +336,8 @@ public class CodeSchemeEditor extends Editor {
 
 		// menu remove
 		final MenuItem removeMenuItem = new MenuItem(menu, SWT.NONE);
-		removeMenuItem.setText(Messages
-				.getString("View.label.removeMenuItem.Remove"));
+		removeMenuItem.setText(Translator
+				.trans("View.label.removeMenuItem.Remove"));
 		removeMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/delete_obj.gif"));
 		removeMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -367,29 +372,29 @@ public class CodeSchemeEditor extends Editor {
 
 		// description tab
 		// name
-		TabItem tabItem2 = createTabItem(Messages
-				.getString("editor.label.description"));
+		TabItem tabItem2 = createTabItem(Translator
+				.trans("editor.label.description"));
 		Group group2 = createGroup(tabItem2,
-				Messages.getString("editor.label.description"));
+				Translator.trans("editor.label.description"));
 
 		try {
 			Text txt = createLabelInput(group2,
-					Messages.getString("editor.label.label"), modelImpl
+					Translator.trans("editor.label.label"), modelImpl
 							.getDocument().getCodeScheme().getLabelList(),
 					modelImpl.getDocument().getCodeScheme().getId());
 
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"), modelImpl
+					Translator.trans("editor.button.translate"), modelImpl
 							.getDocument().getCodeScheme().getLabelList(),
 					new NameTdI(), "", txt);
 
 			StyledText styledText = createStructuredStringInput(group2,
-					Messages.getString("editor.label.description"),
+					Translator.trans("editor.label.description"),
 					modelImpl.getDocument().getCodeScheme()
 							.getDescriptionList(), modelImpl.getDocument()
 							.getCodeScheme().getId());
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"),
+					Translator.trans("editor.button.translate"),
 					modelImpl.getDocument().getCodeScheme()
 							.getDescriptionList(), new DescriptionTdI(), "",
 					styledText);
@@ -470,14 +475,16 @@ public class CodeSchemeEditor extends Editor {
 							codeCateRel.getId(), "", "", "").get(0);
 				} catch (Exception e1) {
 					DDIFtpException e2 = new DDIFtpException(
-							Messages.getString("CodeSchemeEditor.mess.GetCategoryError"), e1); //$NON-NLS-1$
+							Translator
+									.trans("CodeSchemeEditor.mess.GetCategoryError"), e1); //$NON-NLS-1$
 					showError(e2);
 					return "";
 				}
 				return XmlBeansUtil.getTextOnMixedElement(xml);
 			default:
 				DDIFtpException e = new DDIFtpException(
-						Messages.getString("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
+						Translator
+								.trans("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
 				showError(e);
 				return "";
 			}
@@ -488,7 +495,7 @@ public class CodeSchemeEditor extends Editor {
 	 * Content provider
 	 */
 	public class CodeTableContentProvider implements IStructuredContentProvider {
-		
+
 		@Override
 		public Object[] getElements(Object parent) {
 			try {
@@ -497,8 +504,8 @@ public class CodeSchemeEditor extends Editor {
 					// not specified - keep codes - do nothing
 					return items.toArray();
 				}
-				
-				// specified - use it 
+
+				// specified - use it
 				items.clear();
 				String categorySchemeId = getDefaultCategorySchemeID();
 				List<LightXmlObjectType> cats = new CategoryDao()
@@ -521,7 +528,8 @@ public class CodeSchemeEditor extends Editor {
 				return items.toArray();
 			} catch (Exception e) {
 				DDIFtpException e1 = new DDIFtpException(
-						Messages.getString("CodeSchemeEditor.mess.TableConcentProviderError"), e); //$NON-NLS-1$
+						Translator
+								.trans("CodeSchemeEditor.mess.TableConcentProviderError"), e); //$NON-NLS-1$
 				showError(e1);
 				return new Object[0];
 			}
@@ -640,7 +648,8 @@ public class CodeSchemeEditor extends Editor {
 					}
 				} else {
 					DDIFtpException e1 = new DDIFtpException(
-							Messages.getString("CodeSchemeEditor.mass.CorrespondingCodeNotFound"),
+							Translator
+									.trans("CodeSchemeEditor.mass.CorrespondingCodeNotFound"),
 							new Throwable());
 					showError(e1);
 				}
@@ -678,8 +687,8 @@ public class CodeSchemeEditor extends Editor {
 
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(
-				Messages.getString("perspective.switch.dialogtext"),
-				Messages.getString("perspective.codes"));
+				Translator.trans("perspective.switch.dialogtext"),
+				Translator.trans("perspective.codes"));
 	}
 
 	public Viewer getViewer() {

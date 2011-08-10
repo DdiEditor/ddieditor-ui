@@ -22,8 +22,8 @@ import org.ddialliance.ddieditor.ui.model.instrument.Instrument;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -47,10 +47,11 @@ public class InstrumentEditor extends Editor {
 
 	public InstrumentEditor() {
 		super(
-				Messages
-						.getString("InstrumentEditor.label.InstrumentEditorLabel.InstrumentEditor"),
-				Messages
-						.getString("InstrumentEditor.label.useTheEditorLabel.Description"), ID);
+				Translator
+						.trans("InstrumentEditor.label.InstrumentEditorLabel.InstrumentEditor"),
+				Translator
+						.trans("InstrumentEditor.label.useTheEditorLabel.Description"),
+				ID);
 
 		dao = new InstrumentDao();
 	}
@@ -74,31 +75,31 @@ public class InstrumentEditor extends Editor {
 		createTabFolder(getComposite_1());
 
 		// main tab
-		TabItem tabItem = createTabItem(Messages
-				.getString("InstrumentEditor.label.InstrumentTabItem"));
-		Group group = createGroup(tabItem, Messages
-				.getString("InstrumentEditor.label.InstrumentTabItem"));
+		TabItem tabItem = createTabItem(Translator
+				.trans("InstrumentEditor.label.InstrumentTabItem"));
+		Group group = createGroup(tabItem,
+				Translator.trans("InstrumentEditor.label.InstrumentTabItem"));
 		// main sequence ref
 		// condition ref
 		List<LightXmlObjectType> sequenceRefList = new ArrayList<LightXmlObjectType>();
 		try {
-			sequenceRefList = DdiManager.getInstance().getSequencesLight(null,
-					null, null, null).getLightXmlObjectList()
-					.getLightXmlObjectList();
+			sequenceRefList = DdiManager.getInstance()
+					.getSequencesLight(null, null, null, null)
+					.getLightXmlObjectList().getLightXmlObjectList();
 		} catch (Exception e) {
-			DialogUtil.errorDialog(getSite().getShell(), ID, null, e
-					.getMessage(), e);
+			DialogUtil.errorDialog(getSite().getShell(), ID, null,
+					e.getMessage(), e);
 		}
 
 		ReferenceSelectionCombo sequenceRefSelectCombo = createRefSelection(
-				group, Messages
-						.getString("InstrumentEditor.software.mainsequence"),
-				Messages.getString("InstrumentEditor.software.mainsequence"),
+				group,
+				Translator.trans("InstrumentEditor.software.mainsequence"),
+				Translator.trans("InstrumentEditor.software.mainsequence"),
 				null, sequenceRefList, false);
-		sequenceRefSelectCombo.addSelectionListener(Messages
-				.getString("InstrumentEditor.software.mainsequence"), new ReferenceSelectionAdapter(
-						sequenceRefSelectCombo, modelImpl,
-						ModelIdentifingType.Type_B.class,
+		sequenceRefSelectCombo.addSelectionListener(Translator
+				.trans("InstrumentEditor.software.mainsequence"),
+				new ReferenceSelectionAdapter(sequenceRefSelectCombo,
+						modelImpl, ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
 
 		// software tab
@@ -108,30 +109,31 @@ public class InstrumentEditor extends Editor {
 		}
 
 		// label - description - tab
-		TabItem tabItem2 = createTabItem(Messages
-				.getString("editor.label.description"));
-		Group group2 = createGroup(tabItem2, Messages
-				.getString("editor.label.description"));
+		TabItem tabItem2 = createTabItem(Translator
+				.trans("editor.label.description"));
+		Group group2 = createGroup(tabItem2,
+				Translator.trans("editor.label.description"));
 
 		try {
-			Text txt = createLabelInput(group2, Messages
-					.getString("editor.label.label"), modelImpl.getDocument()
-					.getInstrument().getLabelList(), modelImpl.getDocument()
-					.getInstrument().getId());
-			createTranslation(group2, Messages
-					.getString("editor.button.translate"), modelImpl
-					.getDocument().getInstrument().getInstrumentNameList(),
-					new LabelTdI(), "", txt);
+			Text txt = createLabelInput(group2,
+					Translator.trans("editor.label.label"), modelImpl
+							.getDocument().getInstrument().getLabelList(),
+					modelImpl.getDocument().getInstrument().getId());
+			createTranslation(group2,
+					Translator.trans("editor.button.translate"), modelImpl
+							.getDocument().getInstrument()
+							.getInstrumentNameList(), new LabelTdI(), "", txt);
 
 			StyledText styledText = createStructuredStringInput(group2,
-					Messages.getString("editor.label.description"),
+					Translator.trans("editor.label.description"),
 					modelImpl.getDocument().getInstrument()
 							.getDescriptionList(), modelImpl.getDocument()
 							.getInstrument().getId());
-			createTranslation(group2, Messages
-					.getString("editor.button.translate"), modelImpl
-					.getDocument().getInstrument().getDescriptionList(),
-					new DescriptionTdI(), "", styledText);
+			createTranslation(group2,
+					Translator.trans("editor.button.translate"),
+					modelImpl.getDocument().getInstrument()
+							.getDescriptionList(), new DescriptionTdI(), "",
+					styledText);
 		} catch (DDIFtpException e) {
 			DialogUtil
 					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
@@ -150,15 +152,15 @@ public class InstrumentEditor extends Editor {
 	}
 
 	private void createSoftwareTab(final SoftwareType software) {
-		TabItem tabItem = createTabItem(Messages
-				.getString("InstrumentEditor.software"));
-		Group softwareGroup = createGroup(tabItem, Messages
-				.getString("InstrumentEditor.software"));
+		TabItem tabItem = createTabItem(Translator
+				.trans("InstrumentEditor.software"));
+		Group softwareGroup = createGroup(tabItem,
+				Translator.trans("InstrumentEditor.software"));
 
 		// name
 		// final Text name = null;
-		// createTextInput(softwareGroup, Messages
-		// .getString("InstrumentEditor.software.namelabel"), software
+		// createTextInput(softwareGroup, Translator
+		// .trans("InstrumentEditor.software.namelabel"), software
 		// .getNameList().get(0).getStringValue(), name,
 		// new ModifyListener() {
 		// public void modifyText(ModifyEvent e) {
@@ -170,8 +172,8 @@ public class InstrumentEditor extends Editor {
 		//
 		// // version
 		// final Text version = null;
-		// createTextInput(softwareGroup, Messages
-		// .getString("InstrumentEditor.software.versionlabel"), software
+		// createTextInput(softwareGroup, Translator
+		// .trans("InstrumentEditor.software.versionlabel"), software
 		// .getVersion(), version, new ModifyListener() {
 		// public void modifyText(ModifyEvent e) {
 		// editorStatus.setChanged();
@@ -181,8 +183,8 @@ public class InstrumentEditor extends Editor {
 		//
 		// // description
 		// final Text description = null;
-		// createTextAreaInput(softwareGroup, Messages
-		// .getString("InstrumentEditor.software.descriptionlabel"),
+		// createTextAreaInput(softwareGroup, Translator
+		// .trans("InstrumentEditor.software.descriptionlabel"),
 		// XmlBeansUtil.getTextOnMixedElement(software
 		// .getDescriptionList().get(0)), description,
 		// new ModifyListener() {
@@ -197,10 +199,10 @@ public class InstrumentEditor extends Editor {
 		// date
 		final DateTimeWidget dateTimeWidget = null;
 		try {
-			createDateInput(softwareGroup, Messages
-					.getString("InstrumentEditor.software.datelabel"), software
-					.getDate().getSimpleDate().toString(), dateTimeWidget,
-					new SelectionAdapter() {
+			createDateInput(softwareGroup,
+					Translator.trans("InstrumentEditor.software.datelabel"),
+					software.getDate().getSimpleDate().toString(),
+					dateTimeWidget, new SelectionAdapter() {
 						public void widgetSelected(SelectionEvent e) {
 							editorStatus.setChanged();
 							software.setDate(getDate(dateTimeWidget
@@ -208,14 +210,14 @@ public class InstrumentEditor extends Editor {
 						}
 					});
 		} catch (Exception e) {
-			DialogUtil.errorDialog(getSite().getShell(), ID, Messages
-					.getString("ErrorTitle"), e.getMessage(), e);
+			DialogUtil.errorDialog(getSite().getShell(), ID,
+					Translator.trans("ErrorTitle"), e.getMessage(), e);
 		}
 	}
 
 	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages
-				.getString("perspective.switch.dialogtext"), Messages
-				.getString("perspective.instruments"));
+		return MessageFormat.format(
+				Translator.trans("perspective.switch.dialogtext"),
+				Translator.trans("perspective.instruments"));
 	}
 }

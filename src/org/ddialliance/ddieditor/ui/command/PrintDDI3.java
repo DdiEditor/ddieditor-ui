@@ -1,15 +1,13 @@
 package org.ddialliance.ddieditor.ui.command;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 
 import org.apache.commons.io.FileUtils;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dialogs.PrintDDI3Dialog;
-import org.ddialliance.ddieditor.ui.view.Messages;
-import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -42,7 +40,8 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 								InterruptedException {
 							try {
 								monitor.beginTask(
-										Messages.getString("PrintDDI3Action.tooltip.PrintDDI3"),
+										Translator
+												.trans("PrintDDI3Action.tooltip.PrintDDI3"),
 										1);
 
 								PlatformUI.getWorkbench().getDisplay()
@@ -81,7 +80,8 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 																			.getWorkbench()
 																			.getDisplay()
 																			.getActiveShell(),
-																	Messages.getString("PrintDDI3Action.mess.PrintDDI3Error"),
+																	Translator
+																			.trans("PrintDDI3Action.mess.PrintDDI3Error"),
 																	e.getMessage());
 												}
 												// active the browser with the
@@ -100,11 +100,10 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 					});
 		} catch (Exception e) {
 			String errMess = MessageFormat
-					.format(Messages
-							.getString("PrintDDI3Action.mess.PrintDDI3Error"), e.getMessage()); //$NON-NLS-1$
+					.format(Translator
+							.trans("PrintDDI3Action.mess.PrintDDI3Error"), e.getMessage()); //$NON-NLS-1$
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
-					.getActiveShell(), Messages.getString("ErrorTitle"),
-					errMess);
+					.getActiveShell(), Translator.trans("ErrorTitle"), errMess);
 		}
 		return null;
 	}

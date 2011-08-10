@@ -9,8 +9,8 @@ import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor.CodeTableContentProvider;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransferVO;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -229,7 +229,8 @@ public class CodeDropListener extends ViewerDropAdapter {
 			} catch (DDIFtpException e) {
 				Editor.showError(
 						new DDIFtpException(
-								Messages.getString("CodeSchemeEditor.mess.CodeSchemeRetreiveError"),
+								Translator
+										.trans("CodeSchemeEditor.mess.CodeSchemeRetreiveError"),
 								e), ID, codeSchemeEditor.getSite());
 				;
 				return false;
@@ -248,7 +249,8 @@ public class CodeDropListener extends ViewerDropAdapter {
 				} catch (DDIFtpException e) {
 					Editor.showError(
 							new DDIFtpException(
-									Messages.getString("CodeSchemeEditor.mess.CodeSchemeRetreiveError"),
+									Translator
+											.trans("CodeSchemeEditor.mess.CodeSchemeRetreiveError"),
 									e), ID, codeSchemeEditor.getSite());
 					;
 					return false;

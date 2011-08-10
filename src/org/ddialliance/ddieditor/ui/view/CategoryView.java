@@ -7,6 +7,7 @@ package org.ddialliance.ddieditor.ui.view;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectDragListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.model.ElementType;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
@@ -17,16 +18,17 @@ public class CategoryView extends View {
 	public CategoryView() {
 		super(
 				ViewContentType.CategoryContent,
-				Messages
-						.getString("CategoryView.label.categoryNavigationLabel.CategoryNavigation"),
-				Messages
-						.getString("CategoryView.label.selectLabel.NavigatorDescription"),
-				Messages.getString("CategoryView.label.categoryLabel.Category"),
+				Translator
+						.trans("CategoryView.label.categoryNavigationLabel.CategoryNavigation"),
+				Translator
+						.trans("CategoryView.label.selectLabel.NavigatorDescription"),
+				Translator.trans("CategoryView.label.categoryLabel.Category"),
 				ElementType.CATEGORY_SCHEME,
-				Messages
-						.getString("CategoryView.label.categoryTreeGroup.CategoryStructure"), ID);
+				Translator
+						.trans("CategoryView.label.categoryTreeGroup.CategoryStructure"),
+				ID);
 	}
-	
+
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);

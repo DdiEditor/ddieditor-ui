@@ -4,6 +4,7 @@ import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -211,7 +212,7 @@ public class View extends ViewPart implements IPropertyListener {
 			MessageDialog
 					.openInformation(
 							getViewSite().getShell(),
-							Messages.getString("ErrorTitle"), Messages.getString("View.mess.TreeViewerSetInputError") + ":\n" + e1.getMessage()); //$NON-NLS-1$
+							Translator.trans("ErrorTitle"), Translator.trans("View.mess.TreeViewerSetInputError") + ":\n" + e1.getMessage()); //$NON-NLS-1$
 		}
 		treeViewer.addFilter(nameFilter);
 		treeViewer.expandToLevel(2);
@@ -235,7 +236,7 @@ public class View extends ViewPart implements IPropertyListener {
 	 */
 	private void createActions() {
 		expandAllAction = new Action(
-				Messages.getString("View.label.expandAllAction.ExpandAll")) { //$NON-NLS-1$)
+				Translator.trans("View.label.expandAllAction.ExpandAll")) { //$NON-NLS-1$)
 			public void run() {
 				treeViewer.expandAll();
 			}
@@ -245,7 +246,7 @@ public class View extends ViewPart implements IPropertyListener {
 						"icons/expand_all.gif"));
 
 		collapseAllAction = new Action(
-				Messages.getString("View.label.collapseAllAction.CollapseAll")) { //$NON-NLS-1$)
+				Translator.trans("View.label.collapseAllAction.CollapseAll")) { //$NON-NLS-1$)
 			public void run() {
 				treeViewer.collapseAll();
 			}

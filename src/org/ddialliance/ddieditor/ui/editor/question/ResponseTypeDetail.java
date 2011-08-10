@@ -15,7 +15,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.xalan.transformer.DecimalToRoman;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.NumericDomainType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericTypeCodeType;
@@ -31,7 +30,7 @@ import org.ddialliance.ddieditor.ui.editor.FilteredItemsSelection;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem.RESPONSE_TYPES;
 import org.ddialliance.ddieditor.ui.model.question.ResponseTypeReference;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -67,7 +66,7 @@ public class ResponseTypeDetail {
 			}
 			Enum type = null;
 			if (numTypeCombo.getText().equals(
-					Messages.getString("ResponseTypeDetail.label.Double"))) {
+					Translator.trans("ResponseTypeDetail.label.Double"))) {
 				type = NumericTypeCodeType.DOUBLE;
 			} else {
 				type = NumericTypeCodeType.FLOAT;
@@ -81,11 +80,10 @@ public class ResponseTypeDetail {
 
 		@Override
 		public void verifyText(VerifyEvent e) {
-			Editor.verifyField(
-					FIELD_TYPE.DIGIT, e, site);
+			Editor.verifyField(FIELD_TYPE.DIGIT, e, site);
 		}
 	}
-	
+
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			ResponseTypeDetail.class);
 
@@ -103,17 +101,17 @@ public class ResponseTypeDetail {
 	// private RepresentationType m_representationType;
 
 	public static String[] RESPONSE_TYPE_LABELS = { "",
-			Messages.getString("ResponseTypeDetail.label.Code"),
-			Messages.getString("ResponseTypeDetail.label.Text"),
-			Messages.getString("ResponseTypeDetail.label.Numeric"),
-			Messages.getString("ResponseTypeDetail.label.Date"),
-			Messages.getString("ResponseTypeDetail.label.Category"),
-			Messages.getString("ResponseTypeDetail.label.Geographic") };
+			Translator.trans("ResponseTypeDetail.label.Code"),
+			Translator.trans("ResponseTypeDetail.label.Text"),
+			Translator.trans("ResponseTypeDetail.label.Numeric"),
+			Translator.trans("ResponseTypeDetail.label.Date"),
+			Translator.trans("ResponseTypeDetail.label.Category"),
+			Translator.trans("ResponseTypeDetail.label.Geographic") };
 
 	static private final String[] NUMERIC_TYPES = {
-			Messages.getString("ResponseTypeDetail.label.Integer"),
-			Messages.getString("ResponseTypeDetail.label.Double"),
-			Messages.getString("ResponseTypeDetail.label.Float") };
+			Translator.trans("ResponseTypeDetail.label.Integer"),
+			Translator.trans("ResponseTypeDetail.label.Double"),
+			Translator.trans("ResponseTypeDetail.label.Float") };
 
 	static private enum NUMERIC_TYPE_INDEX {
 		INTEGER, DOUBLE, FLOAT
@@ -199,29 +197,28 @@ public class ResponseTypeDetail {
 			decimalPosition = null;
 		}
 	}
-	
+
 	/**
 	 * Create Decimal Position details
 	 */
-	private void createDecimalPosition (String position) {
+	private void createDecimalPosition(String position) {
 		if (decimalPositionLabel == null || decimalPositionLabel.isDisposed()) {
-			decimalPositionLabel = new Label(
-					parentLabelComposite, SWT.NONE);
-			decimalPositionLabel.setLayoutData(new GridData(
-					SWT.RIGHT, SWT.CENTER, true, false));
-			decimalPositionLabel.setText(Messages
-					.getString("ResponseTypeDetail.label.DecimalPosition") + ":"); //$NON-NLS-1$
-			decimalPositionLabel.setBackground(Display
-					.getCurrent().getSystemColor(
-							SWT.COLOR_WHITE));
+			decimalPositionLabel = new Label(parentLabelComposite, SWT.NONE);
+			decimalPositionLabel.setLayoutData(new GridData(SWT.RIGHT,
+					SWT.CENTER, true, false));
+			decimalPositionLabel.setText(Translator
+					.trans("ResponseTypeDetail.label.DecimalPosition") + ":"); //$NON-NLS-1$
+			decimalPositionLabel.setBackground(Display.getCurrent()
+					.getSystemColor(SWT.COLOR_WHITE));
 
-			decimalPosition = new Text(parentCodeComposite,
-					SWT.BORDER);
-			decimalPosition.setLayoutData(new GridData(
-					SWT.FILL, SWT.CENTER, true, false));
+			decimalPosition = new Text(parentCodeComposite, SWT.BORDER);
+			decimalPosition.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+					true, false));
 			decimalPosition.setText(position);
-			decimalPosition.addVerifyListener(new DecimalPositionVerifyListener());
-			decimalPosition.addModifyListener(new DecimalPositionModifyListener());
+			decimalPosition
+					.addVerifyListener(new DecimalPositionVerifyListener());
+			decimalPosition
+					.addModifyListener(new DecimalPositionModifyListener());
 		}
 	}
 
@@ -250,16 +247,14 @@ public class ResponseTypeDetail {
 
 			final Label textLabel = new Label(parentLabelComposite, SWT.NONE);
 			textLabel.setLayoutData(new GridData());
-			textLabel.setText(Messages
-					.getString("ResponseTypeDetail.label.Text") + ":"); //$NON-NLS-1$
+			textLabel
+					.setText(Translator.trans("ResponseTypeDetail.label.Text") + ":"); //$NON-NLS-1$
 			textLabel.setBackground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_WHITE));
 
-			final Label dummyLabel = new Label(parentCodeComposite, SWT.NONE);
-
 			final Label LengthLabel = new Label(parentLabelComposite, SWT.NONE);
-			LengthLabel.setText(Messages
-					.getString("ResponseTypeDetail.label.MaxLength") + ":"); //$NON-NLS-1$
+			LengthLabel.setText(Translator
+					.trans("ResponseTypeDetail.label.MaxLength") + ":"); //$NON-NLS-1$
 			LengthLabel.setBackground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_WHITE));
 
@@ -296,16 +291,14 @@ public class ResponseTypeDetail {
 			String numericType = "";
 			final Label numericLabel = new Label(parentLabelComposite, SWT.NONE);
 			numericLabel.setLayoutData(new GridData());
-			numericLabel.setText(Messages
-					.getString("ResponseTypeDetail.label.Numeric") + ":"); //$NON-NLS-1$
+			numericLabel.setText(Translator
+					.trans("ResponseTypeDetail.label.Numeric") + ":"); //$NON-NLS-1$
 			numericLabel.setBackground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_WHITE));
 
-			final Label dummyLabel = new Label(parentCodeComposite, SWT.NONE);
-
 			final Label integerLabel = new Label(parentLabelComposite, SWT.NONE);
-			integerLabel.setText(Messages
-					.getString("ResponseTypeDetail.label.Type") + ":"); //$NON-NLS-1$
+			integerLabel.setText(Translator
+					.trans("ResponseTypeDetail.label.Type") + ":"); //$NON-NLS-1$
 			integerLabel.setBackground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_WHITE));
 
@@ -346,11 +339,12 @@ public class ResponseTypeDetail {
 					log.debug("Layout Data: "
 							+ parentLabelComposite.getLayoutData());
 					String numericType = numTypeCombo.getText();
-					if (numericType.equals(Messages
-							.getString("ResponseTypeDetail.label.Double"))
-							|| numericType.equals(Messages
-									.getString("ResponseTypeDetail.label.Float"))) {
-						// create decimal position detail - if not already created
+					if (numericType.equals(Translator
+							.trans("ResponseTypeDetail.label.Double"))
+							|| numericType.equals(Translator
+									.trans("ResponseTypeDetail.label.Float"))) {
+						// create decimal position detail - if not already
+						// created
 						BigInteger pos = null;
 						if (decimalPosition != null
 								&& !decimalPosition.isDisposed()
@@ -358,8 +352,8 @@ public class ResponseTypeDetail {
 							pos = new BigInteger(decimalPosition.getText());
 						}
 						createDecimalPosition(pos == null ? "" : pos.toString());
-						if (numericType.equals(Messages
-								.getString("ResponseTypeDetail.label.Double"))) {
+						if (numericType.equals(Translator
+								.trans("ResponseTypeDetail.label.Double"))) {
 							questionItem.setNumericResponseDomain(
 									NumericTypeCodeType.DOUBLE, pos);
 						} else {
@@ -377,13 +371,12 @@ public class ResponseTypeDetail {
 				}
 			});
 			if (numTypeCombo.getText().equals(
-					Messages.getString("ResponseTypeDetail.label.Double"))
-					|| numTypeCombo
-							.getText()
-							.equals(Messages
-									.getString("ResponseTypeDetail.label.Float"))) {
-				createDecimalPosition(representationType == null ? "" : ((NumericDomainType) representationType)
-						.getDecimalPositions().toString());
+					Translator.trans("ResponseTypeDetail.label.Double"))
+					|| numTypeCombo.getText().equals(
+							Translator.trans("ResponseTypeDetail.label.Float"))) {
+				createDecimalPosition(representationType == null ? ""
+						: ((NumericDomainType) representationType)
+								.getDecimalPositions().toString());
 				editorStatus.setChanged();
 			}
 			parentLabelComposite.getParent().layout();
@@ -420,10 +413,10 @@ public class ResponseTypeDetail {
 						"");
 			} catch (Exception e1) {
 				String errMess = MessageFormat
-						.format(Messages
-								.getString("ResponseTypeDetail.mess.CodeSchemeRetrievalError"), e1.getMessage()); //$NON-NLS-1$
+						.format(Translator
+								.trans("ResponseTypeDetail.mess.CodeSchemeRetrievalError"), e1.getMessage()); //$NON-NLS-1$
 				MessageDialog.openError(parentCodeComposite.getShell(),
-						Messages.getString("ErrorTitle"), errMess);
+						Translator.trans("ErrorTitle"), errMess);
 			}
 
 			// - Create Code Scheme selection composite:
@@ -431,8 +424,9 @@ public class ResponseTypeDetail {
 					.createPartControl(
 							labelComposite,
 							codeComposite,
-							Messages.getString("ResponseTypeDetail.label.Code"),
-							Messages.getString("ResponseTypeDetail.label.CodeScheme"),
+							Translator.trans("ResponseTypeDetail.label.Code"),
+							Translator
+									.trans("ResponseTypeDetail.label.CodeScheme"),
 							codeSchemeReferenceList,
 							representationType != null ? ((CodeDomainType) representationType)
 									.getCodeSchemeReference().getIDList()
@@ -440,7 +434,8 @@ public class ResponseTypeDetail {
 									: "");
 			filteredItemsSelection
 					.addSelectionListener(
-							Messages.getString("ResponseTypeDetail.label.SelectCodeShemeReference"),
+							Translator
+									.trans("ResponseTypeDetail.label.SelectCodeShemeReference"),
 							codeSchemeReferenceList, new SelectionAdapter() {
 								public void widgetSelected(SelectionEvent e) {
 									LightXmlObjectType result = (LightXmlObjectType) filteredItemsSelection
@@ -460,10 +455,10 @@ public class ResponseTypeDetail {
 			// ***** OTHER *****
 			// ------------------
 			String errMess = MessageFormat
-					.format(Messages
-							.getString("ResponseTypeDetail.mess.QuestionItemResponseTypeNotSupported"), responseType); //$NON-NLS-1$
+					.format(Translator
+							.trans("ResponseTypeDetail.mess.QuestionItemResponseTypeNotSupported"), responseType); //$NON-NLS-1$
 			MessageDialog.openError(parentLabelComposite.getShell(),
-					Messages.getString("ErrorTitle"), errMess);
+					Translator.trans("ErrorTitle"), errMess);
 		}
 	}
 

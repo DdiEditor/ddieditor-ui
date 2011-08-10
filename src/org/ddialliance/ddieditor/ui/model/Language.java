@@ -3,7 +3,7 @@ package org.ddialliance.ddieditor.ui.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -21,10 +21,10 @@ public class Language {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, Language.class);
 
 	private static final String[] LANGUAGES = {
-			Messages.getString("Language.label.Danish"),
-			Messages.getString("Language.label.English"),
-			Messages.getString("Language.label.Norwegian"),
-			Messages.getString("Language.label.Swedish") };
+			Translator.trans("Language.label.Danish"),
+			Translator.trans("Language.label.English"),
+			Translator.trans("Language.label.Norwegian"),
+			Translator.trans("Language.label.Swedish") };
 
 	public static final String[] LANGUAGE_CODES = { "da", "en", "no", "se" };
 

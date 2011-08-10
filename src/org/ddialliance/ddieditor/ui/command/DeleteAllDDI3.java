@@ -6,9 +6,9 @@ import java.util.List;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,8 +26,8 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 			resources = PersistenceManager.getInstance().getResources();
 		} catch (DDIFtpException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
-					.getActiveShell(), Messages.getString("ErrorTitle"), e
-					.getMessage());
+					.getActiveShell(), Translator.trans("ErrorTitle"),
+					e.getMessage());
 		}
 
 		// yes - no dialog
@@ -49,12 +49,10 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 			}
 		} catch (Exception e) {
 			String errMess = MessageFormat
-					.format(
-							Messages
-									.getString("OpenFileAction.mess.OpenFileError"), e.getMessage()); //$NON-NLS-1$
+					.format(Translator
+							.trans("OpenFileAction.mess.OpenFileError"), e.getMessage()); //$NON-NLS-1$
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
-					.getActiveShell(), Messages.getString("ErrorTitle"),
-					errMess);
+					.getActiveShell(), Translator.trans("ErrorTitle"), errMess);
 		}
 
 		// refresh view

@@ -4,8 +4,8 @@ import java.text.MessageFormat;
 
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -54,7 +54,7 @@ public class DialogUtil {
 			String errorMessage, Throwable e) {
 		checkException(e);
 		if (title == null) {
-			title = Messages.getString("ErrorTitle");
+			title = Translator.trans("ErrorTitle");
 		}
 
 		ErrorDialog.openError(shell, title, null, new Status(IStatus.ERROR,
@@ -76,7 +76,7 @@ public class DialogUtil {
 	public static void infoDialog(Shell shell, String pluginId, String title,
 			String infoMessage) {
 		if (title == null) {
-			title = Messages.getString("InfoTitle");
+			title = Translator.trans("InfoTitle");
 		}
 
 		MessageDialog.openInformation(shell, title, infoMessage);
@@ -101,7 +101,8 @@ public class DialogUtil {
 							shell,
 							title,
 							MessageFormat.format(
-									Messages.getString("View.mess.ConfirmDeletionMaintainableLightLabelQueryResult"),
+									Translator
+											.trans("View.mess.ConfirmDeletionMaintainableLightLabelQueryResult"),
 									mLightLabelQueryResult.getTargetLabel(),
 									mLightLabelQueryResult
 											.getSubElementLabels()));

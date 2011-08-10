@@ -6,8 +6,8 @@ import java.text.MessageFormat;
 
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dialogs.ExportDDI3Dialog;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,22 +30,20 @@ public class ExportDDI3File extends org.eclipse.core.commands.AbstractHandler {
 			return null;
 		}
 
-
 		// do export
 		try {
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
-					new IRunnableWithProgress() {
+			PlatformUI.getWorkbench().getProgressService()
+					.busyCursorWhile(new IRunnableWithProgress() {
 						@Override
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException,
 								InterruptedException {
 							try {
 								// export
-								monitor
-										.beginTask(
-												Messages
-														.getString("ExportDDI3Action.tooltip.ExportDDI3"),
-												1);
+								monitor.beginTask(
+										Translator
+												.trans("ExportDDI3Action.tooltip.ExportDDI3"),
+										1);
 
 								PlatformUI.getWorkbench().getDisplay()
 										.asyncExec(new Runnable() {
@@ -68,10 +66,9 @@ public class ExportDDI3File extends org.eclipse.core.commands.AbstractHandler {
 																			.getWorkbench()
 																			.getDisplay()
 																			.getActiveShell(),
-																	Messages
-																			.getString("ErrorTitle"),
-																	e
-																			.getMessage());
+																	Translator
+																			.trans("ErrorTitle"),
+																	e.getMessage());
 												}
 											}
 										});
@@ -85,12 +82,10 @@ public class ExportDDI3File extends org.eclipse.core.commands.AbstractHandler {
 					});
 		} catch (Exception e) {
 			String errMess = MessageFormat
-					.format(
-							Messages
-									.getString("OpenFileAction.mess.OpenFileError"), e.getMessage()); //$NON-NLS-1$
+					.format(Translator
+							.trans("OpenFileAction.mess.OpenFileError"), e.getMessage()); //$NON-NLS-1$
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
-					.getActiveShell(), Messages.getString("ErrorTitle"),
-					errMess);
+					.getActiveShell(), Translator.trans("ErrorTitle"), errMess);
 		}
 		return null;
 	}

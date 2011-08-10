@@ -32,10 +32,10 @@ import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.util.XmlObjectUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.ReflectionUtil;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -126,7 +126,8 @@ public class MultipleQuestionItem extends Model {
 					.getSubElement("SubQuestionSequence");
 			if (xmlObjects.length > 1) {
 				throw new DDIFtpException(
-						Messages.getString("MultipleQuestionItemEditor.mess.UnexceptedNumberOfSubQuestionSequenceFound"));
+						Translator
+								.trans("MultipleQuestionItemEditor.mess.UnexceptedNumberOfSubQuestionSequenceFound"));
 			}
 			// - store as SpecificSequenceType
 			if (xmlObjects.length > 0) {

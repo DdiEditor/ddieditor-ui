@@ -7,8 +7,8 @@ import org.ddialliance.ddieditor.ui.editor.BooleanCellEditor;
 import org.ddialliance.ddieditor.ui.editor.CellEditorListener;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.model.profile.Profile;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -55,8 +55,8 @@ public class ProfileEditor extends Editor {
 
 	public ProfileEditor(String headerEditorTitle, String headerEditorDescr) {
 		super(headerEditorTitle, headerEditorDescr, ID);
-		enabled = Messages.getString("enabled");
-		disabled = Messages.getString("disabled");
+		enabled = Translator.trans("enabled");
+		disabled = Translator.trans("disabled");
 	}
 
 	private final void showError(DDIFtpException e) {
@@ -80,7 +80,7 @@ public class ProfileEditor extends Editor {
 		topGroup.setLayout(new GridLayout());
 		topGroup.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		topGroup.setText(Messages.getString("translationdialog.topgroup")); //$NON-NLS-1$
+		topGroup.setText(Translator.trans("translationdialog.topgroup")); //$NON-NLS-1$
 
 		// table viewer, table, table label provider, table content label
 		// provider
@@ -113,7 +113,7 @@ public class ProfileEditor extends Editor {
 		final Button addButton = new Button(addRemoveComposite, SWT.NONE);
 		addButton.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		addButton.setText(Messages.getString("translationdialog.button.add")); //$NON-NLS-1$
+		addButton.setText(Translator.trans("translationdialog.button.add")); //$NON-NLS-1$
 		addButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				Object newItem = null;
@@ -137,8 +137,8 @@ public class ProfileEditor extends Editor {
 		final Button removeButton = new Button(addRemoveComposite, SWT.NONE);
 		removeButton.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		removeButton.setText(Messages
-				.getString("translationdialog.button.remove")); //$NON-NLS-1$
+		removeButton.setText(Translator
+				.trans("translationdialog.button.remove")); //$NON-NLS-1$
 		removeButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				ISelection selection = tableViewer.getSelection();
@@ -175,14 +175,12 @@ public class ProfileEditor extends Editor {
 		public void createColumns(final TableViewer viewer) {
 			Table table = viewer.getTable();
 			String[] titles = {
-					Messages
-							.getString("translationdialog.tablecolumn.translate"),
-					Messages
-							.getString("translationdialog.tablecolumn.language"),
-					Messages
-							.getString("translationdialog.tablecolumn.translated"),
-					Messages
-							.getString("translationdialog.tablecolumn.translatable") };
+					Translator.trans("translationdialog.tablecolumn.translate"),
+					Translator.trans("translationdialog.tablecolumn.language"),
+					Translator
+							.trans("translationdialog.tablecolumn.translated"),
+					Translator
+							.trans("translationdialog.tablecolumn.translatable") };
 			// translationdialog.tablecolumn.preferred=Preferred
 			int[] widths = { 350, 100, 120, 50 };
 			for (int i = 0; i < titles.length; i++) {
@@ -235,8 +233,8 @@ public class ProfileEditor extends Editor {
 				break;
 			default:
 				DDIFtpException e = new DDIFtpException(
-						Messages
-								.getString("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
+						Translator
+								.trans("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
 				showError(e);
 			}
 			return "";
@@ -312,14 +310,14 @@ public class ProfileEditor extends Editor {
 				break;
 			case 3:
 				// fixedValue" type="xs:boolean" default="false">
-				editor = new BooleanCellEditor(((TableViewer) viewer)
-						.getTable(), enabled, disabled);
+				editor = new BooleanCellEditor(
+						((TableViewer) viewer).getTable(), enabled, disabled);
 				editor.setValue(new Boolean(true));
 				break;
 			case 4:
 				// required" type="xs:boolean" default="false">
-				editor = new BooleanCellEditor(((TableViewer) viewer)
-						.getTable(), enabled, disabled);
+				editor = new BooleanCellEditor(
+						((TableViewer) viewer).getTable(), enabled, disabled);
 				break;
 			case 5:
 				// path" type="xs:string" use="required">
@@ -384,8 +382,8 @@ public class ProfileEditor extends Editor {
 				break;
 			default:
 				DDIFtpException e = new DDIFtpException(
-						Messages
-								.getString("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
+						Translator
+								.trans("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
 				showError(e);
 				break;
 			}
@@ -425,8 +423,8 @@ public class ProfileEditor extends Editor {
 				break;
 			default:
 				DDIFtpException e = new DDIFtpException(
-						Messages
-								.getString("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
+						Translator
+								.trans("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
 				showError(e);
 				break;
 			}

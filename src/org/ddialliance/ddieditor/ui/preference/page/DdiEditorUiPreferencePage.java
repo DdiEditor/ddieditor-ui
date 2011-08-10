@@ -2,8 +2,8 @@ package org.ddialliance.ddieditor.ui.preference.page;
 
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.LanguageUtil;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -32,7 +32,7 @@ public class DdiEditorUiPreferencePage extends FieldEditorPreferencePage
 		// table font size
 		ComboFieldEditor comboFontEditor = new ComboFieldEditor(
 				PreferenceConstants.FONT_SIZE_TABLE_SIZE,
-				Messages.getString("pref.tablefontsize"),
+				Translator.trans("pref.tablefontsize"),
 				PreferenceConstants.FONT_SIZE_LIST, getFieldEditorParent());
 		comboFieldEditor.load();
 		addField(comboFontEditor);
@@ -40,7 +40,7 @@ public class DdiEditorUiPreferencePage extends FieldEditorPreferencePage
 		// auto change perspective
 		BooleanFieldEditor autoChangePerspectiveFieldEditor = new BooleanFieldEditor(
 				PreferenceConstants.AUTO_CHANGE_PERSPECTIVE, "&"
-						+ Messages.getString("pref.autotoggle.field"),
+						+ Translator.trans("pref.autotoggle.field"),
 				getFieldEditorParent());
 		autoChangePerspectiveFieldEditor.load();
 		addField(autoChangePerspectiveFieldEditor);
@@ -48,7 +48,7 @@ public class DdiEditorUiPreferencePage extends FieldEditorPreferencePage
 		// confirm exit
 		BooleanFieldEditor confirmExitFieldEditor = new BooleanFieldEditor(
 				PreferenceConstants.CONFIRM_DDIEDITOR_EXIT, "&"
-						+ Messages.getString("pref.confirm.ddieditor.exit"),
+						+ Translator.trans("pref.confirm.ddieditor.exit"),
 				getFieldEditorParent());
 		confirmExitFieldEditor.load();
 		addField(confirmExitFieldEditor);

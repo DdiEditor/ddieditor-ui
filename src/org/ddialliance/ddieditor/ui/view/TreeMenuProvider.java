@@ -41,6 +41,7 @@ import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.MessageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -115,8 +116,8 @@ public class TreeMenuProvider extends TreeMenu {
 			if (ElementType.withOpenMenuItem(rootElement.getElementName())) {
 				final MenuItem openMenuItem = new MenuItem(menu, SWT.CASCADE);
 				openMenuItem.setSelection(true);
-				openMenuItem.setText(Messages
-						.getString("View.label.openMenuItem.Open")); //$NON-NLS-1$
+				openMenuItem.setText(Translator
+						.trans("View.label.openMenuItem.Open")); //$NON-NLS-1$
 				openMenuItem.setImage(ResourceManager.getPluginImage(
 						Activator.getDefault(), "icons/new_wiz.gif"));
 				openMenuItem.setData("name", "OPEN");
@@ -126,7 +127,7 @@ public class TreeMenuProvider extends TreeMenu {
 						if (t.length != 1) {
 							MessageDialog.openInformation(
 									currentView.getSite().getShell(),
-									Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
+									Translator.trans("InfoTitle"), Translator.trans("Editor.mess.NotSupported")); //$NON-NLS-1$
 							return;
 						}
 						openPerspective(treeViewer, currentView);
@@ -141,16 +142,14 @@ public class TreeMenuProvider extends TreeMenu {
 		// menu new
 		final MenuItem newMenuItem = new MenuItem(menu, SWT.CASCADE);
 		newMenuItem.setSelection(true);
-		newMenuItem.setText(Messages
-				.getString("View.label.newItemMenuItem.New")); //$NON-NLS-1$
+		newMenuItem.setText(Translator.trans("View.label.newItemMenuItem.New")); //$NON-NLS-1$
 		newMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/new_wiz.gif"));
 		newMenuItem.setData("name", "NEW");
 
 		// menu edit
 		editMenuItem = new MenuItem(menu, SWT.NONE);
-		editMenuItem
-				.setText(Messages.getString("View.label.editMenuItem.Edit")); //$NON-NLS-1$
+		editMenuItem.setText(Translator.trans("View.label.editMenuItem.Edit")); //$NON-NLS-1$
 		editMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/editor_area.gif"));
 		editMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -159,7 +158,7 @@ public class TreeMenuProvider extends TreeMenu {
 				if (t.length != 1) {
 					MessageDialog.openInformation(
 							currentView.getSite().getShell(),
-							Messages.getString("InfoTitle"), Messages.getString("Editor.mess.NotSupported")); //$NON-NLS-1$
+							Translator.trans("InfoTitle"), Translator.trans("Editor.mess.NotSupported")); //$NON-NLS-1$
 					return;
 				}
 				openEditor(treeViewer, currentView, EditorModeType.EDIT, null);
@@ -168,8 +167,8 @@ public class TreeMenuProvider extends TreeMenu {
 
 		// menu delete
 		final MenuItem deleteMenuItem = new MenuItem(menu, SWT.NONE);
-		deleteMenuItem.setText(Messages
-				.getString("View.label.deleteMenuItem.Delete")); //$NON-NLS-1$
+		deleteMenuItem.setText(Translator
+				.trans("View.label.deleteMenuItem.Delete")); //$NON-NLS-1$
 		deleteMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/delete_obj.gif"));
 		deleteMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -298,7 +297,7 @@ public class TreeMenuProvider extends TreeMenu {
 				final ElementType elementType = ElementType
 						.getElementTypeByConceptualType(conceptualType);
 				MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
-				menuItem.setText(Messages.getString(conceptualType.toString()));
+				menuItem.setText(Translator.trans(conceptualType.toString()));
 				menuItem.setImage(ResourceManager.getPluginImage(
 						Activator.getDefault(), "icons/new_wiz.gif"));
 
@@ -335,8 +334,8 @@ public class TreeMenuProvider extends TreeMenu {
 				storage = null;
 			} catch (DDIFtpException e) {
 				DialogUtil.errorDialog(currentView.getSite().getShell(),
-						currentView.ID, Messages.getString("ErrorTitle"),
-						Messages.getString("Error deleting resource"), e);
+						currentView.ID, Translator.trans("ErrorTitle"),
+						Translator.trans("Error deleting resource"), e);
 			}
 		}
 
@@ -349,7 +348,7 @@ public class TreeMenuProvider extends TreeMenu {
 		if (obj instanceof MaintainableLightLabelQueryResult) {
 			doOpenConfirm = false;
 			if (DialogUtil.deleteDialogMll(currentView.getSite().getShell(),
-					Messages.getString("ConfirmTitle"),
+					Translator.trans("ConfirmTitle"),
 					(MaintainableLightLabelQueryResult) obj)) {
 				doDelete = true;
 			}
@@ -370,20 +369,17 @@ public class TreeMenuProvider extends TreeMenu {
 						.errorDialog(
 								currentView.getSite().getShell(),
 								currentView.ID,
-								Messages.getString("ErrorTitle"),
-								Messages.getString("View.mess.EditorNewError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
+								Translator.trans("ErrorTitle"),
+								Translator.trans("View.mess.EditorNewError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
 			}
 
 			if (doOpenConfirm) {
-				doDelete = MessageDialog
-						.openConfirm(
-								currentView.getSite().getShell(),
-								Messages.getString("ConfirmTitle"),
-								MessageFormat.format(
-										Messages.getString("View.mess.ConfirmDeletion"),
-										entityType
-												.getTranslatedDisplayMessageEntry(),
-										lightXmlObject.getId()));
+				doDelete = MessageDialog.openConfirm(currentView.getSite()
+						.getShell(), Translator.trans("ConfirmTitle"),
+						MessageFormat.format(
+								Translator.trans("View.mess.ConfirmDeletion"),
+								entityType.getTranslatedDisplayMessageEntry(),
+								lightXmlObject.getId()));
 			}
 
 			if (doDelete) {
@@ -410,9 +406,11 @@ public class TreeMenuProvider extends TreeMenu {
 										.openConfirm(
 												currentView.getSite()
 														.getShell(),
-												Messages.getString("ConfirmTitle"),
+												Translator
+														.trans("ConfirmTitle"),
 												MessageFormat.format(
-														Messages.getString("View.mess.ConfirmDeleteConcepts"),
+														Translator
+																.trans("View.mess.ConfirmDeleteConcepts"),
 														conceptList.size()))) {
 							break;
 						}
@@ -463,9 +461,11 @@ public class TreeMenuProvider extends TreeMenu {
 										.openConfirm(
 												currentView.getSite()
 														.getShell(),
-												Messages.getString("ConfirmTitle"),
+												Translator
+														.trans("ConfirmTitle"),
 												MessageFormat.format(
-														Messages.getString("View.mess.ConfirmDeleteMultipleQuestionItemQuestionItem"),
+														Translator
+																.trans("View.mess.ConfirmDeleteMultipleQuestionItemQuestionItem"),
 														multipleQuestionItemList
 																.size(),
 														questionItemList.size()))) {
@@ -490,9 +490,11 @@ public class TreeMenuProvider extends TreeMenu {
 										.openConfirm(
 												currentView.getSite()
 														.getShell(),
-												Messages.getString("ConfirmTitle"),
+												Translator
+														.trans("ConfirmTitle"),
 												MessageFormat.format(
-														Messages.getString("View.mess.ConfirmDeleteQuestionItem"),
+														Translator
+																.trans("View.mess.ConfirmDeleteQuestionItem"),
 														questionItemList.size()))) {
 							break;
 						}
@@ -601,15 +603,17 @@ public class TreeMenuProvider extends TreeMenu {
 							.errorDialog(
 									currentView.getSite().getShell(),
 									currentView.ID,
-									Messages.getString("ErrorTitle"),
-									Messages.getString("View.mess.EditorUIDeleteError") + "\n" + ex.getMessage(), ex); //$NON-NLS-1$
+									Translator.trans("ErrorTitle"),
+									Translator
+											.trans("View.mess.EditorUIDeleteError") + "\n" + ex.getMessage(), ex); //$NON-NLS-1$
 				} catch (Exception e) {
 					DialogUtil
 							.errorDialog(
 									currentView.getSite().getShell(),
 									currentView.ID,
-									Messages.getString("ErrorTitle"),
-									Messages.getString("View.mess.EditorDeleteError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
+									Translator.trans("ErrorTitle"),
+									Translator
+											.trans("View.mess.EditorDeleteError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
 				}
 				removeItemFromMenu(lightXmlObject);
 			}

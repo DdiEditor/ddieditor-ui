@@ -41,7 +41,6 @@ import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddieditor.util.DdiEditorConfig;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -172,7 +171,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					editorInput.getResourceId());
 		} catch (DDIFtpException e) {
 			throw new PartInitException(
-					Messages.getString("editor.init.error.create"), e);
+					Translator.trans("editor.init.error.create"), e);
 		}
 
 		// edit mode
@@ -182,14 +181,14 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						editorInput.getParentVersion());
 			} catch (Exception e) {
 				throw new PartInitException(
-						Messages.getString("editor.init.error.create"),
+						Translator.trans("editor.init.error.create"),
 						new DDIFtpException(e));
 			} catch (Throwable t) {
 				DDIFtpException e = new DDIFtpException(
-						Messages.getString("editor.init.error.create"));
+						Translator.trans("editor.init.error.create"));
 				e.setRealThrowable(t);
 				throw new PartInitException(
-						Messages.getString("editor.init.error.create"), e);
+						Translator.trans("editor.init.error.create"), e);
 			}
 		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
 				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
@@ -204,12 +203,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						editorInput.getParentVersion());
 			} catch (Exception e) {
 				throw new PartInitException(
-						Messages.getString("editor.init.error.retrieval"),
+						Translator.trans("editor.init.error.retrieval"),
 						new DDIFtpException(e));
 			}
 		} else {
 			throw new PartInitException(
-					Messages.getString("editor.init.error.editmodeunsupported"),
+					Translator.trans("editor.init.error.editmodeunsupported"),
 					new DDIFtpException());
 		}
 
@@ -315,7 +314,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		} catch (Exception e) {
 			// Save with warning
 			DialogUtil.infoDialog(getSite().getShell(), ID,
-					Messages.getString("InfoTitle"), e.getMessage());
+					Translator.trans("InfoTitle"), e.getMessage());
 		}
 		try {
 			if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
@@ -338,8 +337,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			}
 		} catch (Exception e) {
 			DialogUtil.errorDialog((IEditorSite) getSite(), ID,
-					Messages.getString("ErrorTitle"),
-					Messages.getString("Editor.mess.ErrorDuringSave"), e);
+					Translator.trans("ErrorTitle"),
+					Translator.trans("Editor.mess.ErrorDuringSave"), e);
 			return;
 		}
 
@@ -356,7 +355,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		MessageDialog
 				.openError(
 						getSite().getShell(),
-						Messages.getString("ErrorTitle"), Messages.getString("Editor.mess.SaveAsNotSupported")); //$NON-NLS-1$
+						Translator.trans("ErrorTitle"), Translator.trans("Editor.mess.SaveAsNotSupported")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -384,8 +383,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					getEditorInputImpl().getResourceId());
 		} catch (DDIFtpException e) {
 			DialogUtil.errorDialog((IEditorSite) getSite(), ID,
-					Messages.getString("ErrorTitle"),
-					Messages.getString("editor.init.error.create"), e);
+					Translator.trans("ErrorTitle"),
+					Translator.trans("editor.init.error.create"), e);
 		}
 	}
 
@@ -537,10 +536,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public void createPropertiesTab(TabFolder tabFolder) {
-		TabItem tabItem = createTabItem(Messages
-				.getString("Editor.label.propertiesTabItem.Properties"));
+		TabItem tabItem = createTabItem(Translator
+				.trans("Editor.label.propertiesTabItem.Properties"));
 		Group group = createGroup(tabItem,
-				Messages.getString("Editor.label.propertiesGroup.Properties"));
+				Translator.trans("Editor.label.propertiesGroup.Properties"));
 
 		boolean isMaintainable = false;
 		try {
@@ -552,25 +551,25 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 
 		// action
-		createLabel(group, Messages.getString("Editor.label.action.Action"));
+		createLabel(group, Translator.trans("Editor.label.action.Action"));
 		Combo actionCombo = createCombo(group, new String[] { "1", "2", "3" });
 
 		// urn
 		StyledText urnText = createTextAreaInput(group,
-				Messages.getString("Editor.label.urnLabel.URN"), "", null);
+				Translator.trans("Editor.label.urnLabel.URN"), "", null);
 		urnText.setEditable(false);
 
 		// agency
 		Text agencyText = null;
 		if (isMaintainable) {
 			createLabel(group,
-					Messages.getString("Editor.label.agencyLabel.agency"));
+					Translator.trans("Editor.label.agencyLabel.agency"));
 			agencyText = createText(group, "", null);
 			agencyText.setEditable(false);
 		}
 
 		// id
-		createLabel(group, Messages.getString("Editor.label.idLabel.ID"));
+		createLabel(group, Translator.trans("Editor.label.idLabel.ID"));
 		Text idText = createText(group, "", null);
 		idText.setEditable(false);
 
@@ -591,26 +590,26 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		if (isVersionable) {
 			// version
 			createLabel(group,
-					Messages.getString("Editor.label.versionGroup.Version"));
+					Translator.trans("Editor.label.versionGroup.Version"));
 			versionText = createText(group, "", null);
 			versionText.setEditable(false);
 
 			// version responsibility
 			createLabel(
 					group,
-					Messages.getString("Editor.label.responsibelLabel.Responsibel"));
+					Translator.trans("Editor.label.responsibelLabel.Responsibel"));
 			versionResponsibilityText = createText(group, "", null);
 			versionResponsibilityText.setEditable(false);
 
 			// version date
 			createLabel(group,
-					Messages.getString("Editor.label.versionDateLabel.Date"));
+					Translator.trans("Editor.label.versionDateLabel.Date"));
 			versionDate = createText(group, "", null);
 			versionDate.setEditable(false);
 
 			// version rationale
 			versionRationaleText = createTextAreaInput(group,
-					Messages.getString("Editor.label.versionrationale"), "",
+					Translator.trans("Editor.label.versionrationale"), "",
 					null);
 			versionRationaleText
 					.addModifyListener(new TextStyledTextModyfiListener(model,
@@ -639,12 +638,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public StyledText createXmlTab(IModel model) {
-		TabItem tabItem = createTabItem(Messages
-				.getString("editor.tabitem.ddi"));
+		TabItem tabItem = createTabItem(Translator
+				.trans("editor.tabitem.ddi"));
 		Group group = createGroup(tabItem,
-				Messages.getString("editor.group.ddi"));
+				Translator.trans("editor.group.ddi"));
 		StyledText styledText = createTextAreaInput(group,
-				Messages.getString("editor.label.ddi"), "", false);
+				Translator.trans("editor.label.ddi"), "", false);
 		// styledText.addModifyListener(new TextStyledTextModyfiListener(model,
 		// sometype.class, getEditorIdentification()));
 
@@ -667,12 +666,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public void createPreviewTab(IModel model) {
-		TabItem tabItem = createTabItem(Messages
-				.getString("editor.tabitem.preview"));
+		TabItem tabItem = createTabItem(Translator
+				.trans("editor.tabitem.preview"));
 		Group group = createGroup(tabItem,
-				Messages.getString("editor.group.preview"));
+				Translator.trans("editor.group.preview"));
 		Browser browser = createBrowser(group,
-				Messages.getString("editor.label.preview"));
+				Translator.trans("editor.label.preview"));
 
 		// update on tab item click
 		tabItem.setData(TAB_ID, PREVIEW_TAB_ID);
@@ -727,7 +726,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		labelLabel.setLayoutData(gd_conceptLabel);
 		labelLabel.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		labelLabel.setText(Messages.getString("SimpleEditor.label.Label")); //$NON-NLS-1$
+		labelLabel.setText(Translator.trans("SimpleEditor.label.Label")); //$NON-NLS-1$
 
 		final Text labelText = new Text(group, SWT.BORDER);
 		final GridData gd_labelText = new GridData(SWT.FILL, SWT.CENTER, true,
@@ -758,7 +757,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		// translation
 		try {
 			createTranslation(group,
-					Messages.getString("editor.button.translate"),
+					Translator.trans("editor.button.translate"),
 					labelDescription.getLabels(), new LabelTdI(), "", labelText);
 		} catch (DDIFtpException e1) {
 			// TODO Auto-generated catch block
@@ -773,8 +772,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		simpleDescrLabel.setLayoutData(gd_simpleDescrLabel);
 		simpleDescrLabel.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		simpleDescrLabel.setText(Messages
-				.getString("SimpleEditor.label.DescriptionText.Label")); //$NON-NLS-1$
+		simpleDescrLabel.setText(Translator
+				.trans("SimpleEditor.label.DescriptionText.Label")); //$NON-NLS-1$
 
 		final StyledText simpleDescrStyledText = new StyledText(group, SWT.WRAP
 				| SWT.V_SCROLL | SWT.BORDER);
@@ -808,7 +807,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		// translation
 		try {
 			createTranslation(group,
-					Messages.getString("editor.button.translate"),
+					Translator.trans("editor.button.translate"),
 					labelDescription.getDescrs(), new DescriptionTdI(), "",
 					simpleDescrStyledText);
 		} catch (DDIFtpException e1) {
@@ -953,7 +952,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				editorStatus));
 
 		// createTranslation(group,
-		// Messages.getString("editor.button.translate"),
+		// Translator.trans("editor.button.translate"),
 		// nameList, parentLabel);
 
 		return nameTxt;
@@ -1016,7 +1015,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				structuredString, structuredStringList, editorStatus));
 
 		// createTranslation(group,
-		// Messages.getString("editor.button.translate"),
+		// Translator.trans("editor.button.translate"),
 		// structuredStringList, parentLabel);
 		return styledText;
 	}
@@ -1092,8 +1091,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 								.errorDialog(
 										(IEditorSite) getSite(),
 										ID,
-										Messages.getString("ErrorTitle"),
-										Messages.getString("Editor.mess.InternalError"),
+										Translator.trans("ErrorTitle"),
+										Translator.trans("Editor.mess.InternalError"),
 										e1);
 						return;
 					}
@@ -1139,8 +1138,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 									.errorDialog(
 											(IEditorSite) getSite(),
 											ID,
-											Messages.getString("ErrorTitle"),
-											Messages.getString("Editor.mess.InternalError"),
+											Translator.trans("ErrorTitle"),
+											Translator.trans("Editor.mess.InternalError"),
 											e);
 							return;
 						}
@@ -1202,15 +1201,15 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						.errorDialog(
 								(IEditorSite) getSite(),
 								ID,
-								Messages.getString("ErrorTitle"),
-								Messages.getString("Editor.mess.InternalError"),
+								Translator.trans("ErrorTitle"),
+								Translator.trans("Editor.mess.InternalError"),
 								new DDIFtpException(
-										Messages.getString("Editor.mess.UnsupportedWidgetType")));
+										Translator.trans("Editor.mess.UnsupportedWidgetType")));
 				return;
 			}
 		} catch (DDIFtpException e) {
-			ErrorDialog.openError(getSite().getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+			ErrorDialog.openError(getSite().getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, e.getMessage(), e));
 		}
 	}
@@ -1244,8 +1243,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			referenceSelectionCombo.createPartControl(labelComposite,
 					composite, "", labelText, referenceList, preIdValue);
 		} catch (Exception e) {
-			ErrorDialog.openError(getSite().getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+			ErrorDialog.openError(getSite().getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, e.getMessage(), e));
 		}
 		return referenceSelectionCombo;
@@ -1372,7 +1371,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	@Override
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(
-				Messages.getString("perspective.switch.dialogtext"),
+				Translator.trans("perspective.switch.dialogtext"),
 				getEditorInputImpl().getElementType().getPerspectiveId());
 	}
 
@@ -1445,7 +1444,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				bars.getStatusLineManager().setMessage("");
 			} else {
 				bars.getStatusLineManager().setMessage(
-						Messages.getString("Editor.mess.UseOnlyDigits")); //$NON-NLS-1$
+						Translator.trans("Editor.mess.UseOnlyDigits")); //$NON-NLS-1$
 			}
 			break;
 		case LETTER:
@@ -1455,7 +1454,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				bars.getStatusLineManager().setMessage("");
 			} else {
 				bars.getStatusLineManager().setMessage(
-						Messages.getString("Editor.mess.UseOnlyLetters")); //$NON-NLS-1$
+						Translator.trans("Editor.mess.UseOnlyLetters")); //$NON-NLS-1$
 			}
 			break;
 		case LETTER_DIGIT:
@@ -1465,7 +1464,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				bars.getStatusLineManager().setMessage("");
 			} else {
 				bars.getStatusLineManager().setMessage(
-						Messages.getString("Editor.mess.UseOnlyLettersDigits")); //$NON-NLS-1$
+						Translator.trans("Editor.mess.UseOnlyLettersDigits")); //$NON-NLS-1$
 			}
 			break;
 		}

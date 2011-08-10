@@ -24,7 +24,6 @@ import org.ddialliance.ddieditor.ui.model.studyunit.StudyUnit;
 import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -88,8 +87,8 @@ public class StudyUnitEditor extends Editor {
 	 */
 	public StudyUnitEditor() {
 		super(
-				Messages.getString("StudyUnitEditor.label.StudyUnitEditorLabel.StudyUnitEditor"),
-				Messages.getString("StudyUnitEditor.label.useTheEditorLabel.Description"),
+				Translator.trans("StudyUnitEditor.label.StudyUnitEditorLabel.StudyUnitEditor"),
+				Translator.trans("StudyUnitEditor.label.useTheEditorLabel.Description"),
 				ID);
 		this.dao = new StudyUnitDao();
 	}
@@ -120,12 +119,12 @@ public class StudyUnitEditor extends Editor {
 				1));
 
 		TabItem tbtmCitation = new TabItem(tabFolder, SWT.NONE);
-		tbtmCitation.setText(Messages
-				.getString("StudyUnitEditor.label.Citation"));
+		tbtmCitation.setText(Translator
+				.trans("StudyUnitEditor.label.Citation"));
 
 		Group grpStudyCitation = new Group(tabFolder, SWT.NONE);
-		grpStudyCitation.setText(Messages
-				.getString("StudyUnitEditor.label.StudyCitation"));
+		grpStudyCitation.setText(Translator
+				.trans("StudyUnitEditor.label.StudyCitation"));
 		grpStudyCitation.setBackground(SWTResourceManager
 				.getColor(SWT.COLOR_WHITE));
 		GridLayout gridLayout_2 = new GridLayout();
@@ -137,7 +136,7 @@ public class StudyUnitEditor extends Editor {
 		lblTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblTitle.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		lblTitle.setText(Messages.getString("StudyUnitEditor.label.Title"));
+		lblTitle.setText(Translator.trans("StudyUnitEditor.label.Title"));
 
 		titleText = new Text(grpStudyCitation, SWT.BORDER);
 		titleText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
@@ -156,8 +155,8 @@ public class StudyUnitEditor extends Editor {
 		lblSubtitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblSubtitle.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		lblSubtitle.setText(Messages
-				.getString("StudyUnitEditor.label.Subtitle"));
+		lblSubtitle.setText(Translator
+				.trans("StudyUnitEditor.label.Subtitle"));
 
 		subTitleText = new Text(grpStudyCitation, SWT.BORDER);
 		subTitleText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -176,8 +175,8 @@ public class StudyUnitEditor extends Editor {
 		lblAltTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblAltTitle.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		lblAltTitle.setText(Messages
-				.getString("StudyUnitEditor.label.AlternateTitle"));
+		lblAltTitle.setText(Translator
+				.trans("StudyUnitEditor.label.AlternateTitle"));
 
 		altTitleText = new Text(grpStudyCitation, SWT.BORDER);
 		altTitleText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -196,7 +195,7 @@ public class StudyUnitEditor extends Editor {
 		lblCreator.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblCreator.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		lblCreator.setText(Messages.getString("StudyUnitEditor.label.Creator"));
+		lblCreator.setText(Translator.trans("StudyUnitEditor.label.Creator"));
 
 		creatorText = new Text(grpStudyCitation, SWT.BORDER);
 		creatorText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -217,8 +216,8 @@ public class StudyUnitEditor extends Editor {
 				.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblPublisher.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		lblPublisher.setText(Messages
-				.getString("StudyUnitEditor.label.Publisher"));
+		lblPublisher.setText(Translator
+				.trans("StudyUnitEditor.label.Publisher"));
 
 		publisherText = new Text(grpStudyCitation, SWT.BORDER);
 		publisherText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -238,8 +237,8 @@ public class StudyUnitEditor extends Editor {
 				.getColor(SWT.COLOR_WHITE));
 		lblContributor.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		lblContributor.setText(Messages
-				.getString("StudyUnitEditor.label.Contributor"));
+		lblContributor.setText(Translator
+				.trans("StudyUnitEditor.label.Contributor"));
 
 		contributorText = new Text(grpStudyCitation, SWT.BORDER);
 		contributorText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -260,8 +259,8 @@ public class StudyUnitEditor extends Editor {
 				.getColor(SWT.COLOR_WHITE));
 		lblPublicationdate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
 				false, false, 1, 1));
-		lblPublicationdate.setText(Messages
-				.getString("StudyUnitEditor.label.PublicationDate"));
+		lblPublicationdate.setText(Translator
+				.trans("StudyUnitEditor.label.PublicationDate"));
 
 		publicationDateTime = new DateTimeWidget(grpStudyCitation);
 
@@ -269,8 +268,8 @@ public class StudyUnitEditor extends Editor {
 		try {
 			time = (String) modelImpl.getCitationPublicationDate();
 		} catch (Exception e) {
-			ErrorDialog.openError(site.getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+			ErrorDialog.openError(site.getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, e.getMessage(), e));
 		}
 		if (!time.equals("")) {
@@ -279,8 +278,8 @@ public class StudyUnitEditor extends Editor {
 				Calendar calendar = Translator.formatIso8601DateTime(time);
 				publicationDateTime.setSelection(calendar.getTime());
 			} catch (DDIFtpException e) {
-				ErrorDialog.openError(site.getShell(), Messages
-						.getString("ErrorTitle"), null, new Status(
+				ErrorDialog.openError(site.getShell(), Translator
+						.trans("ErrorTitle"), null, new Status(
 						IStatus.ERROR, ID, 0, e.getMessage(), e));
 			}
 		}
@@ -299,8 +298,8 @@ public class StudyUnitEditor extends Editor {
 		lblLanguage.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblLanguage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		lblLanguage.setText(Messages
-				.getString("StudyUnitEditor.label.Language"));
+		lblLanguage.setText(Translator
+				.trans("StudyUnitEditor.label.Language"));
 
 		langCombo = new Combo(grpStudyCitation, SWT.READ_ONLY);
 		langCombo.addModifyListener(new ModifyListener() {
@@ -317,8 +316,8 @@ public class StudyUnitEditor extends Editor {
 			langCombo.select(Language.getLanguageIndex(modelImpl
 					.getCitationLanguage()));
 		} catch (Exception e) {
-			ErrorDialog.openError(site.getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+			ErrorDialog.openError(site.getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, e.getMessage(), e));
 		}
 		super.setControl(langCombo);
@@ -326,11 +325,11 @@ public class StudyUnitEditor extends Editor {
 		// Study Unit Abstract Tab Item:
 		// -----------------------------
 		TabItem tbtmAbstract = new TabItem(tabFolder, SWT.NONE);
-		tbtmAbstract.setText(Messages
-				.getString("StudyUnitEditor.label.Abstract"));
+		tbtmAbstract.setText(Translator
+				.trans("StudyUnitEditor.label.Abstract"));
 		Group grpAbstract = new Group(tabFolder, SWT.NONE);
-		grpAbstract.setText(Messages
-				.getString("StudyUnitEditor.label.StudyAbstract"));
+		grpAbstract.setText(Translator
+				.trans("StudyUnitEditor.label.StudyAbstract"));
 		grpAbstract.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		tbtmAbstract.setControl(grpAbstract);
 		GridLayout gridLayout = new GridLayout();
@@ -346,8 +345,8 @@ public class StudyUnitEditor extends Editor {
 		abstractLabel.setLayoutData(gd_citationLabel);
 		abstractLabel.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		abstractLabel.setText(Messages
-				.getString("StudyUnitEditor.label.AbstractLabel")); //$NON-NLS-1$
+		abstractLabel.setText(Translator
+				.trans("StudyUnitEditor.label.AbstractLabel")); //$NON-NLS-1$
 
 		abstractStyledText = new StyledText(grpAbstract, SWT.WRAP
 				| SWT.V_SCROLL | SWT.BORDER);
@@ -368,13 +367,13 @@ public class StudyUnitEditor extends Editor {
 		// Study Unit Universe Reference Tab Item
 		// --------------------------------------
 		// - Universe Reference Tab Item
-		TabItem tbtmUniverseReference = createTabItem(Messages
-				.getString("StudyUnitEditor.label.UniverseReference"));
+		TabItem tbtmUniverseReference = createTabItem(Translator
+				.trans("StudyUnitEditor.label.UniverseReference"));
 
 		// - Universe Reference Group
 		Group grpStudyUniverseReference = createGroup(
 				tbtmUniverseReference,
-				Messages.getString("StudyUnitEditor.label.StudyUniverseReference"));
+				Translator.trans("StudyUnitEditor.label.StudyUniverseReference"));
 
 		createLabel(grpStudyUniverseReference, "Universes");
 		uniRefTable = new Table(grpStudyUniverseReference, SWT.VIRTUAL
@@ -408,10 +407,10 @@ public class StudyUnitEditor extends Editor {
 		try {
 			updateUniRefTable();
 		} catch (DDIFtpException e) {
-			String errMess = Messages
-					.getString("StudyUnitEditor.mess.SetUniverseRefError"); //$NON-NLS-1$
-			ErrorDialog.openError(site.getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+			String errMess = Translator
+					.trans("StudyUnitEditor.mess.SetUniverseRefError"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, errMess, e));
 		}
 		uniRefTable.addSelectionListener(new TableListener());
@@ -420,10 +419,10 @@ public class StudyUnitEditor extends Editor {
 		// ----------------------------
 		TabItem tbtmFunding = new TabItem(tabFolder, SWT.NONE);
 		tbtmFunding
-				.setText(Messages.getString("StudyUnitEditor.label.Funding"));
+				.setText(Translator.trans("StudyUnitEditor.label.Funding"));
 		Group grpFunding = createGroup(
 				tbtmFunding,
-				Messages.getString("StudyUnitEditor.label.StudyFundingInformation"));
+				Translator.trans("StudyUnitEditor.label.StudyFundingInformation"));
 		createLabel(grpFunding, "Funding");
 
 		// Funding Information
@@ -457,10 +456,10 @@ public class StudyUnitEditor extends Editor {
 			opdateFundingTable(modelImpl
 					.getFundingAgencyOrganizationReferences());
 		} catch (Exception e) {
-			String errMess = Messages
-					.getString("StudyUnitEditor.mess.SetUniverseRefError"); //$NON-NLS-1$
-			ErrorDialog.openError(site.getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
+			String errMess = Translator
+					.trans("StudyUnitEditor.mess.SetUniverseRefError"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
 					ID, 0, errMess, e));
 		}
 		fundingTable.addSelectionListener(new TableListener());
@@ -469,11 +468,11 @@ public class StudyUnitEditor extends Editor {
 		// -----------------------------
 		TabItem tbtmPurpose = new TabItem(tabFolder, SWT.NONE);
 		tbtmPurpose
-				.setText(Messages.getString("StudyUnitEditor.label.Purpose"));
+				.setText(Translator.trans("StudyUnitEditor.label.Purpose"));
 
 		Group grpPurpose = new Group(tabFolder, SWT.NONE);
-		grpPurpose.setText(Messages
-				.getString("StudyUnitEditor.label.StudyPurpose"));
+		grpPurpose.setText(Translator
+				.trans("StudyUnitEditor.label.StudyPurpose"));
 		grpPurpose.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		tbtmPurpose.setControl(grpPurpose);
 		GridLayout gridLayout_5 = new GridLayout();
@@ -489,8 +488,8 @@ public class StudyUnitEditor extends Editor {
 		purposeLabel.setLayoutData(gd_purposeLabel);
 		purposeLabel.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		purposeLabel.setText(Messages
-				.getString("StudyUnitEditor.label.PurposeLabel")); //$NON-NLS-1$
+		purposeLabel.setText(Translator
+				.trans("StudyUnitEditor.label.PurposeLabel")); //$NON-NLS-1$
 
 		purposeStyledText = new StyledText(grpPurpose, SWT.WRAP | SWT.V_SCROLL
 				| SWT.BORDER);
@@ -527,8 +526,8 @@ public class StudyUnitEditor extends Editor {
 	@Override
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(
-				Messages.getString("perspective.switch.dialogtext"),
-				Messages.getString("perspective.overview"));
+				Translator.trans("perspective.switch.dialogtext"),
+				Translator.trans("perspective.overview"));
 	}
 
 	public void updateUniRefTable() throws DDIFtpException {

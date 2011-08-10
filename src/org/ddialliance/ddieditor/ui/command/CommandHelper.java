@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
@@ -26,8 +25,8 @@ public class CommandHelper {
 	public static void closeEditors(List<DDIResourceType> resources)
 			throws ExecutionException {
 		ICommandService commandService = (ICommandService) PlatformUI
-				.getWorkbench().getActiveWorkbenchWindow().getService(
-						ICommandService.class);
+				.getWorkbench().getActiveWorkbenchWindow()
+				.getService(ICommandService.class);
 		Command closeE = commandService.getCommand(CloseOpenEditors.class
 				.getName());
 
@@ -50,12 +49,12 @@ public class CommandHelper {
 			}
 		}
 		ParameterizedCommand parmCommand = new ParameterizedCommand(closeE,
-				new Parameterization[] { new Parameterization(closeEParm, param
-						.toString()) });
+				new Parameterization[] { new Parameterization(closeEParm,
+						param.toString()) });
 
 		IHandlerService handlerService = (IHandlerService) PlatformUI
-				.getWorkbench().getActiveWorkbenchWindow().getService(
-						IHandlerService.class);
+				.getWorkbench().getActiveWorkbenchWindow()
+				.getService(IHandlerService.class);
 		try {
 			handlerService.executeCommand(parmCommand, null);
 		} catch (Exception e) {
@@ -65,8 +64,7 @@ public class CommandHelper {
 
 	public static void refreshViews() throws ExecutionException {
 		IHandlerService handlerService = (IHandlerService) PlatformUI
-				.getWorkbench().getService(
-						IHandlerService.class);
+				.getWorkbench().getService(IHandlerService.class);
 		try {
 			handlerService.executeCommand(RefreshViews.class.getName(), null);
 		} catch (Exception e) {
@@ -85,8 +83,9 @@ public class CommandHelper {
 				deletion.append(", ");
 			}
 		}
-		return DialogUtil.yesNoDialog(Messages
-				.getString("delete.resource.title"), Translator.trans("delete.resource.confirm", new Object[] { deletion
-						.toString() }));
+		return DialogUtil.yesNoDialog(
+				Translator.trans("delete.resource.title"), Translator.trans(
+						"delete.resource.confirm",
+						new Object[] { deletion.toString() }));
 	}
 }

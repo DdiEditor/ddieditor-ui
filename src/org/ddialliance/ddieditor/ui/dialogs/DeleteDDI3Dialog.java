@@ -5,8 +5,8 @@ import java.util.List;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.events.SelectionEvent;
@@ -31,19 +31,19 @@ public class DeleteDDI3Dialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 		// dialog setup
 		Editor editor = new Editor();
-		Group group = editor.createGroup(parent, Messages
-				.getString("deleteddi3resourceaction.dialog.group"));
+		Group group = editor.createGroup(parent,
+				Translator.trans("deleteddi3resourceaction.dialog.group"));
 		group.setLayoutData(new GridData(400, 100));
 		this.getShell().setText(
-				Messages.getString("deleteddi3resourceaction.dialog.title"));
+				Translator.trans("deleteddi3resourceaction.dialog.title"));
 
 		// loaded resources
 		try {
 			resources = PersistenceManager.getInstance().getResources();
 		} catch (DDIFtpException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
-					.getActiveShell(), Messages.getString("ErrorTitle"), e
-					.getMessage());
+					.getActiveShell(), Translator.trans("ErrorTitle"),
+					e.getMessage());
 		}
 
 		String[] options = new String[resources.size()];

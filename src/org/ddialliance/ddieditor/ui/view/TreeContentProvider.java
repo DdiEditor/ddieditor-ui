@@ -30,6 +30,7 @@ import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.View.ViewContentType;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -155,7 +156,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 							.toArray();
 				} else if (contentType.equals(ViewContentType.QuestionContent)) {
 					return new QuestionSchemeDao().getLightXmlObject(null,
-							null, null, null).toArray();					
+							null, null, null).toArray();
 				} else if (contentType
 						.equals(ViewContentType.InstrumentationContent)) {
 					LightXmlObjectListDocument listDoc = DdiManager
@@ -189,8 +190,8 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				}
 			} catch (Exception e) {
 				DialogUtil.errorDialog(site.getShell(), ID,
-						Messages.getString("ErrorTitle"),
-						Messages.getString("View.mess.GetElementError"), e);
+						Translator.trans("ErrorTitle"),
+						Translator.trans("View.mess.GetElementError"), e);
 			}
 		}
 
@@ -282,21 +283,17 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				}
 				// variable scheme
 				else if (lightXmlTypeLocalname.equals("VariableScheme")) {
-					contentList = new VariableDao()
-							.getLightXmlObjectPlus(null, null,
-									lightXmlObjectType.getId(),
-									lightXmlObjectType.getVersion())
-							.toArray();
+					contentList = new VariableDao().getLightXmlObjectPlus(null,
+							null, lightXmlObjectType.getId(),
+							lightXmlObjectType.getVersion()).toArray();
 				}
 				// guard
 				if (contentList == null) {
 					DDIFtpException e = new DDIFtpException(
 							"Not supported type: " + lightXmlTypeLocalname,
 							new Throwable());
-					DialogUtil
-							.errorDialog(site.getShell(), ID,
-									Messages.getString("ErrorTitle"),
-									e.getMessage(), e);
+					DialogUtil.errorDialog(site.getShell(), ID,
+							Translator.trans("ErrorTitle"), e.getMessage(), e);
 				}
 				// cache for getparent
 
@@ -325,16 +322,15 @@ public class TreeContentProvider implements IStructuredContentProvider,
 	}
 
 	private void displayGetChildrenException(Exception e) {
-		String errMess = Messages.getString("View.mess.GetChildError"); //$NON-NLS-1$
+		String errMess = Translator.trans("View.mess.GetChildError"); //$NON-NLS-1$
 		// log exception
 		if (!(e instanceof DDIFtpException)) {
 			Log elog = LogFactory.getLog(LogType.EXCEPTION,
 					TreeContentProvider.class);
 			elog.error(errMess, e);
 		}
-		ErrorDialog.openError(site.getShell(),
-				Messages.getString("ErrorTitle"), null, new Status(
-						IStatus.ERROR, ID, 0, errMess, e));
+		ErrorDialog.openError(site.getShell(), Translator.trans("ErrorTitle"),
+				null, new Status(IStatus.ERROR, ID, 0, errMess, e));
 	}
 
 	private void addToParentCache(Object parentElement, Object[] objs) {

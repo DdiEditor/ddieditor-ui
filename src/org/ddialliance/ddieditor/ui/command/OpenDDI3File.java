@@ -7,7 +7,6 @@ import java.text.MessageFormat;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.filesystem.FilesystemManager;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -26,11 +25,11 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		FileDialog fileChooser = new FileDialog(PlatformUI.getWorkbench()
 				.getDisplay().getActiveShell());
-		fileChooser.setText(Messages
-				.getString("OpenFileAction.filechooser.title"));
+		fileChooser.setText(Translator
+				.trans("OpenFileAction.filechooser.title"));
 		fileChooser.setFilterExtensions(new String[] { "*.xml" });
-		fileChooser.setFilterNames(new String[] { Messages
-				.getString("OpenFileAction.filechooser.filternames") });
+		fileChooser.setFilterNames(new String[] { Translator
+				.trans("OpenFileAction.filechooser.filternames") });
 		final String fileName = fileChooser.open();
 
 		if (fileName != null) {
@@ -78,10 +77,10 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 					throwable = e;
 				}
 				String errMess = MessageFormat
-						.format(Messages
-								.getString("OpenFileAction.mess.OpenFileError"), throwable.getMessage()); //$NON-NLS-1$
+						.format(Translator
+								.trans("OpenFileAction.mess.OpenFileError"), throwable.getMessage()); //$NON-NLS-1$
 				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
-						.getActiveShell(), Messages.getString("ErrorTitle"),
+						.getActiveShell(), Translator.trans("ErrorTitle"),
 						errMess);
 			}
 		}

@@ -7,7 +7,7 @@ import java.util.List;
 import org.ddialliance.ddieditor.model.lightxmlobject.LabelType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.SWT;
@@ -155,8 +155,8 @@ public class ReferenceSelectionCombo {
 		browseButton = new Button(codeComposite, SWT.NONE);
 		browseButton.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		browseButton.setText(Messages
-				.getString("ResponseTypeDetail.label.Browse")); //$NON-NLS-1$
+		browseButton.setText(Translator
+				.trans("ResponseTypeDetail.label.Browse")); //$NON-NLS-1$
 
 	}
 

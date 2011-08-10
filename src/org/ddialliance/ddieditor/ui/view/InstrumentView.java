@@ -3,6 +3,7 @@ package org.ddialliance.ddieditor.ui.view;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectDragListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.model.ElementType;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
@@ -13,9 +14,10 @@ public class InstrumentView extends View {
 	public InstrumentView() {
 		super(
 				ViewContentType.InstrumentationContent,
-				Messages.getString("InstrumentView.label.navigation"),
-				Messages.getString("InstrumentView.label.selectLabel.NavigatorDescription"),
-				Messages.getString("InstrumentView.label.label.Instrument"),
+				Translator.trans("InstrumentView.label.navigation"),
+				Translator
+						.trans("InstrumentView.label.selectLabel.NavigatorDescription"),
+				Translator.trans("InstrumentView.label.label.Instrument"),
 				ElementType.CONTROL_CONSTRUCT_SCHEME, "", ID);
 	}
 
@@ -30,6 +32,6 @@ public class InstrumentView extends View {
 
 		// jface
 		this.treeViewer.addDragSupport(operations, transferTypes,
-				new LightXmlObjectDragListener(treeViewer, ID));		
+				new LightXmlObjectDragListener(treeViewer, ID));
 	}
 }

@@ -17,8 +17,8 @@ import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -35,8 +35,8 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 	private List<LightXmlObjectType> questionRefList;
 
 	public LoopEditor() {
-		super(Messages.getString("LoopEditor.label"), Messages
-				.getString("LoopEditor.label.Description"), ID);
+		super(Translator.trans("LoopEditor.label"), Translator
+				.trans("LoopEditor.label.Description"), ID);
 		this.dao = new LoopDao();
 	}
 
@@ -54,8 +54,8 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 		createTabFolder(getComposite_1());
 
 		// main tab
-		TabItem tabItem = createTabItem(Messages.getString("Loop"));
-		Group group = createGroup(tabItem, Messages.getString("Loop"));
+		TabItem tabItem = createTabItem(Translator.trans("Loop"));
+		Group group = createGroup(tabItem, Translator.trans("Loop"));
 
 		// loop variable ref
 		List<LightXmlObjectType> variableRefList = new ArrayList<LightXmlObjectType>();
@@ -68,11 +68,11 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 			e1.printStackTrace();
 		}
 		ReferenceSelectionCombo variableRefSelectCombo = createRefSelection(
-				group, Messages.getString("LoopEditor.label.variableref"),
-				Messages.getString("LoopEditor.label.variableref"),
+				group, Translator.trans("LoopEditor.label.variableref"),
+				Translator.trans("LoopEditor.label.variableref"),
 				modelImpl.getLoopVariableReference(), variableRefList, false);
-		variableRefSelectCombo.addSelectionListener(Messages
-				.getString("LoopEditor.label.variableref"),
+		variableRefSelectCombo.addSelectionListener(Translator
+				.trans("LoopEditor.label.variableref"),
 				new ReferenceSelectionAdapter(variableRefSelectCombo,
 						modelImpl, ModelIdentifingType.Type_K.class,
 						getEditorIdentification()));
@@ -87,12 +87,12 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 		}
 
 		ReferenceSelectionCombo controlConstructRefSelectCombo = createRefSelection(
-				group, Messages.getString("ControlConstruct.ref"),
-				Messages.getString("ControlConstruct.ref"),
+				group, Translator.trans("ControlConstruct.ref"),
+				Translator.trans("ControlConstruct.ref"),
 				modelImpl.getControlConstructReference(),
 				controlConstructRefList, false);
-		controlConstructRefSelectCombo.addSelectionListener(Messages
-				.getString("ControlConstruct.ref"),
+		controlConstructRefSelectCombo.addSelectionListener(Translator
+				.trans("ControlConstruct.ref"),
 				new ReferenceSelectionAdapter(controlConstructRefSelectCombo,
 						modelImpl, ModelIdentifingType.Type_J.class,
 						getEditorIdentification()));
@@ -100,12 +100,12 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 		// init value
 		// Composite error = createErrorComposite(group, "");
 		Group initValueGroup = createSubGroup(group,
-				Messages.getString("LoopEditor.label.InitValue"));
+				Translator.trans("LoopEditor.label.InitValue"));
 
 		ProgrammingLanguageCodeType initValue = modelImpl.getCode(modelImpl
 				.getInitialValue());
 		Text initValueTxt = createTextInput(initValueGroup,
-				Messages.getString("LoopEditor.label.InitValue"),
+				Translator.trans("LoopEditor.label.InitValue"),
 				initValue == null ? "" : initValue.getStringValue(), false);
 		initValueTxt.addModifyListener(new TextStyledTextModyfiListener(
 				modelImpl, ModelIdentifingType.Type_A.class,
@@ -116,7 +116,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 				: initValue.getProgrammingLanguage();
 
 		Text appLangInitValueTxt = createTextInput(initValueGroup,
-				Messages.getString("LoopEditor.label.InitValue.programlang"),
+				Translator.trans("LoopEditor.label.InitValue.programlang"),
 				appLangInitValue, false);
 		appLangInitValueTxt.addModifyListener(new TextStyledTextModyfiListener(
 				modelImpl, ModelIdentifingType.Type_B.class,
@@ -133,23 +133,23 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 		}
 		ReferenceSelectionCombo initValueQuestRefSelectCombo = createRefSelection(
 				initValueGroup,
-				Messages.getString("IfThenElse.editor.ifquestionref"),
-				Messages.getString("IfThenElse.editor.ifquestionref"),
+				Translator.trans("IfThenElse.editor.ifquestionref"),
+				Translator.trans("IfThenElse.editor.ifquestionref"),
 				modelImpl.getQuestionReference(modelImpl.getInitialValue()),
 				questionRefList, false);
-		initValueQuestRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.ifquestionref"),
+		initValueQuestRefSelectCombo.addSelectionListener(Translator
+				.trans("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(initValueQuestRefSelectCombo,
 						modelImpl, ModelIdentifingType.Type_C.class,
 						getEditorIdentification()));
 
 		// loop while
 		Group loopWhileGroup = createSubGroup(group,
-				Messages.getString("LoopEditor.label.loopwhile"));
+				Translator.trans("LoopEditor.label.loopwhile"));
 		ProgrammingLanguageCodeType loopWhile = modelImpl.getCode(modelImpl
 				.getLoopWhile());
 		Text loopWhileTxt = createTextInput(loopWhileGroup,
-				Messages.getString("LoopEditor.label.loopwhile"),
+				Translator.trans("LoopEditor.label.loopwhile"),
 				loopWhile == null ? "" : loopWhile.getStringValue(), false);
 		loopWhileTxt.addModifyListener(new TextStyledTextModyfiListener(
 				modelImpl, ModelIdentifingType.Type_D.class,
@@ -162,7 +162,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 			appLangLoopWhile = "";
 		}
 		Text appLangLoopWhileTxt = createTextInput(loopWhileGroup,
-				Messages.getString("LoopEditor.label.loopwhile.programlang"),
+				Translator.trans("LoopEditor.label.loopwhile.programlang"),
 				appLangLoopWhile, false);
 		appLangLoopWhileTxt.addModifyListener(new TextStyledTextModyfiListener(
 				modelImpl, ModelIdentifingType.Type_E.class,
@@ -171,23 +171,23 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 		// loop while source question ref
 		ReferenceSelectionCombo loopWhileQuestRefSelectCombo = createRefSelection(
 				loopWhileGroup,
-				Messages.getString("IfThenElse.editor.ifquestionref"),
-				Messages.getString("IfThenElse.editor.ifquestionref"),
+				Translator.trans("IfThenElse.editor.ifquestionref"),
+				Translator.trans("IfThenElse.editor.ifquestionref"),
 				modelImpl.getQuestionReference(modelImpl.getLoopWhile()),
 				questionRefList, false);
-		loopWhileQuestRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.ifquestionref"),
+		loopWhileQuestRefSelectCombo.addSelectionListener(Translator
+				.trans("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(loopWhileQuestRefSelectCombo,
 						modelImpl, ModelIdentifingType.Type_F.class,
 						getEditorIdentification()));
 
 		// step value
 		Group stepValueGroup = createSubGroup(group,
-				Messages.getString("LoopEditor.label.stepvalue"));
+				Translator.trans("LoopEditor.label.stepvalue"));
 		ProgrammingLanguageCodeType stepValue = modelImpl.getCode(modelImpl
 				.getStepValue());
 		Text steepValueTxt = createTextInput(stepValueGroup,
-				Messages.getString("LoopEditor.label.stepvalue"),
+				Translator.trans("LoopEditor.label.stepvalue"),
 				stepValue == null ? "" : stepValue.getStringValue(), false);
 		steepValueTxt.addModifyListener(new TextStyledTextModyfiListener(
 				modelImpl, ModelIdentifingType.Type_G.class,
@@ -200,7 +200,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 			appLangSteepValue = "";
 		}
 		Text appLangSteepValueTxt = createTextInput(stepValueGroup,
-				Messages.getString("LoopEditor.label.stepvalue.programlang"),
+				Translator.trans("LoopEditor.label.stepvalue.programlang"),
 				appLangSteepValue, false);
 		appLangSteepValueTxt
 				.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
@@ -210,39 +210,39 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 		// step value source question ref
 		ReferenceSelectionCombo steepValueQuestRefSelectCombo = createRefSelection(
 				stepValueGroup,
-				Messages.getString("IfThenElse.editor.ifquestionref"),
-				Messages.getString("IfThenElse.editor.ifquestionref"),
+				Translator.trans("IfThenElse.editor.ifquestionref"),
+				Translator.trans("IfThenElse.editor.ifquestionref"),
 				modelImpl.getQuestionReference(modelImpl.getStepValue()),
 				questionRefList, false);
-		steepValueQuestRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.ifquestionref"),
+		steepValueQuestRefSelectCombo.addSelectionListener(Translator
+				.trans("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(steepValueQuestRefSelectCombo,
 						modelImpl, ModelIdentifingType.Type_I.class,
 						getEditorIdentification()));
 
 		// description tab
-		TabItem tabItem2 = createTabItem(Messages
-				.getString("editor.label.description"));
+		TabItem tabItem2 = createTabItem(Translator
+				.trans("editor.label.description"));
 		Group group2 = createGroup(tabItem2,
-				Messages.getString("editor.label.description"));
+				Translator.trans("editor.label.description"));
 
 		try {
 			Text txt = createLabelInput(group2,
-					Messages.getString("editor.label.label"), modelImpl
+					Translator.trans("editor.label.label"), modelImpl
 							.getDocument().getLoop().getLabelList(), modelImpl
 							.getDocument().getLoop().getId());
 
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"), modelImpl
+					Translator.trans("editor.button.translate"), modelImpl
 							.getDocument().getLoop().getLabelList(),
 					new LabelTdI(), "", txt);
 
 			StyledText styledText = createStructuredStringInput(group2,
-					Messages.getString("editor.label.description"), modelImpl
+					Translator.trans("editor.label.description"), modelImpl
 							.getDocument().getLoop().getDescriptionList(),
 					modelImpl.getDocument().getLoop().getId());
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"), modelImpl
+					Translator.trans("editor.button.translate"), modelImpl
 							.getDocument().getLoop().getDescriptionList(),
 					new DescriptionTdI(), "", styledText);
 		} catch (DDIFtpException e) {

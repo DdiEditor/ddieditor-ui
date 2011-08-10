@@ -12,7 +12,7 @@ package org.ddialliance.ddieditor.ui;
 
 import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -57,9 +57,11 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 				.openYesNoQuestion(
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 								.getShell(),
-						Messages.getString("ExitDDIEditor.dialog.title"),
-						Messages.getString("ExitDDIEditor.dialog.mess.DoYouReallyWantToExitTheDDIEditor"),
-						Messages.getString("ExitDDIEditor.Dialog.label.ConfirmDDIEditorExit"),
+						Translator.trans("ExitDDIEditor.dialog.title"),
+						Translator
+								.trans("ExitDDIEditor.dialog.mess.DoYouReallyWantToExitTheDDIEditor"),
+						Translator
+								.trans("ExitDDIEditor.Dialog.label.ConfirmDDIEditorExit"),
 						store.getBoolean(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT),
 						null, PreferenceConstants.CONFIRM_DDIEDITOR_EXIT);
 		store.setValue(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT,

@@ -11,7 +11,7 @@ import java.text.MessageFormat;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -20,14 +20,19 @@ import org.ddialliance.ddiftp.util.log.LogType;
  * Question Scheme Editor
  */
 public class QuestionSchemeEditor extends LabelDescriptionEditor {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, QuestionSchemeEditor.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			QuestionSchemeEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor";
 
 	public QuestionSchemeEditor() {
-		super(Messages
-				.getString("QuestionSchemeEditor.label.QuestionSchemeEditorLabel.QuestionSchemeEditor"), Messages
-				.getString("QuestionSchemeEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("QuestionSchemeEditor.label.QuestionSchemeTabItem"), ID);
+		super(
+				Translator
+						.trans("QuestionSchemeEditor.label.QuestionSchemeEditorLabel.QuestionSchemeEditor"),
+				Translator
+						.trans("QuestionSchemeEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("QuestionSchemeEditor.label.QuestionSchemeTabItem"),
+				ID);
 		dao = new QuestionSchemeDao();
 	}
 
@@ -36,7 +41,8 @@ public class QuestionSchemeEditor extends LabelDescriptionEditor {
 	}
 
 	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages.getString("perspective.switch.dialogtext"), Messages
-				.getString("perspective.questions"));
+		return MessageFormat.format(
+				Translator.trans("perspective.switch.dialogtext"),
+				Translator.trans("perspective.questions"));
 	}
 }

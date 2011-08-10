@@ -7,9 +7,9 @@ import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dialogs.DeleteDDI3Dialog;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -34,10 +34,10 @@ public class DeleteSingleDDI3 extends org.eclipse.core.commands.AbstractHandler 
 		resources.add(ddiResource);
 
 		// yes - no dialog
-		if(!CommandHelper.confirmResourceDeletion(resources)) {
+		if (!CommandHelper.confirmResourceDeletion(resources)) {
 			return null;
 		}
-		
+
 		// close open editors belonging to resource
 		resources.add(ddiResource);
 		CommandHelper.closeEditors(resources);
@@ -52,8 +52,8 @@ public class DeleteSingleDDI3 extends org.eclipse.core.commands.AbstractHandler 
 			storage = null;
 		} catch (DDIFtpException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
-					.getActiveShell(), Messages.getString("ErrorTitle"), e
-					.getMessage());
+					.getActiveShell(), Translator.trans("ErrorTitle"),
+					e.getMessage());
 		}
 
 		// refresh view

@@ -1,7 +1,7 @@
 package org.ddialliance.ddieditor.ui.dialogs;
 
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -24,15 +24,15 @@ public class NewDDI3FileDialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 		// dialog setup
 		Editor editor = new Editor();
-		Group group = editor.createGroup(parent, Messages
-				.getString("newddi3fileaction.dialog.group"));
+		Group group = editor.createGroup(parent,
+				Translator.trans("newddi3fileaction.dialog.group"));
 		group.setLayoutData(new GridData(500, 150));
 		this.getShell().setText(
-				Messages.getString("newddi3fileaction.dialog.title"));
+				Translator.trans("newddi3fileaction.dialog.title"));
 
 		// file name
-		fileNameText = editor.createTextInput(group, Messages
-				.getString("newddi3fileaction.dialog.filetxt"), "", null);
+		fileNameText = editor.createTextInput(group,
+				Translator.trans("newddi3fileaction.dialog.filetxt"), "", null);
 		fileNameText.setData(true);
 		fileNameText.addModifyListener(new ModifyListener() {
 			@Override

@@ -39,11 +39,11 @@ import org.ddialliance.ddieditor.ui.model.question.QuestionItem.RESPONSE_TYPES;
 import org.ddialliance.ddieditor.ui.model.variable.Variable;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.TreeMenu;
 import org.ddialliance.ddieditor.ui.view.TreeMenuProvider;
 import org.ddialliance.ddieditor.ui.view.XmlObjectComparer;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.xml.Urn;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.jface.action.Action;
@@ -123,8 +123,8 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 			@Override
 			protected Control createControl(Composite parent) {
 				Button b = new Button(parent, 0);
-				b.setText(Messages
-						.getString("variablequestionview.button.applychange"));
+				b.setText(Translator
+						.trans("variablequestionview.button.applychange"));
 				b.addSelectionListener(new SelectionListener() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
@@ -521,7 +521,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 
 		// refresh
 		Action zoomReset = new Action(
-				Messages.getString("sequence.diagram.zoomreset")) { //$NON-NLS-1$)
+				Translator.trans("sequence.diagram.zoomreset")) { //$NON-NLS-1$)
 			public void run() {
 				loadInItems();
 			}
@@ -727,15 +727,14 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 
 		// menu edit
 		MenuItem editMenuItem = new MenuItem(menu, SWT.CASCADE);
-		editMenuItem
-				.setText(Messages.getString("View.label.editMenuItem.Edit"));
+		editMenuItem.setText(Translator.trans("View.label.editMenuItem.Edit"));
 		editMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/editor_area.gif"));
 
 		Menu editsubmenu = new Menu(editMenuItem);
 		MenuItem subeditquei = new MenuItem(editsubmenu, SWT.NONE);
-		subeditquei.setText(Messages
-				.getString("variablequestionview.popupmenu.editquestion"));
+		subeditquei.setText(Translator
+				.trans("variablequestionview.popupmenu.editquestion"));
 		subeditquei.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				popupMenuAction(PopupAction.EDIT_QUESTION);
@@ -743,8 +742,8 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 		});
 
 		MenuItem subeditvari = new MenuItem(editsubmenu, SWT.NONE);
-		subeditvari.setText(Messages
-				.getString("variablequestionview.popupmenu.editvariable"));
+		subeditvari.setText(Translator
+				.trans("variablequestionview.popupmenu.editvariable"));
 		subeditvari.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				popupMenuAction(PopupAction.EDIT_VARIABLE);
@@ -755,8 +754,8 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 
 		// menu remove
 		MenuItem removeMenuItem = new MenuItem(menu, SWT.NONE);
-		removeMenuItem.setText(Messages
-				.getString("variablequestionview.popupmenu.removequestion"));
+		removeMenuItem.setText(Translator
+				.trans("variablequestionview.popupmenu.removequestion"));
 		removeMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/delete_obj.gif"));
 		removeMenuItem.setSelection(true);
@@ -890,8 +889,8 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 			Table table = viewer.getTable();
 			String[] titles = {
 					// 0=vari, 1=quei
-					Messages.getString("variablequestionview.column.vari"),
-					Messages.getString("variablequestionview.column.quei") };
+					Translator.trans("variablequestionview.column.vari"),
+					Translator.trans("variablequestionview.column.quei") };
 			int[] widths = { 200, 375 };
 			int[] style = { SWT.LEFT, SWT.LEFT };
 			for (int i = 0; i < titles.length; i++) {
@@ -1006,7 +1005,8 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 				break;
 			default:
 				DDIFtpException e = new DDIFtpException(
-						Messages.getString("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
+						Translator
+								.trans("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
 				Editor.showError(e, ID, getSite());
 				break;
 			}
@@ -1072,7 +1072,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 			Table table = viewer.getTable();
 			String[] titles = {
 			// 0=quei
-			Messages.getString("variablequestionview.column.quei") };
+			Translator.trans("variablequestionview.column.quei") };
 			int[] widths = { 375 };
 			int[] style = { SWT.LEFT };
 			for (int i = 0; i < titles.length; i++) {
@@ -1154,7 +1154,8 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 				break;
 			default:
 				DDIFtpException e = new DDIFtpException(
-						Messages.getString("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
+						Translator
+								.trans("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
 				Editor.showError(e, ID, getSite());
 				break;
 			}

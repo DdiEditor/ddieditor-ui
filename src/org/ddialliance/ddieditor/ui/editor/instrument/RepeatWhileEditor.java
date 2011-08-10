@@ -13,8 +13,8 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.Referen
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.RepeatWhile;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -31,8 +31,10 @@ public class RepeatWhileEditor extends Editor {
 
 	public RepeatWhileEditor() {
 		super(
-				Messages.getString("RepeatWhileEditor.label.RepeatWhileEditorLabel.RepeatWhileEditor"),
-				Messages.getString("RepeatWhileEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("RepeatWhileEditor.label.RepeatWhileEditorLabel.RepeatWhileEditor"),
+				Translator
+						.trans("RepeatWhileEditor.label.useTheEditorLabel.Description"),
 				ID);
 		this.dao = new RepeatWhileDao();
 	}
@@ -51,17 +53,16 @@ public class RepeatWhileEditor extends Editor {
 		createTabFolder(getComposite_1());
 
 		// main tab
-		TabItem tabItem = createTabItem(Messages
-				.getString("RepeatWhile.editor.tabdisplaytext"));
+		TabItem tabItem = createTabItem(Translator
+				.trans("RepeatWhile.editor.tabdisplaytext"));
 		Group group = createGroup(tabItem,
-				Messages.getString("RepeatWhile.editor.groupdisplaytext"));
+				Translator.trans("RepeatWhile.editor.groupdisplaytext"));
 
 		// while condition
-		Composite error = createErrorComposite(group, "");
 		ProgrammingLanguageCodeType ifProgrammingLanguageCode = modelImpl
 				.getWhileCondition();
 		Text conditionTxt = createTextInput(group,
-				Messages.getString("RepeatWhile.editor.while"),
+				Translator.trans("RepeatWhile.editor.while"),
 				ifProgrammingLanguageCode == null ? ""
 						: ifProgrammingLanguageCode.getStringValue(), false);
 		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(
@@ -73,7 +74,7 @@ public class RepeatWhileEditor extends Editor {
 				: ifProgrammingLanguageCode.getProgrammingLanguage();
 
 		Text programmingLanguageTxt = createTextInput(group,
-				Messages.getString("RepeatWhile.editor.whileprogramlang"),
+				Translator.trans("RepeatWhile.editor.whileprogramlang"),
 				programmingLanguage, false);
 		programmingLanguageTxt
 				.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
@@ -90,29 +91,29 @@ public class RepeatWhileEditor extends Editor {
 		}
 
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(group,
-				Messages.getString("RepeatWhile.editor.whileref"),
-				Messages.getString("RepeatWhile.editor.whileref"),
+				Translator.trans("RepeatWhile.editor.whileref"),
+				Translator.trans("RepeatWhile.editor.whileref"),
 				modelImpl.getWhileReference(), controlConstructRefList, false);
-		thenRefSelectCombo.addSelectionListener(Messages
-				.getString("RepeatWhile.editor.whileref"),
+		thenRefSelectCombo.addSelectionListener(Translator
+				.trans("RepeatWhile.editor.whileref"),
 				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
 
 		// description tab
 		// name
-		TabItem tabItem2 = createTabItem(Messages
-				.getString("editor.label.description"));
+		TabItem tabItem2 = createTabItem(Translator
+				.trans("editor.label.description"));
 		Group group2 = createGroup(tabItem2,
-				Messages.getString("editor.label.description"));
+				Translator.trans("editor.label.description"));
 
 		try {
-			createLabelInput(group2, Messages.getString("editor.label.name"),
+			createLabelInput(group2, Translator.trans("editor.label.name"),
 					modelImpl.getDocument().getRepeatWhile().getLabelList(),
 					modelImpl.getDocument().getRepeatWhile().getId());
 
 			createStructuredStringInput(group2,
-					Messages.getString("editor.label.description"), modelImpl
+					Translator.trans("editor.label.description"), modelImpl
 							.getDocument().getRepeatWhile()
 							.getDescriptionList(), modelImpl.getDocument()
 							.getRepeatWhile().getId());

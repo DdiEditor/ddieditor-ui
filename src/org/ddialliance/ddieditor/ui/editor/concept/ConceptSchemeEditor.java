@@ -16,20 +16,25 @@ import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
 
 public class ConceptSchemeEditor extends LabelDescriptionEditor {
-	private static Log log = LogFactory.getLog(LogType.SYSTEM, ConceptSchemeEditor.class);
+	private static Log log = LogFactory.getLog(LogType.SYSTEM,
+			ConceptSchemeEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor";
-	
+
 	public ConceptSchemeEditor() {
-		super(Messages
-				.getString("ConceptSchemeEditor.label.ConceptSchemeEditorLabel.ConceptSchemeEditor"), Messages
-				.getString("ConceptSchemeEditor.label.useTheEditorLabel.Description"), Messages
-				.getString("ConceptSchemeEditor.label.ConceptSchemeTabItem"), ID);
+		super(
+				Translator
+						.trans("ConceptSchemeEditor.label.ConceptSchemeEditorLabel.ConceptSchemeEditor"),
+				Translator
+						.trans("ConceptSchemeEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("ConceptSchemeEditor.label.ConceptSchemeTabItem"),
+				ID);
 		dao = (IDao) new ConceptSchemeDao();
 	}
 
@@ -38,8 +43,9 @@ public class ConceptSchemeEditor extends LabelDescriptionEditor {
 	}
 
 	public String getPerspectiveSwitchDialogText() {
-		return MessageFormat.format(Messages.getString("perspective.switch.dialogtext"), Messages
-				.getString("perspective.concepts"));
+		return MessageFormat.format(
+				Translator.trans("perspective.switch.dialogtext"),
+				Translator.trans("perspective.concepts"));
 	}
-	
+
 }

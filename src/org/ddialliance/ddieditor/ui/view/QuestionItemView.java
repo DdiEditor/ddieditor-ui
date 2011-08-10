@@ -3,6 +3,7 @@ package org.ddialliance.ddieditor.ui.view;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectDragListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.model.ElementType;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
@@ -17,11 +18,16 @@ public class QuestionItemView extends View {
 	public QuestionItemView() {
 		super(
 				ViewContentType.QuestionContent,
-				Messages.getString("QuestionItemView.label.questionItemNavigationLabel.QuestionItemNavigation"),
-				Messages.getString("QuestionItemView.label.selectLabel.NavigatorDescription"),
-				Messages.getString("QuestionItemView.label.questionItemLabel.QuestionItem"),
+				Translator
+						.trans("QuestionItemView.label.questionItemNavigationLabel.QuestionItemNavigation"),
+				Translator
+						.trans("QuestionItemView.label.selectLabel.NavigatorDescription"),
+				Translator
+						.trans("QuestionItemView.label.questionItemLabel.QuestionItem"),
 				ElementType.QUESTION_SCHEME,
-				Messages.getString("QuestionItemView.label.questionItemsTreeGroup.QuestionItemStructure"), ID);
+				Translator
+						.trans("QuestionItemView.label.questionItemsTreeGroup.QuestionItemStructure"),
+				ID);
 	}
 
 	@Override

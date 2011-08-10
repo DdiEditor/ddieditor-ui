@@ -11,7 +11,7 @@ import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.universe.Universe;
 import org.ddialliance.ddieditor.ui.perspective.UniversePerspective;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -26,9 +26,9 @@ public class UniverseEditor extends LabelDescriptionEditor {
 
 	public UniverseEditor() {
 		super(
-				Messages.getString("UniverseEditor.label.universeEditorLabel.UniverseEditor"),
-				Messages.getString("UniverseEditor.label.useTheEditorLabel.Description"),
-				Messages.getString("UniverseEditor.label.UniverseTabItem"), ID);
+				Translator.trans("UniverseEditor.label.universeEditorLabel.UniverseEditor"),
+				Translator.trans("UniverseEditor.label.useTheEditorLabel.Description"),
+				Translator.trans("UniverseEditor.label.UniverseTabItem"), ID);
 		dao = (IDao) new UniverseDao();
 	}
 
@@ -38,8 +38,8 @@ public class UniverseEditor extends LabelDescriptionEditor {
 
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(
-				Messages.getString("perspective.switch.dialogtext"),
-				Messages.getString("perspective.universe"));
+				Translator.trans("perspective.switch.dialogtext"),
+				Translator.trans("perspective.universe"));
 	}
 
 	@Override

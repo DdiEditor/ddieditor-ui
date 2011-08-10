@@ -6,16 +6,17 @@ import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.variable.VariableSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.perspective.VariablePerspective;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 
 public class VariableSchemeEditor extends LabelDescriptionEditor {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.variable.VariableSchemeEditor";
 
 	public VariableSchemeEditor() {
 		super(
-				Messages.getString("VariableSchemeEditor.label"),
-				Messages.getString("VariableSchemeEditor.label.useTheEditorLabel.Description"),
-				Messages.getString("VariableScheme"), ID);
+				Translator.trans("VariableSchemeEditor.label"),
+				Translator
+						.trans("VariableSchemeEditor.label.useTheEditorLabel.Description"),
+				Translator.trans("VariableScheme"), ID);
 		dao = (IDao) new VariableSchemeDao();
 	}
 
@@ -25,7 +26,7 @@ public class VariableSchemeEditor extends LabelDescriptionEditor {
 
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(
-				Messages.getString("perspective.switch.dialogtext"),
-				Messages.getString("perspective.concepts"));
+				Translator.trans("perspective.switch.dialogtext"),
+				Translator.trans("perspective.concepts"));
 	}
 }

@@ -15,8 +15,8 @@ import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.RepeatUntil;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -33,8 +33,10 @@ public class RepeatUntilEditor extends Editor {
 
 	public RepeatUntilEditor() {
 		super(
-				Messages.getString("RepeatUntilEditor.label.RepeatUntilEditorLabel.RepeatUntilEditor"),
-				Messages.getString("RepeatUntilEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("RepeatUntilEditor.label.RepeatUntilEditorLabel.RepeatUntilEditor"),
+				Translator
+						.trans("RepeatUntilEditor.label.useTheEditorLabel.Description"),
 				ID);
 		this.dao = new RepeatUntilDao();
 	}
@@ -53,17 +55,16 @@ public class RepeatUntilEditor extends Editor {
 		createTabFolder(getComposite_1());
 
 		// main tab
-		TabItem tabItem = createTabItem(Messages
-				.getString("RepeatUntil.editor.tabdisplaytext"));
+		TabItem tabItem = createTabItem(Translator
+				.trans("RepeatUntil.editor.tabdisplaytext"));
 		Group group = createGroup(tabItem,
-				Messages.getString("RepeatUntil.editor.groupdisplaytext"));
+				Translator.trans("RepeatUntil.editor.groupdisplaytext"));
 
 		// until condition
-		Composite error = createErrorComposite(group, "");
 		ProgrammingLanguageCodeType ifProgrammingLanguageCode = modelImpl
 				.getUntilCondition();
 		Text conditionTxt = createTextInput(group,
-				Messages.getString("RepeatUntil.editor.until"),
+				Translator.trans("RepeatUntil.editor.until"),
 				ifProgrammingLanguageCode == null ? ""
 						: ifProgrammingLanguageCode.getStringValue(), false);
 		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(
@@ -74,7 +75,7 @@ public class RepeatUntilEditor extends Editor {
 		String programmingLanguage = ifProgrammingLanguageCode == null ? getDefaultCodeProgrammingLanguage()
 				: ifProgrammingLanguageCode.getProgrammingLanguage();
 		Text programmingLanguageTxt = createTextInput(group,
-				Messages.getString("RepeatUntil.editor.untilprogramlang"),
+				Translator.trans("RepeatUntil.editor.untilprogramlang"),
 				programmingLanguage, false);
 		programmingLanguageTxt
 				.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
@@ -91,38 +92,38 @@ public class RepeatUntilEditor extends Editor {
 		}
 
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(group,
-				Messages.getString("RepeatUntil.editor.untilref"),
-				Messages.getString("RepeatUntil.editor.untilref"),
+				Translator.trans("RepeatUntil.editor.untilref"),
+				Translator.trans("RepeatUntil.editor.untilref"),
 				modelImpl.getUntilReference(), controlConstructRefList, false);
-		thenRefSelectCombo.addSelectionListener(Messages
-				.getString("RepeatUntil.editor.untilref"),
+		thenRefSelectCombo.addSelectionListener(Translator
+				.trans("RepeatUntil.editor.untilref"),
 				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
 
 		// description tab
 		// name
-		TabItem tabItem2 = createTabItem(Messages
-				.getString("editor.label.description"));
+		TabItem tabItem2 = createTabItem(Translator
+				.trans("editor.label.description"));
 		Group group2 = createGroup(tabItem2,
-				Messages.getString("editor.label.description"));
+				Translator.trans("editor.label.description"));
 
 		try {
 			Text txt = createLabelInput(group2,
-					Messages.getString("editor.label.label"), modelImpl
+					Translator.trans("editor.label.label"), modelImpl
 							.getDocument().getRepeatUntil().getLabelList(),
 					modelImpl.getDocument().getRepeatUntil().getId());
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"),
+					Translator.trans("editor.button.translate"),
 					modelImpl.getDocument().getControlConstruct()
 							.getLabelList(), new LabelTdI(), "", txt);
 			StyledText styledText = createStructuredStringInput(group2,
-					Messages.getString("editor.label.description"), modelImpl
+					Translator.trans("editor.label.description"), modelImpl
 							.getDocument().getRepeatUntil()
 							.getDescriptionList(), modelImpl.getDocument()
 							.getRepeatUntil().getId());
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"), modelImpl
+					Translator.trans("editor.button.translate"), modelImpl
 							.getDocument().getControlConstruct()
 							.getDescriptionList(), new DescriptionTdI(), "",
 					styledText);

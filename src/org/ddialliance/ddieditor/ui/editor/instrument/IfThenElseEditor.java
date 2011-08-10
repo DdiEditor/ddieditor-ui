@@ -31,9 +31,9 @@ import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.TreeMenuProvider;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -74,8 +74,10 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 
 	public IfThenElseEditor() {
 		super(
-				Messages.getString("IfThenElseEditor.label.IfThenElseEditorLabel.IfThenElseEditor"),
-				Messages.getString("IfThenElseEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("IfThenElseEditor.label.IfThenElseEditorLabel.IfThenElseEditor"),
+				Translator
+						.trans("IfThenElseEditor.label.useTheEditorLabel.Description"),
 				ID);
 		this.dao = new IfThenElseDao();
 	}
@@ -94,17 +96,16 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 		createTabFolder(getComposite_1());
 
 		// main tab
-		TabItem tabItem = createTabItem(Messages
-				.getString("IfThenElse.editor.tabdisplaytext"));
+		TabItem tabItem = createTabItem(Translator
+				.trans("IfThenElse.editor.tabdisplaytext"));
 		Group group = createGroup(tabItem,
-				Messages.getString("IfThenElse.editor.groupdisplaytext"));
+				Translator.trans("IfThenElse.editor.groupdisplaytext"));
 
 		// if condition
-		Composite error = createErrorComposite(group, "");
 		ProgrammingLanguageCodeType ifProgrammingLanguageCode = modelImpl
 				.getIfCondition();
 		Text conditionTxt = createTextInput(group,
-				Messages.getString("IfThenElse.editor.if"),
+				Translator.trans("IfThenElse.editor.if"),
 				ifProgrammingLanguageCode == null ? ""
 						: ifProgrammingLanguageCode.getStringValue(), false);
 		conditionTxt.addModifyListener(new TextStyledTextModyfiListener(
@@ -116,7 +117,7 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 				: ifProgrammingLanguageCode.getProgrammingLanguage();
 
 		Text programmingLanguageTxt = createTextInput(group,
-				Messages.getString("StatementItem.editor.programlang"),
+				Translator.trans("StatementItem.editor.programlang"),
 				programmingLanguage, false);
 		programmingLanguageTxt
 				.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
@@ -124,9 +125,8 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 						getEditorIdentification()));
 
 		// if question ref
-		createLabel(group,
-				Messages.getString("IfThenElse.editor.ifquestionref"));
-		
+		createLabel(group, Translator.trans("IfThenElse.editor.ifquestionref"));
+
 		table = new Table(group, SWT.VIRTUAL | SWT.FULL_SELECTION | SWT.MULTI
 				| SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		GridData fileTableGd = new GridData(// );
@@ -138,7 +138,7 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 		table.setHeaderVisible(false);
 		fileTableGd.horizontalSpan = 1;
 		Editor.resizeTableFont(table);
-		
+
 		// file table header
 		String[] columnNames = { "" };
 
@@ -159,7 +159,6 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 			Editor.showError(e, ID);
 		}
 
-
 		// quei ref table listeners
 		// popup menu
 		Menu menu = new Menu(table);
@@ -167,7 +166,7 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 		// menu add
 		final MenuItem addMenuItem = new MenuItem(menu, SWT.CASCADE);
 		addMenuItem.setSelection(true);
-		addMenuItem.setText(Messages.getString("View.label.addMenuItem.Add"));
+		addMenuItem.setText(Translator.trans("View.label.addMenuItem.Add"));
 		addMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/new_wiz.gif"));
 		addMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -178,8 +177,7 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 
 		// menu edit
 		MenuItem editMenuItem = new MenuItem(menu, SWT.NONE);
-		editMenuItem
-				.setText(Messages.getString("View.label.editMenuItem.Edit"));
+		editMenuItem.setText(Translator.trans("View.label.editMenuItem.Edit"));
 		editMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/editor_area.gif"));
 		editMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -190,8 +188,8 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 
 		// menu remove
 		final MenuItem removeMenuItem = new MenuItem(menu, SWT.NONE);
-		removeMenuItem.setText(Messages
-				.getString("View.label.removeMenuItem.Remove"));
+		removeMenuItem.setText(Translator
+				.trans("View.label.removeMenuItem.Remove"));
 		removeMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/delete_obj.gif"));
 		removeMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -242,52 +240,52 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 		}
 
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(group,
-				Messages.getString("IfThenElse.editor.thenref"),
-				Messages.getString("IfThenElse.editor.thenref"),
+				Translator.trans("IfThenElse.editor.thenref"),
+				Translator.trans("IfThenElse.editor.thenref"),
 				modelImpl.getThenReference(), controlConstructRefList, false);
-		thenRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.thenref"),
+		thenRefSelectCombo.addSelectionListener(Translator
+				.trans("IfThenElse.editor.thenref"),
 				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_C.class,
 						getEditorIdentification()));
 
 		// else ref
 		ReferenceSelectionCombo elseRefSelectCombo = createRefSelection(group,
-				Messages.getString("IfThenElse.editor.elseref"),
-				Messages.getString("IfThenElse.editor.elseref"),
+				Translator.trans("IfThenElse.editor.elseref"),
+				Translator.trans("IfThenElse.editor.elseref"),
 				modelImpl.getElseReference(), controlConstructRefList, false);
-		elseRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.elseref"),
+		elseRefSelectCombo.addSelectionListener(Translator
+				.trans("IfThenElse.editor.elseref"),
 				new ReferenceSelectionAdapter(elseRefSelectCombo, modelImpl,
 						ModelIdentifingType.Type_D.class,
 						getEditorIdentification()));
 
 		// description tab
 		// name
-		TabItem tabItem2 = createTabItem(Messages
-				.getString("editor.label.description"));
+		TabItem tabItem2 = createTabItem(Translator
+				.trans("editor.label.description"));
 		Group group2 = createGroup(tabItem2,
-				Messages.getString("editor.label.description"));
+				Translator.trans("editor.label.description"));
 
 		try {
 			// label
 			Text txt = createLabelInput(group2,
-					Messages.getString("editor.label.label"), modelImpl
+					Translator.trans("editor.label.label"), modelImpl
 							.getDocument().getIfThenElse().getLabelList(),
 					modelImpl.getDocument().getIfThenElse().getId());
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"), modelImpl
+					Translator.trans("editor.button.translate"), modelImpl
 							.getDocument().getIfThenElse().getLabelList(),
 					new LabelTdI(), "", txt);
 
 			// description
 			StyledText styledText = createStructuredStringInput(group2,
-					Messages.getString("editor.label.description"),
+					Translator.trans("editor.label.description"),
 					modelImpl.getDocument().getIfThenElse()
 							.getDescriptionList(), modelImpl.getDocument()
 							.getIfThenElse().getId());
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"),
+					Translator.trans("editor.button.translate"),
 					modelImpl.getDocument().getIfThenElse()
 							.getDescriptionList(), new DescriptionTdI(), "",
 					styledText);
@@ -409,8 +407,8 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 			// labelQueryResult = null;
 			MenuPopupAddDialog addDialog = new MenuPopupAddDialog(getSite()
 					.getShell(),
-					Messages.getString("IfThenElse.editor.ifquestionref"),
-					Messages.getString("IfThenElse.editor.ifquestionref"),
+					Translator.trans("IfThenElse.editor.ifquestionref"),
+					Translator.trans("IfThenElse.editor.ifquestionref"),
 					controlConstructRefList, modelImpl);
 			addDialog.open();
 
@@ -485,8 +483,8 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 	@Override
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(
-				Messages.getString("perspective.switch.dialogtext"),
-				Messages.getString("perspective.instruments"));
+				Translator.trans("perspective.switch.dialogtext"),
+				Translator.trans("perspective.instruments"));
 	}
 
 	class MenuPopupAddDialog extends Dialog {
@@ -522,11 +520,11 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 
 			// selection
 			selectCombo = editor.createRefSelection(group,
-					Messages.getString("IfThenElse.editor.ifquestionref"),
-					Messages.getString("IfThenElse.editor.ifquestionref"),
+					Translator.trans("IfThenElse.editor.ifquestionref"),
+					Translator.trans("IfThenElse.editor.ifquestionref"),
 					ReferenceType.Factory.newInstance(), refs, false);
 			selectCombo.addSelectionListener(
-					Messages.getString("IfThenElse.editor.ifquestionref"),
+					Translator.trans("IfThenElse.editor.ifquestionref"),
 					new MenuPopupSelectionAdapter(this));
 
 			return null;

@@ -20,7 +20,6 @@ import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
-import org.ddialliance.ddieditor.ui.editor.LabelTypeModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
@@ -31,8 +30,8 @@ import org.ddialliance.ddieditor.ui.model.question.ResponseTypeReference;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DynamicTextTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -75,8 +74,10 @@ public class QuestionItemEditor extends Editor {
 
 	public QuestionItemEditor() {
 		super(
-				Messages.getString("QuestionItemEditor.label.questionItemEditorLabel.QuestionItemEditor"),
-				Messages.getString("QuestionItemEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("QuestionItemEditor.label.questionItemEditorLabel.QuestionItemEditor"),
+				Translator
+						.trans("QuestionItemEditor.label.useTheEditorLabel.Description"),
 				ID);
 		super.dao = new QuestionItemDao();
 	}
@@ -97,9 +98,8 @@ public class QuestionItemEditor extends Editor {
 		// - Question Item Tab Item:
 		TabItem questionTabItem = new TabItem(questionTabFolder, SWT.NONE);
 		questionTabItem.setControl(questionComposite);
-		questionTabItem
-				.setText(Messages
-						.getString("QuestionItemEditor.label.questionTabItem.Question")); //$NON-NLS-1$
+		questionTabItem.setText(Translator
+				.trans("QuestionItemEditor.label.questionTabItem.Question")); //$NON-NLS-1$
 
 		// - Question Group
 		final Group questionGroup = new Group(questionComposite, SWT.NONE);
@@ -122,11 +122,11 @@ public class QuestionItemEditor extends Editor {
 				.get(0);
 
 		Text nameTxt = createTextInput(questionGroup,
-				Messages.getString("QuestionItemEditor.label.Name") + ":",
+				Translator.trans("QuestionItemEditor.label.Name") + ":",
 				name == null ? "" : name.getStringValue(), false);
 		nameTxt.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
 				NameType.class, getEditorIdentification()));
-		nameTxt.addModifyListener(new ModifyListener() {			
+		nameTxt.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
 				Text textTxt = ((Text) event.getSource());
@@ -143,24 +143,26 @@ public class QuestionItemEditor extends Editor {
 			conceptReferenceList = new ConceptDao().getLightXmlObject("", "",
 					"", "");
 		} catch (Exception e1) {
-			String errMess = Messages
-					.getString("QuestionItemEditor.mess.ConceptRetrievalError"); //$NON-NLS-1$
-			ErrorDialog.openError(getSite().getShell(), Messages
-					.getString("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, errMess, e1));
+			String errMess = Translator
+					.trans("QuestionItemEditor.mess.ConceptRetrievalError"); //$NON-NLS-1$
+			ErrorDialog.openError(getSite().getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, errMess, e1));
 		}
 
 		// - Create Concept Reference selection combobox
 		ReferenceSelectionCombo refSelecCombo = createRefSelection(
 				questionGroup,
-				Messages.getString("QuestionItemEditor.label.conceptLabel.Concept")
+				Translator
+						.trans("QuestionItemEditor.label.conceptLabel.Concept")
 						+ ":",
-				Messages.getString("QuestionItemEditor.label.conceptLabel.Concept"),
+				Translator
+						.trans("QuestionItemEditor.label.conceptLabel.Concept"),
 				modelImpl.getConceptReferenceType(), conceptReferenceList,
 				false);
 
-		refSelecCombo.addSelectionListener(Messages
-				.getString("QuestionItemEditor.label.conceptLabel.Concept"),
+		refSelecCombo.addSelectionListener(Translator
+				.trans("QuestionItemEditor.label.conceptLabel.Concept"),
 				new ReferenceSelectionAdapter(refSelecCombo, model,
 						ReferenceType.class, getEditorIdentification()));
 
@@ -179,7 +181,8 @@ public class QuestionItemEditor extends Editor {
 
 		StyledText questionTxt = createTextAreaInput(
 				questionGroup,
-				Messages.getString("QuestionItemEditor.label.questionTextLabel.QuestionText"),
+				Translator
+						.trans("QuestionItemEditor.label.questionTextLabel.QuestionText"),
 				questionText == null ? "" : XmlBeansUtil
 						.getTextOnMixedElement(questionText.getTextList()
 								.get(0)), false);
@@ -190,7 +193,7 @@ public class QuestionItemEditor extends Editor {
 
 		try {
 			createTranslation(questionGroup,
-					Messages.getString("editor.button.translate"),
+					Translator.trans("editor.button.translate"),
 					modelImpl.getQuestionText(), new DynamicTextTdI(), "",
 					questionTxt);
 		} catch (DDIFtpException e) {
@@ -208,8 +211,8 @@ public class QuestionItemEditor extends Editor {
 		questionResponseTypeLabel.setBackground(Display.getCurrent()
 				.getSystemColor(SWT.COLOR_WHITE));
 		questionResponseTypeLabel
-				.setText(Messages
-						.getString("QuestionItemEditor.label.questionResponseTypeLabel.QuestionResponseType")); //$NON-NLS-1$
+				.setText(Translator
+						.trans("QuestionItemEditor.label.questionResponseTypeLabel.QuestionResponseType")); //$NON-NLS-1$
 
 		responseComboViewer = new ComboViewer(questionGroup);
 		final Combo combo = responseComboViewer.getCombo();
@@ -267,11 +270,11 @@ public class QuestionItemEditor extends Editor {
 				responseDomainRef = modelImpl.getResponseDomain();
 			} catch (Exception e1) {
 				String errMess = MessageFormat
-						.format(Messages
-								.getString("QuestionItemEditor.mess.ResponseDomainReferenceRetrievalError"), e1.getMessage()); //$NON-NLS-1$
-				ErrorDialog.openError(getSite().getShell(), Messages
-						.getString("ErrorTitle"), null, new Status(
-						IStatus.ERROR, ID, 0, errMess, e1));
+						.format(Translator
+								.trans("QuestionItemEditor.mess.ResponseDomainReferenceRetrievalError"), e1.getMessage()); //$NON-NLS-1$
+				ErrorDialog.openError(getSite().getShell(), Translator
+						.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, errMess, e1));
 			}
 		}
 
@@ -309,11 +312,12 @@ public class QuestionItemEditor extends Editor {
 							rt, "");
 					if (repType == null) {
 						String errMess = MessageFormat.format(
-								Messages.getString("QuestionItemEditor.mess.QuestionItemResponseTypeNotSupported"),
+								Translator
+										.trans("QuestionItemEditor.mess.QuestionItemResponseTypeNotSupported"),
 								ResponseTypeDetail.getResponseTypeLabel(rt)); //$NON-NLS-1$
 						ErrorDialog.openError(
 								getSite().getShell(),
-								Messages.getString("ErrorTitle"),
+								Translator.trans("ErrorTitle"),
 								null,
 								new Status(IStatus.ERROR, ID, 0, errMess, null),
 								IStatus.ERROR);

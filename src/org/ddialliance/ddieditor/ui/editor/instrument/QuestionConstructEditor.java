@@ -6,8 +6,6 @@ import org.ddialliance.ddi3.xml.xmlbeans.datacollection.SpecificSequenceType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalStringType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.DdiManager;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
-import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.instrument.QuestionConstructDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
@@ -19,8 +17,8 @@ import org.ddialliance.ddieditor.ui.model.instrument.QuestionConstruct;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
@@ -39,8 +37,8 @@ public class QuestionConstructEditor extends Editor {
 	private List<LightXmlObjectType> xquestionRefList;
 
 	public QuestionConstructEditor() {
-		super(Messages.getString("QuestionConstructEditor.label"), Messages
-				.getString("QuestionConstructEditor.label.Description"), ID);
+		super(Translator.trans("QuestionConstructEditor.label"), Translator
+				.trans("QuestionConstructEditor.label.Description"), ID);
 		this.dao = new QuestionConstructDao();
 	}
 
@@ -58,9 +56,9 @@ public class QuestionConstructEditor extends Editor {
 		createTabFolder(getComposite_1());
 
 		// main tab
-		TabItem tabItem = createTabItem(Messages.getString("QuestionConstruct"));
+		TabItem tabItem = createTabItem(Translator.trans("QuestionConstruct"));
 		Group group = createGroup(tabItem,
-				Messages.getString("QuestionConstruct"));
+				Translator.trans("QuestionConstruct"));
 
 		// QuestionReference - id
 		List<LightXmlObjectType> questionRefList;
@@ -70,27 +68,26 @@ public class QuestionConstructEditor extends Editor {
 					.getQuestionItemsLight(null, null, null, null)
 					.getLightXmlObjectList().getLightXmlObjectList();
 			mixedQuestionRefList = DdiManager.getInstance()
-			.getMultipleQuestionItemsLight(null, null, null, null)
-			.getLightXmlObjectList().getLightXmlObjectList();
+					.getMultipleQuestionItemsLight(null, null, null, null)
+					.getLightXmlObjectList().getLightXmlObjectList();
 			mixedQuestionRefList.addAll(questionRefList);
 		} catch (Exception e) {
 			DialogUtil.errorDialog(getSite().getShell(), ID, null,
 					e.getMessage(), e);
 		}
 		ReferenceSelectionCombo questionRefSelectCombo = createRefSelection(
-				group, Messages.getString("IfThenElse.editor.ifquestionref"),
-				Messages.getString("IfThenElse.editor.ifquestionref"),
+				group, Translator.trans("IfThenElse.editor.ifquestionref"),
+				Translator.trans("IfThenElse.editor.ifquestionref"),
 				modelImpl.getQuestionReference(), mixedQuestionRefList, false);
-		questionRefSelectCombo.addSelectionListener(Messages
-				.getString("IfThenElse.editor.ifquestionref"),
+		questionRefSelectCombo.addSelectionListener(Translator
+				.trans("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(questionRefSelectCombo,
 						modelImpl, ReferenceType.class,
 						getEditorIdentification()));
 
 		// ResponseUnit
-		createLabel(
-				group,
-				Messages.getString("QuestionConstructEditor.label.ResponseUnit"));
+		createLabel(group,
+				Translator.trans("QuestionConstructEditor.label.ResponseUnit"));
 		String[] options = new String[QuestionConstruct.ResponceUnit.values().length + 1];
 		options[0] = "";
 		for (int i = 0; i < QuestionConstruct.ResponceUnit.values().length; i++) {
@@ -113,7 +110,8 @@ public class QuestionConstructEditor extends Editor {
 
 		Combo sequencecombo = createSequenceCombo(
 				group,
-				Messages.getString("QuestionConstructEditor.label.ResponseSequence"),
+				Translator
+						.trans("QuestionConstructEditor.label.ResponseSequence"),
 				defineItemSequenceSelection(responseSequence));
 
 		sequencecombo.addSelectionListener(new SequenceComboSelectionListener(
@@ -121,31 +119,31 @@ public class QuestionConstructEditor extends Editor {
 				getEditorIdentification()));
 
 		// description tab
-		TabItem tabItem2 = createTabItem(Messages
-				.getString("editor.label.description"));
+		TabItem tabItem2 = createTabItem(Translator
+				.trans("editor.label.description"));
 		Group group2 = createGroup(tabItem2,
-				Messages.getString("editor.label.description"));
+				Translator.trans("editor.label.description"));
 
 		try {
 			// label
 			Text txt = createLabelInput(group2,
-					Messages.getString("editor.label.label"), modelImpl
+					Translator.trans("editor.label.label"), modelImpl
 							.getDocument().getQuestionConstruct()
 							.getLabelList(), modelImpl.getDocument()
 							.getControlConstruct().getId());
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"),
+					Translator.trans("editor.button.translate"),
 					modelImpl.getDocument().getControlConstruct()
 							.getLabelList(), new LabelTdI(), "", txt);
 
 			// description
 			StyledText styledText = createStructuredStringInput(group2,
-					Messages.getString("editor.label.description"), modelImpl
+					Translator.trans("editor.label.description"), modelImpl
 							.getDocument().getControlConstruct()
 							.getDescriptionList(), modelImpl.getDocument()
 							.getQuestionConstruct().getId());
 			createTranslation(group2,
-					Messages.getString("editor.button.translate"), modelImpl
+					Translator.trans("editor.button.translate"), modelImpl
 							.getDocument().getControlConstruct()
 							.getDescriptionList(), new DescriptionTdI(), "",
 					styledText);

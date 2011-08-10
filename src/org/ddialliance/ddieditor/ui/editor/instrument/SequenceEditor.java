@@ -26,10 +26,10 @@ import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddieditor.ui.view.TreeMenu;
 import org.ddialliance.ddieditor.ui.view.TreeMenuProvider;
 import org.ddialliance.ddiftp.util.DDIFtpException;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -79,8 +79,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 	};
 
 	public SequenceEditor() {
-		super(Messages.getString("SequenceEditor.label"), Messages
-				.getString("SequenceEditor.description"), ID);
+		super(Translator.trans("SequenceEditor.label"), Translator
+				.trans("SequenceEditor.description"), ID);
 		this.dao = new SequenceDao();
 	}
 
@@ -148,7 +148,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		// menu add
 		final MenuItem addMenuItem = new MenuItem(menu, SWT.CASCADE);
 		addMenuItem.setSelection(true);
-		addMenuItem.setText(Messages.getString("View.label.addMenuItem.Add"));
+		addMenuItem.setText(Translator.trans("View.label.addMenuItem.Add"));
 		addMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/new_wiz.gif"));
 		addMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -160,7 +160,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		// menu edit
 		MenuItem editMenuItem = new MenuItem(menu, SWT.NONE);
 		editMenuItem
-				.setText(Messages.getString("View.label.editMenuItem.Edit"));
+				.setText(Translator.trans("View.label.editMenuItem.Edit"));
 		editMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/editor_area.gif"));
 		editMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -171,8 +171,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 
 		// menu remove
 		final MenuItem removeMenuItem = new MenuItem(menu, SWT.NONE);
-		removeMenuItem.setText(Messages
-				.getString("View.label.removeMenuItem.Remove"));
+		removeMenuItem.setText(Translator
+				.trans("View.label.removeMenuItem.Remove"));
 		removeMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/delete_obj.gif"));
 		removeMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -184,16 +184,16 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 
 		// properties
 		Group pGroup = createGroup(parent,
-				Messages.getString("SequenceEditor.properties"));
+				Translator.trans("SequenceEditor.properties"));
 
 		Label label = createLabel(pGroup,
-				Messages.getString("SequenceEditor.properties"));
+				Translator.trans("SequenceEditor.properties"));
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1,
 				1));
 		Button button = new Button(pGroup, 0);
 		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
 				1, 1));
-		button.setText(Messages.getString("SequenceEditor.properties"));
+		button.setText(Translator.trans("SequenceEditor.properties"));
 		button.addSelectionListener(new PropertiesEditorListener(this));
 
 		// clear unwanted changes
@@ -210,7 +210,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			SequencePropertiesDialog spd = new SequencePropertiesDialog(editor
-					.getSite().getShell(), Messages.getString("Sequence"),
+					.getSite().getShell(), Translator.trans("Sequence"),
 					editor);
 			spd.open();
 		}
@@ -274,8 +274,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 				// labelQueryResult = null;
 				SequenceMenuPopupAddDialog addDialog = new SequenceMenuPopupAddDialog(
 						getSite().getShell(),
-						Messages.getString("SequenceEditor.adddialog.title"),
-						Messages.getString("SequenceEditor.adddialog.label"),
+						Translator.trans("SequenceEditor.adddialog.title"),
+						Translator.trans("SequenceEditor.adddialog.label"),
 						controlConstructRefList, modelImpl);
 				addDialog.open();
 
@@ -377,9 +377,9 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 			Table table = viewer.getTable();
 			String[] titles = {
 					// 0=type, 1=label, 2=id
-					Messages.getString("SequenceEditor.tabel.typelabel"),
-					Messages.getString("SequenceEditor.tabel.labellabel"),
-					Messages.getString("SequenceEditor.tabel.idlabel") };
+					Translator.trans("SequenceEditor.tabel.typelabel"),
+					Translator.trans("SequenceEditor.tabel.labellabel"),
+					Translator.trans("SequenceEditor.tabel.idlabel") };
 			int[] widths = { 200, 375, 225 };
 			int[] style = { SWT.RIGHT, SWT.LEFT, SWT.LEFT };
 			for (int i = 0; i < titles.length; i++) {
@@ -455,7 +455,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 						.getTextOnMixedElement(label);
 			default:
 				DDIFtpException e = new DDIFtpException(
-						Messages.getString("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
+						Translator
+								.trans("translationdialog.error.columnindexnotfound"), new Throwable()); //$NON-NLS-1$
 				showError(e);
 			}
 			return "";

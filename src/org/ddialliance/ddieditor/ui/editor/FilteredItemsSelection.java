@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -53,7 +53,7 @@ public class FilteredItemsSelection {
 			final Composite parentCodeComposite, String subTitleText,
 			String itemLabelText, final List<LightXmlObjectType> referenceList,
 			String preIdValue) {
-		
+
 		this.parentCodeComposite = parentCodeComposite;
 		this.referenceList = referenceList;
 
@@ -77,7 +77,7 @@ public class FilteredItemsSelection {
 			SubTitleLabel.setBackground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_WHITE));
 		}
-		
+
 		final Label itemLabel = new Label(labelComposite, SWT.NONE);
 		itemLabel
 				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true));
@@ -131,9 +131,9 @@ public class FilteredItemsSelection {
 		browseButton = new Button(codeComposite, SWT.NONE);
 		browseButton.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
-		browseButton.setText(Messages
-				.getString("ResponseTypeDetail.label.Browse")); //$NON-NLS-1$
-		
+		browseButton.setText(Translator
+				.trans("ResponseTypeDetail.label.Browse")); //$NON-NLS-1$
+
 	}
 
 	/**

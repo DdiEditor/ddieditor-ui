@@ -30,7 +30,6 @@ import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.model.variable.Variable;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
-import org.ddialliance.ddieditor.ui.view.Messages;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -62,8 +61,8 @@ public class VariableEditor extends Editor {
 
 	public VariableEditor() {
 		super(
-				Messages.getString("VariableEditor.label"),
-				Messages.getString("VariableEditor.label.useTheEditorLabel.Description"),
+				Translator.trans("VariableEditor.label"),
+				Translator.trans("VariableEditor.label.useTheEditorLabel.Description"),
 				ID);
 		this.dao = new VariableDao();
 	}
@@ -115,8 +114,8 @@ public class VariableEditor extends Editor {
 		createTabFolder(getComposite_1());
 
 		// main tab
-		TabItem tabItem = createTabItem(Messages.getString("Variable"));
-		Group group = createGroup(tabItem, Messages.getString("Variable"));
+		TabItem tabItem = createTabItem(Translator.trans("Variable"));
+		Group group = createGroup(tabItem, Translator.trans("Variable"));
 
 		// concept ref
 		List<LightXmlObjectType> conceptRefList = new ArrayList<LightXmlObjectType>();
@@ -130,11 +129,11 @@ public class VariableEditor extends Editor {
 		}
 		ReferenceSelectionCombo conRefSelectCombo = null;
 		conRefSelectCombo = createRefSelection(group,
-				Messages.getString("VariableEditor.label.conceptref"),
-				Messages.getString("VariableEditor.label.conceptref"),
+				Translator.trans("VariableEditor.label.conceptref"),
+				Translator.trans("VariableEditor.label.conceptref"),
 				modelImpl.getConceptReference(), conceptRefList, false);
-		conRefSelectCombo.addSelectionListener(Messages
-				.getString("VariableEditor.label.conceptref"),
+		conRefSelectCombo.addSelectionListener(Translator
+				.trans("VariableEditor.label.conceptref"),
 				new ReferenceSelectionAdapter(conRefSelectCombo, model,
 						ModelIdentifingType.Type_B.class,
 						getEditorIdentification()));
@@ -151,11 +150,11 @@ public class VariableEditor extends Editor {
 		}
 		ReferenceSelectionCombo uniRefSelectCombo = null;
 		uniRefSelectCombo = createRefSelection(group,
-				Messages.getString("VariableEditor.label.universeref"),
-				Messages.getString("VariableEditor.label.universeref"),
+				Translator.trans("VariableEditor.label.universeref"),
+				Translator.trans("VariableEditor.label.universeref"),
 				modelImpl.getUniverseReference(), uniRefList, false);
-		uniRefSelectCombo.addSelectionListener(Messages
-				.getString("VariableEditor.label.universeref"),
+		uniRefSelectCombo.addSelectionListener(Translator
+				.trans("VariableEditor.label.universeref"),
 				new ReferenceSelectionAdapter(uniRefSelectCombo, model,
 						ModelIdentifingType.Type_C.class,
 						getEditorIdentification()));
@@ -172,22 +171,22 @@ public class VariableEditor extends Editor {
 		}
 		ReferenceSelectionCombo refSelecCombo = null;
 		refSelecCombo = createRefSelection(group,
-				Messages.getString("VariableEditor.label.questionref"),
-				Messages.getString("VariableEditor.label.questionref"),
+				Translator.trans("VariableEditor.label.questionref"),
+				Translator.trans("VariableEditor.label.questionref"),
 				modelImpl.getQuestionReference(), questionRefList, false);
-		refSelecCombo.addSelectionListener(Messages
-				.getString("VariableEditor.label.questionref"),
+		refSelecCombo.addSelectionListener(Translator
+				.trans("VariableEditor.label.questionref"),
 				new ReferenceSelectionAdapter(refSelecCombo, model,
 						ModelIdentifingType.Type_A.class,
 						getEditorIdentification()));
 
 		// representation
 		createLabel(group,
-				Messages.getString("VariableEditor.label.representation"))
+				Translator.trans("VariableEditor.label.representation"))
 				.setLayoutData(
 						new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
 		Group representationGroup = createGroup(group,
-				Messages.getString("VariableEditor.label.representation"));
+				Translator.trans("VariableEditor.label.representation"));
 		representationGroup.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING,
 				true, true, 1, 1));
 
@@ -195,8 +194,8 @@ public class VariableEditor extends Editor {
 		// CodeRepresentation
 		try {
 			if (repImpl instanceof CodeRepresentationType) {
-				representationGroup.setText(Messages
-						.getString("VariableEditor.label.coderepresentation"));
+				representationGroup.setText(Translator
+						.trans("VariableEditor.label.coderepresentation"));
 				ReferenceType codeSchemeRef = ((CodeRepresentationType) repImpl)
 						.getCodeSchemeReference();
 
@@ -214,11 +213,11 @@ public class VariableEditor extends Editor {
 				// code scheme selection
 				final ReferenceSelectionCombo refSelectCodeSchemeCombo = createRefSelection(
 						representationGroup,
-						Messages.getString("VariableEditor.label.codeschemereference"),
-						Messages.getString("VariableEditor.label.codeschemereference"),
+						Translator.trans("VariableEditor.label.codeschemereference"),
+						Translator.trans("VariableEditor.label.codeschemereference"),
 						codeSchemeRef, codeSchemeRefList, false);
-				refSelectCodeSchemeCombo.addSelectionListener(Messages
-						.getString("VariableEditor.label.codeschemereference"),
+				refSelectCodeSchemeCombo.addSelectionListener(Translator
+						.trans("VariableEditor.label.codeschemereference"),
 						new ReferenceSelectionAdapter(refSelectCodeSchemeCombo,
 								model, ModelIdentifingType.Type_D.class,
 								getEditorIdentification()));
@@ -226,7 +225,7 @@ public class VariableEditor extends Editor {
 				// codes values
 				createLabel(
 						representationGroup,
-						Messages.getString("VariableEditor.label.coderepresentation.codevalues"));
+						Translator.trans("VariableEditor.label.coderepresentation.codevalues"));
 				final Label codeValue = createLabel(representationGroup, "");
 				codeValue.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 						false, false, 1, 1));
@@ -251,12 +250,12 @@ public class VariableEditor extends Editor {
 			if (repImpl instanceof NumericRepresentationType) {
 				NumericRepresentationType numRep = (NumericRepresentationType) repImpl;
 				representationGroup
-						.setText(Messages
-								.getString("VariableEditor.label.numericrepresentation"));
+						.setText(Translator
+								.trans("VariableEditor.label.numericrepresentation"));
 				// numeric type
 				createLabel(
 						representationGroup,
-						Messages.getString("VariableEditor.label.numericrepresentation.types"));
+						Translator.trans("VariableEditor.label.numericrepresentation.types"));
 				Combo numericCombo = createCombo(representationGroup,
 						Variable.NUMERIC_TYPES);
 				int search = numRep.getType().intValue();
@@ -288,7 +287,7 @@ public class VariableEditor extends Editor {
 						.equals("0")) {
 					Text numericDecimalPositionText = createTextInput(
 							representationGroup,
-							Messages.getString("VariableEditor.label.numericrepresentation.decimalpositions"),
+							Translator.trans("VariableEditor.label.numericrepresentation.decimalpositions"),
 							modelImpl.getNumericDecimalPosition().toString(),
 							false);
 					numericDecimalPositionText
@@ -345,12 +344,12 @@ public class VariableEditor extends Editor {
 			// TextRepresentation
 			if (repImpl instanceof TextRepresentationType) {
 				TextRepresentationType rep = (TextRepresentationType) repImpl;
-				representationGroup.setText(Messages
-						.getString("VariableEditor.label.textrepresentation"));
+				representationGroup.setText(Translator
+						.trans("VariableEditor.label.textrepresentation"));
 				// min length
 				Text minlengthText = createTextInput(
 						representationGroup,
-						Messages.getString("VariableEditor.label.textrepresentation.minlength"),
+						Translator.trans("VariableEditor.label.textrepresentation.minlength"),
 						modelImpl.getMinLength() == null ? "" : modelImpl
 								.getMinLength().toString(), false);
 
@@ -379,7 +378,7 @@ public class VariableEditor extends Editor {
 				// max length
 				Text maxlengthText = createTextInput(
 						representationGroup,
-						Messages.getString("VariableEditor.label.textrepresentation.maxlength"),
+						Translator.trans("VariableEditor.label.textrepresentation.maxlength"),
 						modelImpl.getMaxLength() == null ? "" : modelImpl
 								.getMaxLength().toString(), false);
 
@@ -408,7 +407,7 @@ public class VariableEditor extends Editor {
 				// regx
 				Text regxText = createTextInput(
 						representationGroup,
-						Messages.getString("VariableEditor.label.textrepresentation.regx"),
+						Translator.trans("VariableEditor.label.textrepresentation.regx"),
 						modelImpl.getRegx() == null ? "" : modelImpl.getRegx(),
 						false);
 				regxText.addModifyListener(new ModifyListener() {
@@ -428,13 +427,13 @@ public class VariableEditor extends Editor {
 			// DateTimeRepresentation
 			if (repImpl instanceof DateTimeRepresentationType) {
 				representationGroup
-						.setText(Messages
-								.getString("VariableEditor.label.datetimerepresentation"));
+						.setText(Translator
+								.trans("VariableEditor.label.datetimerepresentation"));
 
 				// format
 				Text format = createTextInput(
 						representationGroup,
-						Messages.getString("VariableEditor.label.datetimerepresentation.format"),
+						Translator.trans("VariableEditor.label.datetimerepresentation.format"),
 						modelImpl.getFormat() == null ? "" : modelImpl
 								.getFormat(), false);
 				format.addModifyListener(new ModifyListener() {
@@ -454,7 +453,7 @@ public class VariableEditor extends Editor {
 				// date time type
 				createLabel(
 						representationGroup,
-						Messages.getString("VariableEditor.label.datetimerepresentation.type"));
+						Translator.trans("VariableEditor.label.datetimerepresentation.type"));
 				Combo datetimeCombo = createCombo(representationGroup,
 						Variable.DATE_TIME_TYPES);
 				DateTypeCodeType.Enum dateTime = modelImpl.getDateTimeType();
@@ -480,8 +479,8 @@ public class VariableEditor extends Editor {
 			if (repImpl instanceof ExternalCategoryRepresentationType) {
 				// TODO external category representation
 				representationGroup
-						.setText(Messages
-								.getString("VariableEditor.label.externalcategoryrepresentation"));
+						.setText(Translator
+								.trans("VariableEditor.label.externalcategoryrepresentation"));
 				createLabel(representationGroup, "Not implemented!");
 			}
 		} catch (Exception e) {
@@ -492,37 +491,37 @@ public class VariableEditor extends Editor {
 		}
 
 		// description tab
-		TabItem tabItem2 = createTabItem(Messages
-				.getString("editor.label.description"));
+		TabItem tabItem2 = createTabItem(Translator
+				.trans("editor.label.description"));
 		Group descriptionGroup = createGroup(tabItem2,
-				Messages.getString("editor.label.description"));
+				Translator.trans("editor.label.description"));
 
 		try {
 			// name
 			Text nameText = createTextInput(descriptionGroup,
-					Messages.getString("VariableEditor.label.name"),
+					Translator.trans("VariableEditor.label.name"),
 					modelImpl.getName() == null ? "" : modelImpl.getName()
 							.getStringValue(), false);
 			nameText.addModifyListener(new TextStyledTextModyfiListener(model,
 					NameType.class, getEditorIdentification()));
 
 			Text txt = createLabelInput(descriptionGroup,
-					Messages.getString("editor.label.label"), modelImpl
+					Translator.trans("editor.label.label"), modelImpl
 							.getDocument().getVariable().getLabelList(),
 					modelImpl.getDocument().getVariable().getId());
 
 			createTranslation(descriptionGroup,
-					Messages.getString("editor.button.translate"), modelImpl
+					Translator.trans("editor.button.translate"), modelImpl
 							.getDocument().getVariable().getLabelList(),
 					new LabelTdI(), "", txt);
 
 			StyledText styledText = createStructuredStringInput(
 					descriptionGroup,
-					Messages.getString("editor.label.description"), modelImpl
+					Translator.trans("editor.label.description"), modelImpl
 							.getDocument().getVariable().getDescriptionList(),
 					modelImpl.getDocument().getVariable().getId());
 			createTranslation(descriptionGroup,
-					Messages.getString("editor.button.translate"), modelImpl
+					Translator.trans("editor.button.translate"), modelImpl
 							.getDocument().getVariable().getDescriptionList(),
 					new DescriptionTdI(), "", styledText);
 		} catch (DDIFtpException e) {

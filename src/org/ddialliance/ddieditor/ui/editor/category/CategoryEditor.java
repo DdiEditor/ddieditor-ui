@@ -6,7 +6,7 @@ import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.category.CategoryDao;
 import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.perspective.CategoryPerspective;
-import org.ddialliance.ddieditor.ui.view.Messages;
+import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
 import org.ddialliance.ddiftp.util.log.LogType;
@@ -22,9 +22,9 @@ public class CategoryEditor extends LabelDescriptionEditor {
 
 	public CategoryEditor() {
 		super(
-				Messages.getString("CategoryEditor.label.categoryEditorLabel.CategoryEditor"),
-				Messages.getString("CategoryEditor.label.useTheEditorLabel.Description"),
-				Messages.getString("CategoryEditor.label.CategoryTabItem"), ID);
+				Translator.trans("CategoryEditor.label.categoryEditorLabel.CategoryEditor"),
+				Translator.trans("CategoryEditor.label.useTheEditorLabel.Description"),
+				Translator.trans("CategoryEditor.label.CategoryTabItem"), ID);
 		dao = (IDao) new CategoryDao();
 	}
 
@@ -34,8 +34,8 @@ public class CategoryEditor extends LabelDescriptionEditor {
 
 	public String getPerspectiveSwitchDialogText() {
 		return MessageFormat.format(
-				Messages.getString("perspective.switch.dialogtext"),
-				Messages.getString("perspective.category"));
+				Translator.trans("perspective.switch.dialogtext"),
+				Translator.trans("perspective.category"));
 	}
 
 	public void createPartControl(Composite parent) {
