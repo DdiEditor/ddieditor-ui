@@ -1403,7 +1403,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 
 		public IEditorSite getSite() {
-			return (IEditorSite) getSite();
+			return getEditorSite();
 		}
 	}
 
