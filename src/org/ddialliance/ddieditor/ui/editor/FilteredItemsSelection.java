@@ -32,11 +32,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 
 public class FilteredItemsSelection {
-	Composite parentCodeComposite;
 	ComboViewer comboViewer;
 	Button browseButton;
 	LightXmlObjectType result;
-	List<LightXmlObjectType> referenceList;
 
 	/**
 	 * Create Part Control i.e. create labels, field and browse button
@@ -53,9 +51,6 @@ public class FilteredItemsSelection {
 			final Composite parentCodeComposite, String subTitleText,
 			String itemLabelText, final List<LightXmlObjectType> referenceList,
 			String preIdValue) {
-
-		this.parentCodeComposite = parentCodeComposite;
-		this.referenceList = referenceList;
 
 		// Create Label Composite:
 		final Composite labelComposite = new Composite(parentLabelComposite,

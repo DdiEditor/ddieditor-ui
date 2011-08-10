@@ -34,7 +34,6 @@ import org.eclipse.ui.PartInitException;
 public class QuestionConstructEditor extends Editor {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.instrument.QuestionConstructEditor";
 	QuestionConstruct modelImpl;
-	private List<LightXmlObjectType> xquestionRefList;
 
 	public QuestionConstructEditor() {
 		super(Translator.trans("QuestionConstructEditor.label"), Translator
