@@ -47,13 +47,13 @@ class TreeLabelProvider extends LabelProvider {
 							.getTextOnMixedElement((XmlObject) XmlBeansUtil
 									.getDefaultLangElement(lightXmlObject
 											.getLabelList()));
-					if (l != null || l.equals("")) {
+					if (l != null && !l.equals("")) {
 						result.append(" ");
 						result.append(l);
 					}
 
 				} catch (Exception e) {
-					Editor.showError(e, getClass().getName(), null);
+					Editor.showError(e, getClass().getName());
 				}
 
 				if (result.length() == 0) {
