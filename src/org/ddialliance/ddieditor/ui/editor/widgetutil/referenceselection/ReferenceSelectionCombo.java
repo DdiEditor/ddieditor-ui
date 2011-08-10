@@ -120,7 +120,6 @@ public class ReferenceSelectionCombo {
 		codeComposite.setLayout(gridLayout);
 
 		if (subTitleText.length() > 0) {
-			final Label dummyLabel = new Label(codeComposite, SWT.NONE);
 			new Label(codeComposite, SWT.NONE);
 		}
 
