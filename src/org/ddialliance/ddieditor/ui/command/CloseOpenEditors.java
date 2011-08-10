@@ -31,7 +31,6 @@ public class CloseOpenEditors extends org.eclipse.core.commands.AbstractHandler 
 					}	
 				}
 			} catch (Exception e) {
-				new DDIFtpException(e);
 				throw new ExecutionException(e.getMessage(), e);
 			}
 		}
