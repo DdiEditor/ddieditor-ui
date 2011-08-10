@@ -575,6 +575,7 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						break;
 					case VARIABLE_SCHEME:
 						new VariableSchemeDao().delete(lightXmlObject.getId(),
 								lightXmlObject.getVersion(),
