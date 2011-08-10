@@ -312,7 +312,7 @@ public class ProfileEditor extends Editor {
 				// fixedValue" type="xs:boolean" default="false">
 				editor = new BooleanCellEditor(
 						((TableViewer) viewer).getTable(), enabled, disabled);
-				editor.setValue(new Boolean(true));
+				editor.setValue(Boolean.valueOf(true));
 				break;
 			case 4:
 				// required" type="xs:boolean" default="false">
