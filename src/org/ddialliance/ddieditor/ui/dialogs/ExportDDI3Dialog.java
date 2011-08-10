@@ -1,5 +1,6 @@
 package org.ddialliance.ddieditor.ui.dialogs;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -50,8 +52,11 @@ public class ExportDDI3Dialog extends Dialog {
 		try {
 			resources = PersistenceManager.getInstance().getResources();
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String errMess = MessageFormat
+					.format(Translator
+							.trans("ExportDDI3Action.mess.ExportDDI3Error"), e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
+					.getActiveShell(), Translator.trans("ErrorTitle"), errMess);
 		}
 		String[] comboOptions = new String[resources.size()];
 		for (int i = 0; i < comboOptions.length; i++) {
