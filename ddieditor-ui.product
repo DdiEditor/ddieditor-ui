@@ -15,8 +15,8 @@
 
    <launcherArgs>
       <programArgsWin>-Djava.library.path=%ORACLE_BERKELEY_DB_XML_HOME%\lib</programArgsWin>
-      <vmArgs>-Dddiftp.config=org.ddialliance.ddiftp.util.DdiEditorConfig -Ddda.config=dk.dda.util.properties.DefaultConfig -Ddda.test=true -Dhibernate.osgi=true</vmArgs>
-      <vmArgsLin>-Xms40m -Xmx1024m -Djava.library.path=/opt/dbxml-2.5.16/install/lib</vmArgsLin>
+      <vmArgs>-Xms40m -Xmx1024m -Dddiftp.config=org.ddialliance.ddiftp.util.DdiEditorConfig -Ddda.config=dk.dda.util.properties.DefaultConfig -Ddda.test=true -Dhibernate.osgi=true</vmArgs>
+      <vmArgsLin>-Djava.library.path=/opt/dbxml-2.5.16/install/lib</vmArgsLin>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
