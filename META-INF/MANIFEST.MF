@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.5.2",
  org.eclipse.nebula.cwt;bundle-version="0.9.0",
  org.eclipse.nebula.widgets.cdatetime;bundle-version="0.14.0",
  org.eclipse.draw2d
-Bundle-Version: 0.9.0
+Bundle-Version: 0.10.0
 Bundle-SymbolicName: ddieditor-ui;singleton:=true
 Bundle-Name: %Bundle-Name
 Import-Package: 
@@ -48,4 +48,5 @@ Export-Package: org.ddialliance.ddieditor.ui.dbxml.code,
  org.ddialliance.ddieditor.ui.preference,
  org.ddialliance.ddieditor.ui.util,
  org.ddialliance.ddieditor.ui.util.swtdesigner,
- org.ddialliance.ddieditor.ui.view
+ org.ddialliance.ddieditor.ui.view,
+ org.ddialliance.ddieditor.ui.view.variable.questionrelation
