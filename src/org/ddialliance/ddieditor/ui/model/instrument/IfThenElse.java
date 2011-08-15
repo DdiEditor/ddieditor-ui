@@ -72,10 +72,22 @@ public class IfThenElse extends Model {
 	@Override
 	public void validate() throws Exception {
 		super.validate();
+		// check then ref
 		if (doc.getIfThenElse().getThenConstructReference().getIDList()
 				.isEmpty()) {
 			throw new Exception(
-					Translator.trans("IfThenElse.mess.MandatoryThenReferenceHasNotBeenSpecified")); //$NON-NLS-1$
+					Translator
+							.trans("IfThenElse.mess.MandatoryThenReferenceHasNotBeenSpecified")); //$NON-NLS-1$
+		}
+
+		// check condition
+		if (doc.getIfThenElse().getIfCondition() != null) {
+			String ddaProgLang = DdiEditorConfig
+					.get(DdiEditorConfig.DDA_DDI_INSTRUMENT_PROGRAM_LANG);
+			if (getIfCondition().getProgrammingLanguage().equals(ddaProgLang)) {
+				ConditionalUtil.validateCondition(getIfCondition()
+						.getStringValue());
+			}
 		}
 	}
 
@@ -100,7 +112,7 @@ public class IfThenElse extends Model {
 			return codeType.getSourceQuestionReferenceList().get(0);
 		}
 	}
-	
+
 	public ReferenceType addNewIfQuestionReference() {
 		CodeType codeType = getCodeType(doc.getIfThenElse().getIfCondition());
 		if (codeType == null) {
