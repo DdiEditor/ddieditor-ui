@@ -31,6 +31,7 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.DDITabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.PreviewTabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.PropertyTabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.TabFolderListener;
+import org.ddialliance.ddieditor.ui.model.DdiModelException;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ILabelDescription;
 import org.ddialliance.ddieditor.ui.model.IModel;
@@ -309,31 +310,50 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
+		// validate
 		try {
 			model.validate();
 		} catch (Exception e) {
-			// Save with warning
-			DialogUtil.infoDialog(getSite().getShell(), ID,
-					Translator.trans("InfoTitle"), e.getMessage());
+			// ignore save on validate severity error fatal
+			if (e instanceof DdiModelException) {
+				DialogUtil.infoDialog(getSite().getShell(), ID,
+						Translator.trans("InfoTitle"), e.getMessage());
+				DdiModelException.Sevrity sevrity = ((DdiModelException) e)
+						.getSevrity();
+				if (sevrity != null
+						&& sevrity.equals(DdiModelException.Sevrity.FATAL)) {
+					return;
+				}
+			} else { 
+				// guard
+				// display validate error - continue save
+				boolean yesNo = DialogUtil.yesNoDialog(
+						Translator.trans("InfoTitle"), e.getMessage());
+				if (!yesNo) {
+					return;
+				}
+			}
 		}
+
+		// save
 		try {
+			// new
 			if (getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
+				// question item special
 				if (getEditorInputImpl().getElementType() == ElementType.QUESTION_ITEM
 						|| getEditorInputImpl().getElementType() == ElementType.SUB_QUESTION_ITEM) {
 					((QuestionItemDao) dao)
 							.setParentElementType(getEditorInputImpl()
 									.getParentElementType());
 				}
+
 				dao.create(model);
 				getEditorInputImpl().setEditorMode(EditorModeType.EDIT);
-			} else if (getEditorInputImpl().getEditorMode().equals(
+			}
+			// update
+			else if (getEditorInputImpl().getEditorMode().equals(
 					EditorModeType.EDIT)) {
 				dao.update(model);
-			} else if (getEditorInputImpl().getEditorMode().equals(
-					EditorModeType.VIEW)) {
-				if (log.isDebugEnabled()) {
-					log.debug("View mode: Save ignored");
-				}
 			}
 		} catch (Exception e) {
 			DialogUtil.errorDialog((IEditorSite) getSite(), ID,
@@ -347,6 +367,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			ViewManager.getInstance().addViewsToRefresh(ID);
 			ViewManager.getInstance().refesh();
 		}
+
+		// clear edit status
 		editorStatus.clearChanged();
 	}
 
@@ -405,7 +427,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public void setEditorTabName(String name) {
 		setPartName(name);
 	}
-	
+
 	/**
 	 * Create error dialog displaying exception
 	 * 
@@ -595,9 +617,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			versionText.setEditable(false);
 
 			// version responsibility
-			createLabel(
-					group,
-					Translator.trans("Editor.label.responsibelLabel.Responsibel"));
+			createLabel(group,
+					Translator
+							.trans("Editor.label.responsibelLabel.Responsibel"));
 			versionResponsibilityText = createText(group, "", null);
 			versionResponsibilityText.setEditable(false);
 
@@ -609,8 +631,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 			// version rationale
 			versionRationaleText = createTextAreaInput(group,
-					Translator.trans("Editor.label.versionrationale"), "",
-					null);
+					Translator.trans("Editor.label.versionrationale"), "", null);
 			versionRationaleText
 					.addModifyListener(new TextStyledTextModyfiListener(model,
 							VersionRationaleDocument.class,
@@ -638,10 +659,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public StyledText createXmlTab(IModel model) {
-		TabItem tabItem = createTabItem(Translator
-				.trans("editor.tabitem.ddi"));
-		Group group = createGroup(tabItem,
-				Translator.trans("editor.group.ddi"));
+		TabItem tabItem = createTabItem(Translator.trans("editor.tabitem.ddi"));
+		Group group = createGroup(tabItem, Translator.trans("editor.group.ddi"));
 		StyledText styledText = createTextAreaInput(group,
 				Translator.trans("editor.label.ddi"), "", false);
 		// styledText.addModifyListener(new TextStyledTextModyfiListener(model,
@@ -890,7 +909,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		combo.setItems(options);
 		return combo;
 	}
-	
+
 	public String getDefaultCodeProgrammingLanguage() {
 		String programmingLanguage = "";
 		if (((EditorInput) getEditorInput()).mode
@@ -1087,13 +1106,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 										: false,
 								translated.equals("true") ? true : false));
 					} catch (Exception e1) {
-						DialogUtil
-								.errorDialog(
-										(IEditorSite) getSite(),
-										ID,
-										Translator.trans("ErrorTitle"),
-										Translator.trans("Editor.mess.InternalError"),
-										e1);
+						DialogUtil.errorDialog((IEditorSite) getSite(), ID,
+								Translator.trans("ErrorTitle"),
+								Translator.trans("Editor.mess.InternalError"),
+								e1);
 						return;
 					}
 				}
@@ -1139,7 +1155,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 											(IEditorSite) getSite(),
 											ID,
 											Translator.trans("ErrorTitle"),
-											Translator.trans("Editor.mess.InternalError"),
+											Translator
+													.trans("Editor.mess.InternalError"),
 											e);
 							return;
 						}
@@ -1197,20 +1214,19 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			} else if (widget instanceof StyledText) {
 				((StyledText) widget).setText(text);
 			} else {
-				DialogUtil
-						.errorDialog(
-								(IEditorSite) getSite(),
-								ID,
-								Translator.trans("ErrorTitle"),
-								Translator.trans("Editor.mess.InternalError"),
-								new DDIFtpException(
-										Translator.trans("Editor.mess.UnsupportedWidgetType")));
+				DialogUtil.errorDialog(
+						(IEditorSite) getSite(),
+						ID,
+						Translator.trans("ErrorTitle"),
+						Translator.trans("Editor.mess.InternalError"),
+						new DDIFtpException(Translator
+								.trans("Editor.mess.UnsupportedWidgetType")));
 				return;
 			}
 		} catch (DDIFtpException e) {
 			ErrorDialog.openError(getSite().getShell(), Translator
-					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, e.getMessage(), e));
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, e.getMessage(), e));
 		}
 	}
 
@@ -1244,8 +1260,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					composite, "", labelText, referenceList, preIdValue);
 		} catch (Exception e) {
 			ErrorDialog.openError(getSite().getShell(), Translator
-					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, e.getMessage(), e));
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, e.getMessage(), e));
 		}
 		return referenceSelectionCombo;
 	}
@@ -1321,7 +1337,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			if (!System.getProperty("os.version").equals("2.6.38-10-generic")) {
 				browser = new Browser(group, SWT.EMBEDDED | SWT.BORDER);
 			} else {
-				log.fatal("ubuntu-11.4 bug, org.eclipse.swt.browser.UseWebKitGTK", new Throwable());
+				log.fatal(
+						"ubuntu-11.4 bug, org.eclipse.swt.browser.UseWebKitGTK",
+						new Throwable());
 			}
 		} catch (Exception e) {
 			log.fatal(e, new Throwable());
