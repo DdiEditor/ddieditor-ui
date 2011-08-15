@@ -64,7 +64,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
-public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
+public class IfThenElseEditor extends Editor {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor";
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			IfThenElseEditor.class);
@@ -307,11 +307,12 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 	}
 
 	public void updatequeiRefTable() throws DDIFtpException {
-		String[] queiRefIds = new String[modelImpl.getIfQuestionReferences()
-				.size()];
-		if (queiRefIds.length == 0) {
+		if (modelImpl.getIfQuestionReferences()==null) { // guard
 			return;
 		}
+		
+		String[] queiRefIds = new String[modelImpl.getIfQuestionReferences()
+				.size()];
 		int count = 0;
 		for (ReferenceType ref : modelImpl.getIfQuestionReferences()) {
 			ReferenceResolution refS = new ReferenceResolution(ref);
@@ -320,13 +321,13 @@ public class IfThenElseEditor extends Editor implements IAutoChangePerspective {
 		}
 
 		// clear items
-		TableItem[] items = null;
 		try {
-			items = table.getItems();
+			TableItem[] items = table.getItems();
 			for (int i = 0; i < items.length; i++) {
 				items[i].dispose();
 			}
 		} catch (Exception e) {
+			// do nothing
 			// swt null items in table exception
 		}
 
