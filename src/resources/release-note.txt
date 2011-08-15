@@ -1,20 +1,19 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.14 Release Data: 2011-08-12
+Product Version: 1.0.15 Release Data: 2011-08-XX
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-- Understøtter nu simpel udskrift af et helt DDI 3.1 dokument. Printes via default
-browser.
+- Iftenelse editor tilfoejet validering af konditions felt
+
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
 Item ID:    Description:  
-Refactor preferences to use and persist in files: ddieditor/ddiftp-app.properties, 
-ddieditor-ui/ddieditor-ui.properties
+- Tilfoejet ModelErrorException
 
 -------------------------------------------------------------------------------
 Change Log Previous Releases
@@ -41,3 +40,5 @@ See http://172.20.33.20:8080/jtrac
 -------------------------------------------------------------------------------
 Known Issue
 ------------------------------------------------------------------------------- 
+Validering af konditions felt mangler paa repeatuntil, loop, repeatwhile 
+og computationitem.
