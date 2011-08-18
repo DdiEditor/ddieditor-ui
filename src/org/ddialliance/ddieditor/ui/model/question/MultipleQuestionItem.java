@@ -321,7 +321,7 @@ public class MultipleQuestionItem extends Model {
 		} else if (type.equals(SpecificSequenceType.class)) {
 			// Set Subquestion Sequence
 			if (!value.equals("")) {
-				int i = Editor.defineItemSequenceSelection((String) value);
+				int i = (Integer) value;
 				SpecificSequenceType subSeqType = SpecificSequenceType.Factory
 						.newInstance();
 				ItemSequenceTypeType.Enum itemSequenceType = ItemSequenceTypeType.Enum
