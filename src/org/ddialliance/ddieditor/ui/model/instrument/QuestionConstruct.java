@@ -138,7 +138,7 @@ public class QuestionConstruct extends Model {
 		if (type.equals(SpecificSequenceType.class)) {
 			log.warn("AlternateSequenceType, not implemented");
 
-			int defined = Editor.defineItemSequenceSelection((String) value);
+			int defined = (Integer) value;
 			if (defined == -1 || defined == 0) {
 				// remove ResponseSequence
 				doc.getQuestionConstruct().getDomNode().removeChild(
