@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CaseIdentificationDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
@@ -24,6 +25,8 @@ import org.ddialliance.ddieditor.ui.dbxml.IDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dialogs.TranslationDialog;
 import org.ddialliance.ddieditor.ui.dialogs.TranslationDialogInput;
+import org.ddialliance.ddieditor.ui.dialogs.translationdialoginput.DescriptionTdI;
+import org.ddialliance.ddieditor.ui.dialogs.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
@@ -35,8 +38,6 @@ import org.ddialliance.ddieditor.ui.model.DdiModelException;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ILabelDescription;
 import org.ddialliance.ddieditor.ui.model.IModel;
-import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
-import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
@@ -128,6 +129,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	protected EditorInput editorInput;
 
 	protected Group labelDescriptionTabGroup; // May be used for expanding Label
+	
+	static private String[] sequenceOptions = { "",
+		ItemSequenceTypeType.IN_ORDER_OF_APPEARANCE.toString(),
+		ItemSequenceTypeType.RANDOM.toString(),
+		ItemSequenceTypeType.ROTATE.toString(),
+		ItemSequenceTypeType.OTHER.toString() };
 
 	// Description Tab content
 
@@ -921,12 +928,16 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public static String[] getSequenceOptions() {
-		String[] sequenceOptions = { "",
-				ItemSequenceTypeType.IN_ORDER_OF_APPEARANCE.toString(),
-				ItemSequenceTypeType.RANDOM.toString(),
-				ItemSequenceTypeType.ROTATE.toString(),
-				ItemSequenceTypeType.OTHER.toString() };
 		return sequenceOptions;
+	}
+	
+	public static int getSequenceIndex(String option) {
+		for (int i = 0; i < sequenceOptions.length; i++) {
+			if (sequenceOptions[i].equals(option)) {
+				return (i);
+			}
+		}
+		return -1;
 	}
 
 	public static int defineItemSequenceSelection(String itemSequence) {

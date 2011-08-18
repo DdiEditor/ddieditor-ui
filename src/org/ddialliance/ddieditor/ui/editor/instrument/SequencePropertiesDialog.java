@@ -1,9 +1,9 @@
 package org.ddialliance.ddieditor.ui.editor.instrument;
 
+import org.ddialliance.ddieditor.ui.dialogs.translationdialoginput.DescriptionTdI;
+import org.ddialliance.ddieditor.ui.dialogs.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.model.instrument.Sequence;
-import org.ddialliance.ddieditor.ui.model.translationdialoginput.DescriptionTdI;
-import org.ddialliance.ddieditor.ui.model.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
