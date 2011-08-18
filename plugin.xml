@@ -575,6 +575,7 @@
                <command
                      commandId="org.ddialliance.ddieditor.ui.command.DisplayNote"
                      icon="icons/dates.gif"
+                     id="releasenote"
                      label="Release Note"
                      mnemonic="N"
                      style="push">
