@@ -176,7 +176,7 @@ public class QuestionConstructEditor extends Editor {
 				// TODO do item sequence type other stuff
 			}
 			editorIdentification.getEditorStatus().setChanged();
-			applyChange(Editor.getSequenceOptions()[selected], modifyClass);
+			applyChange(Editor.getSequenceIndex(Editor.getSequenceOptions()[selected]), modifyClass);
 		}
 	}
 
