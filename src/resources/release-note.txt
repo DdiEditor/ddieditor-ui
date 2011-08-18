@@ -8,6 +8,8 @@ What's New
 User interface
 Item ID:    Description:
 - Iftenelse editor tilfoejet validering af konditions felt
+- Tilfoejet simple auto timeing af question import med popup dialog under help->
+question import timing. 
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
