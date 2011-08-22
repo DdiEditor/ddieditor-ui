@@ -26,6 +26,9 @@ public class ReferenceSelectionAdapter implements SelectionListener {
 	public void widgetSelected(SelectionEvent e) {
 		// Combo combo = (Combo) e.getSource();
 		try {
+			if (refSelecCombo.getResult()==null) {
+				return;
+			}
 			model.applyChange(refSelecCombo.getResult(), type);
 		} catch (Exception ex) {
 			DDIFtpException e1 = new DDIFtpException(ex);
