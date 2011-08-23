@@ -182,12 +182,11 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				} else if (contentType.equals(ViewContentType.VariableContent)) {
 					return new VariableSchemeDao().getLightXmlObject(null,
 							null, null, null).toArray();
-				} else { // guard
+				} else
 					new DDIFtpException(
 							"Not supported, contenttype: " + contentType
 									+ ", parentElement: " + parentElement,
 							new Throwable());
-				}
 			} catch (Exception e) {
 				DialogUtil.errorDialog(site.getShell(), ID,
 						Translator.trans("ErrorTitle"),
