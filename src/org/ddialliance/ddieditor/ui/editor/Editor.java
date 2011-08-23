@@ -187,6 +187,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			try {
 				model = dao.create("", "", editorInput.getParentId(),
 						editorInput.getParentVersion());
+				model.setDisplayLanguage(LanguageUtil.getDisplayLanguage());
 			} catch (Exception e) {
 				throw new PartInitException(
 						Translator.trans("editor.init.error.create"),
@@ -209,6 +210,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				model = dao.getModel(editorInput.getId(),
 						editorInput.getVersion(), editorInput.getParentId(),
 						editorInput.getParentVersion());
+				model.setDisplayLanguage(LanguageUtil.getDisplayLanguage());
 			} catch (Exception e) {
 				throw new PartInitException(
 						Translator.trans("editor.init.error.retrieval"),
