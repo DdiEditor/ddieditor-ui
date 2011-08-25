@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.dialogs.PatternFilter;
-import org.eclipse.ui.internal.actions.HelpContentsAction;
 import org.eclipse.ui.part.ViewPart;
 
 /**
@@ -55,7 +54,6 @@ public class View extends ViewPart implements IPropertyListener {
 	private Action expandAllAction;
 	private Action refreshAction;
 	public TreeViewer treeViewer;
-	private HelpContentsAction helpContentsAction;
 	private Tree tree;
 	private Text filterText;
 	final PatternFilter nameFilter = new PatternFilter();
@@ -264,8 +262,6 @@ public class View extends ViewPart implements IPropertyListener {
 		refreshAction.setImageDescriptor(ResourceManager
 				.getPluginImageDescriptor(Activator.getDefault(),
 						"icons/refresh.gif"));
-
-		helpContentsAction = new HelpContentsAction();
 	}
 
 	/**
@@ -279,8 +275,6 @@ public class View extends ViewPart implements IPropertyListener {
 		toolbarManager.add(collapseAllAction);
 		toolbarManager.add(new Separator());
 		toolbarManager.add(refreshAction);
-		toolbarManager.add(new Separator());
-		toolbarManager.add(helpContentsAction);
 	}
 
 	/**
@@ -289,8 +283,6 @@ public class View extends ViewPart implements IPropertyListener {
 	private void initializeMenu() {
 		IMenuManager menuManager = getViewSite().getActionBars()
 				.getMenuManager();
-
-		menuManager.add(helpContentsAction);
 	}
 
 	@Override
