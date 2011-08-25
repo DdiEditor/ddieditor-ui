@@ -7,6 +7,7 @@ What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
+- Instrument support for forskellig fra (!=)
 - Iftenelse editor tilfoejet validering af konditions felt
 - Tilfoejet simple auto timeing af question import med popup dialog under help->
 question import timing. 
@@ -16,6 +17,7 @@ Application Infrastructure:
 -------------------------------------------------------------------------------
 Item ID:    Description:  
 - Tilfoejet ModelErrorException
+_ Refakturering: Sepperation af model og dbxml i ddieditor-ui modulet
 
 -------------------------------------------------------------------------------
 Change Log Previous Releases
