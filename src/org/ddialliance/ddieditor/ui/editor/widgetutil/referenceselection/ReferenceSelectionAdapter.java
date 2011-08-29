@@ -8,7 +8,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
 public class ReferenceSelectionAdapter implements SelectionListener {
-	ReferenceSelectionCombo refSelecCombo;
+	protected ReferenceSelectionCombo refSelecCombo;
 	IModel model;
 	Class type;
 	EditorIdentification editorIdentification;
