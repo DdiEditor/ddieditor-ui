@@ -10,7 +10,8 @@ Item ID:    Description:
 - Instrument support for forskellig fra (!=)
 - Iftenelse editor tilfoejet validering af konditions felt
 - Tilfoejet simple auto timeing af question import med popup dialog under help->
-question import timing. 
+question import timing.
+DDIE-113 Uoverensstemmelse mellem codes og categories i codescheme editor
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
