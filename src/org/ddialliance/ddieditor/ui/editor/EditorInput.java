@@ -188,8 +188,7 @@ public class EditorInput implements IEditorInput {
 	public String getToolTipText() {
 		String toolTip = "";
 		if (getElementType() != null) {
-			toolTip = Translator.trans(getElementType()
-					.getDisplayMessageEntry());
+			toolTip = getElementType().getTranslatedDisplayMessageEntry();
 		}
 		return toolTip;
 	}
