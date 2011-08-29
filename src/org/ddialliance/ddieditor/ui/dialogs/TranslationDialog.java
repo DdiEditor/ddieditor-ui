@@ -266,7 +266,7 @@ public class TranslationDialog extends Dialog {
 		final GridLayout topGridLayout = new GridLayout();
 		topComposite.setLayout(topGridLayout);
 		final Group topGroup = new Group(topComposite, SWT.NONE);
-		topGroup.setLayoutData(new GridData(756, 647));
+		topGroup.setLayoutData(new GridData(675, 250));
 		topGroup.setLayout(new GridLayout());
 		topGroup.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
