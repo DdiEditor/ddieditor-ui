@@ -12,13 +12,19 @@ Item ID:    Description:
 - Tilfoejet simple auto timeing af question import med popup dialog under help->
 question import timing.
 DDIE-113 Uoverensstemmelse mellem codes og categories i codescheme editor
-
+DDIE-77 Mindre oversaettelse popup vinduer
+- Tilfoejet forslag til sidste valgte mappe eller fil valg i aaben, import og 
+eksport menuer
+ - Tilfoejet indikation af arbejdshjul i variable question relation
+ 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
 Item ID:    Description:  
 - Tilfoejet ModelErrorException
-_ Refakturering: Sepperation af model og dbxml i ddieditor-ui modulet
+- Refakturering: Sepperation af model og dbxml i ddieditor-ui modulet
+- Housekeeping tiljoejet persistence storage interface
+- Housekeeping paa xmldb bliver koert efter import spss og questions 
 
 -------------------------------------------------------------------------------
 Change Log Previous Releases
