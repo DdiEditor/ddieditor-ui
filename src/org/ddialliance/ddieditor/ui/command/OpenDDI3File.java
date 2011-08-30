@@ -7,6 +7,7 @@ import java.text.MessageFormat;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.filesystem.FilesystemManager;
+import org.ddialliance.ddieditor.ui.preference.PreferenceUtil;
 import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -30,7 +31,9 @@ public class OpenDDI3File extends org.eclipse.core.commands.AbstractHandler {
 		fileChooser.setFilterExtensions(new String[] { "*.xml" });
 		fileChooser.setFilterNames(new String[] { Translator
 				.trans("OpenFileAction.filechooser.filternames") });
+		PreferenceUtil.setPathFilter(fileChooser);
 		final String fileName = fileChooser.open();
+		PreferenceUtil.setLastBrowsedPath(fileName);
 
 		if (fileName != null) {
 			try {

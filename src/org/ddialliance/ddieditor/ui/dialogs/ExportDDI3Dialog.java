@@ -1,5 +1,6 @@
 package org.ddialliance.ddieditor.ui.dialogs;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.preference.PreferenceUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.jface.dialogs.Dialog;
@@ -89,6 +91,12 @@ public class ExportDDI3Dialog extends Dialog {
 		editor.createLabel(group,
 				Translator.trans("ExportDDI3Action.filechooser.title"));
 		final Text pathText = editor.createText(group, "", false);
+		File lastBrowsedPath = PreferenceUtil.getLastBrowsedPath();
+		if (lastBrowsedPath!=null) {
+			pathText.setText(lastBrowsedPath.getAbsolutePath());
+			path = lastBrowsedPath.getAbsolutePath();
+		}
+		
 		Button pathBrowse = editor.createButton(group,
 				Translator.trans("ExportDDI3Action.filechooser.browse"));
 		pathBrowse.addSelectionListener(new SelectionListener() {
@@ -98,9 +106,11 @@ public class ExportDDI3Dialog extends Dialog {
 						.getWorkbench().getDisplay().getActiveShell());
 				dirChooser.setText(Translator
 						.trans("ExportDDI3Action.filechooser.title"));
+				PreferenceUtil.setPathFilter(dirChooser);
 				path = dirChooser.open();
 				if (path != null) {
 					pathText.setText(path);
+					PreferenceUtil.setLastBrowsedPath(path);
 				}
 			}
 

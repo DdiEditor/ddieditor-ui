@@ -3,6 +3,8 @@ package org.ddialliance.ddieditor.ui.command;
 import java.io.File;
 
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
+import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.preference.PreferenceUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -18,14 +20,16 @@ public class ExportResourceList extends
 				.getWorkbench().getDisplay().getActiveShell());
 		dirChooser.setText(Translator
 				.trans("ExportDDI3Action.filechooser.title"));
+		PreferenceUtil.setPathFilter(dirChooser);
 		String path = dirChooser.open();
+		PreferenceUtil.setLastBrowsedPath(path);
+		
 		// TODO check for null or empty on path
 		try {
 			PersistenceManager.getInstance().exportResourceList(
 					new File(path + File.separator + "resource-list.xml"));
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Editor.showError(e, this.getClass().getName());
 		}
 		return null;
 	}
