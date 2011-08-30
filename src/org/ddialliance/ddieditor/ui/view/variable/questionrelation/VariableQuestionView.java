@@ -57,6 +57,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusEvent;
@@ -128,121 +129,134 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 				b.addSelectionListener(new SelectionListener() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						ReferenceResolution queiRef = null;
-						String variValRep = null;
-						String queiRespDoma = null;
-						QuestionItem quei = null;
+						Thread thread = new Thread(new Runnable() {
+							public void run() {
+								ReferenceResolution queiRef = null;
+								String variValRep = null;
+								String queiRespDoma = null;
+								QuestionItem quei = null;
 
-						for (VariableQuestionRelation variQueiRel : relItems) {
-							queiRef = null;
-							variValRep = null;
-							queiRespDoma = null;
-							quei = null;
+								for (VariableQuestionRelation variQueiRel : relItems) {
+									queiRef = null;
+									variValRep = null;
+									queiRespDoma = null;
+									quei = null;
 
-							// check the values
-							if (variQueiRel.quei != null) {
-								queiRef = new ReferenceResolution(
-										variQueiRel.quei);
+									// check the values
+									if (variQueiRel.quei != null) {
+										queiRef = new ReferenceResolution(
+												variQueiRel.quei);
 
-								// vari name
-								String variName = null;
-								for (CustomType cus : getCustomListbyType(
-										variQueiRel.vari, VARI_NAME)) {
-									variName = XmlBeansUtil
-											.getTextOnMixedElement(cus);
-								}
+										// vari name
+										String variName = null;
+										for (CustomType cus : getCustomListbyType(
+												variQueiRel.vari, VARI_NAME)) {
+											variName = XmlBeansUtil
+													.getTextOnMixedElement(cus);
+										}
 
-								// vari rep value
-								for (CustomType cus : getCustomListbyType(
-										variQueiRel.vari, VARI_VAL_REP)) {
-									variValRep = XmlBeansUtil
-											.getTextOnMixedElement(cus);
-								}
+										// vari rep value
+										for (CustomType cus : getCustomListbyType(
+												variQueiRel.vari, VARI_VAL_REP)) {
+											variValRep = XmlBeansUtil
+													.getTextOnMixedElement(cus);
+										}
 
-								// quei rep domain
-								for (CustomType cus : getCustomListbyType(
-										variQueiRel.quei, QUEI_RESP_DOMA)) {
-									queiRespDoma = XmlBeansUtil
-											.getTextOnMixedElement(cus);
-								}
+										// quei rep domain
+										for (CustomType cus : getCustomListbyType(
+												variQueiRel.quei,
+												QUEI_RESP_DOMA)) {
+											queiRespDoma = XmlBeansUtil
+													.getTextOnMixedElement(cus);
+										}
 
-								// vari id ~ quei userid pseudo vari id
-								String variPseudoId = null;
-								for (CustomType cus : getCustomListbyType(
-										variQueiRel.quei, "UserID")) {
-									if (cus.getOption()
-											.equals(Ddi3NamespaceHelper.QUEI_VAR_USER_ID_TYPE)) {
-										variPseudoId = XmlBeansUtil
-												.getTextOnMixedElement(cus);
-										if (variName != null
-												&& !variName
-														.equals(variPseudoId)) {
+										// vari id ~ quei userid pseudo vari id
+										String variPseudoId = null;
+										for (CustomType cus : getCustomListbyType(
+												variQueiRel.quei, "UserID")) {
+											if (cus.getOption()
+													.equals(Ddi3NamespaceHelper.QUEI_VAR_USER_ID_TYPE)) {
+												variPseudoId = XmlBeansUtil
+														.getTextOnMixedElement(cus);
+												if (variName != null
+														&& !variName
+																.equals(variPseudoId)) {
+													quei = setPseudoVariIdOnQuei(
+															variQueiRel.quei,
+															variName);
+												} else {
+													continue;
+												}
+											}
+										}
+
+										if (variPseudoId == null) {
 											quei = setPseudoVariIdOnQuei(
 													variQueiRel.quei, variName);
-										} else {
-											continue;
-										}
-									}
-								}
-
-								if (variPseudoId == null) {
-									quei = setPseudoVariIdOnQuei(
-											variQueiRel.quei, variName);
-								}
-							}
-
-							// set vari quei ref
-							Variable vari = null;
-							String queiId = null;
-							for (CustomType cus : getCustomListbyType(
-									variQueiRel.vari, VARI_QUEI_REF)) {
-								queiId = XmlBeansUtil
-										.getTextOnMixedElement(cus);
-								break;
-							}
-							if (queiId == null && queiRef == null) {
-								continue;
-							} else if (queiId != null && queiRef == null) {
-								vari = deleteQueiRefOnVari(variQueiRel);
-							} else if (queiId == null && queiRef != null) {
-								vari = setQueiRefOnVari(variQueiRel);
-							} else if (!queiRef.getId().equals(queiId)) {
-								vari = setQueiRefOnVari(variQueiRel);
-							}
-
-							// change quei resp domain
-							// set concept on vari
-							if (variValRep != null && queiRef != null) {
-								if (vari == null) {
-									try {
-										vari = getVariable(variQueiRel);
-									} catch (Exception e1) {
-										Editor.showError(e1, ID, getSite());
-									}
-								}
-
-								if (!(variValRep.equals(queiRespDoma))) {
-									if (quei == null) {
-										try {
-											quei = getQuestionItem(variQueiRel.quei);
-										} catch (Exception e1) {
-											Editor.showError(e1, ID, getSite());
 										}
 									}
 
-									// resp domain
-									changeRespDomain(vari, quei);
+									// set vari quei ref
+									Variable vari = null;
+									String queiId = null;
+									for (CustomType cus : getCustomListbyType(
+											variQueiRel.vari, VARI_QUEI_REF)) {
+										queiId = XmlBeansUtil
+												.getTextOnMixedElement(cus);
+										break;
+									}
+									if (queiId == null && queiRef == null) {
+										continue;
+									} else if (queiId != null
+											&& queiRef == null) {
+										vari = deleteQueiRefOnVari(variQueiRel);
+									} else if (queiId == null
+											&& queiRef != null) {
+										vari = setQueiRefOnVari(variQueiRel);
+									} else if (!queiRef.getId().equals(queiId)) {
+										vari = setQueiRefOnVari(variQueiRel);
+									}
 
-									try {
-										// vari concept
-										setConcepts(vari, quei);
-									} catch (DDIFtpException e1) {
-										Editor.showError(e1, ID, getSite());
+									// change quei resp domain
+									// set concept on vari
+									if (variValRep != null && queiRef != null) {
+										if (vari == null) {
+											try {
+												vari = getVariable(variQueiRel);
+											} catch (Exception e1) {
+												Editor.showError(e1, ID,
+														getSite());
+											}
+										}
+
+										if (!(variValRep.equals(queiRespDoma))) {
+											if (quei == null) {
+												try {
+													quei = getQuestionItem(variQueiRel.quei);
+												} catch (Exception e1) {
+													Editor.showError(e1, ID,
+															getSite());
+												}
+											}
+
+											// resp domain
+											changeRespDomain(vari, quei);
+
+											try {
+												// vari concept
+												setConcepts(vari, quei);
+											} catch (DDIFtpException e1) {
+												Editor.showError(e1, ID,
+														getSite());
+											}
+										}
 									}
 								}
 							}
-						}
+						});
 
+						BusyIndicator.showWhile(PlatformUI.getWorkbench()
+								.getDisplay(), thread);
 						// TODO vari.cods to quei.cats create relation
 
 						// refresh
