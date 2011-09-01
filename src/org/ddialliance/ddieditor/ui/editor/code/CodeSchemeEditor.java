@@ -454,8 +454,12 @@ public class CodeSchemeEditor extends Editor {
 					return "";
 				}
 				try {
-					xml = new CategoryDao().getLightXmlObject(
-							codeCateRel.getId(), "", "", "").get(0);
+					List<LightXmlObjectType> codeCatRelList  = new CategoryDao().getLightXmlObject(
+							codeCateRel.getId(), "", "", "");
+					if (!codeCatRelList.isEmpty()) {
+						xml = new CategoryDao().getLightXmlObject(
+								codeCateRel.getId(), "", "", "").get(0);
+					}					
 				} catch (Exception e1) {
 					DDIFtpException e2 = new DDIFtpException(
 							Translator
