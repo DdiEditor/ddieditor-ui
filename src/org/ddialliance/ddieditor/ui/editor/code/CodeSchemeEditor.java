@@ -454,12 +454,12 @@ public class CodeSchemeEditor extends Editor {
 					return "";
 				}
 				try {
-					List<LightXmlObjectType> codeCatRelList  = new CategoryDao().getLightXmlObject(
-							codeCateRel.getId(), "", "", "");
+					List<LightXmlObjectType> codeCatRelList = new CategoryDao()
+							.getLightXmlObject(codeCateRel.getId(), "", "", "");
 					if (!codeCatRelList.isEmpty()) {
 						xml = new CategoryDao().getLightXmlObject(
 								codeCateRel.getId(), "", "", "").get(0);
-					}					
+					}
 				} catch (Exception e1) {
 					DDIFtpException e2 = new DDIFtpException(
 							Translator
@@ -703,7 +703,8 @@ public class CodeSchemeEditor extends Editor {
 					for (Iterator<CodeType> iterator = codes.iterator(); iterator
 							.hasNext();) {
 						CodeType code = iterator.next();
-						if (code.getCategoryReference().isNil()
+						if (code.getCategoryReference() != null
+								&& code.getCategoryReference().isNil()
 								&& code.getValue().equals(defaultNonSetvalue)) {
 							iterator.remove();
 						}
