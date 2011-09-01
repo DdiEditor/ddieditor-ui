@@ -8,11 +8,14 @@ import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 public class DialogUtil {
 	/**
@@ -71,6 +74,34 @@ public class DialogUtil {
 	public static boolean yesNoDialog(String title, String message) {
 		return MessageDialog.openConfirm(PlatformUI.getWorkbench().getDisplay()
 				.getActiveShell(), title, message);
+	}
+
+	public static int yesNoYesToAllDialog(String title, String[] labels,
+			String message, String ticket) {
+		MessageDialog m = new MessageDialog(PlatformUI.getWorkbench()
+				.getDisplay().getActiveShell(), title, null, message,
+				MessageDialog.CONFIRM, labels, 0);
+		int result = m.open();
+
+		if (result == 0) {
+			// set ticket yes to all
+			ScopedPreferenceStore sps = new ScopedPreferenceStore(
+					ConfigurationScope.INSTANCE, "ddieditor-ui");
+			sps.setDefault(ticket, true);
+		}
+		// System.out.println(labels[result] + ": " + result);
+		return result;
+	}
+
+	public static void cleanUpyesNoYesToAll(String ticket) {
+		ScopedPreferenceStore preferenceStore = new ScopedPreferenceStore(
+				ConfigurationScope.INSTANCE, "ddieditor-ui");
+		IEclipsePreferences[] eps = preferenceStore.getPreferenceNodes(false);
+		try {
+			eps[0].remove(ticket);
+		} catch (Exception e) {
+			Editor.showError(e, DialogUtil.class.getName());
+		}
 	}
 
 	public static void infoDialog(Shell shell, String pluginId, String title,
