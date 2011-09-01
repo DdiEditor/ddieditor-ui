@@ -76,32 +76,14 @@ public class DialogUtil {
 				.getActiveShell(), title, message);
 	}
 
-	public static int yesNoYesToAllDialog(String title, String[] labels,
-			String message, String ticket) {
+	public static int customConfirmDialog(String title, String message,
+			String[] labels) {
 		MessageDialog m = new MessageDialog(PlatformUI.getWorkbench()
 				.getDisplay().getActiveShell(), title, null, message,
 				MessageDialog.CONFIRM, labels, 0);
 		int result = m.open();
-
-		if (result == 0) {
-			// set ticket yes to all
-			ScopedPreferenceStore sps = new ScopedPreferenceStore(
-					ConfigurationScope.INSTANCE, "ddieditor-ui");
-			sps.setDefault(ticket, true);
-		}
-		// System.out.println(labels[result] + ": " + result);
+		System.out.println(labels[result] + ": " + result);
 		return result;
-	}
-
-	public static void cleanUpyesNoYesToAll(String ticket) {
-		ScopedPreferenceStore preferenceStore = new ScopedPreferenceStore(
-				ConfigurationScope.INSTANCE, "ddieditor-ui");
-		IEclipsePreferences[] eps = preferenceStore.getPreferenceNodes(false);
-		try {
-			eps[0].remove(ticket);
-		} catch (Exception e) {
-			Editor.showError(e, DialogUtil.class.getName());
-		}
 	}
 
 	public static void infoDialog(Shell shell, String pluginId, String title,
