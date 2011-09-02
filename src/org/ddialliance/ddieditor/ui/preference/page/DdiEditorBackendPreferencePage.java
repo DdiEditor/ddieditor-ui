@@ -2,6 +2,7 @@ package org.ddialliance.ddieditor.ui.preference.page;
 
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.util.DdiEditorConfig;
+import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
@@ -13,29 +14,20 @@ public class DdiEditorBackendPreferencePage extends FieldEditorPreferencePage
 	public DdiEditorBackendPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("DDIEditor backend preferences");
+		setDescription(Translator.trans("pref.dbxmlbackend.headline"));
 	}
 
 	@Override
 	public void createFieldEditors() {
-		// TODO used commeton 20110718
-		// DirectoryFieldEditor dbXmlInstall = new DirectoryFieldEditor(
-		// PreferenceConstants.DDIEDITOR_DBXML_HOME,
-		// "&Directory of Oracle &Berkley XML instalation:",
-		// getFieldEditorParent());
-		// dbXmlInstall.load();
-		// addField(dbXmlInstall);
-
-		DirectoryFieldEditor dbXmlEnv = new DirectoryFieldEditor(
+		DirectoryFieldEditor dbXmlEnvFieldEditor = new DirectoryFieldEditor(
 				DdiEditorConfig.DBXML_ENVIROMENT_HOME,
-				"Directory of DDIEditor XML &enviroment:",
+				Translator.trans("pref.dbxmlbackend.path"),
 				getFieldEditorParent());
-		dbXmlEnv.load();
-		addField(dbXmlEnv);
+		dbXmlEnvFieldEditor.load();
+		addField(dbXmlEnvFieldEditor);
 	}
 
 	@Override
 	public void init(IWorkbench workbench) {
 	}
-
 }
