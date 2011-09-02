@@ -91,12 +91,18 @@ public class ExportDDI3Dialog extends Dialog {
 		editor.createLabel(group,
 				Translator.trans("ExportDDI3Action.filechooser.title"));
 		final Text pathText = editor.createText(group, "", false);
+		pathText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				path = ((Text) e.getSource()).getText();
+			}
+		});
 		File lastBrowsedPath = PreferenceUtil.getLastBrowsedPath();
-		if (lastBrowsedPath!=null) {
+		if (lastBrowsedPath != null) {
 			pathText.setText(lastBrowsedPath.getAbsolutePath());
 			path = lastBrowsedPath.getAbsolutePath();
 		}
-		
+
 		Button pathBrowse = editor.createButton(group,
 				Translator.trans("ExportDDI3Action.filechooser.browse"));
 		pathBrowse.addSelectionListener(new SelectionListener() {
