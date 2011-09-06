@@ -40,6 +40,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IViewSite;
 
 /**
@@ -86,9 +87,8 @@ public class TreeContentProvider implements IStructuredContentProvider,
 		try {
 			return PersistenceManager.getInstance().getResources().toArray();
 		} catch (DDIFtpException e) {
-			ErrorDialog.openError(site.getShell(), "Error", null, new Status(
-					IStatus.ERROR, ID, 0,
-					"Error while opening meta data container", e));
+			DialogUtil.errorDialog(site.getShell(), ID, null,
+					"Error while opening meta data container", e);
 		}
 		return null;
 	}
