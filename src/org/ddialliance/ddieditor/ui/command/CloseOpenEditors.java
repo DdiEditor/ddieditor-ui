@@ -1,7 +1,6 @@
 package org.ddialliance.ddieditor.ui.command;
 
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
-import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IEditorReference;
