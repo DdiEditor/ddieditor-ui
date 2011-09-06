@@ -10,6 +10,7 @@ Item ID:    Description:
  - Tilfoejet category refrence i wiki syntaks, se: 
 http://192.168.99.102:8080/devwiki/en/Ddieditor-line#Category
 DDIE-115-2 DDI3 export dialog path problem
+ - Tilfoejet muligheden for at aendre database lokation 
  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
