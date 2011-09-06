@@ -69,6 +69,7 @@
 	<target name="resource" description="Setup resources in the build dir">
 		<mkdir dir="${build.classes.dir}/logs" />
 		<mkdir dir="${build.classes.dir}/resources" />
+		<mkdir dir="${build.classes.dir}/dbxml" />
 		<copy todir="${build.classes.dir}/resources" overwrite="yes">
 			<fileset dir="${src.resources.dir}">
 				<include name="**/*.*" />
