@@ -1,0 +1,28 @@
+#
+# See the Oracle Berkeley DB documentation
+#   <http://www.oracle.com/technology/documentation/berkeley-db/db/ref/env/db_config.html>
+# for detail description of DB_CONFIG syntax and semantics.
+#
+# Hints can also be found in the OpenLDAP Software FAQ
+#       <http://www.openldap.org/faq/index.cgi?file=2>
+# in particular:
+#   <http://www.openldap.org/faq/index.cgi?file=1075>
+
+# Note: most DB_CONFIG settings will take effect only upon rebuilding
+# the DB environment.
+
+# one 0.25 GB cache
+set_cachesize 0 1048576 1
+# set_cachesize 0 268435456 1
+# set_cachesize 0 629145600 1
+
+# Data Directory
+#set_data_dir dbhome
+
+# Transaction Log settings
+set_lg_regionmax 262144
+set_lg_regionmax        1048576
+#set_lg_max              10485760
+#set_lg_bsize            2097152
+#set_lg_dir              /home/dak/dbxml/logs
+
