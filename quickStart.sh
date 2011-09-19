@@ -16,7 +16,6 @@ ant resource -f dda-build.xml
 
 echo '--- Resource ddieditor-model ---'
 cd ../ddieditor-model
-pwd
 ant deploy-to-ddieditor-ui -f dda-build.xml
 
 echo '--- Resource ddieditor-spss ---'
