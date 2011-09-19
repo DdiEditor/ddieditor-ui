@@ -22,6 +22,9 @@ public class ExportResourceList extends
 				.trans("ExportDDI3Action.filechooser.title"));
 		PreferenceUtil.setPathFilter(dirChooser);
 		String path = dirChooser.open();
+		if (path == null) {
+			return null;
+		}
 		PreferenceUtil.setLastBrowsedPath(path);
 		
 		// TODO check for null or empty on path
