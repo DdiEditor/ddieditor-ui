@@ -1,8 +1,8 @@
 
 # The DB_CONFIG configuration file is intended to allow database environment administrators
-# to customize environments independent of applications using the environment. For example,
+# to customise environments independent of applications using the environment. For example,
 # a database administrator can move the database log and data files to a different location
-# without application recompilation. In addition, because the DB_CONFIG file is read when
+# without application re-compilation. In addition, because the DB_CONFIG file is read when
 # the database environment is opened, it can be used to overrule application configuration
 # done before that time. For example a database administrator could override the compiled-in
 # application cache size to a size more appropriate for a specific machine.
