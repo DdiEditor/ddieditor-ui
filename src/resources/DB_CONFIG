@@ -1,20 +1,20 @@
-#
-# See the Oracle Berkeley DB documentation
-#   <http://www.oracle.com/technology/documentation/berkeley-db/db/ref/env/db_config.html>
-# for detail description of DB_CONFIG syntax and semantics.
-#
-# Hints can also be found in the OpenLDAP Software FAQ
-#       <http://www.openldap.org/faq/index.cgi?file=2>
-# in particular:
-#   <http://www.openldap.org/faq/index.cgi?file=1075>
 
-# Note: most DB_CONFIG settings will take effect only upon rebuilding
-# the DB environment.
+# The DB_CONFIG configuration file is intended to allow database environment administrators
+# to customize environments independent of applications using the environment. For example,
+# a database administrator can move the database log and data files to a different location
+# without application recompilation. In addition, because the DB_CONFIG file is read when
+# the database environment is opened, it can be used to overrule application configuration
+# done before that time. For example a database administrator could override the compiled-in
+# application cache size to a size more appropriate for a specific machine.
 
-# one 0.25 GB cache
-# set_cachesize 0 268435456 1
-# set_cachesize 0 629145600 1
+# The DB_CONFIG configuration file has to be copied to the database environment home directory
+# which is defined in the 'ddiftp-app.properties' file with the property name 'dbxml.enviroment.home'.
+
+
+# one 1 MB cache
 set_cachesize 0 1048576 1
+
+# Example of other configurable parameters:
 
 # Data Directory
 #set_data_dir dbhome
@@ -25,3 +25,5 @@ set_cachesize 0 1048576 1
 #set_lg_bsize            2097152
 #set_lg_dir              /home/dak/dbxml/logs
 
+# For more information see:
+# http://download.oracle.com/docs/cd/E17076_02/html/programmer_reference/BDB_Prog_Reference.pdf
