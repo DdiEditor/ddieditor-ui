@@ -133,6 +133,7 @@ public class ExportDDI3Dialog extends Dialog {
 		if (comboOptions.length == 1) {
 			fileNameText.setData(false);
 			fileNameText.setText(resouceCombo.getItem(0));
+			fileName = resouceCombo.getItem(0);
 		}
 		fileNameText.addModifyListener(new ModifyListener() {
 			@Override
