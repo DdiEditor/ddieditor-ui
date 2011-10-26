@@ -70,6 +70,7 @@
 		<mkdir dir="${build.classes.dir}/logs" />
 		<mkdir dir="${build.classes.dir}/resources" />
 		<mkdir dir="${build.classes.dir}/dbxml" />
+		<mkdir dir="${build.classes.dir}/tmp" />
 		<copy todir="${build.classes.dir}/resources" overwrite="yes">
 			<fileset dir="${src.resources.dir}">
 				<include name="**/*.*" />
