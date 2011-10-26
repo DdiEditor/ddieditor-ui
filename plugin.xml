@@ -11,23 +11,31 @@
             </application>
       </extension>
       <extension point="org.eclipse.ui.perspectives">
-            <perspective class="org.ddialliance.ddieditor.ui.perspective.InfoPerspective"
-                  id="org.ddialliance.ddieditor.ui.perspective.InfoPerspective" name="%perspective.name.1"> </perspective>
+            <perspective
+                  class="org.ddialliance.ddieditor.ui.perspective.InfoPerspective"
+                  icon="icons/sims-icon/sims_index.png"
+                  id="org.ddialliance.ddieditor.ui.perspective.InfoPerspective"
+                  name="%perspective.name.1"> </perspective>
             <perspective class="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective"
                   id="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective" name="%perspective.name"> </perspective>
-            <perspective class="org.ddialliance.ddieditor.ui.perspective.CodesPerspective"
-                  id="org.ddialliance.ddieditor.ui.perspective.CodesPerspective" name="%perspective.name.0"> </perspective>
+            <perspective
+                  class="org.ddialliance.ddieditor.ui.perspective.CodesPerspective"
+                  icon="icons/code-scheme.png"
+                  id="org.ddialliance.ddieditor.ui.perspective.CodesPerspective"
+                  name="%perspective.name.0"> </perspective>
             <perspective
                   class="org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective"
                   icon="icons/question.png"
                   id="org.ddialliance.ddieditor.ui.perspective.QuestionsPerspective"
                   name="%perspective.name.2"> </perspective>
-            <perspective name="%perspective.name.3"
+            <perspective
                   class="org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective"
+                  icon="icons/instrument-icon/node_relation.gif"
                   id="org.ddialliance.ddieditor.ui.perspective.InstrumentPerspective"
-            > </perspective>
+                  name="%perspective.name.3"> </perspective>
             <perspective
                   class="org.ddialliance.ddieditor.ui.perspective.CategoryPerspective"
+                  icon="icons/sims-icon/sims_choose_2.gif"
                   id="org.ddialliance.ddieditor.ui.perspective.CategoryPerspective"
                   name="%perspective.name.4">
             </perspective>
@@ -38,25 +46,26 @@
             </perspective>
             <perspective
                   class="org.ddialliance.ddieditor.ui.perspective.VariablePerspective"
+                  icon="icons/sims-icon/sims_variable.png"
                   id="org.ddialliance.ddieditor.ui.perspective.VariablePerspective"
                   name="%perspective.name.6">
             </perspective>
       </extension>
       <extension point="org.eclipse.ui.views">
-            <view class="org.ddialliance.ddieditor.ui.view.InfoView" icon="icons/tree.gif"
+            <view class="org.ddialliance.ddieditor.ui.view.InfoView" icon="icons/sims-icon/sims_index.png"
                   id="org.ddialliance.ddieditor.ui.view.InfoView" name="%view.name"> </view>
             <view class="org.ddialliance.ddieditor.ui.view.ConceptView" icon="icons/tree.gif"
                   id="org.ddialliance.ddieditor.ui.view.ConceptView" name="%view.name.0"> </view>
-            <view class="org.ddialliance.ddieditor.ui.view.CodeView" icon="icons/tree.gif"
+            <view class="org.ddialliance.ddieditor.ui.view.CodeView" icon="icons/code-scheme.png"
                   id="org.ddialliance.ddieditor.ui.view.CodeView" name="%view.name.1" restorable="true"> </view>
-            <view class="org.ddialliance.ddieditor.ui.view.QuestionItemView" icon="icons/tree.gif"
+            <view class="org.ddialliance.ddieditor.ui.view.QuestionItemView" icon="icons/question.png"
                   id="org.ddialliance.ddieditor.ui.view.QuestionItemView" name="%view.name.2"> </view>
-            <view class="org.ddialliance.ddieditor.ui.view.InstrumentView" icon="icons/tree.gif"
+            <view class="org.ddialliance.ddieditor.ui.view.InstrumentView" icon="icons/instrument-icon/node_relation.gif"
                   id="org.ddialliance.ddieditor.ui.view.InstrumentView" name="%view.name.3"
                   restorable="true"> </view>
             <view
                   class="org.ddialliance.ddieditor.ui.view.CategoryView"
-                  icon="icons/tree.gif"
+                  icon="icons/sims-icon/sims_choose_2.gif"
                   id="org.ddialliance.ddieditor.ui.view.CategoryView"
                   name="%view.name.4"
                   restorable="true">
@@ -70,7 +79,7 @@
             </view>
             <view
                   class="org.ddialliance.ddieditor.ui.view.VariableView"
-                  icon="icons/tree.gif"
+                  icon="icons/sims-icon/sims_variable.png"
                   id="org.ddialliance.ddieditor.ui.view.VariableView"
                   name="%view.name.6"
                   restorable="true">
@@ -134,18 +143,18 @@
       </extension>
       <extension point="org.eclipse.ui.editors">
             <editor class="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
-                  default="false" icon="icons/editor_area.gif"
+                  default="false" icon="icons/sims-icon/sims_question_copy.png"
                   id="org.ddialliance.ddieditor.ui.editor.question.QuestionSchemeEditor"
                   name="%editor.name"> </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.question.MultipleQuestionItemEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/sims-icon/sims_questionRelated.gif"
                   id="org.ddialliance.ddieditor.ui.editor.question.MultipleQuestionItemEditor"
                   name="%editor.name.17">
             </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
-                  default="false" icon="icons/editor_area.gif"
+                  default="false" icon="icons/question.png"
                   id="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
                   name="%editor.name.0"> </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor"
@@ -157,80 +166,80 @@
                   id="org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor"
                   name="%editor.name.2"> </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor"
-                  default="false" icon="icons/editor_area.gif"
+                  default="false" icon="icons/code-scheme.png"
                   id="org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor"
                   name="%editor.name.3"> </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor"
-                  default="false" icon="icons/editor_area.gif"
+                  default="false" icon="icons/sims-icon/sims_index.png"
                   id="org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor"
                   name="%editor.name.4"> </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.InstrumentEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/instrument-icon/node_relation.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.InstrumentEditor"
                   name="%editor.name.5">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/instrument-icon/DataObject.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.StatementItemEditor"
                   name="%editor.name.6">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/instrument-icon/mul_decision_palette.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.IfThenElseEditor"
                   name="%editor.name.7">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.RepeatUntilEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/instrument-icon/for_loop.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.RepeatUntilEditor"
                   name="%editor.name.8">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.RepeatWhileEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/instrument-icon/do_while_loop.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.RepeatWhileEditor"
                   name="%editor.name.9">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.ComputationItemEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/instrument-icon/sub_process_expanded.png"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.ComputationItemEditor"
                   name="%editor.name.10">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.LoopEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/instrument-icon/while_loop.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.LoopEditor"
                   name="%editor.name.11">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.file.FileEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/text.gif"
                   id="org.ddialliance.ddieditor.ui.editor.file.FileEditor"
                   name="%editor.name.12">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.category.CategorySchemeEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/sims-icon/sims_choose_all.png"
                   id="org.ddialliance.ddieditor.ui.editor.category.CategorySchemeEditor"
                   name="%editor.name.13">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.category.CategoryEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/sims-icon/sims_choose_2.gif"
                   id="org.ddialliance.ddieditor.ui.editor.category.CategoryEditor"
                   name="%editor.name.14">
             </editor>
@@ -251,35 +260,35 @@
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.ControlConstructSchemeEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/instrument-icon/sub_process_expanded_looping.png"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.ControlConstructSchemeEditor"
                   name="ControlConstructSchemeEditor">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.QuestionConstructEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/instrument-icon/Activity.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.QuestionConstructEditor"
                   name="QuestionConstructEditor">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/instrument-icon/outline.gif"
                   id="org.ddialliance.ddieditor.ui.editor.instrument.SequenceEditor"
                   name="%editor.name.17">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.variable.VariableSchemeEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/sims-icon/sims_variableCopy.gif"
                   id="org.ddialliance.ddieditor.ui.editor.variable.VariableSchemeEditor"
                   name="%editor.name.19">
             </editor>
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.variable.VariableEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/sims-icon/sims_variable.png"
                   id="org.ddialliance.ddieditor.ui.editor.variable.VariableEditor"
                   name="%editor.name.20">
             </editor>
