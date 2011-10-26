@@ -129,12 +129,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	protected EditorInput editorInput;
 
 	protected Group labelDescriptionTabGroup; // May be used for expanding Label
-	
+
 	static private String[] sequenceOptions = { "",
-		ItemSequenceTypeType.IN_ORDER_OF_APPEARANCE.toString(),
-		ItemSequenceTypeType.RANDOM.toString(),
-		ItemSequenceTypeType.ROTATE.toString(),
-		ItemSequenceTypeType.OTHER.toString() };
+			ItemSequenceTypeType.IN_ORDER_OF_APPEARANCE.toString(),
+			ItemSequenceTypeType.RANDOM.toString(),
+			ItemSequenceTypeType.ROTATE.toString(),
+			ItemSequenceTypeType.OTHER.toString() };
 
 	// Description Tab content
 
@@ -333,7 +333,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						&& sevrity.equals(DdiModelException.Sevrity.FATAL)) {
 					return;
 				}
-			} else { 
+			} else {
 				// guard
 				// display validate error - continue save
 				boolean yesNo = DialogUtil.yesNoDialog(
@@ -430,7 +430,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 *            exception to display
 	 */
 	public void showError(Exception e) {
-		showError(e, ID, getSite().getShell());
+		showError(e, ID, PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getShell());
 	}
 
 	public void setEditorTabName(String name) {
@@ -448,7 +449,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	 *            ui parent
 	 */
 	public static void showError(Exception e, String id, IWorkbenchPartSite site) {
-		showError(e, id, site.getShell());
+		showError(e, id, PlatformUI.getWorkbench().getDisplay()
+				.getActiveShell());
 	}
 
 	/**
@@ -932,7 +934,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public static String[] getSequenceOptions() {
 		return sequenceOptions;
 	}
-	
+
 	public static int getSequenceIndex(String option) {
 		for (int i = 0; i < sequenceOptions.length; i++) {
 			if (sequenceOptions[i].equals(option)) {
