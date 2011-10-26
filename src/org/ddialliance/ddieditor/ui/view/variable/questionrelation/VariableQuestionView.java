@@ -102,7 +102,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 
 	final String QUEI_RESP_DOMA = "ResponseDomain";
 
-	String selectedResource;
+	public String selectedResource;
 
 	private Composite parent;
 
@@ -129,354 +129,18 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 				b.addSelectionListener(new SelectionListener() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						Thread thread = new Thread(new Runnable() {
-							public void run() {
-								ReferenceResolution queiRef = null;
-								String variValRep = null;
-								String queiRespDoma = null;
-								QuestionItem quei = null;
-
-								for (VariableQuestionRelation variQueiRel : relItems) {
-									queiRef = null;
-									variValRep = null;
-									queiRespDoma = null;
-									quei = null;
-
-									// check the values
-									if (variQueiRel.quei != null) {
-										queiRef = new ReferenceResolution(
-												variQueiRel.quei);
-
-										// vari name
-										String variName = null;
-										for (CustomType cus : getCustomListbyType(
-												variQueiRel.vari, VARI_NAME)) {
-											variName = XmlBeansUtil
-													.getTextOnMixedElement(cus);
-										}
-
-										// vari rep value
-										for (CustomType cus : getCustomListbyType(
-												variQueiRel.vari, VARI_VAL_REP)) {
-											variValRep = XmlBeansUtil
-													.getTextOnMixedElement(cus);
-										}
-
-										// quei rep domain
-										for (CustomType cus : getCustomListbyType(
-												variQueiRel.quei,
-												QUEI_RESP_DOMA)) {
-											queiRespDoma = XmlBeansUtil
-													.getTextOnMixedElement(cus);
-										}
-
-										// vari id ~ quei userid pseudo vari id
-										String variPseudoId = null;
-										for (CustomType cus : getCustomListbyType(
-												variQueiRel.quei, "UserID")) {
-											if (cus.getOption()
-													.equals(Ddi3NamespaceHelper.QUEI_VAR_USER_ID_TYPE)) {
-												variPseudoId = XmlBeansUtil
-														.getTextOnMixedElement(cus);
-												if (variName != null
-														&& !variName
-																.equals(variPseudoId)) {
-													quei = setPseudoVariIdOnQuei(
-															variQueiRel.quei,
-															variName);
-												} else {
-													continue;
-												}
-											}
-										}
-
-										if (variPseudoId == null) {
-											quei = setPseudoVariIdOnQuei(
-													variQueiRel.quei, variName);
-										}
-									}
-
-									// set vari quei ref
-									Variable vari = null;
-									String queiId = null;
-									for (CustomType cus : getCustomListbyType(
-											variQueiRel.vari, VARI_QUEI_REF)) {
-										queiId = XmlBeansUtil
-												.getTextOnMixedElement(cus);
-										break;
-									}
-									if (queiId == null && queiRef == null) {
-										continue;
-									} else if (queiId != null
-											&& queiRef == null) {
-										vari = deleteQueiRefOnVari(variQueiRel);
-									} else if (queiId == null
-											&& queiRef != null) {
-										vari = setQueiRefOnVari(variQueiRel);
-									} else if (!queiRef.getId().equals(queiId)) {
-										vari = setQueiRefOnVari(variQueiRel);
-									}
-
-									// change quei resp domain
-									// set concept on vari
-									if (variValRep != null && queiRef != null) {
-										if (vari == null) {
-											try {
-												vari = getVariable(variQueiRel);
-											} catch (Exception e1) {
-												Editor.showError(e1, ID,
-														getSite());
-											}
-										}
-
-										if (!(variValRep.equals(queiRespDoma))) {
-											if (quei == null) {
-												try {
-													quei = getQuestionItem(variQueiRel.quei);
-												} catch (Exception e1) {
-													Editor.showError(e1, ID,
-															getSite());
-												}
-											}
-
-											// resp domain
-											changeRespDomain(vari, quei);
-
-											try {
-												// vari concept
-												setConcepts(vari, quei);
-											} catch (DDIFtpException e1) {
-												Editor.showError(e1, ID,
-														getSite());
-											}
-										}
-									}
-								}
-							}
-						});
-
+						Thread longRunningJob = new Thread(new ApplyChangeJob());
 						BusyIndicator.showWhile(PlatformUI.getWorkbench()
-								.getDisplay(), thread);
+								.getDisplay(), longRunningJob);
 						// TODO vari.cods to quei.cats create relation
 
 						// refresh
 						loadInItems();
 					}
 
-					private void setConcepts(Variable vari, QuestionItem quei)
-							throws DDIFtpException {
-						if (quei.getConceptReferenceType() != null) {
-							vari.getDocument()
-									.getVariable()
-									.setConceptReference(
-											quei.getConceptReferenceType());
-							new VariableDao().update(vari);
-						}
-					}
-
 					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 						// do nothing
-					}
-
-					QuestionItem getQuestionItem(LightXmlObjectType quei)
-							throws Exception {
-						QuestionItemDao dao = new QuestionItemDao();
-						dao.setParentElementType(ElementType.QUESTION_SCHEME);
-						QuestionItem model = null;
-						model = dao.getModel(quei.getId(), quei.getVersion(),
-								quei.getParentId(), quei.getParentVersion());
-						if (model == null) {
-							dao.setParentElementType(ElementType.MULTIPLE_QUESTION_ITEM);
-							model = dao.getModel(quei.getId(),
-									quei.getVersion(), quei.getParentId(),
-									quei.getParentVersion());
-						}
-						return model;
-					}
-
-					/**
-					 * Relates a question item to a variable via custom user id
-					 * on the question item set as the variable name
-					 * 
-					 * @param quei
-					 *            question item
-					 * @param variName
-					 *            variable name
-					 * @return the changed question item
-					 */
-					QuestionItem setPseudoVariIdOnQuei(LightXmlObjectType quei,
-							String variName) {
-						QuestionItem model = null;
-						try {
-							model = getQuestionItem(quei);
-
-							UserIDType userId = null;
-							for (UserIDType userIdTmp : model.getDocument()
-									.getQuestionItem().getUserIDList()) {
-								if (userIdTmp
-										.getType()
-										.equals(Ddi3NamespaceHelper.QUEI_VAR_USER_ID_TYPE)) {
-									userId = userIdTmp;
-									break;
-								}
-							}
-							if (userId == null) {
-								userId = model.getDocument().getQuestionItem()
-										.addNewUserID();
-
-								userId.setType(Ddi3NamespaceHelper.QUEI_VAR_USER_ID_TYPE);
-							}
-							userId.setStringValue(variName);
-							new QuestionItemDao().update(model);
-							// TODO refresh open editor
-
-							return model;
-						} catch (Exception e) {
-							Editor.showError(e, variName, getSite());
-						}
-						return model;
-					}
-
-					Variable getVariable(VariableQuestionRelation variQueiRel)
-							throws Exception {
-
-						VariableDao dao = new VariableDao();
-						Variable model = null;
-						model = dao.getModel(variQueiRel.vari.getId(),
-								variQueiRel.vari.getVersion(),
-								variQueiRel.vari.getParentId(),
-								variQueiRel.vari.getParentVersion());
-						return model;
-					}
-
-					/**
-					 * Relates a variable to a question item via the variable
-					 * question reference tag
-					 * 
-					 * @param variQueiRel
-					 *            containing the variable and question item
-					 * @return variable
-					 */
-					Variable setQueiRefOnVari(
-							VariableQuestionRelation variQueiRel) {
-						Variable model = null;
-						try {
-							model = getVariable(variQueiRel);
-							model.setCreate(true);
-							model.executeChange(variQueiRel.quei,
-									ModelIdentifingType.Type_A.class);
-							new VariableDao().update(model);
-							// TODO refresh open editor
-						} catch (Exception e) {
-							Editor.showError(e, ID, getSite());
-						}
-						return model;
-					}
-
-					/**
-					 * Removes the question reference on a variable (the first
-					 * question reference in the list)
-					 * 
-					 * @param variQueiRel
-					 *            containing the variable and question item
-					 * @return variable
-					 */
-					Variable deleteQueiRefOnVari(
-							VariableQuestionRelation variQueiRel) {
-						Variable model = null;
-						try {
-							model = getVariable(variQueiRel);
-							if (!model.getDocument().getVariable()
-									.getQuestionReferenceList().isEmpty()) {
-								model.getDocument().getVariable()
-										.getQuestionReferenceList().remove(0);
-								new VariableDao().update(model);
-								// TODO refresh open editor
-							}
-						} catch (Exception e) {
-							Editor.showError(e, ID, getSite());
-						}
-						return model;
-					}
-
-					void changeRespDomain(Variable vari, QuestionItem quei) {
-						// clean quei domain
-						if (quei.getResponseDomain() != null) {
-							quei.setResponseDomain(RESPONSE_TYPES.UNDEFINED, "");
-						}
-
-						Object repImpl = vari.getRepresentation()
-								.getValueRepresentation();
-						// CodeRepresentation
-						if (repImpl instanceof CodeRepresentationType) {
-							ReferenceType codeSchemeRef = ((CodeRepresentationType) repImpl)
-									.getCodeSchemeReference();
-							CodeDomainType rep = (CodeDomainType) quei
-									.setResponseDomain(RESPONSE_TYPES.CODE, "");
-							rep.setCodeSchemeReference(codeSchemeRef);
-						}
-						// NumericRepresentation
-						else if (repImpl instanceof NumericRepresentationType) {
-							NumericDomainType queiRep = (NumericDomainType) quei
-									.setResponseDomain(RESPONSE_TYPES.NUMERIC,
-											"");
-							queiRep.setType(((NumericRepresentationType) vari
-									.getRepresentation()
-									.getValueRepresentation()).getType());
-							queiRep.setDecimalPositions(vari
-									.getNumericDecimalPosition());
-						}
-						// TextRepresentation
-						else if (repImpl instanceof TextRepresentationType) {
-							// quei rep domain
-							TextDomainType queiRep = (TextDomainType) quei
-									.setResponseDomain(RESPONSE_TYPES.TEXT, "");
-
-							// min length
-							if (vari.getMinLength() != null) {
-								queiRep.setMinLength(vari.getMinLength());
-							}
-
-							// max length
-							if (vari.getMaxLength() != null) {
-								queiRep.setMaxLength(vari.getMaxLength());
-							}
-
-							// regx
-							if (vari.getRegx() != null) {
-								queiRep.setRegExp(vari.getRegx());
-							}
-						}
-						// DateTimeRepresentation
-						else if (repImpl instanceof DateTimeRepresentationType) {
-							// quei rep domain
-							DateTimeDomainType queiRep = (DateTimeDomainType) quei
-									.setResponseDomain(RESPONSE_TYPES.DATE, "");
-
-							// format
-							if (vari.getFormat() != null) {
-								queiRep.setFormat(vari.getFormat());
-							}
-
-							// date time type
-							if (vari.getDateTimeType() != null) {
-								queiRep.setType(vari.getDateTimeType());
-							}
-						}
-
-						// ExternalCategoryRepresentation
-						else if (repImpl instanceof ExternalCategoryRepresentationType) {
-							// TODO external category representation
-						}
-
-						// update quei
-						try {
-							new QuestionItemDao().update(quei);
-						} catch (Exception e) {
-							Editor.showError(e, ID, getSite());
-						}
-
 					}
 				});
 				return b;
@@ -551,6 +215,334 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 		toolbarManager.add(zoomReset);
 	}
 
+	QuestionItem getQuestionItem(LightXmlObjectType quei)
+			throws Exception {
+		QuestionItemDao dao = new QuestionItemDao();
+		dao.setParentElementType(ElementType.QUESTION_SCHEME);
+		QuestionItem model = null;
+		model = dao.getModel(quei.getId(), quei.getVersion(),
+				quei.getParentId(), quei.getParentVersion());
+		if (model == null) {
+			dao.setParentElementType(ElementType.MULTIPLE_QUESTION_ITEM);
+			model = dao.getModel(quei.getId(),
+					quei.getVersion(), quei.getParentId(),
+					quei.getParentVersion());
+		}
+		return model;
+	}
+
+	/**
+	 * Relates a question item to a variable via custom user id
+	 * on the question item set as the variable name
+	 * 
+	 * @param quei
+	 *            question item
+	 * @param variName
+	 *            variable name
+	 * @return the changed question item
+	 */
+	QuestionItem setPseudoVariIdOnQuei(LightXmlObjectType quei,
+			String variName) {
+		QuestionItem model = null;
+		try {
+			model = getQuestionItem(quei);
+	
+			UserIDType userId = null;
+			for (UserIDType userIdTmp : model.getDocument()
+					.getQuestionItem().getUserIDList()) {
+				if (userIdTmp
+						.getType()
+						.equals(Ddi3NamespaceHelper.QUEI_VAR_USER_ID_TYPE)) {
+					userId = userIdTmp;
+					break;
+				}
+			}
+			if (userId == null) {
+				userId = model.getDocument().getQuestionItem()
+						.addNewUserID();
+	
+				userId.setType(Ddi3NamespaceHelper.QUEI_VAR_USER_ID_TYPE);
+			}
+			userId.setStringValue(variName);
+			new QuestionItemDao().update(model);
+			// TODO refresh open editor
+	
+			return model;
+		} catch (Exception e) {
+			Editor.showError(e, variName, getSite());
+		}
+		return model;
+	}
+
+	private void setConcepts(Variable vari, QuestionItem quei)
+			throws DDIFtpException {
+		if (quei.getConceptReferenceType() != null) {
+			vari.getDocument()
+					.getVariable()
+					.setConceptReference(
+							quei.getConceptReferenceType());
+			new VariableDao().update(vari);
+		}
+	}
+
+	Variable getVariable(VariableQuestionRelation variQueiRel)
+			throws Exception {
+	
+		VariableDao dao = new VariableDao();
+		Variable model = null;
+		model = dao.getModel(variQueiRel.vari.getId(),
+				variQueiRel.vari.getVersion(),
+				variQueiRel.vari.getParentId(),
+				variQueiRel.vari.getParentVersion());
+		return model;
+	}
+
+	/**
+	 * Relates a variable to a question item via the variable
+	 * question reference tag
+	 * 
+	 * @param variQueiRel
+	 *            containing the variable and question item
+	 * @return variable
+	 */
+	Variable setQueiRefOnVari(
+			VariableQuestionRelation variQueiRel) {
+		Variable model = null;
+		try {
+			model = getVariable(variQueiRel);
+			model.setCreate(true);
+			model.executeChange(variQueiRel.quei,
+					ModelIdentifingType.Type_A.class);
+			new VariableDao().update(model);
+			// TODO refresh open editor
+		} catch (Exception e) {
+			Editor.showError(e, ID, getSite());
+		}
+		return model;
+	}
+
+	/**
+	 * Removes the question reference on a variable (the first
+	 * question reference in the list)
+	 * 
+	 * @param variQueiRel
+	 *            containing the variable and question item
+	 * @return variable
+	 */
+	Variable deleteQueiRefOnVari(
+			VariableQuestionRelation variQueiRel) {
+		Variable model = null;
+		try {
+			model = getVariable(variQueiRel);
+			if (!model.getDocument().getVariable()
+					.getQuestionReferenceList().isEmpty()) {
+				model.getDocument().getVariable()
+						.getQuestionReferenceList().remove(0);
+				new VariableDao().update(model);
+				// TODO refresh open editor
+			}
+		} catch (Exception e) {
+			Editor.showError(e, ID, getSite());
+		}
+		return model;
+	}
+
+	void changeRespDomain(Variable vari, QuestionItem quei) {
+		// clean quei domain
+		if (quei.getResponseDomain() != null) {
+			quei.setResponseDomain(RESPONSE_TYPES.UNDEFINED, "");
+		}
+	
+		Object repImpl = vari.getRepresentation()
+				.getValueRepresentation();
+		// CodeRepresentation
+		if (repImpl instanceof CodeRepresentationType) {
+			ReferenceType codeSchemeRef = ((CodeRepresentationType) repImpl)
+					.getCodeSchemeReference();
+			CodeDomainType rep = (CodeDomainType) quei
+					.setResponseDomain(RESPONSE_TYPES.CODE, "");
+			rep.setCodeSchemeReference(codeSchemeRef);
+		}
+		// NumericRepresentation
+		else if (repImpl instanceof NumericRepresentationType) {
+			NumericDomainType queiRep = (NumericDomainType) quei
+					.setResponseDomain(RESPONSE_TYPES.NUMERIC,
+							"");
+			queiRep.setType(((NumericRepresentationType) vari
+					.getRepresentation()
+					.getValueRepresentation()).getType());
+			queiRep.setDecimalPositions(vari
+					.getNumericDecimalPosition());
+		}
+		// TextRepresentation
+		else if (repImpl instanceof TextRepresentationType) {
+			// quei rep domain
+			TextDomainType queiRep = (TextDomainType) quei
+					.setResponseDomain(RESPONSE_TYPES.TEXT, "");
+	
+			// min length
+			if (vari.getMinLength() != null) {
+				queiRep.setMinLength(vari.getMinLength());
+			}
+	
+			// max length
+			if (vari.getMaxLength() != null) {
+				queiRep.setMaxLength(vari.getMaxLength());
+			}
+	
+			// regx
+			if (vari.getRegx() != null) {
+				queiRep.setRegExp(vari.getRegx());
+			}
+		}
+		// DateTimeRepresentation
+		else if (repImpl instanceof DateTimeRepresentationType) {
+			// quei rep domain
+			DateTimeDomainType queiRep = (DateTimeDomainType) quei
+					.setResponseDomain(RESPONSE_TYPES.DATE, "");
+	
+			// format
+			if (vari.getFormat() != null) {
+				queiRep.setFormat(vari.getFormat());
+			}
+	
+			// date time type
+			if (vari.getDateTimeType() != null) {
+				queiRep.setType(vari.getDateTimeType());
+			}
+		}
+	
+		// ExternalCategoryRepresentation
+		else if (repImpl instanceof ExternalCategoryRepresentationType) {
+			// TODO external category representation
+		}
+	
+		// update quei
+		try {
+			new QuestionItemDao().update(quei);
+		} catch (Exception e) {
+			Editor.showError(e, ID, getSite());
+		}
+	
+	}
+
+	public void applyChange() {
+		new ApplyChangeJob().run();
+	}
+	
+	class ApplyChangeJob implements Runnable {
+		@Override
+		public void run() {
+			ReferenceResolution queiRef = null;
+			String variValRep = null;
+			String queiRespDoma = null;
+			QuestionItem quei = null;
+
+			for (VariableQuestionRelation variQueiRel : relItems) {
+				queiRef = null;
+				variValRep = null;
+				queiRespDoma = null;
+				quei = null;
+
+				// check the values
+				if (variQueiRel.quei != null) {
+					queiRef = new ReferenceResolution(variQueiRel.quei);
+
+					// vari name
+					String variName = null;
+					for (CustomType cus : getCustomListbyType(variQueiRel.vari,
+							VARI_NAME)) {
+						variName = XmlBeansUtil.getTextOnMixedElement(cus);
+					}
+
+					// vari rep value
+					for (CustomType cus : getCustomListbyType(variQueiRel.vari,
+							VARI_VAL_REP)) {
+						variValRep = XmlBeansUtil.getTextOnMixedElement(cus);
+					}
+
+					// quei rep domain
+					for (CustomType cus : getCustomListbyType(variQueiRel.quei,
+							QUEI_RESP_DOMA)) {
+						queiRespDoma = XmlBeansUtil.getTextOnMixedElement(cus);
+					}
+
+					// vari id ~ quei userid pseudo vari id
+					String variPseudoId = null;
+					for (CustomType cus : getCustomListbyType(variQueiRel.quei,
+							"UserID")) {
+						if (cus.getOption().equals(
+								Ddi3NamespaceHelper.QUEI_VAR_USER_ID_TYPE)) {
+							variPseudoId = XmlBeansUtil
+									.getTextOnMixedElement(cus);
+							if (variName != null
+									&& !variName.equals(variPseudoId)) {
+								quei = setPseudoVariIdOnQuei(variQueiRel.quei,
+										variName);
+							} else {
+								continue;
+							}
+						}
+					}
+
+					if (variPseudoId == null) {
+						quei = setPseudoVariIdOnQuei(variQueiRel.quei, variName);
+					}
+				}
+
+				// set vari quei ref
+				Variable vari = null;
+				String queiId = null;
+				for (CustomType cus : getCustomListbyType(variQueiRel.vari,
+						VARI_QUEI_REF)) {
+					queiId = XmlBeansUtil.getTextOnMixedElement(cus);
+					break;
+				}
+				if (queiId == null && queiRef == null) {
+					continue;
+				} else if (queiId != null && queiRef == null) {
+					vari = deleteQueiRefOnVari(variQueiRel);
+				} else if (queiId == null && queiRef != null) {
+					vari = setQueiRefOnVari(variQueiRel);
+				} else if (!queiRef.getId().equals(queiId)) {
+					vari = setQueiRefOnVari(variQueiRel);
+				}
+
+				// change quei resp domain
+				// set concept on vari
+				if (variValRep != null && queiRef != null) {
+					if (vari == null) {
+						try {
+							vari = getVariable(variQueiRel);
+						} catch (Exception e1) {
+							Editor.showError(e1, ID, getSite());
+						}
+					}
+
+					if (!(variValRep.equals(queiRespDoma))) {
+						if (quei == null) {
+							try {
+								quei = getQuestionItem(variQueiRel.quei);
+							} catch (Exception e1) {
+								Editor.showError(e1, ID, getSite());
+							}
+						}
+
+						// resp domain
+						changeRespDomain(vari, quei);
+
+						try {
+							// vari concept
+							setConcepts(vari, quei);
+						} catch (DDIFtpException e1) {
+							Editor.showError(e1, ID, getSite());
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public void refreshView() {
 		if (combo.getSelectionIndex() < 0) {
 			// nothing to do
@@ -581,8 +573,10 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 		}
 	}
 
-	private void loadInItems() {
-		selectedResource = combo.getItem(combo.getSelectionIndex());
+	public void loadInItems() {
+		if (combo!=null) {
+			selectedResource = combo.getItem(combo.getSelectionIndex());
+		}		
 		if (selectedResource.equals("")) { // guard
 			return;
 		}
@@ -698,8 +692,10 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 			}
 			// refresh
 			freeItems = lightQuei;
-			relTableViewer.refresh();
-			freeTableViewer.refresh();
+			if (relTableViewer!=null&&freeTableViewer!=null) {
+				relTableViewer.refresh();
+				freeTableViewer.refresh();				
+			}
 		} catch (Exception e2) {
 			Editor.showError(e2, ID, getSite());
 		}
