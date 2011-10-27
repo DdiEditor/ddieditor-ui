@@ -41,9 +41,6 @@
 			<include name="joda-time/${version.joda-time}/*.jar" />
 			<!-- missing build paths especialy to swt, how to set up this ~ $ECLIPSE_HOME perhaps -->
 		</fileset>
-		<fileset dir="../org.ddialliance.ddi_3_0.xml.xmlbeans/xmllib">
-			<include name="*20080428*.jar" />
-		</fileset>
 		<pathelement path="${build.classes.dir}" />
 		<pathelement path="${testsrc.dir}" />
 		<pathelement location="${src.dir}" />
