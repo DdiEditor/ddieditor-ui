@@ -44,6 +44,8 @@
       <plugin id="ddadb"/>
       <plugin id="ddieditor"/>
       <plugin id="ddieditor-model"/>
+      <plugin id="ddieditor-osiris-batch-convert"/>
+      <plugin id="ddieditor-osiris2ddi3"/>
       <plugin id="ddieditor-spss"/>
       <plugin id="ddieditor-ui"/>
       <plugin id="ddieditor_line"/>
