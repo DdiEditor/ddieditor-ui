@@ -30,11 +30,12 @@ class TreeLabelProvider extends LabelProvider {
 
 	@Override
 	public String getText(Object element) {
+		// LightXmlObjectType
 		if (element instanceof LightXmlObjectType) {
 			LightXmlObjectType lightXmlObject = (LightXmlObjectType) element;
 			if (lightXmlObject.getElement().equals("Variable")) {
-				// System.out.println("here");
 				StringBuilder result = new StringBuilder();
+				
 				// name
 				for (CustomType cus : LightXmlObjectUtil.getCustomListbyType(
 						lightXmlObject, "Name")) {
@@ -61,7 +62,6 @@ class TreeLabelProvider extends LabelProvider {
 							+ lightXmlObject.getId());
 				}
 				return result.toString();
-
 			}
 			if (lightXmlObject.getLabelList().size() > 0) {
 				try {
@@ -78,13 +78,25 @@ class TreeLabelProvider extends LabelProvider {
 				return lightXmlObject.getElement() + ": "
 						+ lightXmlObject.getId();
 			}
-		} else if (element instanceof DDIResourceType) {
+		} 
+		
+		// DDIResourceType
+		else if (element instanceof DDIResourceType) {
 			return ((DDIResourceType) element).getOrgName();
-		} else if (element instanceof StorageType) {
+		} 
+		
+		// StorageType
+		else if (element instanceof StorageType) {
 			return ((StorageType) element).getId();
-		} else if (element instanceof ConceptualType) {
+		} 
+		
+		// ConceptualType
+		else if (element instanceof ConceptualType) {
 			return Translator.trans(((ConceptualType) element).name());
-		} else if (element instanceof ConceptualElement) {
+		} 
+		
+		// ConceptualElement
+		else if (element instanceof ConceptualElement) {
 			List<org.ddialliance.ddieditor.model.lightxmlobject.LabelType> labels = ((ConceptualElement) element)
 					.getValue().getLabelList();
 			if (!labels.isEmpty()) {
@@ -94,7 +106,10 @@ class TreeLabelProvider extends LabelProvider {
 			} else {
 				return ((ConceptualElement) element).getValue().getId();
 			}
-		} else if (element instanceof MaintainableLightLabelQueryResult) {
+		} 
+		
+		// MaintainableLightLabelQueryResult
+		else if (element instanceof MaintainableLightLabelQueryResult) {
 			try {
 				return ((MaintainableLightLabelQueryResult) element)
 						.getTargetLabel();
@@ -103,6 +118,7 @@ class TreeLabelProvider extends LabelProvider {
 			}
 			return "";
 		}
+		
 		// java.util.List
 		else if (element instanceof List<?>) {
 			if (!((List<?>) element).isEmpty()) {
