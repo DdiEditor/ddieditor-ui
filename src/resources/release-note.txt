@@ -10,8 +10,10 @@ Item ID:    Description:
  - Tilfoejet category refrence i wiki syntaks, se: 
 http://192.168.99.102:8080/devwiki/en/Ddieditor-line#Category
 DDIE-115-2 DDI3 export dialog path problem
- - Tilfoejet muligheden for at aendre database lokation 
-DDIE-122 DDI3 export - ikke længere nødvendigt at ændre navn på export fil. 
+ - Tilfoejet muligheden for at aendre databaselokation 
+DDIE-122 DDI3 export - ikke længere nødvendigt at ændre navn på export fil.
+- Coverage bliver nu oprettet/vedligeholdt under Study Unit ved import Study 
+level info.  
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
