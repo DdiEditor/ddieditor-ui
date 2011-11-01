@@ -12,8 +12,9 @@ http://192.168.99.102:8080/devwiki/en/Ddieditor-line#Category
 DDIE-115-2 DDI3 export dialog path problem
  - Tilfoejet muligheden for at aendre databaselokation 
 DDIE-122 DDI3 export - ikke længere nødvendigt at ændre navn på export fil.
-- Coverage bliver nu oprettet/vedligeholdt under Study Unit ved import af Study 
-level info.  
+ - Coverage bliver nu oprettet/vedligeholdt under Study Unit ved import af Study 
+level info.
+ - Batch import af Osiris konverteret til DDI3
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
