@@ -110,6 +110,11 @@ cd ../ddieditor-spss
 ant deploy-to-ddieditor-ui -f dda-build.xml
 cd ../ddieditor-ui/
 
+echo '--- Resource ddieditor-osiris-batch-convert ---'
+cd ../ddieditor-osiris-batch-convert
+ant  deploy-to-ddieditor-ui -f dda-build.xml
+cd ../ddieditor-ui/
+
 #
 # execute product build
 #
@@ -137,6 +142,8 @@ echo $archpath
 fullpath=../../$archpath/ddieditor/
 cp -r resources $fullpath 
 ls $fullpath/resources -al
+mkdir ../../$archpath/ddieditor/dbxml
+mkdir ../../$archpath/ddieditor/tmp
 return;
 }
 
