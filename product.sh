@@ -57,6 +57,12 @@ svn copy $svnurl/dda/trunk/ddadb $svnurl/dda/tags/ddiftp/test-$version/ddadb -m 
 # jounal-study-info-export
 svn copy $svnurl/dda/trunk/jounal-study-info-export $svnurl/dda/tags/ddiftp/test-$version/jounal-study-info-export -m '$memo'
 
+# ddieditor-osiris-batch-convert
+svn copy $svnurl/dda/trunk/ddieditor-osiris-batch-convert $svnurl/dda/tags/ddiftp/test-$version/ddieditor-osiris-batch-convert -m '$memo'
+
+# ddieditor-osiris2ddi3
+svn copy $svnurl/dda/trunk/ddieditor-osiris2ddi3 $svnurl/dda/tags/ddiftp/test-$version/ddieditor-osiris2ddi3 -m '$memo'
+
 # ddiftp
 svn copy $svnurl/dda/trunk/ddiftp $svnurl/dda/tags/ddiftp/test-$version/ -m '$memo'
 
