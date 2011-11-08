@@ -39,17 +39,23 @@ public class PreviewTabItemAction extends TabItemAction {
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		try {
 			this.transformer = tFactory.newTransformer(new StreamSource(
-					"resources" + File.separator + "ddi3_1.xsl"));
+					"resources" + File.separator + "ddixslt" + File.separator
+							+ "ddi3_1.xsl"));
 		} catch (TransformerConfigurationException e1) {
-			throw new DDIFtpException("XML to HTML Transformer error: "+ e1.getMessage());
+			throw new DDIFtpException("XML to HTML Transformer error: "
+					+ e1.getMessage());
 		}
 	}
 
 	@Override
 	public Object action() throws DDIFtpException {
 		// get xml
-		String xml = DdiManager.getInstance().getDdi3NamespaceHelper()
-				.substitutePrefixesFromElements(model.getDocument().xmlText(DdiManager.getInstance().getXmlOptions()));
+		String xml = DdiManager
+				.getInstance()
+				.getDdi3NamespaceHelper()
+				.substitutePrefixesFromElements(
+						model.getDocument().xmlText(
+								DdiManager.getInstance().getXmlOptions()));
 
 		// set display language:
 		transformer.setParameter("lang", LanguageUtil.getDisplayLanguage());
