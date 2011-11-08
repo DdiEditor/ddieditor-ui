@@ -2,11 +2,14 @@ package org.ddialliance.ddieditor.ui.command;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
 
 import org.apache.commons.io.FileUtils;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dialogs.PrintDDI3Dialog;
+import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -15,6 +18,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.program.Program;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
@@ -68,9 +72,9 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 													// document instead of
 													// copying it
 													FileUtils
-															.copyFileToDirectory(
+															.copyDirectory(
 																	new File(
-																			"resources/ddi3_1.xsl"),
+																			"resources/ddixslt"),
 																	new File(
 																			temp.getParent()));
 												} catch (Exception e) {
@@ -84,10 +88,24 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 																			.trans("PrintDDI3Action.mess.PrintDDI3Error"),
 																	e.getMessage());
 												}
-												// active the browser with the
-												// DDI document
+												// active the external browser
+												// with the DDI document
 												Program.launch(temp
 														.getAbsolutePath());
+												try {
+													PlatformUI
+															.getWorkbench()
+															.getBrowserSupport()
+															.getExternalBrowser()
+															.openURL(
+																	new URL(
+																			"file://"
+																					+ temp.getAbsolutePath()));
+												} catch (PartInitException e) {
+													Editor.showError(e, "Print");
+												} catch (MalformedURLException e) {
+													Editor.showError(e, "Print");
+												}
 											}
 										});
 								monitor.worked(1);
