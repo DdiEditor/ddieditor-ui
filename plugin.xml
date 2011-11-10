@@ -50,6 +50,12 @@
                   id="org.ddialliance.ddieditor.ui.perspective.VariablePerspective"
                   name="%perspective.name.6">
             </perspective>
+            <perspective
+                  class="org.ddialliance.ddieditor.ui.perspective.CurationPerspective"
+                  icon="icons/main_tab.gif"
+                  id="org.ddialliance.ddieditor.ui.perspective.CurationPerspective"
+                  name="%perspective.name.7">
+            </perspective>
       </extension>
       <extension point="org.eclipse.ui.views">
             <view class="org.ddialliance.ddieditor.ui.view.InfoView" icon="icons/sims-icon/sims_index.png"
