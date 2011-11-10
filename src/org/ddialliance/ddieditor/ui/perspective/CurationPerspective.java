@@ -23,6 +23,5 @@ public class CurationPerspective implements IPerspectiveFactory {
 		leftFolder.addView(CodeView.ID);
 		leftFolder.addView(VariableView.ID);
 		leftFolder.addView(QuestionItemView.ID);
-		leftFolder.addView(IPageLayout.ID_PROBLEM_VIEW);
 	}
 }
