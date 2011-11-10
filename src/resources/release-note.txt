@@ -1,20 +1,16 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.16 Release Data: 2011-11-01
+Product Version: 1.0.17 Release Data: 2011-11-xx
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
- - Tilfoejet category refrence i wiki syntaks, se: 
-http://192.168.99.102:8080/devwiki/en/Ddieditor-line#Category
-DDIE-115-2 DDI3 export dialog path problem
- - Tilfoejet muligheden for at aendre databaselokation 
-DDIE-122 DDI3 export - ikke længere nødvendigt at ændre navn på export fil.
- - Coverage bliver nu oprettet/vedligeholdt under Study Unit ved import af Study 
-level info.
- - Batch import af Osiris konverteret til DDI3
+ddie-126 Else condition: not applicable na
+ - Print now programicaly using external browser
+ - Ddi XSLT now using CSS and images in Print function
+ - Curation Perspective added 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
