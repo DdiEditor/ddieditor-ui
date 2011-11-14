@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.17 Release Data: 2011-11-xx
+Product Version: 1.0.18-dev-release Release Data: 2011-11-14
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
@@ -11,6 +11,7 @@ ddie-126 Else condition: not applicable na
  - Print now programicaly using external browser
  - Ddi XSLT now using CSS and images in Print function
  - Curation Perspective added 
+ - Coverge fixes 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
