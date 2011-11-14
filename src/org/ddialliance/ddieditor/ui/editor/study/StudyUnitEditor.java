@@ -8,7 +8,17 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseType;
+import org.ddialliance.ddi3.xml.xmlbeans.group.StudyUnitDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.CoverageDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.CoverageType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.GeographicCoverageType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.GeographicStructureType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalCodeValueType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.SpatialCoordinateType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.TemporalCoverageType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.TopicalCoverageDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.TopicalCoverageType;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -80,6 +90,7 @@ public class StudyUnitEditor extends Editor {
 	private IEditorSite site;
 	private StudyUnit modelImpl;
 	private Table uniRefTable;
+	private Table keywordTable;
 	private Table fundingTable;
 
 	/**
@@ -87,8 +98,10 @@ public class StudyUnitEditor extends Editor {
 	 */
 	public StudyUnitEditor() {
 		super(
-				Translator.trans("StudyUnitEditor.label.StudyUnitEditorLabel.StudyUnitEditor"),
-				Translator.trans("StudyUnitEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("StudyUnitEditor.label.StudyUnitEditorLabel.StudyUnitEditor"),
+				Translator
+						.trans("StudyUnitEditor.label.useTheEditorLabel.Description"),
 				ID);
 		this.dao = new StudyUnitDao();
 	}
@@ -119,8 +132,8 @@ public class StudyUnitEditor extends Editor {
 				1));
 
 		TabItem tbtmCitation = new TabItem(tabFolder, SWT.NONE);
-		tbtmCitation.setText(Translator
-				.trans("StudyUnitEditor.label.Citation"));
+		tbtmCitation
+				.setText(Translator.trans("StudyUnitEditor.label.Citation"));
 
 		Group grpStudyCitation = new Group(tabFolder, SWT.NONE);
 		grpStudyCitation.setText(Translator
@@ -155,8 +168,7 @@ public class StudyUnitEditor extends Editor {
 		lblSubtitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblSubtitle.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		lblSubtitle.setText(Translator
-				.trans("StudyUnitEditor.label.Subtitle"));
+		lblSubtitle.setText(Translator.trans("StudyUnitEditor.label.Subtitle"));
 
 		subTitleText = new Text(grpStudyCitation, SWT.BORDER);
 		subTitleText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -269,8 +281,8 @@ public class StudyUnitEditor extends Editor {
 			time = (String) modelImpl.getCitationPublicationDate();
 		} catch (Exception e) {
 			ErrorDialog.openError(site.getShell(), Translator
-					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, e.getMessage(), e));
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, e.getMessage(), e));
 		}
 		if (!time.equals("")) {
 			try {
@@ -279,8 +291,8 @@ public class StudyUnitEditor extends Editor {
 				publicationDateTime.setSelection(calendar.getTime());
 			} catch (DDIFtpException e) {
 				ErrorDialog.openError(site.getShell(), Translator
-						.trans("ErrorTitle"), null, new Status(
-						IStatus.ERROR, ID, 0, e.getMessage(), e));
+						.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, e.getMessage(), e));
 			}
 		}
 		publicationDateTime.addSelectionListener(new SelectionAdapter() {
@@ -298,8 +310,7 @@ public class StudyUnitEditor extends Editor {
 		lblLanguage.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblLanguage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		lblLanguage.setText(Translator
-				.trans("StudyUnitEditor.label.Language"));
+		lblLanguage.setText(Translator.trans("StudyUnitEditor.label.Language"));
 
 		langCombo = new Combo(grpStudyCitation, SWT.READ_ONLY);
 		langCombo.addModifyListener(new ModifyListener() {
@@ -317,16 +328,16 @@ public class StudyUnitEditor extends Editor {
 					.getCitationLanguage()));
 		} catch (Exception e) {
 			ErrorDialog.openError(site.getShell(), Translator
-					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, e.getMessage(), e));
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, e.getMessage(), e));
 		}
 		super.setControl(langCombo);
 
 		// Study Unit Abstract Tab Item:
 		// -----------------------------
 		TabItem tbtmAbstract = new TabItem(tabFolder, SWT.NONE);
-		tbtmAbstract.setText(Translator
-				.trans("StudyUnitEditor.label.Abstract"));
+		tbtmAbstract
+				.setText(Translator.trans("StudyUnitEditor.label.Abstract"));
 		Group grpAbstract = new Group(tabFolder, SWT.NONE);
 		grpAbstract.setText(Translator
 				.trans("StudyUnitEditor.label.StudyAbstract"));
@@ -371,9 +382,9 @@ public class StudyUnitEditor extends Editor {
 				.trans("StudyUnitEditor.label.UniverseReference"));
 
 		// - Universe Reference Group
-		Group grpStudyUniverseReference = createGroup(
-				tbtmUniverseReference,
-				Translator.trans("StudyUnitEditor.label.StudyUniverseReference"));
+		Group grpStudyUniverseReference = createGroup(tbtmUniverseReference,
+				Translator
+						.trans("StudyUnitEditor.label.StudyUniverseReference"));
 
 		createLabel(grpStudyUniverseReference, "Universes");
 		uniRefTable = new Table(grpStudyUniverseReference, SWT.VIRTUAL
@@ -410,19 +421,18 @@ public class StudyUnitEditor extends Editor {
 			String errMess = Translator
 					.trans("StudyUnitEditor.mess.SetUniverseRefError"); //$NON-NLS-1$
 			ErrorDialog.openError(site.getShell(), Translator
-					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, errMess, e));
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, errMess, e));
 		}
 		uniRefTable.addSelectionListener(new TableListener());
 
 		// Study Unit Funding Tab Item:
 		// ----------------------------
 		TabItem tbtmFunding = new TabItem(tabFolder, SWT.NONE);
-		tbtmFunding
-				.setText(Translator.trans("StudyUnitEditor.label.Funding"));
-		Group grpFunding = createGroup(
-				tbtmFunding,
-				Translator.trans("StudyUnitEditor.label.StudyFundingInformation"));
+		tbtmFunding.setText(Translator.trans("StudyUnitEditor.label.Funding"));
+		Group grpFunding = createGroup(tbtmFunding,
+				Translator
+						.trans("StudyUnitEditor.label.StudyFundingInformation"));
 		createLabel(grpFunding, "Funding");
 
 		// Funding Information
@@ -459,25 +469,24 @@ public class StudyUnitEditor extends Editor {
 			String errMess = Translator
 					.trans("StudyUnitEditor.mess.SetUniverseRefError"); //$NON-NLS-1$
 			ErrorDialog.openError(site.getShell(), Translator
-					.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
-					ID, 0, errMess, e));
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, errMess, e));
 		}
 		fundingTable.addSelectionListener(new TableListener());
 
 		// Study Unit Purpose Tab Item:
 		// -----------------------------
 		TabItem tbtmPurpose = new TabItem(tabFolder, SWT.NONE);
-		tbtmPurpose
-				.setText(Translator.trans("StudyUnitEditor.label.Purpose"));
+		tbtmPurpose.setText(Translator.trans("StudyUnitEditor.label.Purpose"));
 
 		Group grpPurpose = new Group(tabFolder, SWT.NONE);
 		grpPurpose.setText(Translator
 				.trans("StudyUnitEditor.label.StudyPurpose"));
 		grpPurpose.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		tbtmPurpose.setControl(grpPurpose);
-		GridLayout gridLayout_5 = new GridLayout();
-		gridLayout_5.numColumns = 2;
-		grpPurpose.setLayout(gridLayout_5);
+		GridLayout gridLayout_3 = new GridLayout();
+		gridLayout_3.numColumns = 2;
+		grpPurpose.setLayout(gridLayout_3);
 
 		// Purpose:
 		final Label purposeLabel = new Label(grpPurpose, SWT.NONE);
@@ -507,8 +516,184 @@ public class StudyUnitEditor extends Editor {
 		});
 		setControl(purposeStyledText);
 
-		createPropertiesTab(tabFolder);
+		// Study Unit Coverage Tab Item:
+		// -----------------------------
+		TabItem tbtmCoverage = new TabItem(tabFolder, SWT.NONE);
+		tbtmCoverage.setText("Coverage");
 
+		// Coverage:
+		Group grpCoverage = new Group(tabFolder, SWT.NONE);
+		grpCoverage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpCoverage.setText(Translator.trans("StudyUnitEditor.label.Coverage"));
+		grpCoverage.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		GridLayout gridLayout_4 = new GridLayout();
+		gridLayout_4.numColumns = 1;
+		grpCoverage.setLayout(gridLayout_4);
+		
+		CoverageDocument coverageDoc = ((StudyUnit) model).getCoverage();
+
+		// Topical Coverage:
+		Group grpTopicalCoverage = new Group(grpCoverage, SWT.NONE);
+		grpTopicalCoverage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpTopicalCoverage.setText(Translator.trans("StudyUnitEditor.label.TopicalCoverage"));
+		grpTopicalCoverage.setBackground(SWTResourceManager
+				.getColor(SWT.COLOR_WHITE));
+        tbtmCoverage.setControl(grpCoverage);
+		GridLayout gridLayout_5 = new GridLayout();
+		gridLayout_5.numColumns = 2;
+		grpTopicalCoverage.setLayout(gridLayout_5);
+
+		createLabel(grpTopicalCoverage, Translator.trans("StudyUnitEditor.label.Keywords"));
+
+		keywordTable = new Table(grpTopicalCoverage, SWT.VIRTUAL
+				| SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
+				| SWT.BORDER);
+
+		GridData filTableGd_1 = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
+				| GridData.GRAB_VERTICAL);
+
+		keywordTable.setRedraw(true);
+		filTableGd_1.horizontalSpan = 1;
+		keywordTable.setLayoutData(filTableGd_1);
+		keywordTable.setLinesVisible(true);
+		keywordTable.setHeaderVisible(true);
+
+		// file table header
+		String[] columnName = { Translator.trans("StudyUnitEditor.label.Value") };
+
+		// create table columns
+		TableColumnSort sortListener_1 = new TableColumnSort(keywordTable);
+		for (int i = 0; i < columnName.length; i++) {
+			TableColumn column = new TableColumn(keywordTable, SWT.NONE);
+			column.setText(columnName[i]);
+			column.addListener(SWT.Selection, sortListener);
+			column.setResizable(true);
+			column.setWidth(130);
+		}
+
+		try {
+			opdateKeywordTable();
+		} catch (DDIFtpException e) {
+			String errMess = Translator
+					.trans("StudyUnitEditor.mess.SetKeyWordError"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, errMess, e));
+		}
+		keywordTable.addSelectionListener(new TableListener());
+
+		// Spatial Coverage:
+		Group grpSpatialCoverage = new Group(grpCoverage, SWT.NONE);
+		grpSpatialCoverage.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, true, false, 1, 1));
+		grpSpatialCoverage.setText(Translator.trans("StudyUnitEditor.label.SpatialCoverage"));
+		grpSpatialCoverage.setBackground(SWTResourceManager
+				.getColor(SWT.COLOR_WHITE));
+		GridLayout gridLayout_6 = new GridLayout();
+		gridLayout_6.numColumns = 2;
+		grpSpatialCoverage.setLayout(gridLayout_6);
+		
+		createLabel(grpSpatialCoverage, Translator.trans("StudyUnitEditor.label.Description"));
+		String description = "";
+		if (coverageDoc != null) {
+			GeographicCoverageType geographicCoverage = coverageDoc
+					.getCoverage().getSpatialCoverage();
+			description = XmlBeansUtil.getTextOnMixedElement(geographicCoverage
+					.getDescriptionArray(0));
+		}
+		createTextAreaInput(grpSpatialCoverage, description, false);
+
+		createLabel(grpSpatialCoverage,
+				Translator.trans("StudyUnitEditor.label.TopLevelName"));
+		String name = "";
+		if (coverageDoc != null) {
+			name = coverageDoc.getCoverage().getSpatialCoverage()
+					.getTopLevelReference().getLevelNameArray(0);
+		}
+		createText(grpSpatialCoverage, name);
+				
+		createLabel(grpSpatialCoverage,
+				Translator.trans("StudyUnitEditor.label.LowestLevelName"));
+		name = "";
+		if (coverageDoc != null) {
+			name = coverageDoc.getCoverage().getSpatialCoverage()
+					.getLowestLevelReference().getLevelNameArray(0);
+		}
+		createText(grpSpatialCoverage, name);
+
+		// Temporal Coverage:
+		Group grpTemporalCoverage = new Group(grpCoverage, SWT.NONE);
+		grpTemporalCoverage.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, true, false, 1, 1));
+		grpTemporalCoverage.setText(Translator.trans("StudyUnitEditor.label.TemporalCoverage"));
+		grpTemporalCoverage.setBackground(SWTResourceManager
+				.getColor(SWT.COLOR_WHITE));
+		GridLayout gridLayout_7 = new GridLayout();
+		gridLayout_7.numColumns = 2;
+		grpTemporalCoverage.setLayout(gridLayout_7);
+		
+		createLabel(grpTemporalCoverage, Translator.trans("StudyUnitEditor.label.StartDate"));
+		DateTimeWidget startDateTime = new DateTimeWidget(grpTemporalCoverage);
+		startDateTime.setEnabled(false);
+
+		TemporalCoverageType temporalCoverage = null;
+		String dateTime = "";
+		if (coverageDoc != null) {
+			temporalCoverage = coverageDoc.getCoverage().getTemporalCoverage();
+			if (temporalCoverage != null) {
+				try {
+					dateTime = temporalCoverage.getReferenceDateArray(0)
+							.getStartDate().toString();
+
+				} catch (Exception e) {
+					ErrorDialog.openError(site.getShell(), Translator
+							.trans("ErrorTitle"), null, new Status(
+							IStatus.ERROR, ID, 0, e.getMessage(), e));
+				}
+			}
+		}
+		if (!dateTime.equals("")) {
+			try {
+				// TODO Improve Date handling
+				Calendar calendar = Translator.formatIso8601DateTime(time);
+				startDateTime.setSelection(calendar.getTime());
+			} catch (DDIFtpException e) {
+				ErrorDialog.openError(site.getShell(), Translator
+						.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, e.getMessage(), e));
+			}
+		}
+
+		createLabel(grpTemporalCoverage, Translator.trans("StudyUnitEditor.label.EndDate"));
+		DateTimeWidget endDateTime = new DateTimeWidget(grpTemporalCoverage);
+		endDateTime.setEnabled(false);
+
+		dateTime = "";
+		if (temporalCoverage != null) {
+			try {
+				dateTime = temporalCoverage.getReferenceDateArray(0)
+						.getEndDate().toString();
+
+			} catch (Exception e) {
+				ErrorDialog.openError(site.getShell(), Translator
+						.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, e.getMessage(), e));
+			}
+
+		}
+		if (!dateTime.equals("")) {
+			try {
+				// TODO Improve Date handling
+				Calendar calendar = Translator.formatIso8601DateTime(time);
+				endDateTime.setSelection(calendar.getTime());
+			} catch (DDIFtpException e) {
+				ErrorDialog.openError(site.getShell(), Translator
+						.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, e.getMessage(), e));
+			}
+		}
+
+		// continue with standard tab items:
+		createPropertiesTab(tabFolder);
 		createXmlTab(modelImpl);
 
 		// preview tab
@@ -606,7 +791,7 @@ public class StudyUnitEditor extends Editor {
 	}
 
 	public void opdateFundingTable(List<ReferenceType> list) {
-		// clear file formats
+		// clear table
 		TableItem[] items = null;
 		try {
 			items = fundingTable.getItems();
@@ -630,7 +815,6 @@ public class StudyUnitEditor extends Editor {
 			}
 
 			// guard
-			// TODO
 			if (lightXmlObjectDoc.getLightXmlObjectList()
 					.getLightXmlObjectList().isEmpty()) {
 				return;
@@ -654,6 +838,36 @@ public class StudyUnitEditor extends Editor {
 		}
 	}
 
+	public void opdateKeywordTable() throws DDIFtpException {
+		CoverageDocument coverageDoc = ((StudyUnit )model).getCoverage();
+		if (coverageDoc == null) {
+			return;
+		}
+		TopicalCoverageType topicalCoverage = 
+				coverageDoc.getCoverage().getTopicalCoverage();		
+		List<InternationalCodeValueType> keywords = topicalCoverage.getKeywordList();
+		
+		// clear table
+		TableItem[] items = null;
+		try {
+			items = fundingTable.getItems();
+			for (int i = 0; i < items.length; i++) {
+				items[i].dispose();
+			}
+		} catch (Exception e) {
+			// swt null items in table exception
+			e.printStackTrace();
+		}
+		
+		// insert into table
+		for (InternationalCodeValueType keyword : keywords) {
+			TableItem item = new TableItem(keywordTable, SWT.NONE);
+			item.setText(0, "" + keyword.getStringValue());
+
+		}
+
+	}
+	
 	// currently not used as edit is not supported, yet!
 	class TableListener implements SelectionListener {
 		public TableListener() {
