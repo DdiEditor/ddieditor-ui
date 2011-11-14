@@ -59,7 +59,7 @@ public class PreviewTabItemAction extends TabItemAction {
 
 		// set display language:
 		transformer.setParameter("lang", LanguageUtil.getDisplayLanguage());
-		transformer.setParameter("fallback-lang", "da");
+		transformer.setParameter("fallback-lang", LanguageUtil.getOriginalLanguage());
 		transformer.setParameter("render-as-document", "true");
 
 		// transform xml to html:
