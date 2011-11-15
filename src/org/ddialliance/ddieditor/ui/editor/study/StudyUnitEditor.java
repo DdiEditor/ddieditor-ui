@@ -861,11 +861,11 @@ public class StudyUnitEditor extends Editor {
 		
 		// insert into table
 		for (InternationalCodeValueType keyword : keywords) {
-			TableItem item = new TableItem(keywordTable, SWT.NONE);
-			item.setText(0, "" + keyword.getStringValue());
-
+			if (keyword.getLang().equals(LanguageUtil.getDisplayLanguage())) {
+				TableItem item = new TableItem(keywordTable, SWT.NONE);
+				item.setText(0, "" + keyword.getStringValue());
+			}
 		}
-
 	}
 	
 	// currently not used as edit is not supported, yet!
