@@ -13,6 +13,8 @@ ddie-126 Else condition: not applicable na
  - Curation Perspective added 
  - Study Unit Coverage now created and maintained. 
  - Coverage now shown in the Study Unit Editor
+ddie-133 Special characters as &, < and > is now supported during pring and 
+export.
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
