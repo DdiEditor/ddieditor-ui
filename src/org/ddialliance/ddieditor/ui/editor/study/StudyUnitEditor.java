@@ -654,7 +654,7 @@ public class StudyUnitEditor extends Editor {
 		if (!dateTime.equals("")) {
 			try {
 				// TODO Improve Date handling
-				Calendar calendar = Translator.formatIso8601DateTime(time);
+				Calendar calendar = Translator.formatIso8601DateTime(dateTime);
 				startDateTime.setSelection(calendar.getTime());
 			} catch (DDIFtpException e) {
 				ErrorDialog.openError(site.getShell(), Translator
@@ -683,7 +683,7 @@ public class StudyUnitEditor extends Editor {
 		if (!dateTime.equals("")) {
 			try {
 				// TODO Improve Date handling
-				Calendar calendar = Translator.formatIso8601DateTime(time);
+				Calendar calendar = Translator.formatIso8601DateTime(dateTime);
 				endDateTime.setSelection(calendar.getTime());
 			} catch (DDIFtpException e) {
 				ErrorDialog.openError(site.getShell(), Translator
