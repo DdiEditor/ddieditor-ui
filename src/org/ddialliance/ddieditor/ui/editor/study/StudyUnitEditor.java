@@ -19,6 +19,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.SpatialCoordinateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.TemporalCoverageType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.TopicalCoverageDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.TopicalCoverageType;
+import org.ddialliance.ddi3.xml.xmlbeans.studyunit.KindOfDataDocument;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
@@ -450,7 +451,7 @@ public class StudyUnitEditor extends Editor {
 
 		// file table header
 		String[] fundingColumnNames = { Translator.trans("ID"),
-				Translator.trans("Description") };
+				Translator.trans("StudyUnitEditor.label.Description") };
 
 		// create table columns
 		TableColumnSort fundingSort = new TableColumnSort(fundingTable);
@@ -519,7 +520,7 @@ public class StudyUnitEditor extends Editor {
 		// Study Unit Coverage Tab Item:
 		// -----------------------------
 		TabItem tbtmCoverage = new TabItem(tabFolder, SWT.NONE);
-		tbtmCoverage.setText("Coverage");
+		tbtmCoverage.setText(Translator.trans("StudyUnitEditor.label.Coverage"));
 
 		// Coverage:
 		Group grpCoverage = new Group(tabFolder, SWT.NONE);
@@ -691,6 +692,24 @@ public class StudyUnitEditor extends Editor {
 						ID, 0, e.getMessage(), e));
 			}
 		}
+		
+		// other:
+		TabItem tabiOther = new TabItem(tabFolder, SWT.NONE);
+		tabiOther.setText(Translator.trans("StudyUnitEditor.label.Other"));
+
+		Group grpOther = new Group(tabFolder, SWT.NONE);
+		grpOther.setText(Translator.trans("StudyUnitEditor.label.Other"));
+		grpOther.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		GridLayout gridLayout_8 = new GridLayout();
+		gridLayout_8.numColumns = 2;
+		grpOther.setLayout(gridLayout_8);
+		tabiOther.setControl(grpOther);
+
+						
+		KindOfDataDocument kindOfDataDoc = modelImpl.getKindOfData();
+
+		createLabel(grpOther, Translator.trans("StudyUnitEditor.label.KindOfData"));
+		Text tKindOfData = createText(grpOther, kindOfDataDoc.getKindOfData().getStringValue());
 
 		// continue with standard tab items:
 		createPropertiesTab(tabFolder);
