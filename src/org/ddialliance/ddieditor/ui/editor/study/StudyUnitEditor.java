@@ -705,11 +705,14 @@ public class StudyUnitEditor extends Editor {
 		grpOther.setLayout(gridLayout_8);
 		tabiOther.setControl(grpOther);
 
-						
+		// - kindofdata:
 		KindOfDataDocument kindOfDataDoc = modelImpl.getKindOfData();
-
+		String kindOfDataString = "";
+		if (kindOfDataDoc != null) {
+			kindOfDataString = kindOfDataDoc.getKindOfData().getStringValue();
+		}
 		createLabel(grpOther, Translator.trans("StudyUnitEditor.label.KindOfData"));
-		Text tKindOfData = createText(grpOther, kindOfDataDoc.getKindOfData().getStringValue());
+		Text tKindOfData = createText(grpOther, kindOfDataString);
 
 		// continue with standard tab items:
 		createPropertiesTab(tabFolder);
