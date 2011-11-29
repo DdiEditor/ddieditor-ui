@@ -1,13 +1,13 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.18-dev-release Release Data: 2011-11-14
+Product Version: 1.0.18-dev-release-0.5 Release Data: 2011-11-29
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-ddie-126 Else condition: not applicable na
+ddie-126 Else condition: not applicable na	
  - Print now programicaly using external browser
  - Ddi XSLT now using CSS and images in Print function
  - Curation Perspective added 
