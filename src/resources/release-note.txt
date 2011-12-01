@@ -1,21 +1,13 @@
 -------------------------------------------------------------------------------
 DDIEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.18-dev-release-0.5 Release Data: 2011-11-29
+Product Version: 1.0.17-dev-release-0.6 Release Data: 2011-12-01
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-ddie-126 Else condition: not applicable na	
- - Print now programicaly using external browser
- - Ddi XSLT now using CSS and images in Print function
- - Curation Perspective added 
- - Study Unit Coverage now created and maintained. 
- - Coverage now shown in the Study Unit Editor
-ddie-133 Special characters as &, < and > is now supported during pring and 
-export.
- - Temporal Coverage dates now presented correct. 
+- Check for null on Info.
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
