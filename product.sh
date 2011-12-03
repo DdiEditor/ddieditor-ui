@@ -94,6 +94,10 @@ echo '--- Resource ddieditor-ui ---'
 cd ../ddieditor-ui
 ant resource -f dda-build.xml
 
+echo '--- Resource ddieditor-model ---'
+cd ../ddieditor-model
+ant deploy-to-ddieditor-ui -f dda-build.xml
+
 echo '--- Edit db connections ---'
 vi ../ddadb/db.properties
 
