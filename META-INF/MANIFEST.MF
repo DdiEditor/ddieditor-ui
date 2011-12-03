@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.5.2",
  org.eclipse.nebula.widgets.cdatetime;bundle-version="0.14.0",
  org.eclipse.draw2d,
  ddieditor-model;bundle-version="0.1.0"
-Bundle-Version: 0.12.0
+Bundle-Version: 0.13.0
 Bundle-SymbolicName: ddieditor-ui;singleton:=true
 Bundle-Name: %Bundle-Name
 Import-Package: 
