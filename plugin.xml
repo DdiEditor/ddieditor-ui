@@ -110,8 +110,8 @@
             point="org.eclipse.core.runtime.products">
             <product
                   application="ddieditor-ui.application"
-                  description="DDI Editor application"
-                  name="DDI Editor">
+                  description="DdiEditor Application"
+                  name="DdiEditor">
                <property
                      name="windowImages"
                      value="icons/dda_logo_32.ico">
@@ -134,7 +134,7 @@
                </property>
 	           <property
 					 name="appName"
-                     value="DDI Editor">
+                     value="DdiEditor">
                </property>
             <property
                   name="aboutImage"
