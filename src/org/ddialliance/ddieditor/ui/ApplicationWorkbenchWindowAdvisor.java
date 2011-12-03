@@ -51,7 +51,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setInitialSize(new Point(1300, 1200));
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(true);
-		configurer.setTitle("DDI Editor");
+		configurer.setTitle("DdiEditor");
 		configurer.setShowPerspectiveBar(true);
 		configurer.setShowFastViewBars(true);
 
