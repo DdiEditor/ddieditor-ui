@@ -1,27 +1,17 @@
 -------------------------------------------------------------------------------
-DDIEditor Release Notes:
+DdiEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.17-dev-release-0.6 Release Data: 2011-12-01
+Product Version: 1.0.17-community Release Data: 2011-12-03
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-- Check for null on Info.
+
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
 Item ID:    Description: 
-
--------------------------------------------------------------------------------
-Change Log Previous Releases
--------------------------------------------------------------------------------
-See http://172.20.33.20:8080/devwiki/en/Change_Log
-
--------------------------------------------------------------------------------
-Installing
--------------------------------------------------------------------------------
-See http://172.20.33.20:8080/devwiki/en/Installation
 
 -------------------------------------------------------------------------------
 Uninstalling
@@ -31,14 +21,9 @@ Uninstalling
  - Remove from environment added parameter from %PATH% variable: 
    %DDIEDITOR_HOME%\resources\native-libs
  - Uninstall DBXML
- 
--------------------------------------------------------------------------------
-Bug reporting
--------------------------------------------------------------------------------
-See http://172.20.33.20:8080/jtrac
 
 -------------------------------------------------------------------------------
 Known Issue
 ------------------------------------------------------------------------------- 
-Validering af konditions felt mangler paa repeatuntil, loop, repeatwhile 
-og computationitem.
+Validation of condition field not implemented for repeatuntil, loop, repeatwhile 
+and computationitem.
