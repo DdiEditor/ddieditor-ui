@@ -104,6 +104,13 @@
                   name="%view.name.8"
                   restorable="true">
             </view>
+            <view
+                  allowMultiple="true"
+                  class="org.ddialliance.ddieditor.ui.view.dynamicview.DynamicView"
+                  id="org.ddialliance.ddieditor.ui.view.dynamicview.DynamicView"
+                  name="%view.name.9"
+                  restorable="true">
+            </view>
       </extension>
       <extension
             id="product"
