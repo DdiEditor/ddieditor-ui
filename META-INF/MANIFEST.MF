@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: ddieditor-ui;singleton:=true
 Bundle-Version: 0.13.0
-Bundle-ClassPath: ddieditor-ui,
+Bundle-ClassPath: .,
  bin/
 Bundle-Activator: org.ddialliance.ddieditor.ui.Activator
 Bundle-Vendor: Danish Data Archive
