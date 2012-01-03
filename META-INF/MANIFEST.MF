@@ -1,21 +1,38 @@
-Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Manifest-Version: 1.0
-Require-Bundle: org.eclipse.ui;bundle-version="3.5.2",
- org.eclipse.core.runtime;bundle-version="3.5.0",
- lib-java;bundle-version="0.7.0",
- util;bundle-version="0.15.0",
- ddieditor;bundle-version="0.10.0",
- org.eclipse.core.resources,
- org.eclipse.nebula.cwt;bundle-version="0.9.0",
- org.eclipse.nebula.widgets.cdatetime;bundle-version="0.14.0",
- org.eclipse.draw2d,
- ddieditor-model;bundle-version="0.1.0"
-Bundle-Version: 0.13.0
-Bundle-SymbolicName: ddieditor-ui;singleton:=true
+Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Import-Package: 
- org.apache.xmlbeans,
+Bundle-SymbolicName: ddieditor-ui;singleton:=true
+Bundle-Version: 0.13.0
+Bundle-ClassPath: ddieditor-ui,
+ bin/
+Bundle-Activator: org.ddialliance.ddieditor.ui.Activator
+Bundle-Vendor: Danish Data Archive
+Export-Package: org.ddialliance.ddieditor.ui.editor,
+ org.ddialliance.ddieditor.ui.editor.category,
+ org.ddialliance.ddieditor.ui.editor.code,
+ org.ddialliance.ddieditor.ui.editor.instrument,
+ org.ddialliance.ddieditor.ui.editor.question,
+ org.ddialliance.ddieditor.ui.editor.study,
+ org.ddialliance.ddieditor.ui.editor.universe,
+ org.ddialliance.ddieditor.ui.editor.variable,
+ org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection,
+ org.ddialliance.ddieditor.ui.perspective,
+ org.ddialliance.ddieditor.ui.preference,
+ org.ddialliance.ddieditor.ui.util,
+ org.ddialliance.ddieditor.ui.util.swtdesigner,
+ org.ddialliance.ddieditor.ui.view,
+ org.ddialliance.ddieditor.ui.view.variable.questionrelation
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.draw2d,
+ org.eclipse.nebula.widgets.cdatetime;bundle-version="0.14.0",
+ org.eclipse.nebula.cwt;bundle-version="0.9.0",
+ lib-java;bundle-version="0.10.0",
+ util;bundle-version="0.18.0",
+ ddieditor;bundle-version="0.17.0",
+ ddieditor-model;bundle-version="0.1.0"
+Import-Package: org.apache.xmlbeans,
  org.ddialliance.ddieditor.ui.model,
  org.ddialliance.ddieditor.ui.model.category,
  org.ddialliance.ddieditor.ui.model.code,
@@ -31,26 +48,6 @@ Import-Package:
  org.ddialliance.ddiftp.util.xml,
  org.eclipse.draw2d,
  org.eclipse.gef.internal.ui.palette.editparts
-Bundle-ClassPath: .,
- bin/,
- formattedtext-1.0.0.jar
-Bundle-Activator: org.ddialliance.ddieditor.ui.Activator
-Bundle-ActivationPolicy: lazy
-Bundle-Vendor: Danish Data Archive
 Bundle-Copyright: LGLP
-Export-Package: 
- org.ddialliance.ddieditor.ui.editor,
- org.ddialliance.ddieditor.ui.editor.category,
- org.ddialliance.ddieditor.ui.editor.code,
- org.ddialliance.ddieditor.ui.editor.instrument,
- org.ddialliance.ddieditor.ui.editor.question,
- org.ddialliance.ddieditor.ui.editor.study,
- org.ddialliance.ddieditor.ui.editor.universe,
- org.ddialliance.ddieditor.ui.editor.variable,
- org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection,
- org.ddialliance.ddieditor.ui.perspective,
- org.ddialliance.ddieditor.ui.preference,
- org.ddialliance.ddieditor.ui.util,
- org.ddialliance.ddieditor.ui.util.swtdesigner,
- org.ddialliance.ddieditor.ui.view,
- org.ddialliance.ddieditor.ui.view.variable.questionrelation
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
