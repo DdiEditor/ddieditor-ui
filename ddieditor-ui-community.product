@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="DdiEditor" id="ddieditor-ui.product" application="ddieditor-ui.application" version="%Bundle.version" useFeatures="false" includeLaunchers="true">
+<product name="DdiEditor" id="ddieditor-ui.product" application="ddieditor-ui.application" version="1.0.17" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/ddieditor-ui/icons/about.gif"/>
@@ -35,7 +35,6 @@
             winMediumHigh="/ddieditor-ui/icons/dda_logo_32.bmp"/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
