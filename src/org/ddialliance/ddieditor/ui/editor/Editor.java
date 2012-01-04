@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType;
-import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CaseIdentificationDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
@@ -44,6 +43,7 @@ import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
 import org.ddialliance.ddieditor.ui.view.ViewManager;
+import org.ddialliance.ddieditor.ui.view.dynamicview.DynamicViewRefreshJob;
 import org.ddialliance.ddieditor.util.DdiEditorConfig;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
@@ -417,6 +417,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					Translator.trans("ErrorTitle"),
 					Translator.trans("editor.init.error.create"), e);
 		}
+
+		// dynamic view
+		updateDynamicView(model);
 	}
 
 	public EditorInput getEditorInputImpl() {
@@ -1535,6 +1538,10 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 	public static void resizeColumn(TableViewerColumn column) {
 		// TODO Auto-generated method stub
+	}
 
+	public void updateDynamicView(IModel model) {
+		DynamicViewRefreshJob job = new DynamicViewRefreshJob(model);
+		Display.getDefault().asyncExec(job);
 	}
 }
