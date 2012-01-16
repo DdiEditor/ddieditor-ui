@@ -1,14 +1,16 @@
 -------------------------------------------------------------------------------
 DdiEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.0.17-dev-release-0.7 
-Release Data: 2011-12-06
+Product Version: 1.1.0 
+Release Data: 2012-01-31
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
 User interface
 Item ID:    Description:
-- Use danish id for spatial coverage.
+- Set no compression on DBXml storage, to speed up queries
+- Added Dynamic View feature
+
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
