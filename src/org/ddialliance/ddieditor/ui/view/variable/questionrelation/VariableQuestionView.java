@@ -600,7 +600,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 
 			// question item plus
 			List<LightXmlObjectType> lightQuei = DdiManager.getInstance()
-					.getQuestionItemsLightPlus(false, null, null, null, null)
+					.getQuestionItemsLightPlus(true, null, null, null, null)
 					.getLightXmlObjectList().getLightXmlObjectList();
 
 			// variable -> question relation
