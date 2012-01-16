@@ -1,19 +1,11 @@
 package org.ddialliance.ddieditor.ui.view.dynamicview;
 
-import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.model.IModel;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-public class DynamicViewRefreshJob implements Runnable {
-	IModel model;
-
-	public DynamicViewRefreshJob(IModel model) {
-		this.model = model;
-	}
-
+public class DynamicViewShutdownJob implements Runnable {
 	public void run() {
 		// Get active page
 		IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
@@ -25,11 +17,7 @@ public class DynamicViewRefreshJob implements Runnable {
 						iViewReference.getId());
 				if (viewPart != null
 						&& viewPart.getClass() == DynamicView.class) {
-					try {
-						((DynamicView) viewPart).refresh(model);
-					} catch (Exception e) {
-						Editor.showError(e, null);
-					}
+					((DynamicView) viewPart).cleanUp();
 				}
 			}
 		}

@@ -7,6 +7,7 @@ import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.view.ViewManager;
+import org.ddialliance.ddieditor.ui.view.dynamicview.DynamicView;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -58,6 +59,10 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		// refresh view
 		ViewManager.getInstance().addAllViewsToRefresh();
 		ViewManager.getInstance().refesh();
+
+		// cleanup dynamic view
+		DynamicView.closeUpdateDynamicView();
+
 		return null;
 	}
 }

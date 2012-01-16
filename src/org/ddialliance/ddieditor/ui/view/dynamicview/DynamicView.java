@@ -4,12 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.MultipleQuestionItemDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionItemType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
+import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
+import org.ddialliance.ddieditor.model.DdiManager;
+import org.ddialliance.ddieditor.model.lightxmlobject.LabelType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.table.TableColumnSort;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
@@ -19,15 +27,17 @@ import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
 import org.ddialliance.ddieditor.ui.model.universe.Universe;
 import org.ddialliance.ddieditor.ui.model.variable.Variable;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
+import org.ddialliance.ddieditor.ui.view.TreeMenu;
 import org.ddialliance.ddieditor.util.LightXmlObjectUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -40,6 +50,7 @@ import org.eclipse.ui.part.ViewPart;
 public class DynamicView extends ViewPart {
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.dynamicview";
 	Editor editor = null;
+	Composite parent;
 	Group group;
 	int tableProperties = SWT.VIRTUAL | SWT.FULL_SELECTION | SWT.MULTI
 			| SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER;
@@ -60,46 +71,19 @@ public class DynamicView extends ViewPart {
 	private Label variableLabel;
 
 	List<ReferenceType> emptyList = new ArrayList<ReferenceType>();
+	String[] labelNames = new String[1];
 
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
 		editor = new Editor();
+		labelNames[0] = Translator.trans("Label");
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
+		this.parent = parent;
 		group = editor.createGroup(parent, "Elements");
-
-		// concept - table
-		conceptLabel = editor.createLabel(group, Translator.trans("Concepts"));
-		conceptTable = new Table(group, tableProperties);
-
-		String[] conceptNames = { Translator.trans("Label") };
-		initTable(conceptLabel, conceptTable, conceptNames);
-
-		// universe - table
-		universeLabel = editor
-				.createLabel(group, Translator.trans("Universes"));
-		universeTable = new Table(group, tableProperties);
-		String[] uniNames = { Translator.trans("Label") };
-		initTable(universeLabel, universeTable, uniNames);
-
-		// question - table
-		questionLabel = editor
-				.createLabel(group, Translator.trans("Questions"));
-		questionTable = new Table(group, tableProperties);
-		String[] queiNames = { Translator.trans("Label") };
-		initTable(questionLabel, questionTable, queiNames);
-
-		// categories - table
-
-		// variable - table
-		variableLabel = editor
-				.createLabel(group, Translator.trans("Variables"));
-		variableTable = new Table(group, tableProperties);
-		String[] variNames = { Translator.trans("Label") };
-		initTable(variableLabel, variableTable, variNames);
 	}
 
 	@Override
@@ -107,22 +91,49 @@ public class DynamicView extends ViewPart {
 		// do nothing
 	}
 
-	private void initTable(Label label, Table table, String[] columnNames) {
-		// label.setVisible(false);
-		// table.setVisible(false);
+	private void createConcepts() {
+		conceptLabel = editor.createLabel(group, Translator.trans("Concepts"));
+		conceptTable = new Table(group, tableProperties);
+		initTable(conceptLabel, conceptTable, labelNames);
+	}
 
+	private void createUniverses() {
+		universeLabel = editor
+				.createLabel(group, Translator.trans("Universes"));
+		universeTable = new Table(group, tableProperties);
+		initTable(universeLabel, universeTable, labelNames);
+	}
+
+	private void createQuestions() {
+		questionLabel = editor
+				.createLabel(group, Translator.trans("Questions"));
+		questionTable = new Table(group, tableProperties);
+		initTable(questionLabel, questionTable, labelNames);
+	}
+
+	private void createVariables() {
+		variableLabel = editor
+				.createLabel(group, Translator.trans("Variables"));
+		variableTable = new Table(group, tableProperties);
+		initTable(variableLabel, variableTable, labelNames);
+	}
+
+	private void createCategories() {
+
+	}
+
+	private void initTable(Label label, Table table, String[] columnNames) {
 		// table properties
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.GRAB_HORIZONTAL);
-		// | GridData.VERTICAL_ALIGN_FILL
-		// | GridData.GRAB_VERTICAL);
+				| GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
+				| GridData.GRAB_VERTICAL);
 		gd.horizontalSpan = 1;
-		
+
 		table.setRedraw(true);
 		table.setLayoutData(gd);
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
-		table.addSelectionListener(new TableListener());
+		table.addMouseListener(new TableListener());
 
 		// create table columns
 		TableColumnSort sort = new TableColumnSort(table);
@@ -135,53 +146,62 @@ public class DynamicView extends ViewPart {
 		}
 	}
 
-	public void refresh(IModel model) {
-		// init
-		((Model) model).setCreate(false);
+	public void cleanUp() {
+		group.dispose();
+		parent.layout(true);
+	}
+
+	public void refresh(IModel model) throws Exception {
+		// group
+		cleanUp();
+		group = editor.createGroup(parent, "Elements");
+
+		// init model
+		boolean isSetCreate = true;
+		if (model != null) {
+			isSetCreate = ((Model) model).isCreate();
+			((Model) model).setCreate(false);
+		}
+		LightXmlObjectListDocument lightXmlObjectListDoc = null;
 
 		// concept
 		if (model instanceof Concept) {
-			// conceptLabel.setVisible(false);
-			// conceptTable.setVisible(false);
-			//
-			// universeLabel.setVisible(true);
-			// universeTable.setVisible(true);
-			//
-			// questionLabel.setVisible(true);
-			// questionTable.setVisible(true);
-			//
-			// variableLabel.setVisible(true);
-			// variableTable.setVisible(true);
+			createUniverses();
+			createQuestions();
+			createVariables();
+
+			Concept modelImpl = (Concept) model;
+
+			// universe
+			updateTable(emptyList, "", universeTable);
+
+			// questions
+			ReferenceResolution refRes = new ReferenceResolution(
+					LightXmlObjectUtil.createLightXmlObject(
+							modelImpl.getParentId(),
+							modelImpl.getParentVersion(), modelImpl.getId(),
+							modelImpl.getVersion(), "Concept"));
+			lightXmlObjectListDoc = DdiManager.getInstance()
+					.getQuestionItemsLightByConcept(refRes);
+			updateTable(lightXmlObjectListDoc, questionTable);
+
+			// variables
 		}
 
 		// universe
 		if (model instanceof Universe) {
-			// universeLabel.setVisible(false);
-			// universeTable.setVisible(false);
-			//
-			// conceptLabel.setVisible(true);
-			// conceptTable.setVisible(true);
-			//
-			// questionLabel.setVisible(true);
-			// questionTable.setVisible(true);
-			//
-			// variableLabel.setVisible(true);
-			// variableTable.setVisible(true);
+			createConcepts();
+			createQuestions();
+			createVariables();
+			createCategories();
 		}
 
 		// question
 		if (model instanceof QuestionItem) {
-			// questionLabel.setVisible(false);
-			// questionTable.setVisible(false);
-			//
-			// conceptLabel.setVisible(true);
-			// conceptTable.setVisible(true);
-			//
-			// universeLabel.setVisible(true);
-			// universeTable.setVisible(true);
-			//
-			// variableLabel.setVisible(true);
-			// variableTable.setVisible(true);
+			createConcepts();
+			createUniverses();
+			createVariables();
+			createCategories();
 
 			QuestionItem modelImpl = (QuestionItem) model;
 
@@ -201,74 +221,62 @@ public class DynamicView extends ViewPart {
 
 		// multiple question
 		if (model instanceof MultipleQuestionItem) {
-			// questionLabel.setVisible(false);
-			// questionTable.setVisible(false);
-			//
-			// conceptLabel.setVisible(true);
-			// conceptTable.setVisible(true);
-			//
-			// universeLabel.setVisible(true);
-			// universeTable.setVisible(true);
-			//
-			// variableLabel.setVisible(true);
-			// variableTable.setVisible(true);
+			createConcepts();
+			createQuestions();
 
 			MultipleQuestionItem modelImpl = (MultipleQuestionItem) model;
 
 			// concept
-			try {
-				updateTable(modelImpl.getDocument().getMultipleQuestionItem()
-						.getConceptReferenceList(), "Concept", conceptTable);
-			} catch (DDIFtpException e) {
-				Editor.showError(e, ID);
-			}
-
-			// universe
-			updateTable(emptyList, "", universeTable);
+			updateTable(modelImpl.getDocument().getMultipleQuestionItem()
+					.getConceptReferenceList(), "Concept", conceptTable);
 
 			// question
 			updateQuestionTable(modelImpl);
-
-			// variable
-			updateTable(emptyList, "", variableTable);
 		}
 
 		// variable
 		if (model instanceof Variable) {
-			// variableLabel.setVisible(false);
-			// variableTable.setVisible(false);
-			//
-			// conceptLabel.setVisible(true);
-			// conceptTable.setVisible(true);
-			//
-			// universeLabel.setVisible(true);
-			// universeTable.setVisible(true);
-			//
-			// questionLabel.setVisible(true);
-			// questionTable.setVisible(true);
+			createConcepts();
+			createUniverses();
+			createQuestions();
+			createCategories();
+
+			Variable modelImpl = (Variable) model;
+
+			// concept
+			List<ReferenceType> concs = new ArrayList<ReferenceType>();
+			concs.add(modelImpl.getDocument().getVariable()
+					.getConceptReference());
+			updateTable(concs, "Concept", conceptTable);
+
+			// universes
+			updateTable(modelImpl.getDocument().getVariable()
+					.getUniverseReferenceList(), "Universe", universeTable);
+
+			// question
+			updateTable(modelImpl.getDocument().getVariable()
+					.getQuestionReferenceList(), "QuestionItem", questionTable);
 		}
 
 		// finalize
-		((Model) model).setCreate(true);
-		group.layout(true);
-		group.redraw();
+		if (model != null) {
+			((Model) model).setCreate(isSetCreate);
+		}
+		parent.layout(true);
 	}
 
 	private void updateTable(List<ReferenceType> list, String elementType,
-			Table table) {
-		// clear table
-		clearTable(table);
-
+			Table table) throws DDIFtpException {
 		// insert into table
 		for (ReferenceType referenceType : list) {
+			if (referenceType == null) {
+				break;
+			}
 			referenceType.getIDArray(0);
 			LightXmlObjectListDocument lightXmlObjectDoc = null;
-			try {
-				lightXmlObjectDoc = ModelAccessor.resolveReference(
-						referenceType, elementType);
-			} catch (DDIFtpException e) {
-				Editor.showError(e, ID);
-			}
+
+			lightXmlObjectDoc = ModelAccessor.resolveReference(referenceType,
+					elementType);
 
 			// guard
 			if (lightXmlObjectDoc.getLightXmlObjectList()
@@ -277,106 +285,130 @@ public class DynamicView extends ViewPart {
 			}
 			LightXmlObjectType lightXmlObject = lightXmlObjectDoc
 					.getLightXmlObjectList().getLightXmlObjectList().get(0);
-
-			TableItem item = new TableItem(table, SWT.NONE);
-			try {
-				item.setText(0, XmlBeansUtil
-						.getTextOnMixedElement((XmlObject) XmlBeansUtil
-								.getLangElement(
-										LanguageUtil.getDisplayLanguage(),
-										lightXmlObject.getLabelList())));
-			} catch (DDIFtpException e) {
-				Editor.showError(e, ID);
-			}
-			item.setData(lightXmlObject);
+			setItem(table, lightXmlObject);
 		}
 	}
 
-	private void clearTable(Table table) {
-		try {
-			TableItem[] items = table.getItems();
-			for (int i = 0; i < items.length; i++) {
-				items[i].dispose();
-			}
-		} catch (Exception e) {
-			// swt null items in table exception
+	private void updateTable(LightXmlObjectListDocument list, Table table)
+			throws DDIFtpException {
+		// insert into table
+		for (LightXmlObjectType lightXmlObject : list.getLightXmlObjectList()
+				.getLightXmlObjectList()) {
+			setItem(table, lightXmlObject);
 		}
 	}
 
-	private void updateQuestionTable(MultipleQuestionItem modelImpl) {
-		// clear table
-		clearTable(questionTable);
+	private void updateQuestionTable(MultipleQuestionItem modelImpl)
+			throws DDIFtpException, Exception {
+		MultipleQuestionItemDocument doc = null;
+		doc = DdiManager.getInstance().getMultipleQuestionItem(
+				modelImpl.getId(), modelImpl.getVersion(),
+				modelImpl.getParentId(), modelImpl.getParentVersion());
 
 		// question item list
-		List<QuestionItemType> questionItemList = null;
-		try {
-			if (modelImpl.getDocument().getMultipleQuestionItem()
-					.getSubQuestions() != null) {
-
-				questionItemList = modelImpl.getDocument()
-						.getMultipleQuestionItem().getSubQuestions()
-						.getQuestionItemList();
-			}
-		} catch (DDIFtpException e) {
-			Editor.showError(e, ID);
-		}
-		if (questionItemList == null) { // guard
+		if (doc.getMultipleQuestionItem().getSubQuestions()
+				.getQuestionItemList().isEmpty()) { // guard
 			return;
 		}
 
 		// insert into table
-		for (QuestionItemType questionItemType : questionItemList) {
+		for (QuestionItemType questionItemType : doc.getMultipleQuestionItem()
+				.getSubQuestions().getQuestionItemList()) {
+			// light xml object
 			LightXmlObjectType lightXmlObject = LightXmlObjectUtil
 					.createLightXmlObject(modelImpl.getParentId(),
 							modelImpl.getParentVersion(),
 							questionItemType.getId(),
 							questionItemType.getVersion(), "QuestionItem");
 
-			TableItem item = new TableItem(questionTable, SWT.NONE);
-			try {
-				item.setText(0, XmlBeansUtil
-						.getTextOnMixedElement((XmlObject) XmlBeansUtil
-								.getLangElement(
-										LanguageUtil.getDisplayLanguage(),
-										lightXmlObject.getLabelList())));
-			} catch (DDIFtpException e) {
-				Editor.showError(e, ID);
+			// light xml object label list
+			for (NameType name : questionItemType.getQuestionItemNameList()) {
+				LabelType label = lightXmlObject.addNewLabel();
+				label.setLang(name.getLang());
+				XmlBeansUtil.setTextOnMixedElement(label,
+						XmlBeansUtil.getTextOnMixedElement(name));
 			}
-			item.setData(lightXmlObject);
 
-			// set label
-			try {
-				item.setText(0, XmlBeansUtil
-						.getTextOnMixedElement((XmlObject) XmlBeansUtil
-								.getLangElement(
-										LanguageUtil.getDisplayLanguage(),
-										lightXmlObject.getLabelList())));
-			} catch (DDIFtpException e) {
-				Editor.showError(e, ID);
-			}
-			item.setData(lightXmlObject);
+			// table item
+			setItem(questionTable, lightXmlObject);
 		}
 	}
 
-	// currently not used as edit is not supported, yet!
-	class TableListener implements SelectionListener {
+	private void setItem(Table table, LightXmlObjectType lightXmlObject)
+			throws DDIFtpException {
+		TableItem item = new TableItem(table, SWT.NONE);
+		item.setText(
+				0,
+				lightXmlObject == null ? "" : XmlBeansUtil
+						.getTextOnMixedElement((XmlObject) XmlBeansUtil
+								.getDefaultLangElement(lightXmlObject
+										.getLabelList())));
+		item.setData(lightXmlObject);
+	}
+
+	public static void closeUpdateDynamicView() {
+		DynamicViewShutdownJob job = new DynamicViewShutdownJob();
+		Display.getDefault().asyncExec(job);
+	}
+
+	class TableListener implements MouseListener {
 		public TableListener() {
-
+			super();
 		}
 
 		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-			// do nothing
-		}
-
-		@Override
-		public void widgetSelected(SelectionEvent event) {
+		public void mouseDoubleClick(MouseEvent event) {
 			TableItem[] selections = ((Table) event.widget).getSelection();
 
 			// guard
 			if (selections.length == 0) {
 				return;
 			}
+
+			// type
+			LightXmlObjectType lightXmlObject = (LightXmlObjectType) selections[0]
+					.getData();
+
+			try {
+				ElementType type = ElementType.getElementType(lightXmlObject
+						.getElement());
+				ElementType parentType = null;
+
+				if (type.equals(ElementType.CONCEPT)) {
+					parentType = ElementType.CONCEPT_SCHEME;
+				}
+				if (type.equals(ElementType.UNIVERSE)) {
+					parentType = ElementType.UNIVERSE_SCHEME;
+				}
+				if (type.equals(ElementType.QUESTION_ITEM)) {
+					parentType = ElementType.QUESTION_SCHEME;
+				}
+				if (type.equals(ElementType.VARIABLE)) {
+					parentType = ElementType.VARIABLE_SCHEME;
+				}
+				if (type.equals(ElementType.CODE_SCHEME)) {
+					parentType = ElementType.LOGICAL_PRODUCT;
+				}
+
+				TreeMenu.defineInputAndOpenEditor(type, parentType,
+						lightXmlObject, EditorModeType.EDIT, PersistenceManager
+								.getInstance().getWorkingResource(), null);
+			} catch (DDIFtpException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void mouseDown(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseUp(MouseEvent e) {
+			// TODO Auto-generated method stub
+
 		}
 	}
 }

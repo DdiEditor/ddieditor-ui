@@ -371,6 +371,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			return;
 		}
 
+		// dynamic view refresh
+		updateDynamicView(model);
+
 		// add views to refresh list
 		if (!ID.equals(ORG_ID)) {
 			ViewManager.getInstance().addViewsToRefresh(ID);
