@@ -10,7 +10,11 @@ import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -22,7 +26,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 
@@ -34,9 +40,10 @@ public class ReferenceSelectionCombo {
 	ComboViewer comboViewer;
 	Button browseButton;
 	LightXmlObjectType result;
-	List<LightXmlObjectType> m_referenceList; // reference list with prefixed
-												// empty item
+	protected List<LightXmlObjectType> referenceList;
+
 	boolean isNew;
+	private String preIdValue;
 
 	public ReferenceSelectionCombo(boolean isNew) {
 		this.isNew = isNew;
@@ -64,18 +71,14 @@ public class ReferenceSelectionCombo {
 			final Composite parentCodeComposite, String subTitleText,
 			String itemLabelText, final List<LightXmlObjectType> referenceList,
 			String preIdValue) {
-
+		this.preIdValue = preIdValue;
 		this.parentCodeComposite = parentCodeComposite;
+
 		// prefix reference list with 'empty' LigthXmlObject
-		List<LightXmlObjectType> addedWithEmpty = new ArrayList<LightXmlObjectType>();
-		LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory
-				.newInstance();
-		lightXmlObject.setId("");
-		LabelType labelType = lightXmlObject.addNewLabel();
-		XmlBeansUtil.setTextOnMixedElement(labelType, "");
-		addedWithEmpty.add(lightXmlObject);
-		addedWithEmpty.addAll(referenceList);
-		this.m_referenceList = addedWithEmpty;
+		if (referenceList == null) {
+			this.referenceList = new ArrayList<LightXmlObjectType>();
+		} else
+			this.referenceList = referenceList;
 
 		// Create Label Composite:
 		final Composite labelComposite = new Composite(parentLabelComposite,
@@ -123,6 +126,7 @@ public class ReferenceSelectionCombo {
 			new Label(codeComposite, SWT.NONE);
 		}
 
+		// combo
 		comboViewer = new ComboViewer(codeComposite);
 		comboViewer
 				.setContentProvider(new org.eclipse.jface.viewers.ArrayContentProvider());
@@ -134,21 +138,8 @@ public class ReferenceSelectionCombo {
 		comboViewer.getCombo().setLayoutData(gd_combo_1);
 		comboViewer.getCombo().setData(Editor.NEW_ITEM, isNew);
 
-		comboViewer.setInput(this.m_referenceList);
-
-		// Select preIdValue:
-		int index = 0;
-		for (Iterator iterator = this.m_referenceList.iterator(); iterator
-				.hasNext();) {
-			LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) iterator
-					.next();
-			if (lightXmlObjectType.getId() != null
-					&& lightXmlObjectType.getId().equals(preIdValue)) {
-				break;
-			}
-			index++;
-		}
-		comboViewer.getCombo().select(index);
+		this.referenceList = addedWithEmpty(getReferenceList());
+		setComboContent(getReferenceList());
 
 		// - "Browse..." button:
 		browseButton = new Button(codeComposite, SWT.NONE);
@@ -156,8 +147,9 @@ public class ReferenceSelectionCombo {
 				SWT.COLOR_WHITE));
 		browseButton.setText(Translator
 				.trans("ResponseTypeDetail.label.Browse")); //$NON-NLS-1$
-
 	}
+
+	boolean updateCombo = true;
 
 	/**
 	 * Add selection listener with call back to the added selection listener
@@ -168,11 +160,38 @@ public class ReferenceSelectionCombo {
 	 */
 	public void addSelectionListener(final String title,
 			SelectionListener selectionListener) {
-
 		comboViewer.getCombo().addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
-				result = getReferenceList().get(
-						comboViewer.getCombo().getSelectionIndex());
+				result = referenceList.get(comboViewer.getCombo()
+						.getSelectionIndex());
+			}
+		});
+
+		comboViewer.getCombo().addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				// the focus listener has two focuses
+				if (updateCombo) {
+					updateCombo = false;
+					// no update
+					// 1 on fucus on button
+					return;
+				}
+
+				updateCombo = true;
+				// do update
+				// 2 on expanding the combo list
+				// 2.1 update is done on expanding the list ;)
+
+				// TODO removeAll insert on combo
+				
+				// getReferenceList();
+				// setComboContent(referenceList);
+				// System.out.println("DONE update combo");
 			}
 		});
 
@@ -183,9 +202,10 @@ public class ReferenceSelectionCombo {
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				Shell shell = new Shell();
+				List<LightXmlObjectType> referenceList = getReferenceList();
 
 				FilteredItemsSelectionDialog dialog = new ReferenceSelectionPopUp(
-						shell, title, getReferenceList(), false, false);
+						shell, title, referenceList, false, false);
 
 				dialog.setInitialPattern(comboViewer.getCombo()
 						.getSelectionIndex() == -1 ? "**" : comboViewer
@@ -196,7 +216,7 @@ public class ReferenceSelectionCombo {
 				result = (LightXmlObjectType) dialog.getFirstResult();
 				if (result != null) {
 					int index = 0;
-					for (Iterator iterator = getReferenceList().iterator(); iterator
+					for (Iterator iterator = referenceList.iterator(); iterator
 							.hasNext();) {
 						LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) iterator
 								.next();
@@ -224,7 +244,47 @@ public class ReferenceSelectionCombo {
 		return result;
 	}
 
-	private List<LightXmlObjectType> getReferenceList() {
-		return m_referenceList;
+	public List<LightXmlObjectType> getReferenceList() {
+		return referenceList;
+	}
+
+	protected List<LightXmlObjectType> addedWithEmpty(
+			List<LightXmlObjectType> referenceList) {
+		List<LightXmlObjectType> result = new ArrayList<LightXmlObjectType>();
+
+		// add empty element
+		LightXmlObjectType lightXmlObject = LightXmlObjectType.Factory
+				.newInstance();
+		lightXmlObject.setId("");
+		LabelType labelType = lightXmlObject.addNewLabel();
+		XmlBeansUtil.setTextOnMixedElement(labelType, "");
+		result.add(lightXmlObject);
+
+		// add org list
+		result.addAll(referenceList);
+		return result;
+	}
+
+	private void setComboContent(List<LightXmlObjectType> referenceList) {
+
+		// set combo content
+		comboViewer.getCombo().removeAll();
+		comboViewer.getCombo().update();
+		comboViewer.setInput(referenceList);
+		comboViewer.refresh(true);
+
+		// Select preIdValue:
+		int index = 0;
+		for (Iterator<LightXmlObjectType> iterator = referenceList.iterator(); iterator
+				.hasNext();) {
+			LightXmlObjectType lightXmlObjectType = (LightXmlObjectType) iterator
+					.next();
+			if (lightXmlObjectType.getId() != null
+					&& lightXmlObjectType.getId().equals(preIdValue)) {
+				break;
+			}
+			index++;
+		}
+		comboViewer.getCombo().select(index);
 	}
 }

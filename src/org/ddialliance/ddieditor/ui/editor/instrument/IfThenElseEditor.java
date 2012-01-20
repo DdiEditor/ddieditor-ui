@@ -27,7 +27,6 @@ import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.IfThenElse;
-import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
@@ -231,18 +230,19 @@ public class IfThenElseEditor extends Editor {
 		});
 
 		// then ref
-		List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
-		try {
-			controlConstructRefList = DdiManager.getInstance()
-					.getControlConstructsLight();
-		} catch (Exception e) {
-			showError(e);
-		}
+//		List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
+//		try {
+//			controlConstructRefList = DdiManager.getInstance()
+//					.getControlConstructsLight();
+//		} catch (Exception e) {
+//			showError(e);
+//		}
 
-		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(group,
+		CconRefSelectCombo  thenRefSelectCombo = createCconRefSelection(group,
 				Translator.trans("IfThenElse.editor.thenref"),
 				Translator.trans("IfThenElse.editor.thenref"),
-				modelImpl.getThenReference(), controlConstructRefList, false);
+				modelImpl.getThenReference(), null, false);
+		
 		thenRefSelectCombo.addSelectionListener(Translator
 				.trans("IfThenElse.editor.thenref"),
 				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,
@@ -250,10 +250,10 @@ public class IfThenElseEditor extends Editor {
 						getEditorIdentification()));
 
 		// else ref
-		ReferenceSelectionCombo elseRefSelectCombo = createRefSelection(group,
+		CconRefSelectCombo elseRefSelectCombo = createCconRefSelection(group,
 				Translator.trans("IfThenElse.editor.elseref"),
 				Translator.trans("IfThenElse.editor.elseref"),
-				modelImpl.getElseReference(), controlConstructRefList, false);
+				modelImpl.getElseReference(), null, false);
 		elseRefSelectCombo.addSelectionListener(Translator
 				.trans("IfThenElse.editor.elseref"),
 				new ReferenceSelectionAdapter(elseRefSelectCombo, modelImpl,

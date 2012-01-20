@@ -27,6 +27,7 @@ import org.ddialliance.ddieditor.ui.dialogs.TranslationDialogInput;
 import org.ddialliance.ddieditor.ui.dialogs.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.dialogs.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
+import org.ddialliance.ddieditor.ui.editor.instrument.CconRefSelectCombo;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.DDITabItemAction;
@@ -1251,6 +1252,42 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 	}
 
+	public CconRefSelectCombo createCconRefSelection(Group group,
+			String labelText, String searchTittle,
+			final ReferenceType reference,
+			List<LightXmlObjectType> referenceList, boolean isNew) {
+		Composite labelComposite = new Composite(group, SWT.NONE);
+		labelComposite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+
+		labelComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false));
+		labelComposite.setLayout(new GridLayout());
+
+		Composite composite = new Composite(group, SWT.NONE);
+		composite.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WHITE));
+		composite
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		composite.setLayout(new GridLayout());
+
+		final CconRefSelectCombo referenceSelectionCombo = new CconRefSelectCombo(
+				isNew);
+		String preIdValue = "";
+		if (reference != null && !reference.getIDList().isEmpty()) {
+			preIdValue = reference.getIDList().get(0).getStringValue();
+		}
+		try {
+			referenceSelectionCombo.createPartControl(labelComposite,
+					composite, "", labelText, referenceList, preIdValue);
+		} catch (Exception e) {
+			ErrorDialog.openError(getSite().getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, e.getMessage(), e));
+		}
+		return referenceSelectionCombo;
+	}
+	
 	public ReferenceSelectionCombo createRefSelection(Group group,
 			String labelText, String searchTittle,
 			final ReferenceType reference,

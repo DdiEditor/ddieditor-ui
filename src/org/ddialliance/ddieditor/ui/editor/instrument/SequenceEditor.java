@@ -43,6 +43,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.MenuEvent;
+import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -143,7 +145,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 				new SequenceDropListener(this));
 
 		// popup menu
-		Menu menu = new Menu(tableViewer.getControl());
+		final Menu menu = new Menu(tableViewer.getControl());
 
 		// menu add
 		final MenuItem addMenuItem = new MenuItem(menu, SWT.CASCADE);
@@ -158,9 +160,8 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		});
 
 		// menu edit
-		MenuItem editMenuItem = new MenuItem(menu, SWT.NONE);
-		editMenuItem
-				.setText(Translator.trans("View.label.editMenuItem.Edit"));
+		final MenuItem editMenuItem = new MenuItem(menu, SWT.NONE);
+		editMenuItem.setText(Translator.trans("View.label.editMenuItem.Edit"));
 		editMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/editor_area.gif"));
 		editMenuItem.addSelectionListener(new SelectionAdapter() {
@@ -178,6 +179,25 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		removeMenuItem.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				popupMenuAction(PopupAction.REMOVE);
+			}
+		});
+
+		menu.addMenuListener(new MenuListener() {
+			@Override
+			public void menuShown(MenuEvent e) {
+				// disable on functional menu items
+				if (tableViewer.getTable().getItemCount() == 0) {
+					removeMenuItem.setEnabled(false);
+					editMenuItem.setEnabled(false);
+				} else {
+					removeMenuItem.setEnabled(true);
+					editMenuItem.setEnabled(true);
+				}
+			}
+
+			@Override
+			public void menuHidden(MenuEvent e) {
+				// do nothing
 			}
 		});
 		tableViewer.getControl().setMenu(menu);
@@ -210,8 +230,7 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			SequencePropertiesDialog spd = new SequencePropertiesDialog(editor
-					.getSite().getShell(), Translator.trans("Sequence"),
-					editor);
+					.getSite().getShell(), Translator.trans("Sequence"), editor);
 			spd.open();
 		}
 
@@ -228,96 +247,122 @@ public class SequenceEditor extends Editor implements IAutoChangePerspective {
 		return items;
 	}
 
+	private boolean popupMenuActionAdd(
+			LightXmlObjectType selectedLightXmlObject, boolean update) {
+		List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
+		try {
+			controlConstructRefList = DdiManager.getInstance()
+					.getControlConstructsLight();
+		} catch (Exception e) {
+			DialogUtil.errorDialog(getSite().getShell(), ID, null,
+					e.getMessage(), e);
+		}
+		for (Iterator<LightXmlObjectType> iterator = controlConstructRefList
+				.iterator(); iterator.hasNext();) {
+			LightXmlObjectType lightXmlObjectType = iterator.next();
+			for (LightXmlObjectType item : (Collection<LightXmlObjectType>) items) {
+				if (lightXmlObjectType.getId().equals(item.getId())) {
+					try {
+						iterator.remove();
+					} catch (IllegalStateException e) {
+						continue; // hack to prevent exception on
+									// duplicate control construct
+									// in list
+					}
+					continue; // guard to not remove it twice in
+					// case of duplicates
+				}
+			}
+		}
+
+		// labelQueryResult = null;
+		SequenceMenuPopupAddDialog addDialog = new SequenceMenuPopupAddDialog(
+				getSite().getShell(),
+				Translator.trans("SequenceEditor.adddialog.title"),
+				Translator.trans("SequenceEditor.adddialog.label"),
+				controlConstructRefList, modelImpl);
+		addDialog.open();
+
+		if (addDialog.getResult() != null) {
+			if (selectedLightXmlObject == null) {
+				// add xml
+				modelImpl
+						.getDocument()
+						.getSequence()
+						.getControlConstructReferenceList()
+						.add(new ReferenceResolution(addDialog.getResult())
+								.getReference());
+
+				// add table
+				items.add(addDialog.getResult());
+				update = true;
+			} else {
+				int count = 0; // count is before
+				for (Iterator<LightXmlObjectType> iterator = items.iterator(); iterator
+						.hasNext(); count++) {
+					LightXmlObjectType lightXmlObject = iterator.next();
+
+					if (lightXmlObject.equals(selectedLightXmlObject)) {
+						update = true;
+						int insert = addDialog.beforeAfter == 0 ? count + 1
+								: count;
+
+						if (insert < items.size()) {
+							// add xml
+							modelImpl
+									.getDocument()
+									.getSequence()
+									.getControlConstructReferenceList()
+									.add(insert,
+											new ReferenceResolution(addDialog
+													.getResult())
+													.getReference());
+
+							// add table
+							items.add(insert, addDialog.getResult());
+						} else {
+							// add xml
+							modelImpl
+									.getDocument()
+									.getSequence()
+									.getControlConstructReferenceList()
+									.add(new ReferenceResolution(addDialog
+											.getResult()).getReference());
+
+							// add table
+							items.add(addDialog.getResult());
+						}
+						break;
+					}
+				}
+			}
+		}
+		return update;
+	}
+
 	private void popupMenuAction(PopupAction action) {
+		boolean update = false;
 		TableItem[] tableItems = tableViewer.getTable().getSelection();
+
+		// add on empty items
+		if (tableItems.length <= 0 && action.equals(PopupAction.ADD)) {
+			update = popupMenuActionAdd(null, update);
+		}
 		// guard
-		if (tableItems.length <= 0) {
+		else if (tableItems.length <= 0) {
 			DialogUtil.errorDialog(PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getShell(), ID, null, null,
 					new DDIFtpException());
 			return;
 		}
 
-		boolean update = false;
 		for (int i = 0; i < tableItems.length; i++) {
 			LightXmlObjectType selectedLightXmlObject = (LightXmlObjectType) tableItems[i]
 					.getData();
 
 			// add
 			if (action.equals(PopupAction.ADD)) {
-				List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
-				try {
-					controlConstructRefList = DdiManager.getInstance()
-							.getControlConstructsLight();
-				} catch (Exception e) {
-					DialogUtil.errorDialog(getSite().getShell(), ID, null,
-							e.getMessage(), e);
-				}
-				for (Iterator<LightXmlObjectType> iterator = controlConstructRefList
-						.iterator(); iterator.hasNext();) {
-					LightXmlObjectType lightXmlObjectType = iterator.next();
-					for (LightXmlObjectType item : (Collection<LightXmlObjectType>) items) {
-						if (lightXmlObjectType.getId().equals(item.getId())) {
-							try {
-								iterator.remove();
-							} catch (IllegalStateException e) {
-								continue; // hack to prevent exception on
-											// duplicate control construct
-											// in list
-							}
-							continue; // guard to not remove it twice in
-							// case of duplicates
-						}
-					}
-				}
-
-				// labelQueryResult = null;
-				SequenceMenuPopupAddDialog addDialog = new SequenceMenuPopupAddDialog(
-						getSite().getShell(),
-						Translator.trans("SequenceEditor.adddialog.title"),
-						Translator.trans("SequenceEditor.adddialog.label"),
-						controlConstructRefList, modelImpl);
-				addDialog.open();
-
-				if (addDialog.getResult() != null) {
-					int count = 0; // count is before
-					for (Iterator<LightXmlObjectType> iterator = items
-							.iterator(); iterator.hasNext(); count++) {
-						LightXmlObjectType lightXmlObject = iterator.next();
-						if (lightXmlObject.equals(selectedLightXmlObject)) {
-							update = true;
-							int insert = addDialog.beforeAfter == 0 ? count + 1
-									: count;
-
-							if (insert < items.size()) {
-								// add xml
-								modelImpl
-										.getDocument()
-										.getSequence()
-										.getControlConstructReferenceList()
-										.add(insert,
-												new ReferenceResolution(
-														addDialog.getResult())
-														.getReference());
-
-								// add table
-								items.add(insert, addDialog.getResult());
-							} else {
-								// add xml
-								modelImpl
-										.getDocument()
-										.getSequence()
-										.getControlConstructReferenceList()
-										.add(new ReferenceResolution(addDialog
-												.getResult()).getReference());
-
-								// add table
-								items.add(addDialog.getResult());
-							}
-							break;
-						}
-					}
-				}
+				update = popupMenuActionAdd(selectedLightXmlObject, update);
 			}
 			// edit
 			else if (action.equals(PopupAction.EDIT)) {
