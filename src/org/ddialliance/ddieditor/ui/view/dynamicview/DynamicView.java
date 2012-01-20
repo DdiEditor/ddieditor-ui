@@ -12,6 +12,7 @@ import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LabelType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.editor.Editor;
@@ -26,7 +27,6 @@ import org.ddialliance.ddieditor.ui.model.question.MultipleQuestionItem;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
 import org.ddialliance.ddieditor.ui.model.universe.Universe;
 import org.ddialliance.ddieditor.ui.model.variable.Variable;
-import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.view.TreeMenu;
 import org.ddialliance.ddieditor.util.LightXmlObjectUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -48,7 +48,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 public class DynamicView extends ViewPart {
-	public static final String ID = "org.ddialliance.ddieditor.ui.view.dynamicview";
+	public static final String ID = "org.ddialliance.ddieditor.ui.view.dynamicview.DynamicView";
 	Editor editor = null;
 	Composite parent;
 	Group group;
@@ -166,26 +166,40 @@ public class DynamicView extends ViewPart {
 
 		// concept
 		if (model instanceof Concept) {
+			// init tables
 			createUniverses();
 			createQuestions();
 			createVariables();
 
+			// init model
 			Concept modelImpl = (Concept) model;
-
-			// universe
-			updateTable(emptyList, "", universeTable);
-
-			// questions
 			ReferenceResolution refRes = new ReferenceResolution(
 					LightXmlObjectUtil.createLightXmlObject(
 							modelImpl.getParentId(),
 							modelImpl.getParentVersion(), modelImpl.getId(),
-							modelImpl.getVersion(), "Concept"));
+							modelImpl.getVersion(),
+							"logicalproduct__ConceptReference"));
+
+			// update questions
 			lightXmlObjectListDoc = DdiManager.getInstance()
 					.getQuestionItemsLightByConcept(refRes);
 			updateTable(lightXmlObjectListDoc, questionTable);
 
-			// variables
+			// update variables
+			lightXmlObjectListDoc = DdiManager.getInstance()
+					.getVariablesLightByConcept(refRes);
+			updateTable(lightXmlObjectListDoc, variableTable);
+
+			// update universe
+			LightXmlObjectListDocument universeDoc = LightXmlObjectListDocument.Factory
+					.newInstance();
+			LightXmlObjectListType universeList = universeDoc
+					.addNewLightXmlObjectList();
+			universeList.setLightXmlObjectArray(LightXmlObjectUtil
+					.getXmlObjectsByCustomListType(lightXmlObjectListDoc,
+							"Universe").toArray(new LightXmlObjectType[] {}));
+
+			updateTable(universeDoc, universeTable);
 		}
 
 		// universe
@@ -193,7 +207,26 @@ public class DynamicView extends ViewPart {
 			createConcepts();
 			createQuestions();
 			createVariables();
-			createCategories();
+
+			Universe modelImpl = (Universe) model;
+			ReferenceResolution refRes = new ReferenceResolution(
+					LightXmlObjectUtil.createLightXmlObject(
+							modelImpl.getParentId(),
+							modelImpl.getParentVersion(), modelImpl.getId(),
+							modelImpl.getVersion(), "UniverseReference"));
+
+			// update variables
+			lightXmlObjectListDoc = DdiManager.getInstance()
+					.getVariablesLightByUniverse(refRes);
+			updateTable(lightXmlObjectListDoc, variableTable);
+
+			// update concept
+			updateTableWithCustom(lightXmlObjectListDoc, "Concept",
+					conceptTable);
+
+			// update question
+			updateTableWithCustom(lightXmlObjectListDoc, "Question",
+					questionTable);
 		}
 
 		// question
@@ -209,14 +242,21 @@ public class DynamicView extends ViewPart {
 			updateTable(modelImpl.getDocument().getQuestionItem()
 					.getConceptReferenceList(), "Concept", conceptTable);
 
-			// universe
-			updateTable(emptyList, "", universeTable);
+			ReferenceResolution refRes = new ReferenceResolution(
+					LightXmlObjectUtil.createLightXmlObject(
+							modelImpl.getParentId(),
+							modelImpl.getParentVersion(), modelImpl.getId(),
+							modelImpl.getVersion(),
+							"logicalproduct__QuestionReference"));
 
-			// question
-			updateTable(emptyList, "", questionTable);
+			// update variables
+			lightXmlObjectListDoc = DdiManager.getInstance()
+					.getVariablesLightByQuestionItem(refRes);
+			updateTable(lightXmlObjectListDoc, variableTable);
 
-			// variable
-			updateTable(emptyList, "", variableTable);
+			// update universe
+			updateTableWithCustom(lightXmlObjectListDoc, "Universe",
+					universeTable);
 		}
 
 		// multiple question
@@ -296,6 +336,24 @@ public class DynamicView extends ViewPart {
 				.getLightXmlObjectList()) {
 			setItem(table, lightXmlObject);
 		}
+	}
+
+	private void updateTableWithCustom(
+			LightXmlObjectListDocument customLightXmlObjectDoc,
+			String elementName, Table table) throws DDIFtpException {
+		LightXmlObjectListDocument lightXmlObjectDoc = LightXmlObjectListDocument.Factory
+				.newInstance();
+		LightXmlObjectListType lightXmlObjectList = lightXmlObjectDoc
+				.addNewLightXmlObjectList();
+		lightXmlObjectList.setLightXmlObjectArray(LightXmlObjectUtil
+				.getXmlObjectsByCustomListType(customLightXmlObjectDoc,
+						elementName).toArray(new LightXmlObjectType[] {}));
+		if (elementName.equals("Question")) {
+			for (LightXmlObjectType lightXmlObject : lightXmlObjectList.getLightXmlObjectList()) {
+				lightXmlObject.setElement("QuestionItem");
+			}
+		}
+		updateTable(lightXmlObjectDoc, table);
 	}
 
 	private void updateQuestionTable(MultipleQuestionItem modelImpl)
