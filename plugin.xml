@@ -16,8 +16,11 @@
                   icon="icons/sims-icon/sims_index.png"
                   id="org.ddialliance.ddieditor.ui.perspective.InfoPerspective"
                   name="%perspective.name.1"> </perspective>
-            <perspective class="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective"
-                  id="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective" name="%perspective.name"> </perspective>
+            <perspective
+                  class="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective"
+                  icon="icons/sims-icon/sims_concept.png"
+                  id="org.ddialliance.ddieditor.ui.perspective.ConceptsPerspective"
+                  name="%perspective.name"> </perspective>
             <perspective
                   class="org.ddialliance.ddieditor.ui.perspective.CodesPerspective"
                   icon="icons/code-scheme.png"
@@ -41,6 +44,7 @@
             </perspective>
             <perspective
                   class="org.ddialliance.ddieditor.ui.perspective.UniversePerspective"
+                  icon="icons/sims-icon/sims_universe.png"
                   id="org.ddialliance.ddieditor.ui.perspective.UniversePerspective"
                   name="%perspective.name.5">
             </perspective>
@@ -60,7 +64,7 @@
       <extension point="org.eclipse.ui.views">
             <view class="org.ddialliance.ddieditor.ui.view.InfoView" icon="icons/sims-icon/sims_index.png"
                   id="org.ddialliance.ddieditor.ui.view.InfoView" name="%view.name"> </view>
-            <view class="org.ddialliance.ddieditor.ui.view.ConceptView" icon="icons/tree.gif"
+            <view class="org.ddialliance.ddieditor.ui.view.ConceptView" icon="icons/sims-icon/sims_concept.png"
                   id="org.ddialliance.ddieditor.ui.view.ConceptView" name="%view.name.0"> </view>
             <view class="org.ddialliance.ddieditor.ui.view.CodeView" icon="icons/code-scheme.png"
                   id="org.ddialliance.ddieditor.ui.view.CodeView" name="%view.name.1" restorable="true"> </view>
@@ -78,7 +82,7 @@
             </view>
             <view
                   class="org.ddialliance.ddieditor.ui.view.UniverseView"
-                  icon="icons/tree.gif"
+                  icon="icons/sims-icon/sims_universe.png"
                   id="org.ddialliance.ddieditor.ui.view.UniverseView"
                   name="%view.name.5"
                   restorable="true">
@@ -171,7 +175,7 @@
                   id="org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor"
                   name="%editor.name.0"> </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor"
-                  default="false" icon="icons/editor_area.gif"
+                  default="false" icon="icons/sims-icon/sims_concept.png"
                   id="org.ddialliance.ddieditor.ui.editor.concept.ConceptEditor"
                   name="%editor.name.1"> </editor>
             <editor class="org.ddialliance.ddieditor.ui.editor.concept.ConceptSchemeEditor"
@@ -266,7 +270,7 @@
             <editor
                   class="org.ddialliance.ddieditor.ui.editor.universe.UniverseEditor"
                   default="false"
-                  icon="icons/editor_area.gif"
+                  icon="icons/sims-icon/sims_universe.png"
                   id="org.ddialliance.ddieditor.ui.editor.universe.UniverseEditor"
                   name="%editor.name.16">
             </editor>
