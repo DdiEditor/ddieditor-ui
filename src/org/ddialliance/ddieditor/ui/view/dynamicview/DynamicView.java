@@ -4,8 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.CodeDomainType;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.MultipleQuestionItemDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.QuestionItemType;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CategorySchemeDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CategoryType;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
@@ -15,6 +21,8 @@ import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
+import org.ddialliance.ddieditor.ui.dbxml.category.CategorySchemeDao;
+import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.table.TableColumnSort;
@@ -22,9 +30,12 @@ import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.Model;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
+import org.ddialliance.ddieditor.ui.model.code.CodeScheme;
 import org.ddialliance.ddieditor.ui.model.concept.Concept;
 import org.ddialliance.ddieditor.ui.model.question.MultipleQuestionItem;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
+import org.ddialliance.ddieditor.ui.model.question.Response;
+import org.ddialliance.ddieditor.ui.model.question.ResponseType;
 import org.ddialliance.ddieditor.ui.model.universe.Universe;
 import org.ddialliance.ddieditor.ui.model.variable.Variable;
 import org.ddialliance.ddieditor.ui.view.TreeMenu;
@@ -35,6 +46,8 @@ import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -45,6 +58,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 public class DynamicView extends ViewPart {
@@ -94,35 +108,66 @@ public class DynamicView extends ViewPart {
 	private void createConcepts() {
 		conceptLabel = editor.createLabel(group, Translator.trans("Concepts"));
 		conceptTable = new Table(group, tableProperties);
-		initTable(conceptLabel, conceptTable, labelNames);
+		initTable(conceptTable, labelNames);
 	}
 
 	private void createUniverses() {
 		universeLabel = editor
 				.createLabel(group, Translator.trans("Universes"));
 		universeTable = new Table(group, tableProperties);
-		initTable(universeLabel, universeTable, labelNames);
+		initTable(universeTable, labelNames);
 	}
 
 	private void createQuestions() {
 		questionLabel = editor
 				.createLabel(group, Translator.trans("Questions"));
 		questionTable = new Table(group, tableProperties);
-		initTable(questionLabel, questionTable, labelNames);
+		initTable(questionTable, labelNames);
 	}
 
 	private void createVariables() {
 		variableLabel = editor
 				.createLabel(group, Translator.trans("Variables"));
 		variableTable = new Table(group, tableProperties);
-		initTable(variableLabel, variableTable, labelNames);
+		initTable(variableTable, labelNames);
 	}
 
-	private void createCategories() {
+	private void createCategories(IModel model) {
+		categoryLabel = editor.createLabel(group,
+				Translator.trans("Representation"));
 
+		ResponseType responseType = null;
+		if (model instanceof QuestionItem) {
+			QuestionItem modelImpl = ((QuestionItem) model);
+			responseType = Response.getResponseType(modelImpl
+					.getResponseDomain());
+		} else if (model instanceof Variable) {
+			Variable modelImpl = ((Variable) model);
+			responseType = Response.getResponseType(modelImpl
+					.getValueRepresentation());
+		}
+
+		if (responseType == null) {
+			return;
+		} else if (responseType.equals(ResponseType.CODE)) {
+			categoryTable = new Table(group, tableProperties);
+			initTable(categoryTable, new String[] { Translator.trans("Code"),
+					Translator.trans("Category") });
+		} else {
+			Label label = editor.createLabel(group,
+					Response.RESPONSE_TYPE_LABELS[responseType.ordinal()]);
+			FontData[] fontData = label.getFont().getFontData();
+			for (int i = 0; i < fontData.length; i++) {
+				fontData[i].setStyle(SWT.BOLD);
+			}
+			label.setFont(new Font(PlatformUI.getWorkbench().getDisplay(),
+					fontData));
+			label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
+					false, 1, 1));
+		}
 	}
 
-	private void initTable(Label label, Table table, String[] columnNames) {
+	private void initTable(Table table, String[] columnNames) {
 		// table properties
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
@@ -142,7 +187,8 @@ public class DynamicView extends ViewPart {
 			column.setText(columnNames[i]);
 			column.addListener(SWT.Selection, sort);
 			column.setResizable(true);
-			column.setWidth(130);
+			column.setWidth(50);
+			// column.setAlignment(SWT.RIGHT);
 		}
 	}
 
@@ -234,7 +280,7 @@ public class DynamicView extends ViewPart {
 			createConcepts();
 			createUniverses();
 			createVariables();
-			createCategories();
+			createCategories(model);
 
 			QuestionItem modelImpl = (QuestionItem) model;
 
@@ -257,6 +303,19 @@ public class DynamicView extends ViewPart {
 			// update universe
 			updateTableWithCustom(lightXmlObjectListDoc, "Universe",
 					universeTable);
+
+			// categories
+			ResponseType rep = Response.getResponseType(modelImpl
+					.getResponseDomain());
+			if (rep != null && rep.equals(ResponseType.CODE)) {
+				CodeDomainType codeDomain = (CodeDomainType) modelImpl
+						.getResponseDomain()
+						.substitute(
+								CodeDomainDocument.type
+										.getDocumentElementName(),
+								CodeDomainType.type);
+				updateCategoryTable(codeDomain.getCodeSchemeReference());
+			}
 		}
 
 		// multiple question
@@ -279,7 +338,7 @@ public class DynamicView extends ViewPart {
 			createConcepts();
 			createUniverses();
 			createQuestions();
-			createCategories();
+			createCategories(model);
 
 			Variable modelImpl = (Variable) model;
 
@@ -296,6 +355,37 @@ public class DynamicView extends ViewPart {
 			// question
 			updateTable(modelImpl.getDocument().getVariable()
 					.getQuestionReferenceList(), "QuestionItem", questionTable);
+
+			// categories
+			ReferenceType ref = modelImpl
+					.getCodeRepresentationCodeSchemeReference();
+			if (ref != null && !ref.getIDList().isEmpty()) {
+				updateCategoryTable(ref);
+			}
+		}
+
+		// categories
+		if (model instanceof CodeScheme) {
+			CodeScheme modelImpl = (CodeScheme) model;
+
+			// init table
+			createQuestions();
+			createVariables();
+
+			ReferenceResolution refRes = new ReferenceResolution(
+					LightXmlObjectUtil.createLightXmlObject(
+							modelImpl.getParentId(),
+							modelImpl.getParentVersion(), modelImpl.getId(),
+							modelImpl.getVersion(), "reusable__CodeSchemeReference"));
+
+			// question
+			lightXmlObjectListDoc = DdiManager.getInstance()
+					.getQuestionItemsLightByCodeScheme(refRes);
+			updateTable(lightXmlObjectListDoc, questionTable);
+
+			// variable
+			lightXmlObjectListDoc = DdiManager.getInstance().getVariablesLightByCodeScheme(refRes);
+			updateTable(lightXmlObjectListDoc, variableTable);
 		}
 
 		// finalize
@@ -325,7 +415,7 @@ public class DynamicView extends ViewPart {
 			}
 			LightXmlObjectType lightXmlObject = lightXmlObjectDoc
 					.getLightXmlObjectList().getLightXmlObjectList().get(0);
-			setItem(table, lightXmlObject);
+			setItem(table, 0, lightXmlObject);
 		}
 	}
 
@@ -334,7 +424,7 @@ public class DynamicView extends ViewPart {
 		// insert into table
 		for (LightXmlObjectType lightXmlObject : list.getLightXmlObjectList()
 				.getLightXmlObjectList()) {
-			setItem(table, lightXmlObject);
+			setItem(table, 0, lightXmlObject);
 		}
 	}
 
@@ -349,7 +439,8 @@ public class DynamicView extends ViewPart {
 				.getXmlObjectsByCustomListType(customLightXmlObjectDoc,
 						elementName).toArray(new LightXmlObjectType[] {}));
 		if (elementName.equals("Question")) {
-			for (LightXmlObjectType lightXmlObject : lightXmlObjectList.getLightXmlObjectList()) {
+			for (LightXmlObjectType lightXmlObject : lightXmlObjectList
+					.getLightXmlObjectList()) {
 				lightXmlObject.setElement("QuestionItem");
 			}
 		}
@@ -388,15 +479,69 @@ public class DynamicView extends ViewPart {
 			}
 
 			// table item
-			setItem(questionTable, lightXmlObject);
+			setItem(questionTable, 0, lightXmlObject);
 		}
 	}
 
-	private void setItem(Table table, LightXmlObjectType lightXmlObject)
-			throws DDIFtpException {
+	private void updateCategoryTable(ReferenceType codeSchemeReference)
+			throws Exception {
+		// resolve references
+		CodeSchemeDocument codeScheme = CodeSchemeDao
+				.getCodeSchemeByReference(new ReferenceResolution(
+						codeSchemeReference));
+
+		ReferenceType catSchemeRef = codeScheme.getCodeScheme()
+				.getCategorySchemeReference();
+		CategorySchemeDocument catScheme = CategorySchemeDao
+				.getCodeSchemeByReference(new ReferenceResolution(catSchemeRef));
+
+		LightXmlObjectType lightXmlObject = LightXmlObjectUtil
+				.createLightXmlObject(null, null, codeScheme.getCodeScheme()
+						.getId(), codeScheme.getCodeScheme().getVersion(),
+						"CodeScheme");
+
+		for (CodeType code : codeScheme.getCodeScheme().getCodeList()) {
+			// code
+			XmlBeansUtil.setTextOnMixedElement(lightXmlObject.addNewLabel(),
+					code.getValue());
+			TableItem item = setItem(categoryTable, 0, lightXmlObject);
+
+			// category
+			for (CategoryType cat : catScheme.getCategoryScheme()
+					.getCategoryList()) {
+				if (cat.getId().equals(
+						XmlBeansUtil.getTextOnMixedElement(code
+								.getCategoryReference().getIDList().get(0)))) {
+
+					String text = XmlBeansUtil
+							.getTextOnMixedElement(((org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType) XmlBeansUtil
+									.getDefaultLangElement(cat.getLabelList())));
+					XmlBeansUtil.setTextOnMixedElement(
+							lightXmlObject.addNewLabel(), text);
+					addToTableItem(item, 1, lightXmlObject);
+					break;
+				}
+			}
+		}
+	}
+
+	private TableItem setItem(Table table, int index,
+			LightXmlObjectType lightXmlObject) throws DDIFtpException {
 		TableItem item = new TableItem(table, SWT.NONE);
 		item.setText(
-				0,
+				index,
+				lightXmlObject == null ? "" : XmlBeansUtil
+						.getTextOnMixedElement((XmlObject) XmlBeansUtil
+								.getDefaultLangElement(lightXmlObject
+										.getLabelList())));
+		item.setData(lightXmlObject);
+		return item;
+	}
+
+	private void addToTableItem(TableItem item, int index,
+			LightXmlObjectType lightXmlObject) throws DDIFtpException {
+		item.setText(
+				index,
 				lightXmlObject == null ? "" : XmlBeansUtil
 						.getTextOnMixedElement((XmlObject) XmlBeansUtil
 								.getDefaultLangElement(lightXmlObject
