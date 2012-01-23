@@ -1,8 +1,9 @@
 package org.ddialliance.ddieditor.ui.perspective;
 
 import org.ddialliance.ddieditor.ui.view.CodeView;
-import org.ddialliance.ddieditor.ui.view.InfoView;
+import org.ddialliance.ddieditor.ui.view.ConceptView;
 import org.ddialliance.ddieditor.ui.view.QuestionItemView;
+import org.ddialliance.ddieditor.ui.view.UniverseView;
 import org.ddialliance.ddieditor.ui.view.VariableView;
 import org.ddialliance.ddieditor.ui.view.dynamicview.DynamicView;
 import org.ddialliance.ddieditor.ui.view.instrument.sequenceflow.SequenceflowView;
@@ -15,10 +16,11 @@ public class CurationPerspective implements IPerspectiveFactory {
 
 	@Override
 	public void createInitialLayout(IPageLayout layout) {
-		PerspectiveUtil.createLeftFolder(layout, InfoView.ID,
-				VariableQuestionView.ID, SequenceflowView.ID, CodeView.ID,
-				VariableView.ID, QuestionItemView.ID);
+		PerspectiveUtil.createLeftFolder(layout, ConceptView.ID,
+				UniverseView.ID, VariableView.ID, QuestionItemView.ID,
+				CodeView.ID);
 
-		PerspectiveUtil.createRightFolder(layout, DynamicView.ID);
+		PerspectiveUtil.createRightFolder(layout, VariableQuestionView.ID,
+				SequenceflowView.ID, DynamicView.ID);
 	}
 }
