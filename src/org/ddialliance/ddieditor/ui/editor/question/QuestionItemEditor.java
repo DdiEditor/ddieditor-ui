@@ -26,7 +26,7 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.Referen
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
-import org.ddialliance.ddieditor.ui.model.question.QuestionItem.RESPONSE_TYPES;
+import org.ddialliance.ddieditor.ui.model.question.ResponseType;
 import org.ddialliance.ddieditor.ui.model.question.ResponseTypeReference;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
@@ -122,7 +122,7 @@ public class QuestionItemEditor extends Editor {
 				.get(0);
 
 		Text nameTxt = createTextInput(questionGroup,
-				Translator.trans("QuestionItemEditor.label.Name") + ":",
+				Translator.trans("QuestionItemEditor.label.Name"),
 				name == null ? "" : name.getStringValue(), false);
 		nameTxt.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
 				NameType.class, getEditorIdentification()));
@@ -155,7 +155,7 @@ public class QuestionItemEditor extends Editor {
 				questionGroup,
 				Translator
 						.trans("QuestionItemEditor.label.conceptLabel.Concept")
-						+ ":",
+						,
 				Translator
 						.trans("QuestionItemEditor.label.conceptLabel.Concept"),
 				modelImpl.getConceptReferenceType(), conceptReferenceList,
@@ -258,7 +258,7 @@ public class QuestionItemEditor extends Editor {
 				responseTypeDetail.getResponseTypeLabels());
 
 		if (!getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
-			RESPONSE_TYPES responseType = ResponseTypeDetail
+			ResponseType responseType = ResponseTypeDetail
 					.getResponseType(modelImpl.getResponseDomain());
 			responseTypeDetail.setDetails(modelImpl.getResponseDomain());
 		}
@@ -304,7 +304,7 @@ public class QuestionItemEditor extends Editor {
 				// Save new Response Type
 				int index = responseComboViewer.getCombo().getSelectionIndex();
 				if (index >= 0) {
-					RESPONSE_TYPES rt = ((ResponseTypeReference) responseDomainReferenceList
+					ResponseType rt = ((ResponseTypeReference) responseDomainReferenceList
 							.get(index)).getResponseDomain();
 					// Save Responds Type without details - saved by
 					// ResponseTypeDetail modify listener
@@ -352,14 +352,12 @@ public class QuestionItemEditor extends Editor {
 	}
 
 	public Viewer getViewer() {
-		log.debug("QuestionItemEditor.getViewer()");
 		return this.tableViewer;
 	}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
-		log.debug("QuestionItemEditor.init()");
 		super.init(site, input);
 		this.modelImpl = (QuestionItem) model;
 	}

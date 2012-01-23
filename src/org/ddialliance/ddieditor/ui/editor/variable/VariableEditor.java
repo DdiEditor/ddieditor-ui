@@ -20,6 +20,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextRepresentationType;
 import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.variable.VariableDao;
 import org.ddialliance.ddieditor.ui.dialogs.translationdialoginput.DescriptionTdI;
 import org.ddialliance.ddieditor.ui.dialogs.translationdialoginput.LabelTdI;
@@ -60,9 +61,8 @@ public class VariableEditor extends Editor {
 	Variable modelImpl;
 
 	public VariableEditor() {
-		super(
-				Translator.trans("VariableEditor.label"),
-				Translator.trans("VariableEditor.label.useTheEditorLabel.Description"),
+		super(Translator.trans("VariableEditor.label"), Translator
+				.trans("VariableEditor.label.useTheEditorLabel.Description"),
 				ID);
 		this.dao = new VariableDao();
 	}
@@ -213,8 +213,10 @@ public class VariableEditor extends Editor {
 				// code scheme selection
 				final ReferenceSelectionCombo refSelectCodeSchemeCombo = createRefSelection(
 						representationGroup,
-						Translator.trans("VariableEditor.label.codeschemereference"),
-						Translator.trans("VariableEditor.label.codeschemereference"),
+						Translator
+								.trans("VariableEditor.label.codeschemereference"),
+						Translator
+								.trans("VariableEditor.label.codeschemereference"),
 						codeSchemeRef, codeSchemeRefList, false);
 				refSelectCodeSchemeCombo.addSelectionListener(Translator
 						.trans("VariableEditor.label.codeschemereference"),
@@ -225,7 +227,8 @@ public class VariableEditor extends Editor {
 				// codes values
 				createLabel(
 						representationGroup,
-						Translator.trans("VariableEditor.label.coderepresentation.codevalues"));
+						Translator
+								.trans("VariableEditor.label.coderepresentation.codevalues"));
 				final Label codeValue = createLabel(representationGroup, "");
 				codeValue.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 						false, false, 1, 1));
@@ -249,13 +252,13 @@ public class VariableEditor extends Editor {
 			// NumericRepresentation
 			if (repImpl instanceof NumericRepresentationType) {
 				NumericRepresentationType numRep = (NumericRepresentationType) repImpl;
-				representationGroup
-						.setText(Translator
-								.trans("VariableEditor.label.numericrepresentation"));
+				representationGroup.setText(Translator
+						.trans("VariableEditor.label.numericrepresentation"));
 				// numeric type
 				createLabel(
 						representationGroup,
-						Translator.trans("VariableEditor.label.numericrepresentation.types"));
+						Translator
+								.trans("VariableEditor.label.numericrepresentation.types"));
 				Combo numericCombo = createCombo(representationGroup,
 						Variable.NUMERIC_TYPES);
 				int search = numRep.getType().intValue();
@@ -287,7 +290,8 @@ public class VariableEditor extends Editor {
 						.equals("0")) {
 					Text numericDecimalPositionText = createTextInput(
 							representationGroup,
-							Translator.trans("VariableEditor.label.numericrepresentation.decimalpositions"),
+							Translator
+									.trans("VariableEditor.label.numericrepresentation.decimalpositions"),
 							modelImpl.getNumericDecimalPosition().toString(),
 							false);
 					numericDecimalPositionText
@@ -349,7 +353,8 @@ public class VariableEditor extends Editor {
 				// min length
 				Text minlengthText = createTextInput(
 						representationGroup,
-						Translator.trans("VariableEditor.label.textrepresentation.minlength"),
+						Translator
+								.trans("VariableEditor.label.textrepresentation.minlength"),
 						modelImpl.getMinLength() == null ? "" : modelImpl
 								.getMinLength().toString(), false);
 
@@ -378,7 +383,8 @@ public class VariableEditor extends Editor {
 				// max length
 				Text maxlengthText = createTextInput(
 						representationGroup,
-						Translator.trans("VariableEditor.label.textrepresentation.maxlength"),
+						Translator
+								.trans("VariableEditor.label.textrepresentation.maxlength"),
 						modelImpl.getMaxLength() == null ? "" : modelImpl
 								.getMaxLength().toString(), false);
 
@@ -407,7 +413,8 @@ public class VariableEditor extends Editor {
 				// regx
 				Text regxText = createTextInput(
 						representationGroup,
-						Translator.trans("VariableEditor.label.textrepresentation.regx"),
+						Translator
+								.trans("VariableEditor.label.textrepresentation.regx"),
 						modelImpl.getRegx() == null ? "" : modelImpl.getRegx(),
 						false);
 				regxText.addModifyListener(new ModifyListener() {
@@ -426,14 +433,14 @@ public class VariableEditor extends Editor {
 			}
 			// DateTimeRepresentation
 			if (repImpl instanceof DateTimeRepresentationType) {
-				representationGroup
-						.setText(Translator
-								.trans("VariableEditor.label.datetimerepresentation"));
+				representationGroup.setText(Translator
+						.trans("VariableEditor.label.datetimerepresentation"));
 
 				// format
 				Text format = createTextInput(
 						representationGroup,
-						Translator.trans("VariableEditor.label.datetimerepresentation.format"),
+						Translator
+								.trans("VariableEditor.label.datetimerepresentation.format"),
 						modelImpl.getFormat() == null ? "" : modelImpl
 								.getFormat(), false);
 				format.addModifyListener(new ModifyListener() {
@@ -453,7 +460,8 @@ public class VariableEditor extends Editor {
 				// date time type
 				createLabel(
 						representationGroup,
-						Translator.trans("VariableEditor.label.datetimerepresentation.type"));
+						Translator
+								.trans("VariableEditor.label.datetimerepresentation.type"));
 				Combo datetimeCombo = createCombo(representationGroup,
 						Variable.DATE_TIME_TYPES);
 				DateTypeCodeType.Enum dateTime = modelImpl.getDateTimeType();
@@ -543,7 +551,8 @@ public class VariableEditor extends Editor {
 	public static void changeCodeRepresentationCodeValues(
 			ReferenceType codeSchemeRef, Label codeValue) throws Exception {
 		ReferenceResolution refRes = new ReferenceResolution(codeSchemeRef);
-		CodeSchemeDocument codeScheme = getCodeScheme(refRes);
+		CodeSchemeDocument codeScheme = CodeSchemeDao
+				.getCodeSchemeByReference(refRes);
 		StringBuilder codeValues = new StringBuilder("");
 		if (codeScheme == null) {
 			throw new DDIFtpException("Code Scheme, with ID: " + refRes.getId()
@@ -558,21 +567,5 @@ public class VariableEditor extends Editor {
 			}
 		}
 		codeValue.setText(codeValues.toString());
-	}
-
-	private static CodeSchemeDocument getCodeScheme(ReferenceResolution refRes)
-			throws Exception {
-		List<LightXmlObjectType> codeSchemeRefList = DdiManager.getInstance()
-				.getCodeSchemesLight(null, null, null, null)
-				.getLightXmlObjectList().getLightXmlObjectList();
-		for (LightXmlObjectType lightXmlObject : codeSchemeRefList) {
-			if (lightXmlObject.getId().equals(refRes.getId())) {
-				return DdiManager.getInstance().getCodeScheme(
-						lightXmlObject.getId(), lightXmlObject.getVersion(),
-						lightXmlObject.getParentId(),
-						lightXmlObject.getParentVersion());
-			}
-		}
-		return null;
 	}
 }

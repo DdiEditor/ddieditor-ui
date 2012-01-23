@@ -28,7 +28,7 @@ import org.ddialliance.ddieditor.ui.editor.Editor.EditorStatus;
 import org.ddialliance.ddieditor.ui.editor.Editor.FIELD_TYPE;
 import org.ddialliance.ddieditor.ui.editor.FilteredItemsSelection;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
-import org.ddialliance.ddieditor.ui.model.question.QuestionItem.RESPONSE_TYPES;
+import org.ddialliance.ddieditor.ui.model.question.ResponseType;
 import org.ddialliance.ddieditor.ui.model.question.ResponseTypeReference;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -54,36 +54,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorSite;
 
 public class ResponseTypeDetail {
-
-	public class DecimalPositionModifyListener implements ModifyListener {
-
-		@Override
-		public void modifyText(ModifyEvent e) {
-			log.debug(".modifyText(): " + decimalPosition.getText());
-			BigInteger pos = null;
-			if (decimalPosition.getText().length() > 0) {
-				pos = new BigInteger(decimalPosition.getText());
-			}
-			Enum type = null;
-			if (numTypeCombo.getText().equals(
-					Translator.trans("ResponseTypeDetail.label.Double"))) {
-				type = NumericTypeCodeType.DOUBLE;
-			} else {
-				type = NumericTypeCodeType.FLOAT;
-			}
-			questionItem.setNumericResponseDomain(type, pos);
-			editorStatus.setChanged();
-		}
-	}
-
-	public class DecimalPositionVerifyListener implements VerifyListener {
-
-		@Override
-		public void verifyText(VerifyEvent e) {
-			Editor.verifyField(FIELD_TYPE.DIGIT, e, site);
-		}
-	}
-
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			ResponseTypeDetail.class);
 
@@ -117,21 +87,11 @@ public class ResponseTypeDetail {
 		INTEGER, DOUBLE, FLOAT
 	};
 
-	public ResponseTypeDetail(QuestionItem questionItem,
-			Composite parentLabelComposite, Composite parentCodeComposite,
-			EditorStatus editorStatus, IEditorSite site) {
-		this.parentLabelComposite = parentLabelComposite;
-		this.parentCodeComposite = parentCodeComposite;
-		this.editorStatus = editorStatus;
-		this.questionItem = questionItem;
-		this.site = site;
-	}
-
 	static public String[] getResponseTypeLabels() {
 		return RESPONSE_TYPE_LABELS;
 	}
 
-	static public String getResponseTypeLabel(RESPONSE_TYPES rt) {
+	static public String getResponseTypeLabel(ResponseType rt) {
 		return RESPONSE_TYPE_LABELS[rt.ordinal()];
 	}
 
@@ -144,28 +104,79 @@ public class ResponseTypeDetail {
 		List<ResponseTypeReference> responseDomainReferenceList = new ArrayList<ResponseTypeReference>();
 
 		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.UNDEFINED.ordinal()],
-				RESPONSE_TYPES.UNDEFINED));
+				RESPONSE_TYPE_LABELS[ResponseType.UNDEFINED.ordinal()],
+				ResponseType.UNDEFINED));
 		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.CODE.ordinal()],
-				RESPONSE_TYPES.CODE));
+				RESPONSE_TYPE_LABELS[ResponseType.CODE.ordinal()],
+				ResponseType.CODE));
 		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.TEXT.ordinal()],
-				RESPONSE_TYPES.TEXT));
+				RESPONSE_TYPE_LABELS[ResponseType.TEXT.ordinal()],
+				ResponseType.TEXT));
 		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.NUMERIC.ordinal()],
-				RESPONSE_TYPES.NUMERIC));
+				RESPONSE_TYPE_LABELS[ResponseType.NUMERIC.ordinal()],
+				ResponseType.NUMERIC));
 		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.DATE.ordinal()],
-				RESPONSE_TYPES.DATE));
+				RESPONSE_TYPE_LABELS[ResponseType.DATE.ordinal()],
+				ResponseType.DATE));
 		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.CATEGORY.ordinal()],
-				RESPONSE_TYPES.CATEGORY));
+				RESPONSE_TYPE_LABELS[ResponseType.CATEGORY.ordinal()],
+				ResponseType.CATEGORY));
 		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[RESPONSE_TYPES.GEOGRAPHIC.ordinal()],
-				RESPONSE_TYPES.GEOGRAPHIC));
+				RESPONSE_TYPE_LABELS[ResponseType.GEOGRAPHIC.ordinal()],
+				ResponseType.GEOGRAPHIC));
 
 		return responseDomainReferenceList;
+	}
+
+	/**
+	 * Return Response Type of a given Response Domain
+	 * 
+	 * @param representationType
+	 * @return
+	 */
+	static public ResponseType getResponseType(
+			RepresentationType representationType) {
+
+		if (representationType == null) {
+			return ResponseType.UNDEFINED;
+		}
+
+		String responseType = representationType.getClass().getSimpleName();
+		ResponseType responseTypeEnum = null;
+		if (responseType.equals("RepresentationTypeImpl")) {
+			responseTypeEnum = ResponseType.UNDEFINED;
+		} else if (responseType.equals("CodeDomainTypeImpl")) {
+			responseTypeEnum = ResponseType.CODE;
+		} else if (responseType.equals("TextDomainTypeImpl")) {
+			responseTypeEnum = ResponseType.TEXT;
+		} else if (responseType.equals("NumericDomainTypeImpl")) {
+			responseTypeEnum = ResponseType.NUMERIC;
+		} else if (responseType.equals("DateDomainTypeImpl")) {
+			responseTypeEnum = ResponseType.DATE;
+		} else if (responseType.equals("CategoryDomainTypeImpl")) {
+			responseTypeEnum = ResponseType.CATEGORY;
+		} else if (responseType.equals("GeographicDomainTypeImpl")) {
+			responseTypeEnum = ResponseType.GEOGRAPHIC;
+		}
+		return responseTypeEnum;
+	}
+
+	/**
+	 * Constructor
+	 * @param questionItem
+	 * @param parentLabelComposite
+	 * @param parentCodeComposite
+	 * @param editorStatus
+	 * @param site
+	 */
+	public ResponseTypeDetail(QuestionItem questionItem,
+			Composite parentLabelComposite, Composite parentCodeComposite,
+			EditorStatus editorStatus, IEditorSite site) {
+		this.parentLabelComposite = parentLabelComposite;
+		this.parentCodeComposite = parentCodeComposite;
+		this.editorStatus = editorStatus;
+		this.questionItem = questionItem;
+		this.site = site;
 	}
 
 	/**
@@ -236,14 +247,14 @@ public class ResponseTypeDetail {
 
 		// m_representationType = representationType;
 
-		RESPONSE_TYPES responseType = ResponseTypeDetail
+		ResponseType responseType = ResponseTypeDetail
 				.getResponseType(representationType);
 
 		this.dispose();
 
-		if (responseType == RESPONSE_TYPES.UNDEFINED) {
+		if (responseType == ResponseType.UNDEFINED) {
 			return;
-		} else if (responseType == RESPONSE_TYPES.TEXT) {
+		} else if (responseType == ResponseType.TEXT) {
 
 			final Label textLabel = new Label(parentLabelComposite, SWT.NONE);
 			textLabel.setLayoutData(new GridData());
@@ -284,7 +295,7 @@ public class ResponseTypeDetail {
 			});
 			parentLabelComposite.getParent().layout();
 			return;
-		} else if (responseType == RESPONSE_TYPES.NUMERIC) {
+		} else if (responseType == ResponseType.NUMERIC) {
 
 			// ***** NUMERIC *****
 			// --------------------
@@ -381,7 +392,7 @@ public class ResponseTypeDetail {
 			}
 			parentLabelComposite.getParent().layout();
 			return;
-		} else if (responseType == RESPONSE_TYPES.CODE) {
+		} else if (responseType == ResponseType.CODE) {
 
 			// ***** CODE *****
 			// -----------------
@@ -462,37 +473,32 @@ public class ResponseTypeDetail {
 		}
 	}
 
-	/**
-	 * Return Response Type of a given Response Domain
-	 * 
-	 * @param representationType
-	 * @return
-	 */
-	static public RESPONSE_TYPES getResponseType(
-			RepresentationType representationType) {
+	public class DecimalPositionModifyListener implements ModifyListener {
 
-		if (representationType == null) {
-			return RESPONSE_TYPES.UNDEFINED;
+		@Override
+		public void modifyText(ModifyEvent e) {
+			log.debug(".modifyText(): " + decimalPosition.getText());
+			BigInteger pos = null;
+			if (decimalPosition.getText().length() > 0) {
+				pos = new BigInteger(decimalPosition.getText());
+			}
+			Enum type = null;
+			if (numTypeCombo.getText().equals(
+					Translator.trans("ResponseTypeDetail.label.Double"))) {
+				type = NumericTypeCodeType.DOUBLE;
+			} else {
+				type = NumericTypeCodeType.FLOAT;
+			}
+			questionItem.setNumericResponseDomain(type, pos);
+			editorStatus.setChanged();
 		}
-
-		String responseType = representationType.getClass().getSimpleName();
-		RESPONSE_TYPES responseTypeEnum = null;
-		if (responseType.equals("RepresentationTypeImpl")) {
-			responseTypeEnum = RESPONSE_TYPES.UNDEFINED;
-		} else if (responseType.equals("CodeDomainTypeImpl")) {
-			responseTypeEnum = RESPONSE_TYPES.CODE;
-		} else if (responseType.equals("TextDomainTypeImpl")) {
-			responseTypeEnum = RESPONSE_TYPES.TEXT;
-		} else if (responseType.equals("NumericDomainTypeImpl")) {
-			responseTypeEnum = RESPONSE_TYPES.NUMERIC;
-		} else if (responseType.equals("DateDomainTypeImpl")) {
-			responseTypeEnum = RESPONSE_TYPES.DATE;
-		} else if (responseType.equals("CategoryDomainTypeImpl")) {
-			responseTypeEnum = RESPONSE_TYPES.CATEGORY;
-		} else if (responseType.equals("GeographicDomainTypeImpl")) {
-			responseTypeEnum = RESPONSE_TYPES.GEOGRAPHIC;
-		}
-		return responseTypeEnum;
 	}
 
+	public class DecimalPositionVerifyListener implements VerifyListener {
+
+		@Override
+		public void verifyText(VerifyEvent e) {
+			Editor.verifyField(FIELD_TYPE.DIGIT, e, site);
+		}
+	}
 }
