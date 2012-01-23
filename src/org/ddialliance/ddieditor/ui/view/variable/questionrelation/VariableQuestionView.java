@@ -35,7 +35,7 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXml
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
-import org.ddialliance.ddieditor.ui.model.question.QuestionItem.RESPONSE_TYPES;
+import org.ddialliance.ddieditor.ui.model.question.ResponseType;
 import org.ddialliance.ddieditor.ui.model.variable.Variable;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.ResourceManager;
@@ -350,7 +350,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 	void changeRespDomain(Variable vari, QuestionItem quei) {
 		// clean quei domain
 		if (quei.getResponseDomain() != null) {
-			quei.setResponseDomain(RESPONSE_TYPES.UNDEFINED, "");
+			quei.setResponseDomain(ResponseType.UNDEFINED, "");
 		}
 	
 		Object repImpl = vari.getRepresentation()
@@ -360,13 +360,13 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 			ReferenceType codeSchemeRef = ((CodeRepresentationType) repImpl)
 					.getCodeSchemeReference();
 			CodeDomainType rep = (CodeDomainType) quei
-					.setResponseDomain(RESPONSE_TYPES.CODE, "");
+					.setResponseDomain(ResponseType.CODE, "");
 			rep.setCodeSchemeReference(codeSchemeRef);
 		}
 		// NumericRepresentation
 		else if (repImpl instanceof NumericRepresentationType) {
 			NumericDomainType queiRep = (NumericDomainType) quei
-					.setResponseDomain(RESPONSE_TYPES.NUMERIC,
+					.setResponseDomain(ResponseType.NUMERIC,
 							"");
 			queiRep.setType(((NumericRepresentationType) vari
 					.getRepresentation()
@@ -378,7 +378,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 		else if (repImpl instanceof TextRepresentationType) {
 			// quei rep domain
 			TextDomainType queiRep = (TextDomainType) quei
-					.setResponseDomain(RESPONSE_TYPES.TEXT, "");
+					.setResponseDomain(ResponseType.TEXT, "");
 	
 			// min length
 			if (vari.getMinLength() != null) {
@@ -399,7 +399,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 		else if (repImpl instanceof DateTimeRepresentationType) {
 			// quei rep domain
 			DateTimeDomainType queiRep = (DateTimeDomainType) quei
-					.setResponseDomain(RESPONSE_TYPES.DATE, "");
+					.setResponseDomain(ResponseType.DATE, "");
 	
 			// format
 			if (vari.getFormat() != null) {
@@ -600,7 +600,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 
 			// question item plus
 			List<LightXmlObjectType> lightQuei = DdiManager.getInstance()
-					.getQuestionItemsLightPlus(true, null, null, null, null)
+					.getQuestionItemsLightPlus(false, null, null, null, null)
 					.getLightXmlObjectList().getLightXmlObjectList();
 
 			// variable -> question relation
