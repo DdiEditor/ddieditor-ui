@@ -63,6 +63,15 @@
 		</javac>
 	</target>
 
+	<path id="svn.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="svnant/${version.svnant}/*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask" classpathref="svn.classpath">
+	</taskdef>
+
 	<target name="resource" description="Setup resources in the build dir">
 		<mkdir dir="${build.classes.dir}/logs" />
 		<mkdir dir="${build.classes.dir}/resources" />
@@ -73,7 +82,7 @@
 				<include name="**/*.*" />
 			</fileset>
 		</copy>
-		
+
 		<copy todir="${build.classes.dir}/resources" overwrite="yes" verbose="true">
 			<fileset dir="../ddieditor/source/resources">
 				<include name="resource-list.xml" />
@@ -96,6 +105,11 @@
 				<exclude name="**/*.zip" />
 			</fileset>
 		</copy>
+
+		<!-- checkout stylesheet -->
+		<svn>
+			<export force="true" srcurl="http://ddixslt.googlecode.com/svn/trunk/ddi-html" revision="HEAD" destpath="${build.classes.dir}/resources/ddixslt" />
+		</svn>
 	</target>
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
