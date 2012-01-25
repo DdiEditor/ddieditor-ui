@@ -8,18 +8,27 @@ public class PerspectiveUtil {
 	final static float rightRatio = 0.65f;
 
 	public static IFolderLayout createLeftFolder(IPageLayout layout) {
+		return createLeftFolder(layout, leftRatio);
+	}
+
+	public static IFolderLayout createLeftFolder(IPageLayout layout, float ratio) {
 		IFolderLayout leftFolder = layout.createFolder("topLeft",
-				IPageLayout.LEFT, leftRatio, layout.getEditorArea());
+				IPageLayout.LEFT, ratio, layout.getEditorArea());
+		return leftFolder;
+	}
+
+	public static IFolderLayout createLeftFolder(IPageLayout layout,
+			float ratio, String... viewIds) {
+		IFolderLayout leftFolder = createLeftFolder(layout, ratio);
+		for (String id : viewIds) {
+			leftFolder.addView(id);
+		}
 		return leftFolder;
 	}
 
 	public static IFolderLayout createLeftFolder(IPageLayout layout,
 			String... viewIds) {
-		IFolderLayout leftFolder = createLeftFolder(layout);
-		for (String id : viewIds) {
-			leftFolder.addView(id);
-		}
-		return leftFolder;
+		return createLeftFolder(layout, leftRatio, viewIds);
 	}
 
 	public static IFolderLayout createRightFolder(IPageLayout layout) {

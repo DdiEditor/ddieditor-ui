@@ -16,11 +16,9 @@ public class CurationPerspective implements IPerspectiveFactory {
 
 	@Override
 	public void createInitialLayout(IPageLayout layout) {
-		PerspectiveUtil.createLeftFolder(layout, ConceptView.ID,
+		PerspectiveUtil.createLeftFolder(layout, .55f, ConceptView.ID,
 				UniverseView.ID, VariableView.ID, QuestionItemView.ID,
-				CodeView.ID);
-
-		PerspectiveUtil.createRightFolder(layout, VariableQuestionView.ID,
-				SequenceflowView.ID, DynamicView.ID);
+				CodeView.ID, VariableQuestionView.ID, SequenceflowView.ID,
+				DynamicView.ID);
 	}
 }
