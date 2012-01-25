@@ -26,8 +26,10 @@ public class UniverseEditor extends LabelDescriptionEditor {
 
 	public UniverseEditor() {
 		super(
-				Translator.trans("UniverseEditor.label.universeEditorLabel.UniverseEditor"),
-				Translator.trans("UniverseEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("UniverseEditor.label.universeEditorLabel.UniverseEditor"),
+				Translator
+						.trans("UniverseEditor.label.useTheEditorLabel.Description"),
 				Translator.trans("UniverseEditor.label.UniverseTabItem"), ID);
 		dao = (IDao) new UniverseDao();
 	}
@@ -51,8 +53,7 @@ public class UniverseEditor extends LabelDescriptionEditor {
 		EditorInput editorInput = (EditorInput) input;
 		if (editorInput.getParentElementType().equals(
 				ElementType.UNIVERSE_SCHEME)) {
-			System.out
-					.println("Check if this Univer is references by Study Unit");
+			// TODO check if this Univer is references by Study Unit
 			try {
 				List<String> ids = ((Universe) model).getStudyUnitReference();
 				for (String id : ids) {
