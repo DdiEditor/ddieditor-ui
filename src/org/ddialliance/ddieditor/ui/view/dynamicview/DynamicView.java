@@ -68,7 +68,13 @@ public class DynamicView extends ViewPart {
 	Group group;
 	int tableProperties = SWT.VIRTUAL | SWT.FULL_SELECTION | SWT.MULTI
 			| SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER;
-
+	
+	GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+			| GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
+			| GridData.GRAB_VERTICAL);
+	
+	int[] catColumnWidth = new int[] {45, 200};
+	
 	private Table conceptTable;
 	private Label conceptLabel;
 
@@ -152,7 +158,7 @@ public class DynamicView extends ViewPart {
 		} else if (responseType.equals(ResponseType.CODE)) {
 			categoryTable = new Table(group, tableProperties);
 			initTable(categoryTable, new String[] { Translator.trans("Code"),
-					Translator.trans("Category") });
+					Translator.trans("Category") }, catColumnWidth);
 		} else {
 			Label label = editor.createLabel(group,
 					Response.RESPONSE_TYPE_LABELS[responseType.ordinal()]);
@@ -166,16 +172,16 @@ public class DynamicView extends ViewPart {
 					false, 1, 1));
 		}
 	}
-
+	
 	private void initTable(Table table, String[] columnNames) {
-		// table properties
-		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
-				| GridData.GRAB_VERTICAL);
-		gd.horizontalSpan = 1;
+		initTable(table, columnNames, new int[] {200});
+	}
 
-		table.setRedraw(true);
-		table.setLayoutData(gd);
+	private void initTable(Table table, String[] columnNames, int[] width) {
+		// table properties
+		gd.horizontalSpan = 1;
+		table.setLayoutData(gd);		
+		table.setRedraw(true);		
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.addMouseListener(new TableListener());
@@ -187,7 +193,7 @@ public class DynamicView extends ViewPart {
 			column.setText(columnNames[i]);
 			column.addListener(SWT.Selection, sort);
 			column.setResizable(true);
-			column.setWidth(50);
+			column.setWidth(width[i]);
 			// column.setAlignment(SWT.RIGHT);
 		}
 	}
