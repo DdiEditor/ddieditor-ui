@@ -165,6 +165,11 @@ public class VariableEditor extends Editor {
 			questionRefList = DdiManager.getInstance()
 					.getQuestionItemsLight(null, null, null, null)
 					.getLightXmlObjectList().getLightXmlObjectList();
+			questionRefList.addAll(DdiManager
+					.getInstance()
+					.getMultipleQuestionQuestionItemsLight(null, null, null,
+							null).getLightXmlObjectList()
+					.getLightXmlObjectList());
 		} catch (Exception e) {
 			DialogUtil
 					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
