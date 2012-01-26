@@ -16,6 +16,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
 import org.ddialliance.ddieditor.model.DdiManager;
+import org.ddialliance.ddieditor.model.lightxmlobject.CustomType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LabelType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListDocument;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectListType;
@@ -68,13 +69,13 @@ public class DynamicView extends ViewPart {
 	Group group;
 	int tableProperties = SWT.VIRTUAL | SWT.FULL_SELECTION | SWT.MULTI
 			| SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER;
-	
+
 	GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL
 			| GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
 			| GridData.GRAB_VERTICAL);
-	
-	int[] catColumnWidth = new int[] {45, 200};
-	
+
+	int[] catColumnWidth = new int[] { 45, 200 };
+
 	private Table conceptTable;
 	private Label conceptLabel;
 
@@ -172,16 +173,16 @@ public class DynamicView extends ViewPart {
 					false, 1, 1));
 		}
 	}
-	
+
 	private void initTable(Table table, String[] columnNames) {
-		initTable(table, columnNames, new int[] {200});
+		initTable(table, columnNames, new int[] { 200 });
 	}
 
 	private void initTable(Table table, String[] columnNames, int[] width) {
 		// table properties
 		gd.horizontalSpan = 1;
-		table.setLayoutData(gd);		
-		table.setRedraw(true);		
+		table.setLayoutData(gd);
+		table.setRedraw(true);
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.addMouseListener(new TableListener());
@@ -382,7 +383,8 @@ public class DynamicView extends ViewPart {
 					LightXmlObjectUtil.createLightXmlObject(
 							modelImpl.getParentId(),
 							modelImpl.getParentVersion(), modelImpl.getId(),
-							modelImpl.getVersion(), "reusable__CodeSchemeReference"));
+							modelImpl.getVersion(),
+							"reusable__CodeSchemeReference"));
 
 			// question
 			lightXmlObjectListDoc = DdiManager.getInstance()
@@ -390,7 +392,8 @@ public class DynamicView extends ViewPart {
 			updateTable(lightXmlObjectListDoc, questionTable);
 
 			// variable
-			lightXmlObjectListDoc = DdiManager.getInstance().getVariablesLightByCodeScheme(refRes);
+			lightXmlObjectListDoc = DdiManager.getInstance()
+					.getVariablesLightByCodeScheme(refRes);
 			updateTable(lightXmlObjectListDoc, variableTable);
 		}
 
@@ -427,9 +430,13 @@ public class DynamicView extends ViewPart {
 
 	private void updateTable(LightXmlObjectListDocument list, Table table)
 			throws DDIFtpException {
+		String vari = "Variable";
 		// insert into table
 		for (LightXmlObjectType lightXmlObject : list.getLightXmlObjectList()
 				.getLightXmlObjectList()) {
+			if (lightXmlObject.getElement().equals(vari)) {
+				enhanceVariableLabel(lightXmlObject);
+			}
 			setItem(table, 0, lightXmlObject);
 		}
 	}
@@ -498,6 +505,9 @@ public class DynamicView extends ViewPart {
 
 		ReferenceType catSchemeRef = codeScheme.getCodeScheme()
 				.getCategorySchemeReference();
+
+		// TODO if default cats is null
+		// fix resolve iduvidual cat refs
 		CategorySchemeDocument catScheme = CategorySchemeDao
 				.getCodeSchemeByReference(new ReferenceResolution(catSchemeRef));
 
@@ -527,6 +537,21 @@ public class DynamicView extends ViewPart {
 					addToTableItem(item, 1, lightXmlObject);
 					break;
 				}
+			}
+		}
+	}
+
+	private void enhanceVariableLabel(LightXmlObjectType lightXmlObject) {
+		String text = "";
+		List<CustomType> list = LightXmlObjectUtil.getCustomListbyType(
+				lightXmlObject, "VariableId");
+
+		if (!list.isEmpty()) {
+			for (LabelType label : lightXmlObject.getLabelList()) {
+				text = XmlBeansUtil.getTextOnMixedElement(lightXmlObject);
+				XmlBeansUtil.setTextOnMixedElement(label, list.get(0)
+						.getValue() + " - " + text);
+				text = "";
 			}
 		}
 	}
