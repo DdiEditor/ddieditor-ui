@@ -520,31 +520,36 @@ public class StudyUnitEditor extends Editor {
 		// Study Unit Coverage Tab Item:
 		// -----------------------------
 		TabItem tbtmCoverage = new TabItem(tabFolder, SWT.NONE);
-		tbtmCoverage.setText(Translator.trans("StudyUnitEditor.label.Coverage"));
+		tbtmCoverage
+				.setText(Translator.trans("StudyUnitEditor.label.Coverage"));
 
 		// Coverage:
 		Group grpCoverage = new Group(tabFolder, SWT.NONE);
-		grpCoverage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpCoverage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
+				1, 1));
 		grpCoverage.setText(Translator.trans("StudyUnitEditor.label.Coverage"));
 		grpCoverage.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		GridLayout gridLayout_4 = new GridLayout();
 		gridLayout_4.numColumns = 1;
 		grpCoverage.setLayout(gridLayout_4);
-		
+
 		CoverageDocument coverageDoc = ((StudyUnit) model).getCoverage();
 
 		// Topical Coverage:
 		Group grpTopicalCoverage = new Group(grpCoverage, SWT.NONE);
-		grpTopicalCoverage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpTopicalCoverage.setText(Translator.trans("StudyUnitEditor.label.TopicalCoverage"));
+		grpTopicalCoverage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 1, 1));
+		grpTopicalCoverage.setText(Translator
+				.trans("StudyUnitEditor.label.TopicalCoverage"));
 		grpTopicalCoverage.setBackground(SWTResourceManager
 				.getColor(SWT.COLOR_WHITE));
-        tbtmCoverage.setControl(grpCoverage);
+		tbtmCoverage.setControl(grpCoverage);
 		GridLayout gridLayout_5 = new GridLayout();
 		gridLayout_5.numColumns = 2;
 		grpTopicalCoverage.setLayout(gridLayout_5);
 
-		createLabel(grpTopicalCoverage, Translator.trans("StudyUnitEditor.label.Keywords"));
+		createLabel(grpTopicalCoverage,
+				Translator.trans("StudyUnitEditor.label.Keywords"));
 
 		keywordTable = new Table(grpTopicalCoverage, SWT.VIRTUAL
 				| SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
@@ -586,15 +591,18 @@ public class StudyUnitEditor extends Editor {
 
 		// Spatial Coverage:
 		Group grpSpatialCoverage = new Group(grpCoverage, SWT.NONE);
-		grpSpatialCoverage.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, true, false, 1, 1));
-		grpSpatialCoverage.setText(Translator.trans("StudyUnitEditor.label.SpatialCoverage"));
+		grpSpatialCoverage.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT,
+				true, false, 1, 1));
+		grpSpatialCoverage.setText(Translator
+				.trans("StudyUnitEditor.label.SpatialCoverage"));
 		grpSpatialCoverage.setBackground(SWTResourceManager
 				.getColor(SWT.COLOR_WHITE));
 		GridLayout gridLayout_6 = new GridLayout();
 		gridLayout_6.numColumns = 2;
 		grpSpatialCoverage.setLayout(gridLayout_6);
-		
-		createLabel(grpSpatialCoverage, Translator.trans("StudyUnitEditor.label.Description"));
+
+		createLabel(grpSpatialCoverage,
+				Translator.trans("StudyUnitEditor.label.Description"));
 		String description = "";
 		if (coverageDoc != null) {
 			GeographicCoverageType geographicCoverage = coverageDoc
@@ -612,7 +620,7 @@ public class StudyUnitEditor extends Editor {
 					.getTopLevelReference().getLevelNameArray(0);
 		}
 		createText(grpSpatialCoverage, name);
-				
+
 		createLabel(grpSpatialCoverage,
 				Translator.trans("StudyUnitEditor.label.LowestLevelName"));
 		name = "";
@@ -624,15 +632,18 @@ public class StudyUnitEditor extends Editor {
 
 		// Temporal Coverage:
 		Group grpTemporalCoverage = new Group(grpCoverage, SWT.NONE);
-		grpTemporalCoverage.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, true, false, 1, 1));
-		grpTemporalCoverage.setText(Translator.trans("StudyUnitEditor.label.TemporalCoverage"));
+		grpTemporalCoverage.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT,
+				true, false, 1, 1));
+		grpTemporalCoverage.setText(Translator
+				.trans("StudyUnitEditor.label.TemporalCoverage"));
 		grpTemporalCoverage.setBackground(SWTResourceManager
 				.getColor(SWT.COLOR_WHITE));
 		GridLayout gridLayout_7 = new GridLayout();
 		gridLayout_7.numColumns = 2;
 		grpTemporalCoverage.setLayout(gridLayout_7);
-		
-		createLabel(grpTemporalCoverage, Translator.trans("StudyUnitEditor.label.StartDate"));
+
+		createLabel(grpTemporalCoverage,
+				Translator.trans("StudyUnitEditor.label.StartDate"));
 		DateTimeWidget startDateTime = new DateTimeWidget(grpTemporalCoverage);
 		startDateTime.setEnabled(false);
 
@@ -664,7 +675,8 @@ public class StudyUnitEditor extends Editor {
 			}
 		}
 
-		createLabel(grpTemporalCoverage, Translator.trans("StudyUnitEditor.label.EndDate"));
+		createLabel(grpTemporalCoverage,
+				Translator.trans("StudyUnitEditor.label.EndDate"));
 		DateTimeWidget endDateTime = new DateTimeWidget(grpTemporalCoverage);
 		endDateTime.setEnabled(false);
 
@@ -692,28 +704,32 @@ public class StudyUnitEditor extends Editor {
 						ID, 0, e.getMessage(), e));
 			}
 		}
-		
-		// other:
-		TabItem tabiOther = new TabItem(tabFolder, SWT.NONE);
-		tabiOther.setText(Translator.trans("StudyUnitEditor.label.Other"));
 
-		Group grpOther = new Group(tabFolder, SWT.NONE);
-		grpOther.setText(Translator.trans("StudyUnitEditor.label.Other"));
-		grpOther.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		GridLayout gridLayout_8 = new GridLayout();
-		gridLayout_8.numColumns = 2;
-		grpOther.setLayout(gridLayout_8);
-		tabiOther.setControl(grpOther);
-
-		// - kindofdata:
+		// other tab
 		KindOfDataDocument kindOfDataDoc = modelImpl.getKindOfData();
 		String kindOfDataString = "";
 		if (kindOfDataDoc != null) {
 			kindOfDataString = kindOfDataDoc.getKindOfData().getStringValue();
 		}
-		createLabel(grpOther, Translator.trans("StudyUnitEditor.label.KindOfData"));
-		Text tKindOfData = createText(grpOther, kindOfDataString);
+		if (!kindOfDataString.equals("")) {
+			// tab item 
+			TabItem tabiOther = new TabItem(tabFolder, SWT.NONE);
+			tabiOther.setText(Translator.trans("StudyUnitEditor.label.Other"));
 
+			Group grpOther = new Group(tabFolder, SWT.NONE);
+			grpOther.setText(Translator.trans("StudyUnitEditor.label.Other"));
+			grpOther.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+			GridLayout gridLayout_8 = new GridLayout();
+			gridLayout_8.numColumns = 2;
+			grpOther.setLayout(gridLayout_8);
+			tabiOther.setControl(grpOther);
+
+			// kindofdata text
+			createLabel(grpOther,
+					Translator.trans("StudyUnitEditor.label.KindOfData"));
+			Text tKindOfData = createText(grpOther, kindOfDataString);
+		}
+		
 		// continue with standard tab items:
 		createPropertiesTab(tabFolder);
 		createXmlTab(modelImpl);
@@ -861,14 +877,15 @@ public class StudyUnitEditor extends Editor {
 	}
 
 	public void opdateKeywordTable() throws DDIFtpException {
-		CoverageDocument coverageDoc = ((StudyUnit )model).getCoverage();
+		CoverageDocument coverageDoc = ((StudyUnit) model).getCoverage();
 		if (coverageDoc == null) {
 			return;
 		}
-		TopicalCoverageType topicalCoverage = 
-				coverageDoc.getCoverage().getTopicalCoverage();		
-		List<InternationalCodeValueType> keywords = topicalCoverage.getKeywordList();
-		
+		TopicalCoverageType topicalCoverage = coverageDoc.getCoverage()
+				.getTopicalCoverage();
+		List<InternationalCodeValueType> keywords = topicalCoverage
+				.getKeywordList();
+
 		// clear table
 		TableItem[] items = null;
 		try {
@@ -880,7 +897,7 @@ public class StudyUnitEditor extends Editor {
 			// swt null items in table exception
 			e.printStackTrace();
 		}
-		
+
 		// insert into table
 		for (InternationalCodeValueType keyword : keywords) {
 			if (keyword.getLang().equals(LanguageUtil.getDisplayLanguage())) {
@@ -889,7 +906,7 @@ public class StudyUnitEditor extends Editor {
 			}
 		}
 	}
-	
+
 	// currently not used as edit is not supported, yet!
 	class TableListener implements SelectionListener {
 		public TableListener() {
