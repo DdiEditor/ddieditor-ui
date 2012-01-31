@@ -65,6 +65,7 @@ along with Foobar.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <plugin id="ddieditor-line"/>
       <plugin id="ddieditor-model"/>
       <plugin id="ddieditor-spss"/>
+      <plugin id="ddieditor-spss-stat"/>
       <plugin id="ddieditor-ui"/>
       <plugin id="lib-java"/>
       <plugin id="org.eclipse.core.commands"/>

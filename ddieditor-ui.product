@@ -69,6 +69,7 @@ along with Foobar.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <plugin id="ddieditor-osiris-batch-convert"/>
       <plugin id="ddieditor-osiris2ddi3"/>
       <plugin id="ddieditor-spss"/>
+      <plugin id="ddieditor-spss-stat"/>
       <plugin id="ddieditor-ui"/>
       <plugin id="javax.servlet"/>
       <plugin id="jounal-study-info-export"/>
