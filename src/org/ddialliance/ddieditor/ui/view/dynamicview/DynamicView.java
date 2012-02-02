@@ -226,19 +226,26 @@ public class DynamicView extends ViewPart {
 
 			// init model
 			Concept modelImpl = (Concept) model;
-			ReferenceResolution refRes = new ReferenceResolution(
+			ReferenceResolution refRes;
+
+			// update questions
+			refRes = new ReferenceResolution(
 					LightXmlObjectUtil.createLightXmlObject(
 							modelImpl.getParentId(),
 							modelImpl.getParentVersion(), modelImpl.getId(),
 							modelImpl.getVersion(),
-							"logicalproduct__ConceptReference"));
-
-			// update questions
+							"datacollection__ConceptReference"));
 			lightXmlObjectListDoc = DdiManager.getInstance()
 					.getQuestionItemsLightByConcept(refRes);
 			updateTable(lightXmlObjectListDoc, questionTable);
 
 			// update variables
+			refRes = new ReferenceResolution(
+					LightXmlObjectUtil.createLightXmlObject(
+							modelImpl.getParentId(),
+							modelImpl.getParentVersion(), modelImpl.getId(),
+							modelImpl.getVersion(),
+							"logicalproduct__ConceptReference"));
 			lightXmlObjectListDoc = DdiManager.getInstance()
 					.getVariablesLightByConcept(refRes);
 			updateTable(lightXmlObjectListDoc, variableTable);
