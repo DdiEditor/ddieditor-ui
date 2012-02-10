@@ -34,7 +34,7 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		}
 
 		// print the selected resource and pass it to the default browser with
-		// the DDI 3 style sheeet
+		// the DDI 3 style sheet
 		try {
 			PlatformUI.getWorkbench().getProgressService()
 					.busyCursorWhile(new IRunnableWithProgress() {
