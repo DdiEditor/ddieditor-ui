@@ -2,7 +2,7 @@
 DdiEditor Release Notes:
 -------------------------------------------------------------------------------
 Product Version: 1.1.0 
-Release Data: 2012-01-31
+Release Data: 2012-02-10
 -------------------------------------------------------------------------------
 What's New
 -------------------------------------------------------------------------------
@@ -10,6 +10,7 @@ User interface
 Item ID:    Description:
 - Set no compression on DBXml storage, to speed up queries
 - Added Dynamic View feature
+- DDI 3.1 style sheet now supports statistics, missing values and data range.
 
 -------------------------------------------------------------------------------  
 Application Infrastructure:
