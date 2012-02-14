@@ -512,17 +512,19 @@ public class DynamicView extends ViewPart {
 
 		ReferenceType catSchemeRef = codeScheme.getCodeScheme()
 				.getCategorySchemeReference();
+		CategorySchemeDocument catScheme = null;
 
-		// TODO if default cats is null
-		// fix resolve iduvidual cat refs
-		CategorySchemeDocument catScheme = CategorySchemeDao
-				.getCodeSchemeByReference(new ReferenceResolution(catSchemeRef));
+		if (catSchemeRef != null) {
+			// fix resolve iduvidual cat refs
+			catScheme = CategorySchemeDao
+					.getCodeSchemeByReference(new ReferenceResolution(
+							catSchemeRef));
+		}
 
 		LightXmlObjectType lightXmlObject = LightXmlObjectUtil
 				.createLightXmlObject(null, null, codeScheme.getCodeScheme()
 						.getId(), codeScheme.getCodeScheme().getVersion(),
 						"CodeScheme");
-
 		for (CodeType code : codeScheme.getCodeScheme().getCodeList()) {
 			// code
 			XmlBeansUtil.setTextOnMixedElement(lightXmlObject.addNewLabel(),
@@ -530,19 +532,22 @@ public class DynamicView extends ViewPart {
 			TableItem item = setItem(categoryTable, 0, lightXmlObject);
 
 			// category
-			for (CategoryType cat : catScheme.getCategoryScheme()
-					.getCategoryList()) {
-				if (cat.getId().equals(
-						XmlBeansUtil.getTextOnMixedElement(code
-								.getCategoryReference().getIDList().get(0)))) {
+			if (catScheme != null) {
+				for (CategoryType cat : catScheme.getCategoryScheme()
+						.getCategoryList()) {
+					if (cat.getId()
+							.equals(XmlBeansUtil.getTextOnMixedElement(code
+									.getCategoryReference().getIDList().get(0)))) {
 
-					String text = XmlBeansUtil
-							.getTextOnMixedElement(((org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType) XmlBeansUtil
-									.getDefaultLangElement(cat.getLabelList())));
-					XmlBeansUtil.setTextOnMixedElement(
-							lightXmlObject.addNewLabel(), text);
-					addToTableItem(item, 1, lightXmlObject);
-					break;
+						String text = XmlBeansUtil
+								.getTextOnMixedElement(((org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType) XmlBeansUtil
+										.getDefaultLangElement(cat
+												.getLabelList())));
+						XmlBeansUtil.setTextOnMixedElement(
+								lightXmlObject.addNewLabel(), text);
+						addToTableItem(item, 1, lightXmlObject);
+						break;
+					}
 				}
 			}
 		}
