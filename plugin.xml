@@ -446,6 +446,11 @@
                id="org.ddialliance.ddieditor.ui.command.PrintDDI3"
                name="%command.name.5">
          </command>
+         <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.ValidateDDI3"
+               id="org.ddialliance.ddieditor.ui.command.ValidateDDI3"
+               name="ValidateDDI3">
+         </command>
       </extension>
       <extension
             point="org.eclipse.ui.menus">
@@ -563,6 +568,11 @@
                      name="ddieditor-ui.separator6"
                      visible="true">
                </separator>
+               <command
+                     commandId="org.ddialliance.ddieditor.ui.command.ValidateDDI3"
+                     label="Validate"
+                     style="push">
+               </command>
                <command
                      commandId="org.ddialliance.ddieditor.ui.command.PrintDDI3"
                      icon="icons/print_edit.gif"
