@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-public class ValidateDialog extends Dialog{
+public class ValidateDialog extends Dialog {
 	List<DDIResourceType> resources = new ArrayList<DDIResourceType>();
 	public DDIResourceType ddiResource;
 
@@ -33,19 +33,17 @@ public class ValidateDialog extends Dialog{
 	protected Control createDialogArea(Composite parent) {
 		// dialog setup
 		Editor editor = new Editor();
-		Group group = editor.createGroup(parent,
-				Translator.trans("validation"));
+		Group group = editor
+				.createGroup(parent, Translator.trans("validation"));
 		group.setLayoutData(new GridData(500, 50));
-		this.getShell().setText(
-				Translator.trans("validation"));
+		this.getShell().setText(Translator.trans("validation"));
 
 		// print resource
 		try {
 			resources = PersistenceManager.getInstance().getResources();
 		} catch (DDIFtpException e) {
 			String errMess = MessageFormat
-					.format(Translator
-							.trans("validation.choose.error"), e.getMessage()); //$NON-NLS-1$
+					.format(Translator.trans("validation.choose.error"), e.getMessage()); //$NON-NLS-1$
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
 					.getActiveShell(), Translator.trans("ErrorTitle"), errMess);
 		}
@@ -53,8 +51,7 @@ public class ValidateDialog extends Dialog{
 		for (int i = 0; i < comboOptions.length; i++) {
 			comboOptions[i] = resources.get(i).getOrgName();
 		}
-		editor.createLabel(group,
-				Translator.trans("validation.choose"));
+		editor.createLabel(group, Translator.trans("validation.choose"));
 		final Combo resouceCombo = editor.createCombo(group, comboOptions);
 		if (comboOptions.length == 1) {
 			resouceCombo.select(0);
