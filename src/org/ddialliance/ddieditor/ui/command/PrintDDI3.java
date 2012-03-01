@@ -90,21 +90,26 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 												}
 												// active the external browser
 												// with the DDI document
-												Program.launch(temp
-														.getAbsolutePath());
-												try {
-													PlatformUI
-															.getWorkbench()
-															.getBrowserSupport()
-															.getExternalBrowser()
-															.openURL(
-																	new URL(
-																			"file://"
-																					+ temp.getAbsolutePath()));
-												} catch (PartInitException e) {
-													Editor.showError(e, "Print");
-												} catch (MalformedURLException e) {
-													Editor.showError(e, "Print");
+												// - start by using application associated with file type
+												if (!Program.launch(temp
+														.getAbsolutePath())) {
+													// - failed: then use browser
+													try {
+														PlatformUI
+																.getWorkbench()
+																.getBrowserSupport()
+																.getExternalBrowser()
+																.openURL(
+																		new URL(
+																				"file://"
+																						+ temp.getAbsolutePath()));
+													} catch (PartInitException e) {
+														Editor.showError(e,
+																"Print");
+													} catch (MalformedURLException e) {
+														Editor.showError(e,
+																"Print");
+													}
 												}
 											}
 										});
