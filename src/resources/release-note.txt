@@ -9,7 +9,7 @@ What's New
 User interface
 Item ID:    Description:
 - Support for nested ifthenelse now given in wiki file of File->Import->Questions.
-- DDA stylesheet now supports nested inthenelse.
+- DDA style sheet now supports nested ifthenelse.
 DDIE-163 - Error in createQuestionScheme corrected.
 -------------------------------------------------------------------------------  
 Application Infrastructure:
