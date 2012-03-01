@@ -11,6 +11,7 @@ Item ID:    Description:
 - Support for nested ifthenelse now given in wiki file of File->Import->Questions.
 - DDA style sheet now supports nested ifthenelse.
 DDIE-163 - Error in createQuestionScheme corrected.
+DDIE-152 - Print bliver loaded 2 gange
 -------------------------------------------------------------------------------  
 Application Infrastructure:
 -------------------------------------------------------------------------------
