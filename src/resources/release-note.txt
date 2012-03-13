@@ -1,19 +1,26 @@
 -------------------------------------------------------------------------------
 DdiEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.1.x 
-Release Data: 2012-02-xx
+Product Version: 1.2
+Release Data: 2012-03-13
+
 -------------------------------------------------------------------------------
-What's New
+What's New, User Interface
 -------------------------------------------------------------------------------
-User interface
 Item ID:    Description:
-- Support for nested ifthenelse now given in wiki file of File->Import->Questions.
-- DDA style sheet now supports nested ifthenelse.
+- DdiEditor Line support for nested ifthenelse now given in wiki file of 
+File->Import->Questions.
+- DDA DdiXslt now supports nested ifthenelse.
 DDIE-163 - Error in createQuestionScheme corrected.
-DDIE-152 - Print bliver loaded 2 gange
+DDIE-152 - Print is loaded 2 times
+- DdiEditor SPSS support of long string variables
+- DdiEditor SPSS support of measure export to DDI-L
+- DDIXslt measure support
+- DdiEditor UI DDI-L schema validation feature
+- Journal Study Unit Import support for import of OPD state studies 
+
 -------------------------------------------------------------------------------  
-Application Infrastructure:
+What's New, Application Infrastructure
 -------------------------------------------------------------------------------
 Item ID:    Description: 
 - Refactoring of Respone Type
