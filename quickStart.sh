@@ -42,3 +42,9 @@ echo '--- Resource ddieditor-osiris-batch-convert ---'
 cd ../ddieditor-osiris-batch-convert
 ant  deploy-to-ddieditor-ui -f dda-build.xml
 echo '--- Done setup ---'
+
+echo '--- Resource ddi-html ---'
+cd ../ddi-html
+ant deploy-to-ddieditor-ui -f dda-build.xml
+echo '--- Done setup ---'
+

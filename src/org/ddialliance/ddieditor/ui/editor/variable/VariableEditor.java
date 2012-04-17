@@ -106,6 +106,40 @@ public class VariableEditor extends Editor {
 		super.init(site, input);
 		modelImpl = (Variable) model;
 	}
+	
+	private void createMissingValue(Group representationGroup) {
+
+		StringBuffer missingValues = new StringBuffer();
+		List list = modelImpl.getMissingValue();
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			String missingValue = (String) iterator.next();
+			if (iterator.hasNext()) {
+				missingValues.append(missingValue + " ");
+			} else {
+				missingValues.append(missingValue);
+			}
+		}
+		Text missingValueText = createTextInput(representationGroup,
+				"Missing Values", missingValues.toString(), false);
+		missingValueText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				editorStatus.setChanged();
+
+				try {
+					String missing = ((Text) e.getSource()).getText();
+					// split string of space separated element into list
+					List<String> tokens = Arrays.asList(missing
+							.split("\\s+"));
+					List<String> list = tokens.subList(0, tokens.size());
+					modelImpl.applyChange(list,
+							ModelIdentifingType.Type_L.class);
+				} catch (Exception e1) {
+					showError(e1);
+				}
+			}
+		});
+	}
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -253,6 +287,7 @@ public class VariableEditor extends Editor {
 								}
 							}
 						});
+				createMissingValue(representationGroup);
 			}
 			// NumericRepresentation
 			if (repImpl instanceof NumericRepresentationType) {
@@ -319,36 +354,7 @@ public class VariableEditor extends Editor {
 								}
 							});
 				}
-				StringBuffer missingValues = new StringBuffer();
-				List list = modelImpl.getMissingValue();
-				for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-					String missingValue = (String) iterator.next();
-					if (iterator.hasNext()) {
-						missingValues.append(missingValue + " ");
-					} else {
-						missingValues.append(missingValue);
-					}
-				}
-				Text missingValueText = createTextInput(representationGroup,
-						"Missing Values", missingValues.toString(), false);
-				missingValueText.addModifyListener(new ModifyListener() {
-					@Override
-					public void modifyText(ModifyEvent e) {
-						editorStatus.setChanged();
-
-						try {
-							String missing = ((Text) e.getSource()).getText();
-							// split string of space separated element into list
-							List<String> tokens = Arrays.asList(missing
-									.split("\\s+"));
-							List<String> list = tokens.subList(0, tokens.size());
-							modelImpl.applyChange(list,
-									ModelIdentifingType.Type_L.class);
-						} catch (Exception e1) {
-							showError(e1);
-						}
-					}
-				});
+				createMissingValue(representationGroup);
 			}
 			// TextRepresentation
 			if (repImpl instanceof TextRepresentationType) {
@@ -435,6 +441,7 @@ public class VariableEditor extends Editor {
 						}
 					}
 				});
+				createMissingValue(representationGroup);
 			}
 			// DateTimeRepresentation
 			if (repImpl instanceof DateTimeRepresentationType) {
@@ -486,6 +493,7 @@ public class VariableEditor extends Editor {
 						}
 					}
 				});
+				createMissingValue(representationGroup);
 			}
 
 			// ExternalCategoryRepresentation
@@ -495,6 +503,7 @@ public class VariableEditor extends Editor {
 						.setText(Translator
 								.trans("VariableEditor.label.externalcategoryrepresentation"));
 				createLabel(representationGroup, "Not implemented!");
+				createMissingValue(representationGroup);
 			}
 		} catch (Exception e) {
 			if (!(e instanceof DDIFtpException)) {

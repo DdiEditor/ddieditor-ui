@@ -8,16 +8,12 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.UniverseType;
-import org.ddialliance.ddi3.xml.xmlbeans.group.StudyUnitDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.CoverageDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.CoverageType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.CreatorType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.GeographicCoverageType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.GeographicStructureType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.InternationalCodeValueType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.SpatialCoordinateType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.TemporalCoverageType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.TopicalCoverageDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.TopicalCoverageType;
 import org.ddialliance.ddi3.xml.xmlbeans.studyunit.KindOfDataDocument;
 import org.ddialliance.ddieditor.model.DdiManager;
@@ -77,8 +73,6 @@ public class StudyUnitEditor extends Editor {
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.study.StudyUnitEditor";
 
 	private StyledText abstractStyledText;
-	private Text agencyText;
-	private Text identifyingAgencyText;
 	private Text titleText;
 	private Text subTitleText;
 	private Text altTitleText;
@@ -92,7 +86,9 @@ public class StudyUnitEditor extends Editor {
 	private StudyUnit modelImpl;
 	private Table uniRefTable;
 	private Table keywordTable;
+	private Table subjectTable;
 	private Table fundingTable;
+	private Table creatorTable;
 
 	/**
 	 * Default constructor
@@ -203,25 +199,49 @@ public class StudyUnitEditor extends Editor {
 			}
 		});
 		super.setControl(altTitleText);
+		
+		// creator table
+		createLabel(grpStudyCitation,
+				Translator.trans("StudyUnitEditor.label.Creator"));
+		creatorTable = new Table(grpStudyCitation, SWT.VIRTUAL
+				| SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
+				| SWT.BORDER);
 
-		Label lblCreator = new Label(grpStudyCitation, SWT.NONE);
-		lblCreator.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblCreator.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
-				false, 1, 1));
-		lblCreator.setText(Translator.trans("StudyUnitEditor.label.Creator"));
+		GridData filTableGd_1 = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
+				| GridData.GRAB_VERTICAL);
 
-		creatorText = new Text(grpStudyCitation, SWT.BORDER);
-		creatorText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
-		creatorText.setText(modelImpl.getCitationCreator("da"));
-		creatorText.addModifyListener(new ModifyListener() {
-			public void modifyText(final ModifyEvent e) {
-				// TODO Handle LanguageCode
-				modelImpl.setCitationCreator(creatorText.getText(), "da");
-				editorStatus.setChanged();
-			}
-		});
-		super.setControl(creatorText);
+		// file table header
+		String[] columnNameNames = { Translator.trans("citation.creator.name"),
+				Translator.trans("citation.creator.affiliation") };
+
+		creatorTable.setRedraw(true);
+		creatorTable.setLayoutData(filTableGd_1);
+		creatorTable.setLinesVisible(true);
+		creatorTable.setHeaderVisible(true);
+
+		// creator table create table columns
+		TableColumnSort sortcreatorTableListener = new TableColumnSort(
+				creatorTable);
+		for (int i = 0; i < columnNameNames.length; i++) {
+			TableColumn column = new TableColumn(creatorTable, SWT.NONE);
+			column.setText(columnNameNames[i]);
+			column.addListener(SWT.Selection, sortcreatorTableListener);
+			column.setResizable(true);
+			column.setWidth(130);
+		}
+
+		// creator table update
+		try {
+			updateCreatorTable();
+		} catch (DDIFtpException e) {
+			String errMess = Translator
+					.trans("StudyUnitEditor.mess.SetcreatorError"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, errMess, e));
+		}
+		creatorTable.addSelectionListener(new TableListener());
 
 		// publisher
 		Label lblPublisher = new Label(grpStudyCitation, SWT.NONE);
@@ -402,20 +422,6 @@ public class StudyUnitEditor extends Editor {
 		uniRefTable.setLinesVisible(true);
 		uniRefTable.setHeaderVisible(true);
 
-		// file table header
-		String[] columnNames = { Translator.trans("ID"),
-				Translator.trans("Description") };
-
-		// create table columns
-		TableColumnSort sortListener = new TableColumnSort(uniRefTable);
-		for (int i = 0; i < columnNames.length; i++) {
-			TableColumn column = new TableColumn(uniRefTable, SWT.NONE);
-			column.setText(columnNames[i]);
-			column.addListener(SWT.Selection, sortListener);
-			column.setResizable(true);
-			column.setWidth(130);
-		}
-
 		try {
 			updateUniRefTable();
 		} catch (DDIFtpException e) {
@@ -464,7 +470,7 @@ public class StudyUnitEditor extends Editor {
 		}
 
 		try {
-			opdateFundingTable(modelImpl
+			updateFundingTable(modelImpl
 					.getFundingAgencyOrganizationReferences());
 		} catch (Exception e) {
 			String errMess = Translator
@@ -548,16 +554,12 @@ public class StudyUnitEditor extends Editor {
 		gridLayout_5.numColumns = 2;
 		grpTopicalCoverage.setLayout(gridLayout_5);
 
+		// keyword table
 		createLabel(grpTopicalCoverage,
 				Translator.trans("StudyUnitEditor.label.Keywords"));
-
 		keywordTable = new Table(grpTopicalCoverage, SWT.VIRTUAL
 				| SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
 				| SWT.BORDER);
-
-		GridData filTableGd_1 = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
-				| GridData.GRAB_VERTICAL);
 
 		keywordTable.setRedraw(true);
 		filTableGd_1.horizontalSpan = 1;
@@ -566,10 +568,25 @@ public class StudyUnitEditor extends Editor {
 		keywordTable.setHeaderVisible(true);
 
 		// file table header
+		String[] columnNames = { Translator.trans("ID"),
+				Translator.trans("Description") };
+
+		// keyword table file table header
 		String[] columnName = { Translator.trans("StudyUnitEditor.label.Value") };
 
 		// create table columns
-		TableColumnSort sortListener_1 = new TableColumnSort(keywordTable);
+		TableColumnSort sortListener = new TableColumnSort(uniRefTable);
+		for (int i = 0; i < columnNames.length; i++) {
+			TableColumn column = new TableColumn(uniRefTable, SWT.NONE);
+			column.setText(columnNames[i]);
+			column.addListener(SWT.Selection, sortListener);
+			column.setResizable(true);
+			column.setWidth(130);
+		}
+
+		// keyword table create table columns
+		TableColumnSort sortKeywordTableListener = new TableColumnSort(
+				keywordTable);
 		for (int i = 0; i < columnName.length; i++) {
 			TableColumn column = new TableColumn(keywordTable, SWT.NONE);
 			column.setText(columnName[i]);
@@ -578,8 +595,9 @@ public class StudyUnitEditor extends Editor {
 			column.setWidth(130);
 		}
 
+		// update keyword table
 		try {
-			opdateKeywordTable();
+			updateKeywordTable();
 		} catch (DDIFtpException e) {
 			String errMess = Translator
 					.trans("StudyUnitEditor.mess.SetKeyWordError"); //$NON-NLS-1$
@@ -589,7 +607,45 @@ public class StudyUnitEditor extends Editor {
 		}
 		keywordTable.addSelectionListener(new TableListener());
 
-		// Spatial Coverage:
+		// subject table
+		createLabel(grpTopicalCoverage,
+				Translator.trans("StudyUnitEditor.label.Subjects"));
+		subjectTable = new Table(grpTopicalCoverage, SWT.VIRTUAL
+				| SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
+				| SWT.BORDER);
+
+		subjectTable.setRedraw(true);
+		subjectTable.setLayoutData(filTableGd_1);
+		subjectTable.setLinesVisible(true);
+		subjectTable.setHeaderVisible(true);
+
+		// subject table create table columns
+		String[] columnNamesTable = { Translator
+				.trans("StudyUnitEditor.label.Value") };
+
+		TableColumnSort sortSubjectTableListener = new TableColumnSort(
+				subjectTable);
+		for (int i = 0; i < columnName.length; i++) {
+			TableColumn column = new TableColumn(subjectTable, SWT.NONE);
+			column.setText(columnNamesTable[i]);
+			column.addListener(SWT.Selection, sortSubjectTableListener);
+			column.setResizable(true);
+			column.setWidth(130);
+		}
+
+		// subject table update
+		try {
+			updateSubjectTable();
+		} catch (DDIFtpException e) {
+			String errMess = Translator
+					.trans("StudyUnitEditor.mess.SetsubjectError"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, errMess, e));
+		}
+		subjectTable.addSelectionListener(new TableListener());
+
+		// spatial coverage
 		Group grpSpatialCoverage = new Group(grpCoverage, SWT.NONE);
 		grpSpatialCoverage.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT,
 				true, false, 1, 1));
@@ -712,7 +768,7 @@ public class StudyUnitEditor extends Editor {
 			kindOfDataString = kindOfDataDoc.getKindOfData().getStringValue();
 		}
 		if (!kindOfDataString.equals("")) {
-			// tab item 
+			// tab item
 			TabItem tabiOther = new TabItem(tabFolder, SWT.NONE);
 			tabiOther.setText(Translator.trans("StudyUnitEditor.label.Other"));
 
@@ -729,10 +785,11 @@ public class StudyUnitEditor extends Editor {
 					Translator.trans("StudyUnitEditor.label.KindOfData"));
 			Text tKindOfData = createText(grpOther, kindOfDataString);
 		}
-		
+
 		// continue with standard tab items:
 		createPropertiesTab(tabFolder);
-		createXmlTab(modelImpl);
+		StyledText xmlText = createXmlTab(modelImpl);
+		xmlText.setEnabled(true);
 
 		// preview tab
 		createPreviewTab(modelImpl);
@@ -828,7 +885,7 @@ public class StudyUnitEditor extends Editor {
 		}
 	}
 
-	public void opdateFundingTable(List<ReferenceType> list) {
+	public void updateFundingTable(List<ReferenceType> list) {
 		// clear table
 		TableItem[] items = null;
 		try {
@@ -876,7 +933,7 @@ public class StudyUnitEditor extends Editor {
 		}
 	}
 
-	public void opdateKeywordTable() throws DDIFtpException {
+	public void updateKeywordTable() throws DDIFtpException {
 		CoverageDocument coverageDoc = ((StudyUnit) model).getCoverage();
 		if (coverageDoc == null) {
 			return;
@@ -889,7 +946,7 @@ public class StudyUnitEditor extends Editor {
 		// clear table
 		TableItem[] items = null;
 		try {
-			items = fundingTable.getItems();
+			items = keywordTable.getItems();
 			for (int i = 0; i < items.length; i++) {
 				items[i].dispose();
 			}
@@ -903,6 +960,66 @@ public class StudyUnitEditor extends Editor {
 			if (keyword.getLang().equals(LanguageUtil.getDisplayLanguage())) {
 				TableItem item = new TableItem(keywordTable, SWT.NONE);
 				item.setText(0, "" + keyword.getStringValue());
+			}
+		}
+	}
+
+	private void updateSubjectTable() throws DDIFtpException {
+		// clear table
+		TableItem[] items = null;
+		try {
+			items = subjectTable.getItems();
+			for (int i = 0; i < items.length; i++) {
+				items[i].dispose();
+			}
+		} catch (Exception e) {
+			// swt null items in table exception
+			e.printStackTrace();
+		}
+
+		// insert into table
+		CoverageDocument coverageDoc = ((StudyUnit) model).getCoverage();
+		if (coverageDoc == null) {
+			return;
+		}
+		List<InternationalCodeValueType> subjects = coverageDoc.getCoverage()
+				.getTopicalCoverage().getSubjectList();
+
+		for (InternationalCodeValueType subject : subjects) {
+			if (subject.getLang().equals(LanguageUtil.getDisplayLanguage())) {
+				TableItem item = new TableItem(subjectTable, SWT.NONE);
+				item.setText(0, "" + subject.getStringValue());
+			}
+		}
+	}
+
+	void updateCreatorTable() throws DDIFtpException {
+		List<CreatorType> creators = modelImpl.getDocument().getStudyUnit()
+				.getCitation().getCreatorList();
+		if (creators.isEmpty()) {
+			return;
+		}
+
+		// clear table
+		TableItem[] items = null;
+		try {
+			items = creatorTable.getItems();
+			for (int i = 0; i < items.length; i++) {
+				items[i].dispose();
+			}
+		} catch (Exception e) {
+			// swt null items in table exception
+			e.printStackTrace();
+		}
+
+		// insert into table
+		for (CreatorType creator : creators) {
+			TableItem item = new TableItem(creatorTable, SWT.NONE);
+			item.setText(0, creator.getStringValue());
+			if (creator.getAffiliation()!=null) {
+				item.setText(1, creator.getAffiliation());	
+			} else {
+				item.setText(1, "");
 			}
 		}
 	}
