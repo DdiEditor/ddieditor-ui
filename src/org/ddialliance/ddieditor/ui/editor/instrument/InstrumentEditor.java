@@ -19,6 +19,7 @@ import org.ddialliance.ddieditor.ui.editor.DateTimeWidget;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.Instrument;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
@@ -79,8 +80,8 @@ public class InstrumentEditor extends Editor {
 				.trans("InstrumentEditor.label.InstrumentTabItem"));
 		Group group = createGroup(tabItem,
 				Translator.trans("InstrumentEditor.label.InstrumentTabItem"));
+
 		// main sequence ref
-		// condition ref
 		List<LightXmlObjectType> sequenceRefList = new ArrayList<LightXmlObjectType>();
 		try {
 			sequenceRefList = DdiManager.getInstance()
@@ -95,7 +96,8 @@ public class InstrumentEditor extends Editor {
 				group,
 				Translator.trans("InstrumentEditor.software.mainsequence"),
 				Translator.trans("InstrumentEditor.software.mainsequence"),
-				null, sequenceRefList, false);
+				modelImpl.getDocument().getInstrument()
+						.getControlConstructReference(), sequenceRefList, false, ElementType.SEQUENCE);
 		sequenceRefSelectCombo.addSelectionListener(Translator
 				.trans("InstrumentEditor.software.mainsequence"),
 				new ReferenceSelectionAdapter(sequenceRefSelectCombo,
@@ -103,10 +105,11 @@ public class InstrumentEditor extends Editor {
 						getEditorIdentification()));
 
 		// software tab
-		for (SoftwareType software : modelImpl.getDocument().getInstrument()
-				.getSoftwareList()) {
-			createSoftwareTab(software);
-		}
+		// commet out - jvj - 20120530
+		// for (SoftwareType software : modelImpl.getDocument().getInstrument()
+		// .getSoftwareList()) {
+		// createSoftwareTab(software);
+		// }
 
 		// label - description - tab
 		TabItem tabItem2 = createTabItem(Translator

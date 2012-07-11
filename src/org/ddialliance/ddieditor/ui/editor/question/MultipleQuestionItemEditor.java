@@ -16,6 +16,7 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.Text
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericselectionlistener.GenericComboSelectionListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.question.MultipleQuestionItem;
@@ -154,7 +155,7 @@ public class MultipleQuestionItemEditor extends Editor {
 				Translator
 						.trans("MultipleQuestionItemEditor.label.conceptLabel.Concept"),
 				modelImpl.getConceptReferenceType(), conceptReferenceList,
-				false);
+				false, ElementType.CONCEPT);
 		refSelecCombo
 				.addSelectionListener(
 						Translator

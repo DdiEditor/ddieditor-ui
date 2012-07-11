@@ -230,18 +230,26 @@ public class IfThenElseEditor extends Editor {
 		});
 
 		// then ref
-//		List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
-//		try {
-//			controlConstructRefList = DdiManager.getInstance()
-//					.getControlConstructsLight();
-//		} catch (Exception e) {
-//			showError(e);
-//		}
+		List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
+		String ccId = modelImpl.getDocument().getIfThenElse()
+				.getThenConstructReference().getIDList().get(0)
+				.getStringValue();
+		String ccVersion = modelImpl.getDocument().getIfThenElse()
+				.getThenConstructReference().getVersionList().size() == 0 ? null
+				: modelImpl.getDocument().getIfThenElse()
+						.getThenConstructReference().getVersionList().get(0)
+						.getStringValue();
+		try {
+			controlConstructRefList = DdiManager.getInstance()
+					.getControlConstructsLight(ccId, ccVersion, null, null);
+		} catch (Exception e) {
+			showError(e);
+		}
 
 		CconRefSelectCombo  thenRefSelectCombo = createCconRefSelection(group,
 				Translator.trans("IfThenElse.editor.thenref"),
 				Translator.trans("IfThenElse.editor.thenref"),
-				modelImpl.getThenReference(), null, false);
+				modelImpl.getThenReference(), controlConstructRefList, false, ElementType.CONTROL_CONSTRUCT_SCHEME);
 		
 		thenRefSelectCombo.addSelectionListener(Translator
 				.trans("IfThenElse.editor.thenref"),
@@ -250,10 +258,30 @@ public class IfThenElseEditor extends Editor {
 						getEditorIdentification()));
 
 		// else ref
+		if (modelImpl.getDocument().getIfThenElse().getElseConstructReference() != null) {
+			ccId = modelImpl.getDocument().getIfThenElse()
+					.getElseConstructReference().getIDList().get(0)
+					.getStringValue();
+			ccVersion = modelImpl.getDocument().getIfThenElse()
+					.getElseConstructReference().getVersionList().size() == 0 ? null
+					: modelImpl.getDocument().getIfThenElse()
+							.getThenConstructReference().getVersionList()
+							.get(0).getStringValue();
+			try {
+				controlConstructRefList = DdiManager.getInstance()
+						.getControlConstructsLight(ccId, ccVersion, null, null);
+			} catch (Exception e) {
+				showError(e);
+			}
+		} else {
+			controlConstructRefList.clear();
+		}
+		
 		CconRefSelectCombo elseRefSelectCombo = createCconRefSelection(group,
 				Translator.trans("IfThenElse.editor.elseref"),
 				Translator.trans("IfThenElse.editor.elseref"),
-				modelImpl.getElseReference(), null, false);
+				modelImpl.getElseReference(), controlConstructRefList, false, ElementType.CONTROL_CONSTRUCT_SCHEME);
+
 		elseRefSelectCombo.addSelectionListener(Translator
 				.trans("IfThenElse.editor.elseref"),
 				new ReferenceSelectionAdapter(elseRefSelectCombo, modelImpl,
@@ -520,10 +548,11 @@ public class IfThenElseEditor extends Editor {
 			group.setLayoutData(new GridData(700, 75));
 
 			// selection
+			// TODO is element type correct???
 			selectCombo = editor.createRefSelection(group,
 					Translator.trans("IfThenElse.editor.ifquestionref"),
 					Translator.trans("IfThenElse.editor.ifquestionref"),
-					ReferenceType.Factory.newInstance(), refs, false);
+					ReferenceType.Factory.newInstance(), refs, false, ElementType.CONTROL_CONSTRUCT_SCHEME);
 			selectCombo.addSelectionListener(
 					Translator.trans("IfThenElse.editor.ifquestionref"),
 					new MenuPopupSelectionAdapter(this));

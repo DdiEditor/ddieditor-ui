@@ -6,6 +6,7 @@ import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -67,7 +68,7 @@ public class SequenceMenuPopupAddDialog extends Dialog {
 		selectCombo = editor.createRefSelection(group,
 				Translator.trans("SequenceEditor.adddialog.label"),
 				Translator.trans("SequenceEditor.adddialog.label"),
-				ReferenceType.Factory.newInstance(), refs, false);
+				ReferenceType.Factory.newInstance(), refs, false, ElementType.CONTROL_CONSTRUCT_SCHEME);
 		selectCombo.addSelectionListener(
 				Translator.trans("SequenceEditor.adddialog.label"),
 				new SelectionAdapter(this));

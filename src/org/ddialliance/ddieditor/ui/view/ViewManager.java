@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.category.CategoryEditor;
 import org.ddialliance.ddieditor.ui.editor.category.CategorySchemeEditor;
 import org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor;
@@ -113,12 +114,18 @@ public class ViewManager {
 				VariableEditor.ID,
 				new ArrayList<String>(Arrays.asList(VariableView.ID,
 						VariableQuestionView.ID)));
+
+		// special case -all editors
 		editorWiews.put(
 				ALL_EDITORS,
 				new ArrayList<String>(Arrays.asList(InfoView.ID,
 						CategoryView.ID, CodeView.ID, ConceptView.ID,
 						InstrumentView.ID, QuestionItemView.ID,
 						UniverseView.ID, VariableView.ID)));
+
+		// special case -address only overview
+		editorWiews.put(Editor.ID,
+				new ArrayList<String>(Arrays.asList(InfoView.ID)));
 	}
 
 	public static synchronized ViewManager getInstance() {

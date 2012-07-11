@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IPropertyListener;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.ViewPart;
 
@@ -40,7 +42,7 @@ public class View extends ViewPart implements IPropertyListener {
 	private static Log log = LogFactory.getLog(LogType.SYSTEM, View.class);
 
 	public enum ViewContentType {
-		StudyContent, UniverseContent, ConceptContent, CodeContent, CategoryContent, QuestionContent, InstrumentationContent, VariableContent;
+		StudyLevelContent, UniverseContent, ConceptContent, CodeContent, CategoryContent, QuestionContent, InstrumentationContent, VariableContent;
 	}
 
 	private ViewContentType viewContentType;
@@ -212,9 +214,18 @@ public class View extends ViewPart implements IPropertyListener {
 							getViewSite().getShell(),
 							Translator.trans("ErrorTitle"), Translator.trans("View.mess.TreeViewerSetInputError") + ":\n" + e1.getMessage()); //$NON-NLS-1$
 		}
-		treeViewer.addFilter(nameFilter);
-		treeViewer.expandToLevel(2);
-
+		
+		treeViewer.addFilter(nameFilter);		 
+		
+		// hack to avoid wrong resource ids on level 2 items
+		if (ID.equals(InfoView.ID)) {
+			treeViewer.expandToLevel(3);
+			refreshView();
+			treeViewer.collapseAll();
+		} else {
+			treeViewer.expandToLevel(2);
+		}
+		
 		// Define Tree
 		tree = treeViewer.getTree();
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -253,7 +264,8 @@ public class View extends ViewPart implements IPropertyListener {
 				.getPluginImageDescriptor(Activator.getDefault(),
 						"icons/collapse_all.gif"));
 
-		refreshAction = new Action("Refresh") {
+		refreshAction = new Action(
+				Translator.trans("View.label.collapseAllAction.Refresh")) { //$NON-NLS-1$)
 			public void run() {
 				refreshView();
 			}

@@ -47,7 +47,7 @@ public class XmlObjectComparer implements IElementComparer {
 			List<?> bb = (List<?>) b;
 			if (aa.size() == bb.size()) {
 				// empty list
-				if (aa.isEmpty()&&bb.isEmpty()) {
+				if (aa.isEmpty() && bb.isEmpty()) {
 					return true;
 				}
 				// list<xmlobject>
@@ -119,7 +119,7 @@ public class XmlObjectComparer implements IElementComparer {
 			} else {
 				return element.hashCode();
 			}
-		}
+		} 
 		// guard
 		else {
 			return element.hashCode();

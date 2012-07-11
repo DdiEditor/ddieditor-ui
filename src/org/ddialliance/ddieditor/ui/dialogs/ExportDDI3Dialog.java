@@ -77,6 +77,7 @@ public class ExportDDI3Dialog extends Dialog {
 					int selection = ((Combo) e.getSource()).getSelectionIndex();
 					fileNameText.setData(false);
 					fileNameText.setText(resouceCombo.getItem(selection));
+					fileName = resouceCombo.getItem(selection);
 					ddiResource = resources.get(selection);
 				}
 

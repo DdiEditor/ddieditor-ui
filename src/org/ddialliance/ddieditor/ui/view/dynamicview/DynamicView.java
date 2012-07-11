@@ -394,13 +394,26 @@ public class DynamicView extends ViewPart {
 							"reusable__CodeSchemeReference"));
 
 			// question
-			lightXmlObjectListDoc = DdiManager.getInstance()
-					.getQuestionItemsLightByCodeScheme(refRes);
+			if (refRes.getId() != null) {
+				lightXmlObjectListDoc = DdiManager.getInstance()
+						.getQuestionItemsLightByCodeScheme(refRes);
+			} else {
+				lightXmlObjectListDoc = resetResult();
+			}
 			updateTable(lightXmlObjectListDoc, questionTable);
 
 			// variable
-			lightXmlObjectListDoc = DdiManager.getInstance()
-					.getVariablesLightByCodeScheme(refRes);
+			if (refRes.getId() != null) {
+				try {
+					lightXmlObjectListDoc = DdiManager.getInstance()
+							.getVariablesLightByCodeScheme(refRes);
+				} catch (Exception e) {
+					// resource package with no variables escape hack
+					lightXmlObjectListDoc = LightXmlObjectListDocument.Factory
+							.newInstance();
+					lightXmlObjectListDoc.addNewLightXmlObjectList();
+				}
+			}
 			updateTable(lightXmlObjectListDoc, variableTable);
 		}
 
@@ -409,6 +422,14 @@ public class DynamicView extends ViewPart {
 			((Model) model).setCreate(isSetCreate);
 		}
 		parent.layout(true);
+	}
+
+	private LightXmlObjectListDocument resetResult() {
+		LightXmlObjectListDocument result = LightXmlObjectListDocument.Factory
+				.newInstance();
+		result.addNewLightXmlObjectList();
+
+		return result;
 	}
 
 	private void updateTable(List<ReferenceType> list, String elementType,
@@ -507,37 +528,41 @@ public class DynamicView extends ViewPart {
 			throws Exception {
 		// resolve references
 		CodeSchemeDocument codeScheme = CodeSchemeDao
-				.getCodeSchemeByReference(new ReferenceResolution(
+				.getAllCodeSchemeByReference(new ReferenceResolution(
 						codeSchemeReference));
+		if (codeScheme == null) {
+			return;
+		}
 
 		ReferenceType catSchemeRef = codeScheme.getCodeScheme()
 				.getCategorySchemeReference();
 		CategorySchemeDocument catScheme = null;
 
 		if (catSchemeRef != null) {
-			// fix resolve iduvidual cat refs
 			catScheme = CategorySchemeDao
-					.getCodeSchemeByReference(new ReferenceResolution(
+					.getAllCategorySchemeByReference(new ReferenceResolution(
 							catSchemeRef));
 		}
 
 		LightXmlObjectType lightXmlObject = LightXmlObjectUtil
-				.createLightXmlObject(null, null, codeScheme.getCodeScheme()
-						.getId(), codeScheme.getCodeScheme().getVersion(),
-						"CodeScheme");
+				.createLightXmlObject(codeScheme.getCodeScheme().getAgency(),
+						null, null, codeScheme.getCodeScheme().getId(),
+						codeScheme.getCodeScheme().getVersion(), "CodeScheme");
 		for (CodeType code : codeScheme.getCodeScheme().getCodeList()) {
 			// code
 			XmlBeansUtil.setTextOnMixedElement(lightXmlObject.addNewLabel(),
 					code.getValue());
 			TableItem item = setItem(categoryTable, 0, lightXmlObject);
 
-			// category
+			// resolve cat by default cats ref
 			if (catScheme != null) {
 				for (CategoryType cat : catScheme.getCategoryScheme()
 						.getCategoryList()) {
-					if (cat.getId()
-							.equals(XmlBeansUtil.getTextOnMixedElement(code
-									.getCategoryReference().getIDList().get(0)))) {
+					if (!code.getCategoryReference().getIDList().isEmpty()
+							&& cat.getId().equals(
+									XmlBeansUtil.getTextOnMixedElement(code
+											.getCategoryReference().getIDList()
+											.get(0)))) {
 
 						String text = XmlBeansUtil
 								.getTextOnMixedElement(((org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType) XmlBeansUtil
@@ -548,6 +573,29 @@ public class DynamicView extends ViewPart {
 						addToTableItem(item, 1, lightXmlObject);
 						break;
 					}
+				}
+			}
+			// resolve cat by code to cat ref
+			else {
+				if (code.getCategoryReference() != null) {
+					ReferenceResolution refResolv = new ReferenceResolution(
+							code.getCategoryReference());
+					List<LightXmlObjectType> result = DdiManager
+							.getInstance()
+							.getCategorysLight(refResolv.getId(),
+									refResolv.getVersion(), null, null)
+							.getLightXmlObjectList().getLightXmlObjectList();
+					if (!result.isEmpty()
+							&& !result.get(0).getLabelList().isEmpty()) {
+						String text = XmlBeansUtil
+								.getTextOnMixedElement((XmlObject) XmlBeansUtil
+										.getDefaultLangElement(result.get(0)
+												.getLabelList()));
+						XmlBeansUtil.setTextOnMixedElement(
+								lightXmlObject.addNewLabel(), text);
+						addToTableItem(item, 1, lightXmlObject);
+					}
+
 				}
 			}
 		}

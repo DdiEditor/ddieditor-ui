@@ -1,18 +1,16 @@
 package org.ddialliance.ddieditor.ui.command;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
-
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.ddialliance.ddieditor.model.resource.DDIResourceType;
+import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dialogs.PrintDDI3Dialog;
 import org.ddialliance.ddieditor.ui.editor.Editor;
@@ -38,6 +36,20 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		if (returnCode == Window.CANCEL) {
 			return null;
 		}
+		if (printDDI3Dialog.ddiResource == null) {
+			System.out.println("Error");
+			MessageDialog
+			.openError(
+					PlatformUI
+							.getWorkbench()
+							.getDisplay()
+							.getActiveShell(),
+							Translator
+							.trans("PrintDDI3Action.tooltip.PrintDDI3"),
+							Translator
+							.trans("PrintDDI3Action.mess.ResourceNotSpecified"));
+			return null;
+		}
 
 		// print the selected resource and pass it to the default browser with
 		// the DDI 3 style sheet
@@ -59,47 +71,35 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 											@Override
 											public void run() {
 												// export the resource
-												File xmlFile = null;
-												File htmlFile = null;
+												File temp = null;
 												try {
-													xmlFile = File
+													temp = File
 															.createTempFile(
 																	"PrintDDI3",
 																	".xml");
-													htmlFile = File
-															.createTempFile(
-																	"PrintDDI3",
-																	".html");
-													xmlFile.deleteOnExit();
-													htmlFile.deleteOnExit();
+													temp.deleteOnExit();
 
+													List<DDIResourceType> ddiResources = PersistenceManager.getInstance().getResources();
+													List<String> resources = new ArrayList<String>();
+													for (DDIResourceType ddiResource : ddiResources) {
+														resources.add(ddiResource.getOrgName());
+													}
 													PersistenceManager
 															.getInstance()
-															.exportResoure(
+															.exportResoures(
 																	printDDI3Dialog.ddiResource
-																			.getOrgName(),
-																			xmlFile);
-													// Transform xml to html
-													TransformerFactory tFactory = TransformerFactory
-															.newInstance();
-													Transformer transformer = tFactory
-															.newTransformer(new StreamSource(
-																	"resources/ddixslt/ddaddi3_1.xsl"));
-													transformer.setParameter(
-															"show-numeric-var-frequence",
-															printDDI3Dialog.numVarStatisticBoolean ? 1 : 0);
-													transformer.transform(
-															new StreamSource(
-																	xmlFile.getAbsolutePath()),
-															new StreamResult(
-																	htmlFile.getAbsolutePath()));
-													// Copy to temp
+																			.getOrgName(), resources,
+																	temp);
+													// TODO specify path to
+													// style sheet in XML
+													// document instead of
+													// copying it
 													FileUtils
 															.copyDirectory(
 																	new File(
 																			"resources/ddixslt"),
 																	new File(
-																			htmlFile.getParent()));
+																			temp.getParent()));
 												} catch (Exception e) {
 													MessageDialog
 															.openError(
@@ -111,13 +111,13 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 																			.trans("PrintDDI3Action.mess.PrintDDI3Error"),
 																	e.getMessage());
 												}
+												
 												// active the external browser
 												// with the DDI document
 												// - start by using application associated with file type
-												if (!Program.launch(htmlFile
+												if (!Program.launch(temp
 														.getAbsolutePath())) {
-													// - failed: then use
-													// browser
+													// - failed: then use browser
 													try {
 														PlatformUI
 																.getWorkbench()
@@ -126,14 +126,13 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 																.openURL(
 																		new URL(
 																				"file://"
-																						+ htmlFile
-																								.getAbsolutePath()));
+																						+ temp.getAbsolutePath()));
 													} catch (PartInitException e) {
 														Editor.showError(e,
-																"Browse error");
+																"Print");
 													} catch (MalformedURLException e) {
 														Editor.showError(e,
-																"Browse error");
+																"Print");
 													}
 												}
 											}

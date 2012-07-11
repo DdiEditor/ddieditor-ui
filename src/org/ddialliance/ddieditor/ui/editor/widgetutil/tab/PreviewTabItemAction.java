@@ -40,7 +40,7 @@ public class PreviewTabItemAction extends TabItemAction {
 		try {
 			this.transformer = tFactory.newTransformer(new StreamSource(
 					"resources" + File.separator + "ddixslt" + File.separator
-							+ "ddi3_1.xsl"));
+							+ "ddaddi3_1.xsl"));
 		} catch (TransformerConfigurationException e1) {
 			throw new DDIFtpException("XML to HTML Transformer error: "
 					+ e1.getMessage());
@@ -63,6 +63,8 @@ public class PreviewTabItemAction extends TabItemAction {
 		transformer.setParameter("render-as-document", "true");
 
 		// transform xml to html:
+		// TODO Add missing link to cascading stylesheet (ddi.css) 
+		// <link type="text/css" rel="stylesheet" media="all" href="./theme/default/ddi.css">
 		StreamResult streamResult = null;
 		try {
 			InputStream inputStream = new ByteArrayInputStream(

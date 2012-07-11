@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.xmlbeans.XmlBeans;
+import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
+import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
@@ -21,6 +24,7 @@ import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXml
 import org.ddialliance.ddieditor.ui.editor.widgetutil.lightxmlobjectdnd.LightXmlObjectTransfer;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.model.code.CodeScheme;
 import org.ddialliance.ddieditor.ui.perspective.CodesPerspective;
@@ -108,7 +112,18 @@ public class CodeSchemeEditor extends Editor {
 			throws PartInitException {
 		super.init(site, input);
 		modelImpl = (CodeScheme) model;
-
+		
+		// TODO check for classification
+		// XQuery on xmlbeans model
+		try {
+			String query = "for $x in doc($doc)/*//*[namespace-uri()='ddi:logicalproduct:3_1' and local-name()='Code'] return $x;";
+			XmlObject[] test = model.getDocument().execQuery(query, null);
+			System.out.println("break");
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// init items
 		List<CodeType> codes = modelImpl.getCodes();
 		for (int i = 0; i < codes.size(); i++) {
@@ -200,24 +215,23 @@ public class CodeSchemeEditor extends Editor {
 					return;
 				}
 				try {
-					String SelectedValue = XmlBeansUtil
+					// selected code value
+					String selectedValue = XmlBeansUtil
 							.getTextOnMixedElement(selectedLightXmlObject
 									.getLabelList().get(0));
-					// for all codes in code scheme:
+
+					// for all codes in code scheme
 					for (Iterator<CodeType> iterator = modelImpl.getDocument()
 							.getCodeScheme().getCodeList().iterator(); iterator
 							.hasNext();) {
 						CodeType codeType = iterator.next();
+
 						// remove code from code scheme
-						if (codeType.getCategoryReference() == null
-								|| selectedLightXmlObject.getId().equals(
-										codeType.getCategoryReference()
-												.getIDList().get(0)
-												.getStringValue())
-								&& SelectedValue.equals(codeType.getValue())) {
+						if (codeType.getValue().equals(selectedValue)) {
 							// remove from document
 							iterator.remove();
-							// remove from table
+
+							// update table
 							update = true;
 							tableViewer.remove(selectedLightXmlObject);
 							items.remove(selectedLightXmlObject);
@@ -229,7 +243,8 @@ public class CodeSchemeEditor extends Editor {
 				}
 
 			} else {
-				log.warn("Action not specified!");
+				if (log.isWarnEnabled())
+					log.warn("Action not specified!");
 			}
 
 			// update table
@@ -252,7 +267,7 @@ public class CodeSchemeEditor extends Editor {
 				Translator.trans("QuestionConstruct"));
 
 		// avail default cats
-		List<LightXmlObjectType> categorySchemeReferenceList = new ArrayList();
+		List<LightXmlObjectType> categorySchemeReferenceList = new ArrayList<LightXmlObjectType>();
 		try {
 			categorySchemeReferenceList = new CategorySchemeDao()
 					.getLightXmlObject("", "", "", "");
@@ -265,7 +280,7 @@ public class CodeSchemeEditor extends Editor {
 						.trans("CodeSchemeEditor.label.DefaultCategoryScheme"),
 				Translator.trans("CodeSchemeEditor.label.CategoryScheme"),
 				modelImpl.getCategorySchemeReference(),
-				categorySchemeReferenceList, false);
+				categorySchemeReferenceList, false, ElementType.CATEGORY_SCHEME);
 
 		catSchemeRefCombo.addSelectionListener(Translator
 				.trans("CodeSchemeEditor.label.CategoryScheme"),
@@ -408,6 +423,9 @@ public class CodeSchemeEditor extends Editor {
 		 *            to be created on
 		 */
 		public void createColumns(final TableViewer viewer) {
+			// TODO define length of classification
+			
+			
 			// 0=Value, 1=Category
 			String[] titles = {
 					Translator.trans("CodeView.label.codeLabel.Code"),
@@ -487,7 +505,7 @@ public class CodeSchemeEditor extends Editor {
 			return items.toArray();
 		}
 
-		public List getItems() {
+		public List<LightXmlObjectType> getItems() {
 			return items;
 		}
 
@@ -631,7 +649,7 @@ public class CodeSchemeEditor extends Editor {
 			super.widgetSelected(event);
 
 			// insert categories on codes
-			if (refSelecCombo.getResult() == null) {
+			if (refSelecCombo.getResult() == null) { // guard
 				return;
 			} else {
 				try {
@@ -641,12 +659,21 @@ public class CodeSchemeEditor extends Editor {
 					List<LightXmlObjectType> cats = null;
 					String defaultCatsId = modelImpl
 							.getDefaultCategorySchemeID();
-					if (defaultCatsId == null) {
+					String agency = null;
+					if (defaultCatsId == null || defaultCatsId.equals("")) {
 						cats = new ArrayList<LightXmlObjectType>();
 						cats.addAll(items);
+						modelImpl.applyChange(null, ReferenceType.class);
 					} else {
 						cats = new CategoryDao().getLightXmlObject("", "",
 								defaultCatsId, "");
+
+						// define cats agency
+						ReferenceType catRef = modelImpl.getDocument()
+								.getCodeScheme().getCategorySchemeReference();
+						if (!catRef.getIdentifyingAgencyList().isEmpty()) {
+							agency = catRef.getIdentifyingAgencyArray(0);
+						}
 					}
 
 					// rebuild items
@@ -667,6 +694,21 @@ public class CodeSchemeEditor extends Editor {
 						// category
 						if (cats.size() > codeIndex) {
 							lightXmlObject.setId(cats.get(codeIndex).getId());
+							lightXmlObject.setAgency(agency);
+							lightXmlObject.setVersion(cats.get(codeIndex)
+									.getVersion());
+
+							// set cate ref on code
+							ReferenceType ref = codes.get(codeIndex)
+									.getCategoryReference();
+							if (codes.get(codeIndex).getCategoryReference() == null) {
+								ref = codes.get(codeIndex)
+										.addNewCategoryReference();
+								ref.addIdentifyingAgency(agency);
+							}
+							IdentificationManager.getInstance()
+									.addReferenceInformation(ref,
+											lightXmlObject);
 						} else {
 							// unset category
 							codes.get(codeIndex).setCategoryReference(null);
@@ -689,11 +731,14 @@ public class CodeSchemeEditor extends Editor {
 
 							// category
 							lightXmlObject.setId(cats.get(i).getId());
+							
+							// agency
+							lightXmlObject.setAgency(agency);
 
 							modelImpl.addCode(
 									XmlBeansUtil.getXmlAttributeValue(
-											cats.get(i).xmlText(), "id=\""),
-									defaultNonSetvalue);
+											cats.get(i).xmlText(), "id=\""), agency,
+									defaultNonSetvalue); 
 							items.add(lightXmlObject);
 						}
 					}

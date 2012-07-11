@@ -115,6 +115,12 @@
                   name="%view.name.9"
                   restorable="true">
             </view>
+            <view
+                  class="org.ddialliance.ddieditor.ui.view.validate.ValidateView"
+                  id="org.ddialliance.ddieditor.ui.view.validate.ValidateView"
+                  name="Validation"
+                  restorable="true">
+            </view>
       </extension>
       <extension
             id="product"
@@ -451,6 +457,11 @@
                id="org.ddialliance.ddieditor.ui.command.ValidateDDI3"
                name="ValidateDDI3">
          </command>
+         <command
+               defaultHandler="org.ddialliance.ddieditor.ui.command.NewResourcePackage"
+               id="org.ddialliance.ddieditor.ui.command.NewResourcePackage"
+               name="%command.label.14">
+         </command>
       </extension>
       <extension
             point="org.eclipse.ui.menus">
@@ -544,6 +555,14 @@
                      id="new-ddi-3-file"
                      label="%command.label.0"
                      mnemonic="%command.mnemonic.0"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.ddialliance.ddieditor.ui.command.NewResourcePackage"
+                     icon="icons/newfile_wiz.gif"
+                     id="new-ddi-3-resourcepack"
+                     label="%command.label.14"
+                     mnemonic="%command.mnemonic.14"
                      style="push">
                </command>
                <separator

@@ -4,12 +4,11 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import org.ddialliance.ddieditor.logic.validation.DdiSchemaValidator;
-import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.marker.MarkerListDocument;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
-import org.ddialliance.ddieditor.ui.dialogs.DisplayNoteDialog;
 import org.ddialliance.ddieditor.ui.dialogs.ValidateDialog;
 import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.view.validate.ValidateView;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -19,6 +18,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 public class ValidateDDI3 extends org.eclipse.core.commands.AbstractHandler {
@@ -59,7 +61,7 @@ public class ValidateDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		return null;
 	}
 
-	class ValidateJob implements Runnable {
+	public class ValidateJob implements Runnable {
 		String resourceId = null;
 		File temp = null;
 
@@ -73,10 +75,6 @@ public class ValidateDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		@Override
 		public void run() {
 			try {
-				// working resource
-				resourceId = PersistenceManager.getInstance()
-						.getWorkingResource();
-
 				// ddi file to validate
 				temp = File.createTempFile("ddischemavalidate-", ".xml");
 				temp.deleteOnExit();
@@ -91,14 +89,53 @@ public class ValidateDDI3 extends org.eclipse.core.commands.AbstractHandler {
 				ddiSchemaValidator = new DdiSchemaValidator();
 				ddiSchemaValidator.validate(temp, resourceId, markerListDoc);
 
-				// debug result
-				String txt = Translator.trans("validation.schema");
-				DisplayNoteDialog dialog = new DisplayNoteDialog(PlatformUI
-						.getWorkbench().getDisplay().getActiveShell(), txt,
-						txt, txt,
-						ddiSchemaValidator.markerListDoc.xmlText(DdiManager
-								.getInstance().getXmlOptions()));
-				dialog.open();
+				// validate view
+				IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
+						.getWorkbenchWindows();
+				boolean found = false;
+				for (int i = 0; i < windows.length; i++) {
+					for (IViewReference iViewReference : windows[i]
+							.getActivePage().getViewReferences()) {
+						IViewPart viewPart = windows[i].getActivePage()
+								.findView(iViewReference.getId());
+						if (viewPart != null
+								&& viewPart.getClass() == ValidateView.class) {
+							try {
+								((ValidateView) viewPart)
+										.refresh(markerListDoc);
+
+								// select right combo item
+								// String[] test = ((ValidateView)
+								// viewPart).combo.getItems();
+								
+								// combo.getItems() returns the 'possible empty
+								// list of strings' thanks SWT!
+								
+								// for (int j = 0; j < test.length; j++) {
+								// if (test[i].equals(resourceId)) {
+								// ((ValidateView) viewPart).combo.select(i);
+								// }
+								// }
+								
+								windows[i].getActivePage().activate(viewPart);
+							} catch (Exception e) {
+								Editor.showError(e, null);
+							}
+							found = true;
+							break;
+						}
+					}
+					if (found) {
+						break;
+					}
+				}
+				if (!found) {
+					// create view
+					IViewPart viewPart = PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow().getActivePage()
+							.showView(ValidateView.ID);
+					((ValidateView) viewPart).refresh(markerListDoc);
+				}
 			} catch (Exception e) {
 				Editor.showError(e, "");
 			}

@@ -13,6 +13,7 @@ import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.ComputationItem;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
@@ -98,7 +99,7 @@ public class ComputationItemEditor extends Editor {
 				Translator.trans("ComputationItem.editor.computationvariableref"),
 				Translator.trans("ComputationItem.editor.computationvariableref"),
 				modelImpl.getAssignedVariableReference(), variableRefList,
-				false);
+				false, ElementType.VARIABLE);
 		thenRefSelectCombo.addSelectionListener(Translator
 				.trans("ComputationItem.editor.computationvariableref"),
 				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,

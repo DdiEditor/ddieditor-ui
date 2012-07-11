@@ -6,28 +6,23 @@ package org.ddialliance.ddieditor.ui.editor.question;
  * $Revision$
  */
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DynamicTextType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.dbxml.concept.ConceptDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dialogs.translationdialoginput.DynamicTextTdI;
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
-import org.ddialliance.ddieditor.ui.model.question.ResponseType;
-import org.ddialliance.ddieditor.ui.model.question.ResponseTypeReference;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -39,7 +34,6 @@ import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -48,11 +42,9 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -68,8 +60,6 @@ public class QuestionItemEditor extends Editor {
 			QuestionItemEditor.class);
 	public static final String ID = "org.ddialliance.ddieditor.ui.editor.question.QuestionItemEditor";
 	private QuestionItem modelImpl;
-	private ComboViewer responseComboViewer;
-	private Composite ResponseTypeCodeComposite;
 	private TableViewer tableViewer;
 
 	public QuestionItemEditor() {
@@ -150,16 +140,15 @@ public class QuestionItemEditor extends Editor {
 					0, errMess, e1));
 		}
 
-		// - Create Concept Reference selection combobox
+		// - Create Concept Reference selection combo box
 		ReferenceSelectionCombo refSelecCombo = createRefSelection(
 				questionGroup,
 				Translator
-						.trans("QuestionItemEditor.label.conceptLabel.Concept")
-						,
+						.trans("QuestionItemEditor.label.conceptLabel.Concept"),
 				Translator
 						.trans("QuestionItemEditor.label.conceptLabel.Concept"),
 				modelImpl.getConceptReferenceType(), conceptReferenceList,
-				false);
+				false, ElementType.CONCEPT);
 
 		refSelecCombo.addSelectionListener(Translator
 				.trans("QuestionItemEditor.label.conceptLabel.Concept"),
@@ -201,136 +190,13 @@ public class QuestionItemEditor extends Editor {
 					.errorDialog(getEditorSite(), ID, null, e.getMessage(), e);
 		}
 
-		// Response Type:
-		final Label questionResponseTypeLabel = new Label(questionGroup,
-				SWT.NONE);
-		final GridData gd_questionResponseTypeLabel = new GridData(SWT.RIGHT,
-				SWT.CENTER, false, false);
-		gd_questionResponseTypeLabel.horizontalIndent = 5;
-		questionResponseTypeLabel.setLayoutData(gd_questionResponseTypeLabel);
-		questionResponseTypeLabel.setBackground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_WHITE));
-		questionResponseTypeLabel
-				.setText(Translator
-						.trans("QuestionItemEditor.label.questionResponseTypeLabel.QuestionResponseType")); //$NON-NLS-1$
-
-		responseComboViewer = new ComboViewer(questionGroup);
-		final Combo combo = responseComboViewer.getCombo();
-		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		responseComboViewer
-				.setContentProvider(new org.eclipse.jface.viewers.ArrayContentProvider());
-		responseComboViewer
-				.setLabelProvider(new org.eclipse.jface.viewers.LabelProvider());
-		final List<ResponseTypeReference> responseDomainReferenceList;
-
-		responseComboViewer.getCombo().setRedraw(true);
-		responseComboViewer.getCombo().setLayoutData(
-				new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-		final Composite ResponseTypeLabelComposite = new Composite(
-				questionGroup, SWT.NONE);
-		ResponseTypeLabelComposite.setLayoutData(new GridData(SWT.RIGHT,
-				SWT.CENTER, false, false));
-		ResponseTypeLabelComposite.setBackground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_WHITE));
-		final GridLayout gridLayout_4 = new GridLayout();
-		gridLayout_4.marginWidth = 0;
-		gridLayout_4.marginHeight = 0;
-		ResponseTypeLabelComposite.setLayout(gridLayout_4);
-
-		ResponseTypeCodeComposite = new Composite(questionGroup, SWT.NONE);
-		ResponseTypeCodeComposite.setRedraw(true);
-		ResponseTypeCodeComposite.setBackground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_WHITE));
-		ResponseTypeCodeComposite.setLayoutData(new GridData(SWT.FILL,
-				SWT.CENTER, false, false));
-		final GridLayout gridLayout_5 = new GridLayout();
-		gridLayout_5.marginHeight = 0;
-		gridLayout_5.marginWidth = 0;
-		gridLayout_5.numColumns = 1;
-		ResponseTypeCodeComposite.setLayout(gridLayout_5);
-
-		final ResponseTypeDetail responseTypeDetail = new ResponseTypeDetail(
-				modelImpl, ResponseTypeLabelComposite,
-				ResponseTypeCodeComposite, editorStatus,
-				(IEditorSite) getSite());
-		responseComboViewer.getCombo().setItems(
-				responseTypeDetail.getResponseTypeLabels());
-
-		if (!getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
-			ResponseType responseType = ResponseTypeDetail
-					.getResponseType(modelImpl.getResponseDomain());
-			responseTypeDetail.setDetails(modelImpl.getResponseDomain());
+		// show relevant Response Type parameters
+		try {
+			createResponseType(questionGroup);
+		} catch (DDIFtpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
-		// - get Response Domain Reference
-		RepresentationType responseDomainRef = null;
-		if (!getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
-			try {
-				responseDomainRef = modelImpl.getResponseDomain();
-			} catch (Exception e1) {
-				String errMess = MessageFormat
-						.format(Translator
-								.trans("QuestionItemEditor.mess.ResponseDomainReferenceRetrievalError"), e1.getMessage()); //$NON-NLS-1$
-				ErrorDialog.openError(getSite().getShell(), Translator
-						.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, errMess, e1));
-			}
-		}
-
-		// - get list of Response Types e.g. CODE, NUMERIC, etc.
-		responseDomainReferenceList = ResponseTypeDetail
-				.getResponseDomainReferenceList();
-		responseComboViewer.setInput(responseDomainReferenceList);
-		int index = 0;
-		if (!getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
-			for (Iterator iterator = responseDomainReferenceList.iterator(); iterator
-					.hasNext();) {
-				ResponseTypeReference responseDomainReference = (ResponseTypeReference) iterator
-						.next();
-				if (responseDomainReference.getResponseDomain() != null
-						&& responseDomainReference.getResponseDomain().equals(
-								ResponseTypeDetail
-										.getResponseType(responseDomainRef))) {
-					break;
-				}
-				index++;
-			}
-		}
-		responseComboViewer.getCombo().select(index);
-
-		responseComboViewer.getCombo().addModifyListener(new ModifyListener() {
-			public void modifyText(final ModifyEvent e) {
-				// Save new Response Type
-				int index = responseComboViewer.getCombo().getSelectionIndex();
-				if (index >= 0) {
-					ResponseType rt = ((ResponseTypeReference) responseDomainReferenceList
-							.get(index)).getResponseDomain();
-					// Save Responds Type without details - saved by
-					// ResponseTypeDetail modify listener
-					RepresentationType repType = modelImpl.setResponseDomain(
-							rt, "");
-					if (repType == null) {
-						String errMess = MessageFormat.format(
-								Translator
-										.trans("QuestionItemEditor.mess.QuestionItemResponseTypeNotSupported"),
-								ResponseTypeDetail.getResponseTypeLabel(rt)); //$NON-NLS-1$
-						ErrorDialog.openError(
-								getSite().getShell(),
-								Translator.trans("ErrorTitle"),
-								null,
-								new Status(IStatus.ERROR, ID, 0, errMess, null),
-								IStatus.ERROR);
-						responseComboViewer.getCombo().select(0);
-						responseTypeDetail.dispose();
-						return;
-					}
-					// Show corresponding Response Type details
-					responseTypeDetail.setDetails(repType);
-					editorStatus.setChanged();
-				}
-			}
-		});
 
 		final Composite composite_4 = new Composite(questionGroup, SWT.NONE);
 		composite_4.setBackground(Display.getCurrent().getSystemColor(

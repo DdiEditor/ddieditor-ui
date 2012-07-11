@@ -1,7 +1,9 @@
 package org.ddialliance.ddieditor.ui.editor;
 
+import java.math.BigInteger;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -10,17 +12,31 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ConstructNameDocument;
 import org.ddialliance.ddi3.xml.xmlbeans.datacollection.ItemSequenceTypeType;
+import org.ddialliance.ddi3.xml.xmlbeans.datacollection.impl.CodeDomainTypeImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeRepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeSchemeDocument;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeType;
+import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.impl.CodeRepresentationTypeImpl;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateTimeRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.DateTypeCodeType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.ExternalCategoryRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.LabelType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.NameType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericRepresentationType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.NumericTypeCodeType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.RepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.StructuredStringType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.TextRepresentationType;
 import org.ddialliance.ddi3.xml.xmlbeans.reusable.VersionRationaleDocument;
+import org.ddialliance.ddieditor.logic.urn.ddi.ReferenceResolution;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dbxml.IDao;
+import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.question.QuestionItemDao;
 import org.ddialliance.ddieditor.ui.dialogs.TranslationDialog;
 import org.ddialliance.ddieditor.ui.dialogs.TranslationDialogInput;
@@ -29,6 +45,7 @@ import org.ddialliance.ddieditor.ui.dialogs.translationdialoginput.LabelTdI;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.instrument.CconRefSelectCombo;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.DDITabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.PreviewTabItemAction;
@@ -38,6 +55,11 @@ import org.ddialliance.ddieditor.ui.model.DdiModelException;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ILabelDescription;
 import org.ddialliance.ddieditor.ui.model.IModel;
+import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
+import org.ddialliance.ddieditor.ui.model.question.QuestionItem;
+import org.ddialliance.ddieditor.ui.model.question.ResponseType;
+import org.ddialliance.ddieditor.ui.model.question.ResponseTypeReference;
+import org.ddialliance.ddieditor.ui.model.variable.Variable;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
 import org.ddialliance.ddieditor.ui.preference.PreferenceConstants;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
@@ -71,6 +93,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -117,6 +140,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	private Composite composite;
 	private TabFolder tabFolder;
 	private TabItem labelDescriptionTabItem;
+	private Combo responseTypeCombo;
+	private List<ResponseTypeReference> responseDomainReferenceList;
 
 	public static String NEW_ITEM = "new_item";
 	public static String CONTROL_ID = "control_id";
@@ -125,7 +150,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public static String PREVIEW_TAB_ID = "preview";
 	public static String PROPERTY_TAB_ID = "property";
 
-	protected IModel model;
+	protected static IModel model;
 	protected IDao dao;
 	protected EditorInput editorInput;
 
@@ -137,7 +162,111 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			ItemSequenceTypeType.ROTATE.toString(),
 			ItemSequenceTypeType.OTHER.toString() };
 
-	// Description Tab content
+	private Label representationLabel;
+	private Group representationGroup;
+	private Group parentGroup;
+
+	private static String[] RESPONSE_TYPE_LABELS = { "",
+			Translator.trans("ResponseTypeDetail.label.Code"),
+			Translator.trans("ResponseTypeDetail.label.Text"),
+			Translator.trans("ResponseTypeDetail.label.Numeric"),
+			Translator.trans("ResponseTypeDetail.label.Date") };
+
+	private static String[] RESPONSE_TYPE_LABELS_QI_EXTENSION = {
+		Translator.trans("ResponseTypeDetail.label.Category"),
+		Translator.trans("ResponseTypeDetail.label.Geographic") };
+
+	static public String[] getResponseTypeLabels() {
+		
+		List<String> result = new java.util.ArrayList(RESPONSE_TYPE_LABELS.length+RESPONSE_TYPE_LABELS_QI_EXTENSION.length);
+
+		result.addAll(Arrays.asList(RESPONSE_TYPE_LABELS));
+		if (model instanceof QuestionItem) {
+			result.addAll(Arrays.asList(RESPONSE_TYPE_LABELS_QI_EXTENSION));
+		}
+		return result.toArray(new String[result.size()]);
+	}
+
+	static public String getResponseTypeLabel(ResponseType rt) {
+		if (rt.ordinal() <= RESPONSE_TYPE_LABELS.length-1) {
+			return RESPONSE_TYPE_LABELS[rt.ordinal()];
+		}
+		return RESPONSE_TYPE_LABELS_QI_EXTENSION[rt.ordinal()-RESPONSE_TYPE_LABELS.length];
+	}
+
+	/**
+	 * Return list of Response references
+	 * 
+	 * @return List<ResponseReference>
+	 */
+	static public List<ResponseTypeReference> getResponseReferenceList() {
+		List<ResponseTypeReference> responseDomainReferenceList = new ArrayList<ResponseTypeReference>();
+
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[ResponseType.UNDEFINED.ordinal()],
+				ResponseType.UNDEFINED));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[ResponseType.CODE.ordinal()],
+				ResponseType.CODE));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[ResponseType.TEXT.ordinal()],
+				ResponseType.TEXT));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[ResponseType.NUMERIC.ordinal()],
+				ResponseType.NUMERIC));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[ResponseType.DATE.ordinal()],
+				ResponseType.DATE));
+		if (model instanceof QuestionItem) {
+			responseDomainReferenceList.add(new ResponseTypeReference(
+					RESPONSE_TYPE_LABELS_QI_EXTENSION[ResponseType.CATEGORY.ordinal()-RESPONSE_TYPE_LABELS.length],
+					ResponseType.CATEGORY));
+			responseDomainReferenceList.add(new ResponseTypeReference(
+					RESPONSE_TYPE_LABELS_QI_EXTENSION[ResponseType.GEOGRAPHIC.ordinal()-RESPONSE_TYPE_LABELS.length],
+					ResponseType.GEOGRAPHIC));
+		}
+		return responseDomainReferenceList;
+	}
+
+	static public ResponseType getResponseType(
+			RepresentationType representationType) {
+
+		if (representationType == null) {
+			return ResponseType.UNDEFINED;
+		}
+		String responseType = representationType.getClass().getSimpleName();
+		ResponseType responseTypeEnum = null;
+		if (model instanceof QuestionItem) {
+			if (responseType.equals("RepresentationTypeImpl")) {
+				responseTypeEnum = ResponseType.UNDEFINED;
+			} else if (responseType.equals("CodeDomainTypeImpl")) {
+				responseTypeEnum = ResponseType.CODE;
+			} else if (responseType.equals("TextDomainTypeImpl")) {
+				responseTypeEnum = ResponseType.TEXT;
+			} else if (responseType.equals("NumericDomainTypeImpl")) {
+				responseTypeEnum = ResponseType.NUMERIC;
+			} else if (responseType.equals("DateDomainTypeImpl")) {
+				responseTypeEnum = ResponseType.DATE;
+			} else if (responseType.equals("CategoryDomainTypeImpl")) {
+				responseTypeEnum = ResponseType.CATEGORY;
+			} else if (responseType.equals("GeographicDomainTypeImpl")) {
+				responseTypeEnum = ResponseType.GEOGRAPHIC;
+			}
+		} else if (model instanceof Variable) {
+			if (responseType.equals("RepresentationTypeImpl")) {
+				responseTypeEnum = ResponseType.UNDEFINED;
+			} else if (responseType.equals("CodeRepresentationTypeImpl")) {
+				responseTypeEnum = ResponseType.CODE;
+			} else if (responseType.equals("TextRepresentationTypeImpl")) {
+				responseTypeEnum = ResponseType.TEXT;
+			} else if (responseType.equals("NumericRepresentationTypeImpl")) {
+				responseTypeEnum = ResponseType.NUMERIC;
+			} else if (responseType.equals("DateRepresentationTypeImpl")) {
+				responseTypeEnum = ResponseType.DATE;
+			}
+		}
+		return responseTypeEnum;
+	}
 
 	/**
 	 * Default constructor. Usage to gain access to create widget methods <br>
@@ -594,7 +723,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 
 		// action
 		createLabel(group, Translator.trans("Editor.label.action.Action"));
-		Combo actionCombo = createCombo(group, new String[] { "1", "2", "3" });
+		Combo actionCombo = createCombo(group, new String[] { "", "Add",
+				"Update", "Delete" });
+		// TODO make action persist!
 
 		// urn
 		StyledText urnText = createTextAreaInput(group,
@@ -799,8 +930,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					Translator.trans("editor.button.translate"),
 					labelDescription.getLabels(), new LabelTdI(), "", labelText);
 		} catch (DDIFtpException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			showError(e1);
 		}
 
 		// Simple Description:
@@ -822,8 +952,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				simpleDescrStyledText.setEnabled(false);
 			}
 		} catch (DDIFtpException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			showError(e1);
 		}
 		final GridData gd_originalConceptTextStyledText = new GridData(
 				SWT.FILL, SWT.CENTER, true, false);
@@ -837,8 +966,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 							.getText());
 					editorStatus.setChanged();
 				} catch (DDIFtpException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					showError(e1);
 				}
 			}
 		});
@@ -850,8 +978,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					labelDescription.getDescrs(), new DescriptionTdI(), "",
 					simpleDescrStyledText);
 		} catch (DDIFtpException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			showError(e1);
 		}
 	}
 
@@ -1008,8 +1135,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			label = (LabelType) XmlBeansUtil.getLangElement(
 					LanguageUtil.getDisplayLanguage(), labelList);
 		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			showError(e);
 		}
 
 		Text text = createTextInput(group, labelText, label == null ? ""
@@ -1257,7 +1383,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public CconRefSelectCombo createCconRefSelection(Group group,
 			String labelText, String searchTittle,
 			final ReferenceType reference,
-			List<LightXmlObjectType> referenceList, boolean isNew) {
+			List<LightXmlObjectType> referenceList, boolean isNew,
+			ElementType refType) {
 		Composite labelComposite = new Composite(group, SWT.NONE);
 		labelComposite.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
@@ -1281,7 +1408,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 		try {
 			referenceSelectionCombo.createPartControl(labelComposite,
-					composite, "", labelText, referenceList, preIdValue);
+					composite, "", labelText, referenceList, preIdValue,
+					refType);
 		} catch (Exception e) {
 			ErrorDialog.openError(getSite().getShell(), Translator
 					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
@@ -1289,11 +1417,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 		return referenceSelectionCombo;
 	}
-	
+
 	public ReferenceSelectionCombo createRefSelection(Group group,
 			String labelText, String searchTittle,
 			final ReferenceType reference,
-			List<LightXmlObjectType> referenceList, boolean isNew) {
+			List<LightXmlObjectType> referenceList, boolean isNew,
+			ElementType refType) {
 		Composite labelComposite = new Composite(group, SWT.NONE);
 		labelComposite.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
@@ -1317,7 +1446,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 		try {
 			referenceSelectionCombo.createPartControl(labelComposite,
-					composite, "", labelText, referenceList, preIdValue);
+					composite, "", labelText, referenceList, preIdValue,
+					refType);
 		} catch (Exception e) {
 			ErrorDialog.openError(getSite().getShell(), Translator
 					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
@@ -1585,5 +1715,558 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public void updateDynamicView(IModel model) {
 		DynamicViewRefreshJob job = new DynamicViewRefreshJob(model);
 		Display.getDefault().asyncExec(job);
+	}
+
+	public void createResponseType(Group group) throws DDIFtpException {
+
+		// only supported for Variables and Question Items
+		if (!(model instanceof Variable) && !(model instanceof QuestionItem)) {
+			throw new DDIFtpException("Unsupported class: "
+					+ model.getClass().getName());
+		}
+
+		parentGroup = group;
+		createLabel(
+				parentGroup,
+				Translator
+						.trans("Editor.label.questionResponseTypeLabel.ResponseType"));
+
+		responseTypeCombo = createCombo(parentGroup, getResponseTypeLabels());
+
+		// get Response Domain Reference
+		RepresentationType responseDomainRef = null;
+		if (!getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
+			try {
+				if (model instanceof Variable) {
+					responseDomainRef = ((Variable) model)
+							.getValueRepresentation();
+				} else if (model instanceof QuestionItem) {
+					responseDomainRef = ((QuestionItem) model)
+							.getResponseDomain();
+				}
+			} catch (Exception e1) {
+				String errMess = MessageFormat
+						.format(Translator
+								.trans("Editor.mess.ResponseReferenceRetrievalError"), e1.getMessage()); //$NON-NLS-1$
+				ErrorDialog.openError(getSite().getShell(), Translator
+						.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
+						ID, 0, errMess, e1));
+			}
+		}
+
+		responseDomainReferenceList = getResponseReferenceList();
+
+		// select relevant Response Type
+		int index = 0;
+		if (!getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
+			for (Iterator iterator = responseDomainReferenceList.iterator(); iterator
+					.hasNext();) {
+				ResponseTypeReference responseDomainReference = (ResponseTypeReference) iterator
+						.next();
+				if (responseDomainReference.getResponseDomain() != null
+						&& responseDomainReference.getResponseDomain().equals(
+								getResponseType(responseDomainRef))) {
+					break;
+				}
+				index++;
+			}
+		}
+		responseTypeCombo.select(index);
+
+		// assign modify listener
+		responseTypeCombo.addModifyListener(new ModifyListener() {
+			public void modifyText(final ModifyEvent e) {
+				// Save new Response Type
+				int index = responseTypeCombo.getSelectionIndex();
+				if (index >= 0) {
+					ResponseType rt = ((ResponseTypeReference) responseDomainReferenceList
+							.get(index)).getResponseDomain();
+					// Save Responds Type without details - saved by
+					// ResponseTypeDetail modify listener
+					RepresentationType repType = null;
+					if (model instanceof Variable) {
+						repType = ((Variable) model).setRepresentation(rt, "");
+					} else if (model instanceof QuestionItem) {
+						repType = ((QuestionItem) model).setResponseDomain(rt,
+								"");
+					}
+					if (repType == null) {
+						String errMess = MessageFormat.format(
+								Translator
+										.trans("Editor.mess.ResponseTypeNotSupported"),
+								getResponseTypeLabel(rt)); //$NON-NLS-1$
+						ErrorDialog.openError(
+								getSite().getShell(),
+								Translator.trans("ErrorTitle"),
+								null,
+								new Status(IStatus.ERROR, ID, 0, errMess, null),
+								IStatus.ERROR);
+						responseTypeCombo.select(0);
+						disposeRepresentation();
+						return;
+					}
+					disposeRepresentation();
+					// Show corresponding Response Type details
+					try {
+						createResponseTypeDetail();
+						parentGroup.layout();
+					} catch (DDIFtpException e1) {
+						ErrorDialog.openError(
+								getSite().getShell(),
+								Translator.trans("ErrorTitle"),
+								null,
+								new Status(IStatus.ERROR, ID, 0, e1.getMessage(), null),
+								IStatus.ERROR);
+						responseTypeCombo.select(0);
+						disposeRepresentation();
+						return;
+					}
+					editorStatus.setChanged();
+				}
+			}
+		});
+		createResponseTypeDetail();
+	}
+
+	private void createResponseTypeDetail() throws DDIFtpException {
+
+		representationLabel = createLabel(parentGroup, "");
+		representationLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP,
+				false, false, 1, 1));
+		representationGroup = createGroup(parentGroup,
+				Translator.trans("Editor.label.representation"));
+		representationGroup.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING,
+				true, true, 1, 1));
+
+		Object repImpl = null;
+		if (model instanceof Variable) {
+			repImpl = ((Variable) model).getValueRepresentation();
+		} else if (model instanceof QuestionItem) {
+			repImpl = ((QuestionItem) model).getResponseDomain();
+		} else {
+			throw new DDIFtpException("Unsupported class: "
+					+ model.getClass().getName());
+		}
+		try {
+			// CodeRepresentation
+			if (repImpl instanceof CodeRepresentationTypeImpl
+					|| repImpl instanceof CodeDomainTypeImpl) {
+				representationGroup.setText(Translator
+						.trans("Editor.label.coderepresentation"));
+				ReferenceType codeSchemeRef = null;
+				if (model instanceof Variable) {
+					codeSchemeRef = ((CodeRepresentationType) repImpl)
+							.getCodeSchemeReference();
+				} else if (model instanceof QuestionItem) {
+					codeSchemeRef = ((CodeDomainTypeImpl) repImpl)
+							.getCodeSchemeReference();
+				} else {
+					throw new DDIFtpException("Unsupported class: "
+							+ model.getClass().getName());
+				}
+
+				// code schemes light
+				// lazy load of code scheme ref. list
+				List<LightXmlObjectType> codeSchemeRefList = new ArrayList<LightXmlObjectType>();
+				try {
+					String cSId = codeSchemeRef.getIDList().get(0)
+							.getStringValue();
+					String cSVersion = codeSchemeRef.getVersionList().size() == 0 ? null
+							: codeSchemeRef.getVersionList().get(0)
+									.getStringValue();
+					codeSchemeRefList = CodeSchemeDao.getCodeSchemesLight(cSId,
+							cSVersion);
+				} catch (Exception e) {
+					DialogUtil.errorDialog(getEditorSite(), ID, null,
+							e.getMessage(), e);
+				}
+
+				// code scheme selection
+				final ReferenceSelectionCombo refSelectCodeSchemeCombo = createRefSelection(
+						representationGroup,
+						Translator.trans("Editor.label.codeschemereference"),
+						Translator.trans("Editor.label.codeschemereference"),
+						codeSchemeRef, codeSchemeRefList, false,
+						ElementType.CODE_SCHEME);
+				refSelectCodeSchemeCombo.addSelectionListener(Translator
+						.trans("Editor.label.codeschemereference"),
+						new ReferenceSelectionAdapter(refSelectCodeSchemeCombo,
+								model, ModelIdentifingType.Type_D.class,
+								getEditorIdentification()));
+
+				// codes values
+				createLabel(
+						representationGroup,
+						Translator
+								.trans("Editor.label.coderepresentation.codevalues"));
+				final Label codeValue = createLabel(representationGroup, "");
+				codeValue.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
+						false, false, 1, 1));
+				changeCodeRepresentationCodeValues(codeSchemeRef, codeValue);
+				refSelectCodeSchemeCombo.getCombo().addModifyListener(
+						new ModifyListener() {
+							@Override
+							public void modifyText(ModifyEvent event) {
+								if (refSelectCodeSchemeCombo.getResult() == null) {
+									// List of combo box changed - no selection
+									// done
+									return;
+								}
+								try {
+									changeCodeRepresentationCodeValues(
+											new ReferenceResolution(
+													refSelectCodeSchemeCombo
+															.getResult())
+													.getReference(), codeValue);
+								} catch (Exception e) {
+									showError(e);
+								}
+							}
+						});
+
+				// missing values
+				createMissingValue(representationGroup);
+			}
+			// NumericRepresentation
+			if (repImpl instanceof NumericRepresentationType) {
+				NumericRepresentationType numRep = (NumericRepresentationType) repImpl;
+				representationGroup.setText(Translator
+						.trans("Editor.label.numericrepresentation"));
+				// numeric type
+				createLabel(
+						representationGroup,
+						Translator
+								.trans("Editor.label.numericrepresentation.types"));
+				Combo numericCombo = createCombo(representationGroup,
+						Variable.NUMERIC_TYPES);
+				if (numRep.getType() != null) {
+					int search = numRep.getType().intValue();
+					if (search != 0) {
+						search--;
+					}
+					for (int i = 0; i < Variable.NUMERIC_TYPES.length; i++) {
+						if (search == i) {
+							numericCombo.select(i);
+						}
+					}
+				} else {
+					numericCombo.select(0);
+				}
+				numericCombo.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent event) {
+						editorStatus.setChanged();
+						int index = ((Combo) event.getSource())
+								.getSelectionIndex();
+						index++;
+						try {
+							model.applyChange(
+									NumericTypeCodeType.Enum.forInt(index),
+									ModelIdentifingType.Type_E.class);
+						} catch (Exception e) {
+							showError(e);
+						}
+					}
+				});
+				String decimalPos = null;
+				if (model instanceof Variable) {
+					decimalPos = ((Variable) model).getNumericDecimalPosition() == null ? "0"
+							: ((Variable) model).getNumericDecimalPosition()
+									.toString();
+				} else if (model instanceof QuestionItem) {
+					decimalPos = ((QuestionItem) model)
+							.getNumericDecimalPosition() == null ? "0"
+							: ((QuestionItem) model)
+									.getNumericDecimalPosition().toString();
+				}
+				if (!decimalPos.equals("0")) {
+					Text numericDecimalPositionText = createTextInput(
+							representationGroup,
+							Translator
+									.trans("Editor.label.numericrepresentation.decimalpositions"),
+							decimalPos, false);
+					numericDecimalPositionText
+							.addModifyListener(new ModifyListener() {
+								@Override
+								public void modifyText(ModifyEvent e) {
+									editorStatus.setChanged();
+
+									try {
+										BigInteger bigint = null;
+										bigint = new BigInteger(((Text) e
+												.getSource()).getText());
+										model.applyChange(
+												bigint,
+												ModelIdentifingType.Type_F.class);
+									} catch (Exception e1) {
+										showError(e1);
+									}
+								}
+							});
+				}
+				createMissingValue(representationGroup);
+			}
+			// TextRepresentation
+			if (repImpl instanceof TextRepresentationType) {
+				TextRepresentationType rep = (TextRepresentationType) repImpl;
+				representationGroup.setText(Translator
+						.trans("Editor.label.textrepresentation"));
+				// min length
+				String minLength = null;
+				if (model instanceof Variable) {
+					minLength = ((Variable) model).getMinLength() == null ? ""
+							: ((Variable) model).getMinLength().toString();
+				} else if (model instanceof QuestionItem) {
+					minLength = ((QuestionItem) model).getMinLength() == null ? ""
+							: ((QuestionItem) model).getMinLength().toString();
+				}
+				Text minlengthText = createTextInput(
+						representationGroup,
+						Translator
+								.trans("Editor.label.textrepresentation.minlength"),
+						minLength, false);
+
+				minlengthText.addVerifyListener(new VerifyListener() {
+					public void verifyText(final VerifyEvent e) {
+						Editor.verifyField(FIELD_TYPE.DIGIT, e, getSite());
+					}
+				});
+
+				minlengthText.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						try {
+							BigInteger bigint = Translator
+									.stringToBigInt(((Text) e.getSource())
+											.getText());
+							model.applyChange(bigint,
+									ModelIdentifingType.Type_G.class);
+							editorStatus.setChanged();
+						} catch (Exception e1) {
+							showError(e1);
+						}
+					}
+				});
+
+				// max length
+				String maxLength = null;
+				if (model instanceof Variable) {
+					maxLength = ((Variable) model).getMaxLength() == null ? ""
+							: ((Variable) model).getMaxLength().toString();
+				} else if (model instanceof QuestionItem) {
+					maxLength = ((QuestionItem) model).getMaxLength() == null ? ""
+							: ((QuestionItem) model).getMaxLength().toString();
+				}
+
+				Text maxlengthText = createTextInput(
+						representationGroup,
+						Translator
+								.trans("Editor.label.textrepresentation.maxlength"),
+						maxLength, false);
+
+				maxlengthText.addVerifyListener(new VerifyListener() {
+					public void verifyText(final VerifyEvent e) {
+						Editor.verifyField(FIELD_TYPE.DIGIT, e, getSite());
+					}
+				});
+
+				maxlengthText.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						try {
+							BigInteger bigint = Translator
+									.stringToBigInt(((Text) e.getSource())
+											.getText());
+							model.applyChange(bigint,
+									ModelIdentifingType.Type_I.class);
+							editorStatus.setChanged();
+						} catch (Exception e1) {
+							showError(e1);
+						}
+					}
+				});
+
+				// regx
+				String regx = null;
+				if (model instanceof Variable) {
+					regx = ((Variable) model).getRegx() == null ? ""
+							: ((Variable) model).getRegx().toString();
+				} else if (model instanceof QuestionItem) {
+					regx = ((QuestionItem) model).getRegx() == null ? ""
+							: ((QuestionItem) model).getRegx().toString();
+				}
+
+				Text regxText = createTextInput(representationGroup,
+						Translator
+								.trans("Editor.label.textrepresentation.regx"),
+						regx, false);
+				regxText.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						try {
+							model.applyChange(((Text) e.getSource()).getText(),
+									ModelIdentifingType.Type_H.class);
+							editorStatus.setChanged();
+						} catch (Exception e1) {
+							showError(e1);
+						}
+					}
+				});
+				createMissingValue(representationGroup);
+			}
+			// DateTimeRepresentation
+			if (repImpl instanceof DateTimeRepresentationType) {
+				representationGroup.setText(Translator
+						.trans("Editor.label.datetimerepresentation"));
+
+				// format
+				String format = null;
+				if (model instanceof Variable) {
+					format = ((Variable) model).getFormat() == null ? ""
+							: ((Variable) model).getFormat().toString();
+				} else if (model instanceof QuestionItem) {
+					format = ((QuestionItem) model).getFormat() == null ? ""
+							: ((QuestionItem) model).getFormat().toString();
+				}
+
+				Text formatText = createTextInput(
+						representationGroup,
+						Translator
+								.trans("Editor.label.datetimerepresentation.format"),
+						format, false);
+				formatText.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						try {
+							model.applyChange(((Text) e.getSource()).getText(),
+									ModelIdentifingType.Type_J.class);
+							editorStatus.setChanged();
+						} catch (Exception e1) {
+							showError(e1);
+						}
+					}
+				});
+
+				// date time type
+				createLabel(
+						representationGroup,
+						Translator
+								.trans("Editor.label.datetimerepresentation.type"));
+				Combo datetimeCombo = createCombo(representationGroup,
+						Variable.DATE_TIME_TYPES);
+				DateTypeCodeType.Enum dateTime = null;
+				if (model instanceof Variable) {
+					dateTime = ((Variable) model).getDateTimeType();
+				} else if (model instanceof QuestionItem) {
+					dateTime = ((QuestionItem) model).getDateTimeType();
+				}
+				int value = dateTime == null ? 0 : dateTime.intValue();
+				datetimeCombo.select(--value);
+				datetimeCombo.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						try {
+							int select = ((Combo) e.getSource())
+									.getSelectionIndex();
+
+							((QuestionItem) model).executeChange(++select,
+									ModelIdentifingType.Type_K.class);
+							editorStatus.setChanged();
+						} catch (Exception e1) {
+							showError(e1);
+						}
+					}
+				});
+				createMissingValue(representationGroup);
+			}
+
+			// ExternalCategoryRepresentation
+			if (repImpl instanceof ExternalCategoryRepresentationType) {
+				// TODO external category representation
+				representationGroup.setText(Translator
+						.trans("Editor.label.externalcategoryrepresentation"));
+				createLabel(representationGroup, "Not implemented!");
+				createMissingValue(representationGroup);
+			}
+		} catch (Exception e) {
+			if (!(e instanceof DDIFtpException)) {
+				DDIFtpException ddiE = new DDIFtpException(e);
+				ddiE.setRealThrowable(new Throwable());
+			}
+		}
+	}
+
+	/**
+	 * Dispose Representation
+	 */
+	public void disposeRepresentation() {
+		log.debug("Dispose Response");
+		if (!representationGroup.isDisposed()) {
+			representationLabel.dispose();
+			Control[] children = representationGroup.getChildren();
+			for (int i = 0; i < children.length; i++) {
+				children[i].dispose();
+			}
+			representationGroup.dispose();
+		}
+	}
+
+	public static void changeCodeRepresentationCodeValues(
+			ReferenceType codeSchemeRef, Label codeValue) throws Exception {
+		ReferenceResolution refRes = new ReferenceResolution(codeSchemeRef);
+		CodeSchemeDocument codeScheme = CodeSchemeDao
+				.getAllCodeSchemeByReference(refRes);
+		StringBuilder codeValues = new StringBuilder("");
+		if (codeScheme == null) {
+			return;
+		}
+
+		for (Iterator<CodeType> iterator = codeScheme.getCodeScheme()
+				.getCodeList().iterator(); iterator.hasNext();) {
+			codeValues.append(iterator.next().getValue());
+			if (iterator.hasNext()) {
+				codeValues.append(", ");
+			}
+		}
+		codeValue.setText(codeValues.toString());
+	}
+
+	private void createMissingValue(Group representationGroup) {
+
+		StringBuffer missingValues = new StringBuffer();
+		List list = null;
+		if (model instanceof Variable) {
+			list = ((Variable) model).getMissingValue();
+		} else if (model instanceof QuestionItem) {
+			list = ((QuestionItem) model).getMissingValue();
+		}
+		if (list != null) {
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				String missingValue = (String) iterator.next();
+				if (iterator.hasNext()) {
+					missingValues.append(missingValue + " ");
+				} else {
+					missingValues.append(missingValue);
+				}
+			}
+		}
+		Text missingValueText = createTextInput(representationGroup,
+				"Missing Values", missingValues.toString(), false);
+		missingValueText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				editorStatus.setChanged();
+
+				try {
+					String missing = ((Text) e.getSource()).getText();
+					// split string of space separated element into list
+					List<String> tokens = Arrays.asList(missing.split("\\s+"));
+					List<String> list = tokens.subList(0, tokens.size());
+					model.applyChange(list, ModelIdentifingType.Type_L.class);
+				} catch (Exception e1) {
+					showError(e1);
+				}
+			}
+		});
 	}
 }

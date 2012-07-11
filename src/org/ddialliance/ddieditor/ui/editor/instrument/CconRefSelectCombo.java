@@ -22,8 +22,8 @@ public class CconRefSelectCombo extends ReferenceSelectionCombo{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		referenceList = addedWithEmpty(result); 
-		return referenceList;
+				
+//		referenceList = addedWithEmpty(result);
+		return addedWithEmpty(result);
 	}
 }

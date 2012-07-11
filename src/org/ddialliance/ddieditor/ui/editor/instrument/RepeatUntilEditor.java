@@ -13,6 +13,7 @@ import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.RepeatUntil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -94,7 +95,7 @@ public class RepeatUntilEditor extends Editor {
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(group,
 				Translator.trans("RepeatUntil.editor.untilref"),
 				Translator.trans("RepeatUntil.editor.untilref"),
-				modelImpl.getUntilReference(), controlConstructRefList, false);
+				modelImpl.getUntilReference(), controlConstructRefList, false, ElementType.CONTROL_CONSTRUCT_SCHEME);
 		thenRefSelectCombo.addSelectionListener(Translator
 				.trans("RepeatUntil.editor.untilref"),
 				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,

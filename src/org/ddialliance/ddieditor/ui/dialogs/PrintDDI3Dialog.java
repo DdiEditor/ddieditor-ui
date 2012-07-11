@@ -14,20 +14,16 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 public class PrintDDI3Dialog extends Dialog {
-
 	List<DDIResourceType> resources = new ArrayList<DDIResourceType>();
 	public DDIResourceType ddiResource;
-	public boolean numVarStatisticBoolean = false;// null;
 
 	public PrintDDI3Dialog(Shell parentShell) {
 		super(parentShell);
@@ -39,11 +35,11 @@ public class PrintDDI3Dialog extends Dialog {
 		Editor editor = new Editor();
 		Group group = editor.createGroup(parent,
 				Translator.trans("PrintDDI3Action.properties"));
-		group.setLayoutData(new GridData(500, 70));
+		group.setLayoutData(new GridData(500, 50));
 		this.getShell().setText(
 				Translator.trans("PrintDDI3Action.menu.PrintDDI3"));
 
-		// print resource
+		// selectable resources
 		try {
 			resources = PersistenceManager.getInstance().getResources();
 		} catch (DDIFtpException e) {
@@ -53,13 +49,19 @@ public class PrintDDI3Dialog extends Dialog {
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
 					.getActiveShell(), Translator.trans("ErrorTitle"), errMess);
 		}
+
+		// label
+		editor.createLabel(group,
+				Translator.trans("PrintDDI3Action.resource.choose"));
+
+		// resource combo
 		String[] comboOptions = new String[resources.size()];
 		for (int i = 0; i < comboOptions.length; i++) {
 			comboOptions[i] = resources.get(i).getOrgName();
 		}
-		editor.createLabel(group,
-				Translator.trans("PrintDDI3Action.resource.choose"));
 		final Combo resouceCombo = editor.createCombo(group, comboOptions);
+
+		// resource selection
 		if (comboOptions.length == 1) {
 			resouceCombo.select(0);
 			ddiResource = resources.get(0);
@@ -77,20 +79,6 @@ public class PrintDDI3Dialog extends Dialog {
 				}
 			});
 		}
-		Button numVarStatistic = editor.createCheckBox(group, "",
-				Translator.trans("PrintDDI3Action.numeric.statistics"));
-		numVarStatistic.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				numVarStatisticBoolean = ((Button) e.widget).getSelection();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// do nothing
-			}
-		});
-
 
 		return null;
 	}

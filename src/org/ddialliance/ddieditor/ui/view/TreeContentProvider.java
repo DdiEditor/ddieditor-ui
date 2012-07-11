@@ -1,6 +1,5 @@
 package org.ddialliance.ddieditor.ui.view;
 
-import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +39,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IViewSite;
 
 /**
@@ -51,27 +49,35 @@ public class TreeContentProvider implements IStructuredContentProvider,
 	private static Log log = LogFactory.getLog(LogType.SYSTEM,
 			TreeContentProvider.class);
 
-	private Map<String, List<ConceptualElement>> conceptualElementCache = new HashMap<String, List<ConceptualElement>>();
-	private String currentDdiResource = "";
-
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.TreeContentProvider";
 	private IViewSite site;
+
+	private String currentDdiResource = "";
+	private ViewContentType contentType = null;
+	private Map<String, List<ConceptualElement>> conceptualElementCache = new HashMap<String, List<ConceptualElement>>();
+	private Map<String, String> parentElemenIdToResourceId = new HashMap<String, String>();
 
 	public TreeContentProvider(IViewSite site) {
 		this.site = site;
 	}
 
-	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		log.debug("TreeContentProvider.inputChanged()");
-	}
+	private List<ConceptualElement> getConceptualList(
+			DDIResourceType ddiResource) throws Exception {
+		// TODO Implement sync. between views.
 
-	@Override
-	public void dispose() {
-		// do nothing
+		// Reset cache due to missing sync. between views
+		// But cache used on this.getChildren(ConceptualType)
+		List<ConceptualElement> result = null; // conceptualElementCache.get(ddiResource.getOrgName());
+		if (result == null) {
+			try {
+				result = DdiManager.getInstance().getConceptualOverview();
+				conceptualElementCache.put(ddiResource.getOrgName(), result);
+			} catch (Exception e) {
+				displayGetChildrenException(e);
+			}
+		}
+		return result;
 	}
-
-	ViewContentType contentType = null;
 
 	/**
 	 * Based on the input an array of containing ddi elements is provided as
@@ -93,28 +99,6 @@ public class TreeContentProvider implements IStructuredContentProvider,
 		return null;
 	}
 
-	private List<ConceptualElement> getConceptualList(
-			DDIResourceType ddiResource) {
-		List<ConceptualElement> result = conceptualElementCache.get(ddiResource
-				.getOrgName());
-		// Cach disabled due to missing sync. between views
-		// TODO Implement sync. between views.
-		result = null;
-
-		if (result == null) {
-			try {
-				PersistenceManager.getInstance().setWorkingResource(
-						ddiResource.getOrgName());
-
-				result = DdiManager.getInstance().getConceptualOverview();
-				conceptualElementCache.put(ddiResource.getOrgName(), result);
-			} catch (Exception e) {
-				displayGetChildrenException(e);
-			}
-		}
-		return result;
-	}
-
 	/**
 	 * Get child elements of parent.
 	 * 
@@ -132,7 +116,10 @@ public class TreeContentProvider implements IStructuredContentProvider,
 				PersistenceManager.getInstance().setWorkingResource(
 						currentDdiResource);
 
-				if (contentType.equals(ViewContentType.StudyContent)) {
+				Object[] result = null;
+
+				// info view
+				if (contentType.equals(ViewContentType.StudyLevelContent)) {
 					List<ConceptualElement> conceptualList = getConceptualList((DDIResourceType) parentElement);
 					List<ConceptualType> list = new ArrayList<ConceptualType>();
 					for (ConceptualElement conceptualElement : conceptualList) {
@@ -140,53 +127,107 @@ public class TreeContentProvider implements IStructuredContentProvider,
 							list.add(conceptualElement.getType());
 						}
 					}
-					ConceptualType[] result = new ConceptualType[list.size()];
-					return list.toArray(result);
+					result = list.toArray();
 				}
+
+				// concept
 				if (contentType.equals(ViewContentType.ConceptContent)) {
-					return new ConceptSchemeDao().getLightXmlObject(null, null,
-							null, null).toArray();
-				} else if (contentType.equals(ViewContentType.CategoryContent)) {
-					Object[] objs = new CategorySchemeDao().getLightXmlObject(
-							null, null, null, null).toArray();
-					// addToParentCache(parentElement, objs);
-					return objs;
-				} else if (contentType.equals(ViewContentType.CodeContent)) {
-					return CodeSchemeDao.getCodeSchemesLight(null, null)
-							.toArray();
-				} else if (contentType.equals(ViewContentType.QuestionContent)) {
-					return new QuestionSchemeDao().getLightXmlObject(null,
+					result = new ConceptSchemeDao().getLightXmlObject(null,
 							null, null, null).toArray();
-				} else if (contentType
+				}
+
+				// category
+				else if (contentType.equals(ViewContentType.CategoryContent)) {
+					result = new CategorySchemeDao().getLightXmlObject(null,
+							null, null, null).toArray();
+				}
+
+				// code
+				else if (contentType.equals(ViewContentType.CodeContent)) {
+					result = CodeSchemeDao.getCodeSchemesLight(null, null)
+							.toArray();
+				}
+
+				// question
+				else if (contentType.equals(ViewContentType.QuestionContent)) {
+					result = new QuestionSchemeDao().getLightXmlObject(null,
+							null, null, null).toArray();
+				}
+
+				// instrument
+				else if (contentType
 						.equals(ViewContentType.InstrumentationContent)) {
+					LightXmlObjectListDocument instListDoc = DdiManager
+							.getInstance().getInstrumentsLight(null, null,
+									null, null);
+
 					LightXmlObjectListDocument listDoc = DdiManager
 							.getInstance().getControlConstructSchemesLight(
 									null, null, null, null);
-					Object[] result = new Object[listDoc
-							.getLightXmlObjectList().getLightXmlObjectList()
-							.size()];
+
+					// result
+					result = new Object[listDoc.getLightXmlObjectList()
+							.getLightXmlObjectList().size()
+							+ instListDoc.getLightXmlObjectList()
+									.getLightXmlObjectList().size()];
 					int count = 0;
+
+					// instruments
+					for (LightXmlObjectType lightXmlObject : instListDoc
+							.getLightXmlObjectList().getLightXmlObjectList()) {
+						MaintainableLightLabelQueryResult mLightLabelQueryResult = new MaintainableLightLabelQueryResult(
+								lightXmlObject.getElement(),
+								lightXmlObject.getId(),
+								lightXmlObject.getVersion(),
+								lightXmlObject.getAgency(),
+								lightXmlObject.getParentId(),
+								lightXmlObject.getParentVersion());
+						mLightLabelQueryResult.setLabelList(lightXmlObject.getLabelList());
+						result[count] = mLightLabelQueryResult;
+						count++;
+					}
+
+					// control construct schemes
 					for (LightXmlObjectType lightXmlObject : listDoc
 							.getLightXmlObjectList().getLightXmlObjectList()) {
-						result[count] = DdiManager.getInstance()
+						result[count] = 
+								DdiManager.getInstance()
 								.getInstrumentLabel(lightXmlObject.getId(),
 										lightXmlObject.getVersion(),
 										lightXmlObject.getParentId(),
 										lightXmlObject.getParentVersion());
 						count++;
 					}
-					return result;
-				} else if (contentType.equals(ViewContentType.UniverseContent)) {
-					return new UniverseSchemeDao().getLightXmlObject(null,
+				}
+
+				// universe
+				else if (contentType.equals(ViewContentType.UniverseContent)) {
+					result = new UniverseSchemeDao().getLightXmlObject(null,
 							null, null, null).toArray();
-				} else if (contentType.equals(ViewContentType.VariableContent)) {
-					return new VariableSchemeDao().getLightXmlObject(null,
+				}
+
+				// variable
+				else if (contentType.equals(ViewContentType.VariableContent)) {
+					result = new VariableSchemeDao().getLightXmlObject(null,
 							null, null, null).toArray();
-				} else
+				}
+
+				// log guard and parent element id to resource id caching
+				if (result == null) { // log guard only
 					new DDIFtpException(
 							"Not supported, contenttype: " + contentType
 									+ ", parentElement: " + parentElement,
 							new Throwable());
+				} else if (result.length > 0
+						&& result[0] instanceof LightXmlObjectType) {
+					for (int i = 0; i < result.length; i++) {
+						parentElemenIdToResourceId.put(
+								((LightXmlObjectType) result[i]).getId(),
+								currentDdiResource);
+					}
+				}
+
+				return result;
 			} catch (Exception e) {
 				DialogUtil.errorDialog(site.getShell(), ID,
 						Translator.trans("ErrorTitle"),
@@ -195,19 +236,16 @@ public class TreeContentProvider implements IStructuredContentProvider,
 		}
 
 		// conceptual type
-		// TODO Is this double ? Is used ?
-		if (parentElement instanceof ConceptualType) {
+		else if (parentElement instanceof ConceptualType) {
 			try {
-				PersistenceManager.getInstance().setWorkingResource(
-						currentDdiResource);
 				List<ConceptualElement> list = new ArrayList<ConceptualElement>();
 				for (ConceptualElement conceptualElement : conceptualElementCache
-						.get(currentDdiResource)) {
+						.get(((ConceptualType) parentElement).getResourceId())) {
 					if (conceptualElement.getType().equals(parentElement)) {
 						list.add(conceptualElement);
 					}
 				}
-				return list.toArray(new ConceptualElement[list.size()]);
+				return list.toArray();
 			} catch (Exception e) {
 				displayGetChildrenException(e);
 			}
@@ -220,7 +258,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			String lightXmlTypeLocalname = lightXmlObjectType.getElement();
 			Object[] contentList = null;
 
-			// Skip leafs as hasChild() does not filter these when view filter
+			// skip leafs as hasChild() does not filter those when view filter
 			// used
 			if (lightXmlTypeLocalname.indexOf("Scheme") < 0
 					&& !lightXmlTypeLocalname.equals("MultipleQuestionItem")) {
@@ -228,40 +266,65 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			}
 
 			try {
+				// change to parent resource via cache
+				String cacheResource = parentElemenIdToResourceId
+						.get(lightXmlObjectType.getId());
+				if (site.getId().equals(InfoView.ID)
+						|| (cacheResource == null && lightXmlObjectType
+								.getElement().equals(
+										ElementType.MULTIPLE_QUESTION_ITEM
+												.getElementName()))) {
+					// multiple question item guard
+					// do nothing
+				} else if (!cacheResource.equals(currentDdiResource)) {
+					PersistenceManager.getInstance().setWorkingResource(
+							cacheResource);
+					currentDdiResource = cacheResource;
+				}
+
 				// code scheme
 				if (lightXmlTypeLocalname.equals("CodeScheme")) {
 					// Codes are supported by the Code Scheme Editor
 					return (new Object[0]);
 				}
+
 				// category scheme
 				else if (lightXmlTypeLocalname.equals("CategoryScheme")) {
 					contentList = new CategoryDao().getLightXmlObject(
 							lightXmlObjectType).toArray();
 				}
+
 				// concept scheme
 				else if (lightXmlTypeLocalname.equals("ConceptScheme")) {
 					contentList = new ConceptDao().getLightXmlObject(
 							lightXmlObjectType).toArray();
-					// question scheme
-				} else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
+				}
+
+				// question scheme
+				else if (lightXmlTypeLocalname.equals("QuestionScheme")) {
 					List<LightXmlObjectType> list = new MultipleQuestionItemDao()
 							.getLightXmlObject(lightXmlObjectType);
+
 					QuestionItemDao questionItemDao = new QuestionItemDao();
 					questionItemDao
 							.setParentElementType(ElementType.QUESTION_SCHEME);
 					list.addAll(questionItemDao
 							.getLightXmlObject(lightXmlObjectType));
+
 					contentList = list.toArray();
-					// multiple question item
-				} else if (lightXmlTypeLocalname.equals("MultipleQuestionItem")) {
+				}
+
+				// multiple question item
+				else if (lightXmlTypeLocalname.equals("MultipleQuestionItem")) {
 					QuestionItemDao questionItemDao = new QuestionItemDao();
 					questionItemDao
 							.setParentElementType(ElementType.MULTIPLE_QUESTION_ITEM);
 					contentList = questionItemDao.getLightXmlObject(
 							lightXmlObjectType).toArray();
-					// control construct scheme
-				} else if (lightXmlTypeLocalname
-						.equals("ControlConstructScheme")) {
+				}
+
+				// control construct scheme
+				else if (lightXmlTypeLocalname.equals("ControlConstructScheme")) {
 					contentList = DdiManager
 							.getInstance()
 							.getQuestionConstructsLight(null, null,
@@ -270,6 +333,7 @@ public class TreeContentProvider implements IStructuredContentProvider,
 							.getLightXmlObjectList().getLightXmlObjectList()
 							.toArray();
 				}
+
 				// universe scheme
 				else if (lightXmlTypeLocalname.equals("UniverseScheme")) {
 					contentList = DdiManager
@@ -280,21 +344,19 @@ public class TreeContentProvider implements IStructuredContentProvider,
 							.getLightXmlObjectList().getLightXmlObjectList()
 							.toArray();
 				}
+
 				// variable scheme
 				else if (lightXmlTypeLocalname.equals("VariableScheme")) {
 					contentList = new VariableDao().getLightXmlObjectPlus(null,
 							null, lightXmlObjectType.getId(),
 							lightXmlObjectType.getVersion()).toArray();
 				}
+
 				// guard
 				if (contentList == null) {
-					DDIFtpException e = new DDIFtpException(
-							"Not supported type: " + lightXmlTypeLocalname,
-							new Throwable());
-					DialogUtil.errorDialog(site.getShell(), ID,
-							Translator.trans("ErrorTitle"), e.getMessage(), e);
+					throw new DDIFtpException("Not supported type: "
+							+ lightXmlTypeLocalname, new Throwable());
 				}
-				// cache for getparent
 
 				return contentList;
 			} catch (Exception e) {
@@ -314,46 +376,9 @@ public class TreeContentProvider implements IStructuredContentProvider,
 		return (new Object[0]);
 	}
 
-	Map<Object, Object> childrenParentMap = new HashMap<Object, Object>();
-
-	public void clearChildrenParentMap() {
-		childrenParentMap.clear();
-	}
-
-	private void displayGetChildrenException(Exception e) {
-		String errMess = Translator.trans("View.mess.GetChildError"); //$NON-NLS-1$
-		// log exception
-		if (!(e instanceof DDIFtpException)) {
-			Log elog = LogFactory.getLog(LogType.EXCEPTION,
-					TreeContentProvider.class);
-			elog.error(errMess, e);
-		}
-		ErrorDialog.openError(site.getShell(), Translator.trans("ErrorTitle"),
-				null, new Status(IStatus.ERROR, ID, 0, errMess, e));
-	}
-
-	private void addToParentCache(Object parentElement, Object[] objs) {
-		for (Object object : objs) {
-			Object o = childrenParentMap.put(object.toString(), parentElement);
-			if (o == null) {
-				System.out.println(object);
-			}
-		}
-	}
-
-	@Override
-	public Object getParent(Object element) {
-		// Implement by: In each case of getChildren cache the result and the
-		// parent via:
-		// addToParentCache(parentElement, objs);
-
-		// childrenParentMap.get(element.toString());
-		return null;
-	}
-
 	@Override
 	public boolean hasChildren(Object element) {
-		// light xml beans
+		// light xml object
 		if (element instanceof LightXmlObjectType) {
 			String localName = ((LightXmlObjectType) element).getElement();
 			boolean result = false;
@@ -361,23 +386,29 @@ public class TreeContentProvider implements IStructuredContentProvider,
 			// scheme
 			if (localName.indexOf("Scheme") > -1) {
 				result = true;
-				if (log.isDebugEnabled()) {
-					log.debug(localName + ": " + result);
+
+				if (site.getId().equals(InfoView.ID)) {
+					result = false;
+				}
+				if (localName.indexOf("CodeScheme") > -1) {
+					result = false;
 				}
 			}
+
+			// multiple question item
 			if (localName.equals("MultipleQuestionItem")) {
 				if (getChildren(element).length > 0) {
 					result = true;
 				}
 			}
-			// TODO check up on this, might add other *Names maybe in property
-			// file or something
 			return result;
 		}
+
 		// maintainable light label
 		else if (element instanceof MaintainableLightLabelQueryResult) {
 			return true;
 		}
+
 		// sub elements of maintainable light label
 		else if (element instanceof List<?>) {
 			if (!((List<?>) element).isEmpty()) {
@@ -398,12 +429,33 @@ public class TreeContentProvider implements IStructuredContentProvider,
 		}
 
 		// guard
-		// TODO - subject to change
-		log.debug("***** TreeContentProvider.hasChildren() - save guard activated! *****");
 		return getChildren(element).length > 0;
 	}
 
-	public void propertyChange(PropertyChangeEvent arg0) {
-		log.debug("TreeContentProvider.propertyChange()");
+	private void displayGetChildrenException(Exception e) {
+		String errMess = Translator.trans("View.mess.GetChildError"); //$NON-NLS-1$
+		// log exception
+		if (!(e instanceof DDIFtpException)) {
+			Log elog = LogFactory.getLog(LogType.EXCEPTION,
+					TreeContentProvider.class);
+			elog.error(errMess, e);
+		}
+		ErrorDialog.openError(site.getShell(), Translator.trans("ErrorTitle"),
+				null, new Status(IStatus.ERROR, ID, 0, errMess, e));
+	}
+
+	@Override
+	public Object getParent(Object element) {
+		return null;
+	}
+
+	@Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		// do nothing
+	}
+
+	@Override
+	public void dispose() {
+		// do nothing
 	}
 }

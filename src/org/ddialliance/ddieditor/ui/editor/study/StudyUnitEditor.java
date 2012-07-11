@@ -199,7 +199,7 @@ public class StudyUnitEditor extends Editor {
 			}
 		});
 		super.setControl(altTitleText);
-		
+
 		// creator table
 		createLabel(grpStudyCitation,
 				Translator.trans("StudyUnitEditor.label.Creator"));
@@ -382,7 +382,16 @@ public class StudyUnitEditor extends Editor {
 
 		abstractStyledText = new StyledText(grpAbstract, SWT.WRAP
 				| SWT.V_SCROLL | SWT.BORDER);
-		abstractStyledText.setText(modelImpl.getAbstractContent("da"));
+		try {
+			abstractStyledText.setText(modelImpl.getAbstractContent());
+		} catch (DDIFtpException e) {
+			String errMess = Translator
+					.trans("StudyUnitEdiror.mess.SetAbstractError"); //$NON-NLS-1$
+			ErrorDialog.openError(site.getShell(), Translator
+					.trans("ErrorTitle"), null, new Status(IStatus.ERROR, ID,
+					0, e.getMessage(), e));
+		}
+
 		final GridData gd_originalStudyUnitTextStyledText = new GridData(
 				SWT.FILL, SWT.FILL, true, true);
 		gd_originalStudyUnitTextStyledText.heightHint = 328;
@@ -663,8 +672,10 @@ public class StudyUnitEditor extends Editor {
 		if (coverageDoc != null) {
 			GeographicCoverageType geographicCoverage = coverageDoc
 					.getCoverage().getSpatialCoverage();
+			if (!geographicCoverage.getDescriptionList().isEmpty()) {
 			description = XmlBeansUtil.getTextOnMixedElement(geographicCoverage
 					.getDescriptionArray(0));
+			}
 		}
 		createTextAreaInput(grpSpatialCoverage, description, false);
 
@@ -672,8 +683,13 @@ public class StudyUnitEditor extends Editor {
 				Translator.trans("StudyUnitEditor.label.TopLevelName"));
 		String name = "";
 		if (coverageDoc != null) {
-			name = coverageDoc.getCoverage().getSpatialCoverage()
-					.getTopLevelReference().getLevelNameArray(0);
+			try {
+				name = coverageDoc.getCoverage().getSpatialCoverage()
+						.getTopLevelReference().getLevelNameArray(0);
+			} catch (Exception e) {
+				// do nothing
+				// exception hack -to many null pointer checks
+			}
 		}
 		createText(grpSpatialCoverage, name);
 
@@ -681,8 +697,13 @@ public class StudyUnitEditor extends Editor {
 				Translator.trans("StudyUnitEditor.label.LowestLevelName"));
 		name = "";
 		if (coverageDoc != null) {
-			name = coverageDoc.getCoverage().getSpatialCoverage()
-					.getLowestLevelReference().getLevelNameArray(0);
+			try {
+				name = coverageDoc.getCoverage().getSpatialCoverage()
+						.getLowestLevelReference().getLevelNameArray(0);
+			} catch (Exception e) {
+				// do nothing
+				// exception hack -to many null pointer checks
+			}
 		}
 		createText(grpSpatialCoverage, name);
 
@@ -711,11 +732,9 @@ public class StudyUnitEditor extends Editor {
 				try {
 					dateTime = temporalCoverage.getReferenceDateArray(0)
 							.getStartDate().toString();
-
 				} catch (Exception e) {
-					ErrorDialog.openError(site.getShell(), Translator
-							.trans("ErrorTitle"), null, new Status(
-							IStatus.ERROR, ID, 0, e.getMessage(), e));
+					// do nothing
+					// exception hack -to many null pointer checks
 				}
 			}
 		}
@@ -741,14 +760,12 @@ public class StudyUnitEditor extends Editor {
 			try {
 				dateTime = temporalCoverage.getReferenceDateArray(0)
 						.getEndDate().toString();
-
 			} catch (Exception e) {
-				ErrorDialog.openError(site.getShell(), Translator
-						.trans("ErrorTitle"), null, new Status(IStatus.ERROR,
-						ID, 0, e.getMessage(), e));
+				// do nothing
+				// exception hack -to many null pointer checks
 			}
-
 		}
+		
 		if (!dateTime.equals("")) {
 			try {
 				// TODO Improve Date handling
@@ -783,7 +800,7 @@ public class StudyUnitEditor extends Editor {
 			// kindofdata text
 			createLabel(grpOther,
 					Translator.trans("StudyUnitEditor.label.KindOfData"));
-			Text tKindOfData = createText(grpOther, kindOfDataString);
+			createText(grpOther, kindOfDataString);
 		}
 
 		// continue with standard tab items:
@@ -957,7 +974,9 @@ public class StudyUnitEditor extends Editor {
 
 		// insert into table
 		for (InternationalCodeValueType keyword : keywords) {
-			if (keyword.getLang().equals(LanguageUtil.getDisplayLanguage())) {
+			if (keyword.getLang() == null
+					|| keyword.getLang().equals(
+							LanguageUtil.getDisplayLanguage())) {
 				TableItem item = new TableItem(keywordTable, SWT.NONE);
 				item.setText(0, "" + keyword.getStringValue());
 			}
@@ -986,7 +1005,9 @@ public class StudyUnitEditor extends Editor {
 				.getTopicalCoverage().getSubjectList();
 
 		for (InternationalCodeValueType subject : subjects) {
-			if (subject.getLang().equals(LanguageUtil.getDisplayLanguage())) {
+			if (subject.getLang() == null
+					|| subject.getLang().equals(
+							LanguageUtil.getDisplayLanguage())) {
 				TableItem item = new TableItem(subjectTable, SWT.NONE);
 				item.setText(0, "" + subject.getStringValue());
 			}
@@ -1016,8 +1037,8 @@ public class StudyUnitEditor extends Editor {
 		for (CreatorType creator : creators) {
 			TableItem item = new TableItem(creatorTable, SWT.NONE);
 			item.setText(0, creator.getStringValue());
-			if (creator.getAffiliation()!=null) {
-				item.setText(1, creator.getAffiliation());	
+			if (creator.getAffiliation() != null) {
+				item.setText(1, creator.getAffiliation());
 			} else {
 				item.setText(1, "");
 			}

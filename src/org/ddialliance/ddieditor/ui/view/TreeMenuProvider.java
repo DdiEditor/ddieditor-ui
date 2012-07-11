@@ -6,14 +6,15 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualElement;
 import org.ddialliance.ddieditor.model.conceptual.ConceptualType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
-import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.Activator;
+import org.ddialliance.ddieditor.ui.command.CommandHelper;
 import org.ddialliance.ddieditor.ui.dbxml.category.CategoryDao;
 import org.ddialliance.ddieditor.ui.dbxml.category.CategorySchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.code.CodeSchemeDao;
@@ -34,6 +35,7 @@ import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseDao;
 import org.ddialliance.ddieditor.ui.dbxml.universe.UniverseSchemeDao;
 import org.ddialliance.ddieditor.ui.dbxml.variable.VariableDao;
 import org.ddialliance.ddieditor.ui.dbxml.variable.VariableSchemeDao;
+import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.model.ElementType;
@@ -60,7 +62,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Provides menus to view list items
@@ -112,32 +116,33 @@ public class TreeMenuProvider extends TreeMenu {
 		treeViewer.getTree().setMenu(menu);
 
 		// menu open
-		try {
-			if (ElementType.withOpenMenuItem(rootElement.getElementName())) {
-				final MenuItem openMenuItem = new MenuItem(menu, SWT.CASCADE);
-				openMenuItem.setSelection(true);
-				openMenuItem.setText(Translator
-						.trans("View.label.openMenuItem.Open")); //$NON-NLS-1$
-				openMenuItem.setImage(ResourceManager.getPluginImage(
-						Activator.getDefault(), "icons/new_wiz.gif"));
-				openMenuItem.setData("name", "OPEN");
-				openMenuItem.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(final SelectionEvent e) {
-						TreeItem[] t = treeViewer.getTree().getSelection();
-						if (t.length != 1) {
-							MessageDialog.openInformation(
-									currentView.getSite().getShell(),
-									Translator.trans("InfoTitle"), Translator.trans("Editor.mess.NotSupported")); //$NON-NLS-1$
-							return;
-						}
-						openPerspective(treeViewer, currentView);
-					}
-				});
-			}
-		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(currentView.getSite().getShell(),
-					currentView.ID, "Error", e.getMessage(), e);
-		}
+		// commented out 20120518 -dead code never used
+		// try {
+		// if (ElementType.withOpenMenuItem(rootElement.getElementName())) {
+		// final MenuItem openMenuItem = new MenuItem(menu, SWT.CASCADE);
+		// openMenuItem.setSelection(true);
+		// openMenuItem.setText(Translator
+		//						.trans("View.label.openMenuItem.Open")); //$NON-NLS-1$
+		// openMenuItem.setImage(ResourceManager.getPluginImage(
+		// Activator.getDefault(), "icons/new_wiz.gif"));
+		// openMenuItem.setData("name", "OPEN");
+		// openMenuItem.addSelectionListener(new SelectionAdapter() {
+		// public void widgetSelected(final SelectionEvent e) {
+		// TreeItem[] t = treeViewer.getTree().getSelection();
+		// if (t.length != 1) {
+		// MessageDialog.openInformation(
+		// currentView.getSite().getShell(),
+		//									Translator.trans("InfoTitle"), Translator.trans("Editor.mess.NotSupported")); //$NON-NLS-1$
+		// return;
+		// }
+		// openPerspective(treeViewer, currentView);
+		// }
+		// });
+		// }
+		// } catch (DDIFtpException e) {
+		// DialogUtil.errorDialog(currentView.getSite().getShell(),
+		// currentView.ID, "Error", e.getMessage(), e);
+		// }
 
 		// menu new
 		final MenuItem newMenuItem = new MenuItem(menu, SWT.CASCADE);
@@ -153,14 +158,22 @@ public class TreeMenuProvider extends TreeMenu {
 		editMenuItem.setImage(ResourceManager.getPluginImage(
 				Activator.getDefault(), "icons/editor_area.gif"));
 		editMenuItem.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent event) {
 				TreeItem[] t = treeViewer.getTree().getSelection();
-				if (t.length != 1) {
+				if (t.length != 1) { // guard
 					MessageDialog.openInformation(
 							currentView.getSite().getShell(),
 							Translator.trans("InfoTitle"), Translator.trans("Editor.mess.NotSupported")); //$NON-NLS-1$
 					return;
 				}
+
+				// conceptual type
+				if (t[0].getData() instanceof ConceptualType) {
+					openPerspective(treeViewer, currentView);
+					return;
+				}
+
+				// all other
 				openEditor(treeViewer, currentView, EditorModeType.EDIT, null);
 			}
 		});
@@ -227,15 +240,43 @@ public class TreeMenuProvider extends TreeMenu {
 				// ddi resource
 				else if (inputSelection.getSelection() instanceof DDIResourceType) {
 					cleanPreviousMenuItems();
-					TreeItem[] items = treeViewer.getTree().getSelection()[0]
-							.getItems();
 					ArrayList<ConceptualType> newItems = new ArrayList<ConceptualType>(
 							Arrays.asList(ConceptualType.values()));
-					for (int i = 0; i < items.length; i++) {
-						Object obj = items[i].getData();
-						newItems.remove(obj);
-					}
+
+					// comment out 20120518 - adding new items is a good thing
+					// :)
+					// TreeItem[] items = treeViewer.getTree().getSelection()[0]
+					// .getItems();
+					// for (int i = 0; i < items.length; i++) {
+					// Object obj = items[i].getData();
+					// newItems.remove(obj);
+					// }
+
 					for (ConceptualType conceptualType : newItems) {
+						if (conceptualType.equals(ConceptualType.STUDY)) {
+							continue;
+						}
+						if (conceptualType
+								.equals(ConceptualType.LOGIC_INSTRUMENT)) {
+							try {
+								PersistenceManager
+										.getInstance()
+										.setWorkingResource(
+												((DDIResourceType) inputSelection
+														.getSelection())
+														.getOrgName());
+								boolean check = DdiManager
+										.getInstance()
+										.getStudyUnitsLight(null, null, null,
+												null).getLightXmlObjectList()
+										.getLightXmlObjectList().isEmpty();
+								if (check) {
+									continue;
+								}
+							} catch (Exception e) {
+								// do nothing
+							}
+						}
 						try {
 							createDDIResourceNewMenuItem(conceptualType,
 									inputSelection.resourceId);
@@ -271,10 +312,9 @@ public class TreeMenuProvider extends TreeMenu {
 				});
 				List<ElementType> subElements = type.getSubElements();
 				if (subElements != null) {
-					for (Iterator iterator = subElements.iterator(); iterator
-							.hasNext();) {
-						final ElementType elementType = (ElementType) iterator
-								.next();
+					for (Iterator<ElementType> iterator = subElements
+							.iterator(); iterator.hasNext();) {
+						final ElementType elementType = iterator.next();
 						menuItem = new MenuItem(subMenu, SWT.NONE);
 						menuItem.setText(elementType
 								.getTranslatedDisplayMessageEntry());
@@ -285,6 +325,7 @@ public class TreeMenuProvider extends TreeMenu {
 							public void widgetSelected(final SelectionEvent e) {
 								openEditor(treeViewer, currentView,
 										EditorModeType.NEW, elementType);
+
 							}
 						});
 					}
@@ -297,13 +338,12 @@ public class TreeMenuProvider extends TreeMenu {
 				final ElementType elementType = ElementType
 						.getElementTypeByConceptualType(conceptualType);
 				MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
-				menuItem.setText(Translator.trans(conceptualType.toString()));
+				menuItem.setText(Translator.trans(conceptualType.name()));
 				menuItem.setImage(ResourceManager.getPluginImage(
 						Activator.getDefault(), "icons/new_wiz.gif"));
 
 				menuItem.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(final SelectionEvent e) {
-						// TODO create needed parents
 						EditorInput input = new EditorInput(null, resourceId,
 								null, null, null, null, elementType, null,
 								EditorModeType.NEW);
@@ -317,26 +357,31 @@ public class TreeMenuProvider extends TreeMenu {
 	}
 
 	private void deleteItem(EditorModeType mode) {
+		boolean doRefeshOverView = false;
 		boolean doOpenConfirm = true;
 		boolean doDelete = false;
 
+		// selection
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
+
 		if (obj instanceof DDIResourceType) {
-			// TODO delete DDIResourceType stuff
 			DDIResourceType ddiResource = (DDIResourceType) obj;
-			try {
-				StorageType storage = PersistenceManager.getInstance()
-						.getStorageByResourceOrgName(ddiResource.getOrgName());
-				PersistenceManager.getInstance().deleteResource(
-						ddiResource.getOrgName());
-				PersistenceManager.getInstance().deleteStorage(storage.getId());
-				storage = null;
-			} catch (DDIFtpException e) {
-				DialogUtil.errorDialog(currentView.getSite().getShell(),
-						currentView.ID, Translator.trans("ErrorTitle"),
-						Translator.trans("Error deleting resource"), e);
-			}
+			List<DDIResourceType> resources = new ArrayList<DDIResourceType>();
+			resources.add(ddiResource);
+			CommandHelper.deleteResources(resources);
+			return;
+		}
+
+		if (obj instanceof ConceptualType) {
+			// TODO implement delete on conceptual element
+			DialogUtil.infoDialog(currentView.getSite().getShell(),
+					this.currentView.ID, Translator.trans("ConfirmTitle"),
+					Translator.trans(
+							"editor.editelement.notimplemented",
+							"ConceptualType: "
+									+ Translator.trans(((ConceptualType) obj)
+											.name())));
 		}
 
 		if (obj instanceof ConceptualElement) {
@@ -418,6 +463,7 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						doRefeshOverView = true;
 						break;
 					case CONCEPT:
 						new ConceptDao().delete(lightXmlObject.getId(),
@@ -431,12 +477,14 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						doRefeshOverView = true;
 						break;
 					case UNIVERSE_SCHEME:
 						new UniverseSchemeDao().delete(lightXmlObject.getId(),
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						doRefeshOverView = true;
 						break;
 					case UNIVERSE:
 						new UniverseDao().delete(lightXmlObject.getId(),
@@ -475,6 +523,7 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						doRefeshOverView = true;
 						break;
 					case MULTIPLE_QUESTION_ITEM:
 						questionItemDao
@@ -517,20 +566,20 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
-						log.debug("Deleted!");
 						break;
 					case CATEGORY_SCHEME:
 						new CategorySchemeDao().delete(lightXmlObject.getId(),
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
-						log.debug("Deleted!");
+						doRefeshOverView = true;
 						break;
 					case INSTRUMENT:
 						new InstrumentDao().delete(lightXmlObject.getId(),
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						doRefeshOverView = true;
 						break;
 					case QUESTION_CONSTRUCT:
 						new QuestionConstructDao().delete(
@@ -563,6 +612,7 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						doRefeshOverView = true;
 						break;
 					case LOOP:
 						new LoopDao().delete(lightXmlObject.getId(),
@@ -581,6 +631,7 @@ public class TreeMenuProvider extends TreeMenu {
 								lightXmlObject.getVersion(),
 								lightXmlObject.getParentId(),
 								lightXmlObject.getParentVersion());
+						doRefeshOverView = true;
 						break;
 					case VARIABLE:
 						new VariableDao().delete(lightXmlObject.getId(),
@@ -599,6 +650,25 @@ public class TreeMenuProvider extends TreeMenu {
 								e);
 						break;
 					}
+
+					// close open editors
+					IEditorReference[] openEditors = PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow().getActivePage()
+							.getEditorReferences();
+					EditorInput editorInput = null;
+					for (int i = 0; i < openEditors.length; i++) {
+						editorInput = ((EditorInput) openEditors[i].getEditorInput());
+						if (editorInput.getId().equals(
+								((LightXmlObjectType) obj).getId())) {
+							PlatformUI
+									.getWorkbench()
+									.getActiveWorkbenchWindow()
+									.getActivePage()
+									.closeEditor(
+											openEditors[i].getEditor(false),
+											true);
+						}
+					}
 				} catch (PartInitException ex) {
 					DialogUtil
 							.errorDialog(
@@ -616,12 +686,20 @@ public class TreeMenuProvider extends TreeMenu {
 									Translator
 											.trans("View.mess.EditorDeleteError") + "\n" + e.getMessage(), e); //$NON-NLS-1$
 				}
-				removeItemFromMenu(lightXmlObject);
+				// comment out 20120520 not used -view refreshed instead used
+				// removeItemFromMenu(lightXmlObject);
 			}
 		}
+
+		// refresh info view
+		if (doRefeshOverView) {
+			ViewManager.getInstance().addViewsToRefresh(Editor.ID);
+		}
+
+		// current view
 		treeViewer.refresh();
 		treeViewer.getControl().setRedraw(true);
-		treeViewer.expandToLevel(2);
+		// treeViewer.expandToLevel(2); comment out 20120520
 		treeViewer.getTree().setFocus();
 	}
 

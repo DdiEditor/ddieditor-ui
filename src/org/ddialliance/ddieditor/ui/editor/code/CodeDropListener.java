@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.CodeType;
+import org.ddialliance.ddi3.xml.xmlbeans.reusable.ReferenceType;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.code.CodeSchemeEditor.CodeTableContentProvider;
@@ -207,6 +208,12 @@ public class CodeDropListener extends ViewerDropAdapter {
 							XmlBeansUtil.getXmlAttributeValue(
 									transfers[i].lightXmlObject.xmlText(),
 									"id=\""));
+			codeType.getCategoryReference().addNewIdentifyingAgency().setStringValue(XmlBeansUtil.getXmlAttributeValue(
+					transfers[i].lightXmlObject.xmlText(),
+					"agency=\""));
+			codeType.getCategoryReference().addNewVersion().setStringValue(XmlBeansUtil.getXmlAttributeValue(
+					transfers[i].lightXmlObject.xmlText(),
+					"version=\""));
 			String value = null;
 			if (getCurrentLocation() == LOCATION_ON) {
 				LightXmlObjectType xml = (LightXmlObjectType) ctcp.getItems()

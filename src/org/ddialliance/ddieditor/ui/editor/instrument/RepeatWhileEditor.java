@@ -11,6 +11,7 @@ import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.RepeatWhile;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -93,7 +94,7 @@ public class RepeatWhileEditor extends Editor {
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(group,
 				Translator.trans("RepeatWhile.editor.whileref"),
 				Translator.trans("RepeatWhile.editor.whileref"),
-				modelImpl.getWhileReference(), controlConstructRefList, false);
+				modelImpl.getWhileReference(), controlConstructRefList, false, ElementType.CONTROL_CONSTRUCT_SCHEME);
 		thenRefSelectCombo.addSelectionListener(Translator
 				.trans("RepeatWhile.editor.whileref"),
 				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,

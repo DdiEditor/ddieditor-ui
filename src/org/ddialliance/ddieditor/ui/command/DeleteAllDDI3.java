@@ -31,37 +31,7 @@ public class DeleteAllDDI3 extends org.eclipse.core.commands.AbstractHandler {
 					e.getMessage());
 		}
 
-		// yes - no dialog
-		if (!CommandHelper.confirmResourceDeletion(resources)) {
-			return null;
-		}
-
-		// close open editors belonging to resources
-		CommandHelper.closeEditors(resources);
-
-		try {
-			for (DDIResourceType ddiResource : resources) {
-				StorageType storage = PersistenceManager.getInstance()
-						.getStorageByResourceOrgName(ddiResource.getOrgName());
-				PersistenceManager.getInstance().deleteResource(
-						ddiResource.getOrgName());
-				PersistenceManager.getInstance().deleteStorage(storage.getId());
-				storage = null;
-			}
-		} catch (Exception e) {
-			String errMess = MessageFormat
-					.format(Translator
-							.trans("OpenFileAction.mess.OpenFileError"), e.getMessage()); //$NON-NLS-1$
-			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
-					.getActiveShell(), Translator.trans("ErrorTitle"), errMess);
-		}
-
-		// refresh view
-		ViewManager.getInstance().addAllViewsToRefresh();
-		ViewManager.getInstance().refesh();
-
-		// cleanup dynamic view
-		DynamicView.closeUpdateDynamicView();
+		CommandHelper.deleteResources(resources);
 
 		return null;
 	}

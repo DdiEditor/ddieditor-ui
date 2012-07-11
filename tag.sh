@@ -48,24 +48,27 @@ then
 echo 'Submit version no. for SVN tag:'
 read version
 
+echo 'Name of branch for SVN tag:'
+read name
+
 svnurl=svn://192.168.99.101
 memo='Dev release taging: $version'
-svn mkdir $svnurl/dda/tags/ddiftp/test-$version -m '$memo'
+svn mkdir $svnurl/dda/tags/ddiftp/release-$version -m '$memo'
 
 # dbdda
-svn copy $svnurl/dda/trunk/ddadb $svnurl/dda/tags/ddiftp/test-$version/ddadb -m '$memo' 
+svn copy $svnurl/dda/branches/ddieditor/$name/ddadb $svnurl/dda/tags/ddiftp/release-$version/ddadb -m '$memo' 
 
 # jounal-study-info-export
-svn copy $svnurl/dda/trunk/jounal-study-info-export $svnurl/dda/tags/ddiftp/test-$version/jounal-study-info-export -m '$memo'
+svn copy $svnurl/dda/branches/ddieditor/$name/jounal-study-info-export $svnurl/dda/tags/ddiftp/release-$version/jounal-study-info-export -m '$memo'
 
 # ddieditor-osiris-batch-convert
-svn copy $svnurl/dda/trunk/ddieditor-osiris-batch-convert $svnurl/dda/tags/ddiftp/test-$version/ddieditor-osiris-batch-convert -m '$memo'
+svn copy $svnurl/dda/branches/ddieditor/$name/ddieditor-osiris-batch-convert $svnurl/dda/tags/ddiftp/release-$version/ddieditor-osiris-batch-convert -m '$memo'
 
 # ddieditor-osiris2ddi3
-svn copy $svnurl/dda/trunk/ddieditor-osiris2ddi3 $svnurl/dda/tags/ddiftp/test-$version/ddieditor-osiris2ddi3 -m '$memo'
+svn copy $svnurl/dda/branches/ddieditor/$name/ddieditor-osiris2ddi3 $svnurl/dda/tags/ddiftp/release-$version/ddieditor-osiris2ddi3 -m '$memo'
 
 # ddiftp
-svn copy $svnurl/dda/trunk/ddiftp $svnurl/dda/tags/ddiftp/test-$version/ -m '$memo'
+svn copy $svnurl/dda/branches/ddieditor/$name/ddiftp $svnurl/dda/tags/ddiftp/release-$version/ -m '$memo'
 
 else
 echo 'No SVN tagging taking place'

@@ -13,6 +13,7 @@ import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.genericmodifylistener.TextStyledTextModyfiListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionAdapter;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.referenceselection.ReferenceSelectionCombo;
+import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.ModelIdentifingType;
 import org.ddialliance.ddieditor.ui.model.instrument.Loop;
 import org.ddialliance.ddieditor.ui.perspective.IAutoChangePerspective;
@@ -70,7 +71,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 		ReferenceSelectionCombo variableRefSelectCombo = createRefSelection(
 				group, Translator.trans("LoopEditor.label.variableref"),
 				Translator.trans("LoopEditor.label.variableref"),
-				modelImpl.getLoopVariableReference(), variableRefList, false);
+				modelImpl.getLoopVariableReference(), variableRefList, false, ElementType.VARIABLE);
 		variableRefSelectCombo.addSelectionListener(Translator
 				.trans("LoopEditor.label.variableref"),
 				new ReferenceSelectionAdapter(variableRefSelectCombo,
@@ -90,7 +91,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 				group, Translator.trans("ControlConstruct.ref"),
 				Translator.trans("ControlConstruct.ref"),
 				modelImpl.getControlConstructReference(),
-				controlConstructRefList, false);
+				controlConstructRefList, false, ElementType.CONTROL_CONSTRUCT_SCHEME);
 		controlConstructRefSelectCombo.addSelectionListener(Translator
 				.trans("ControlConstruct.ref"),
 				new ReferenceSelectionAdapter(controlConstructRefSelectCombo,
@@ -136,7 +137,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 				Translator.trans("IfThenElse.editor.ifquestionref"),
 				Translator.trans("IfThenElse.editor.ifquestionref"),
 				modelImpl.getQuestionReference(modelImpl.getInitialValue()),
-				questionRefList, false);
+				questionRefList, false, ElementType.QUESTION_ITEM);
 		initValueQuestRefSelectCombo.addSelectionListener(Translator
 				.trans("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(initValueQuestRefSelectCombo,
@@ -174,7 +175,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 				Translator.trans("IfThenElse.editor.ifquestionref"),
 				Translator.trans("IfThenElse.editor.ifquestionref"),
 				modelImpl.getQuestionReference(modelImpl.getLoopWhile()),
-				questionRefList, false);
+				questionRefList, false, ElementType.QUESTION_ITEM);
 		loopWhileQuestRefSelectCombo.addSelectionListener(Translator
 				.trans("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(loopWhileQuestRefSelectCombo,
@@ -213,7 +214,7 @@ public class LoopEditor extends Editor implements IAutoChangePerspective {
 				Translator.trans("IfThenElse.editor.ifquestionref"),
 				Translator.trans("IfThenElse.editor.ifquestionref"),
 				modelImpl.getQuestionReference(modelImpl.getStepValue()),
-				questionRefList, false);
+				questionRefList, false, ElementType.QUESTION_ITEM);
 		steepValueQuestRefSelectCombo.addSelectionListener(Translator
 				.trans("IfThenElse.editor.ifquestionref"),
 				new ReferenceSelectionAdapter(steepValueQuestRefSelectCombo,

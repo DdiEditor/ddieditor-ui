@@ -17,7 +17,7 @@ public class InfoView extends View {
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.InfoView";
 
 	public InfoView() {
-		super(ViewContentType.StudyContent, Translator
+		super(ViewContentType.StudyLevelContent, Translator
 				.trans("InfoView.label.titleLabel.DDIOverview"), Translator
 				.trans("InfoView.label.selectLabel.Description"), Translator
 				.trans("InfoView.label.maskLabel.Id"), ElementType.FILE,

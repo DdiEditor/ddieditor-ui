@@ -34,35 +34,7 @@ public class DeleteSingleDDI3 extends org.eclipse.core.commands.AbstractHandler 
 		List<DDIResourceType> resources = new ArrayList<DDIResourceType>();
 		resources.add(ddiResource);
 
-		// yes - no dialog
-		if (!CommandHelper.confirmResourceDeletion(resources)) {
-			return null;
-		}
-
-		// close open editors belonging to resource
-		resources.add(ddiResource);
-		CommandHelper.closeEditors(resources);
-
-		// terminate resource
-		try {
-			StorageType storage = PersistenceManager.getInstance()
-					.getStorageByResourceOrgName(ddiResource.getOrgName());
-			PersistenceManager.getInstance().deleteResource(
-					ddiResource.getOrgName());
-			PersistenceManager.getInstance().deleteStorage(storage.getId());
-			storage = null;
-		} catch (DDIFtpException e) {
-			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
-					.getActiveShell(), Translator.trans("ErrorTitle"),
-					e.getMessage());
-		}
-
-		// refresh view
-		ViewManager.getInstance().addAllViewsToRefresh();
-		ViewManager.getInstance().refesh();
-
-		// cleanup dynamic view
-		DynamicView.closeUpdateDynamicView();
+		CommandHelper.deleteResources(resources);
 
 		return null;
 	}

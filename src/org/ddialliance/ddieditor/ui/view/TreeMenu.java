@@ -71,18 +71,19 @@ public class TreeMenu {
 			EditorModeType mode, ElementType entityType) {
 		InputSelection inputSelection = defineSelection(treeViewer,
 				currentView.ID);
-		log.debug(entityType);
-		// define editor input
-		EditorInput input = null;
 
-		// ddi resource type
+		// define editor input
 		if (inputSelection.getSelection() instanceof DDIResourceType) {
 			entityType = ElementType.FILE;
 
-			input = new EditorInput(null, inputSelection.getResourceId(),
+			EditorInput input = new EditorInput(
+					null,
+					inputSelection.getResourceId(),
+					// ddi resource type
 					((DDIResourceType) inputSelection.getSelection())
 							.getOrgName(), null, null, null, entityType, null,
 					mode);
+
 			// open editor
 			executeOpenEditor(input, mode, currentView, currentView.getSite()
 					.getShell());
@@ -241,8 +242,10 @@ public class TreeMenu {
 				&& selection.getPaths()[0].getSegment(length - 2) instanceof LightXmlObjectType) {
 			String parentElementName = ((LightXmlObjectType) selection
 					.getPaths()[0].getSegment(length - 2)).getElement();
-			log.debug("ParentElementType: "
-					+ ElementType.getElementType(parentElementName));
+			if (log.isDebugEnabled()) {
+				log.debug("ParentElementType: "
+						+ ElementType.getElementType(parentElementName));
+			}
 			return ElementType.getElementType(parentElementName);
 		}
 		// DDIResourceType:
@@ -282,6 +285,8 @@ public class TreeMenu {
 			lightXmlObject.setElement(result.getMaintainableTarget());
 			lightXmlObject.setId(result.getId());
 			lightXmlObject.setVersion(result.getVersion());
+			lightXmlObject.setParentId(result.getParentId());
+			lightXmlObject.setParentVersion(result.getParentVersion());
 		}
 		// list
 		else if (obj instanceof List) {
@@ -304,25 +309,25 @@ public class TreeMenu {
 			if (conTypeObj.equals(ConceptualType.STUDY)) {
 				lightXmlObject.setElement(ElementType.STUDY_UNIT
 						.getElementName());
-			} else if (conTypeObj.equals(ConceptualType.LOGIC_Universe)) {
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_UNIVERSE)) {
 				lightXmlObject.setElement(ElementType.UNIVERSE_SCHEME
 						.getElementName());
-			} else if (conTypeObj.equals(ConceptualType.LOGIC_concepts)) {
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_CONCEPT)) {
 				lightXmlObject.setElement(ElementType.CONCEPT_SCHEME
 						.getElementName());
-			} else if (conTypeObj.equals(ConceptualType.LOGIC_category)) {
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_CATEGORY)) {
 				lightXmlObject.setElement(ElementType.CATEGORY_SCHEME
 						.getElementName());
-			} else if (conTypeObj.equals(ConceptualType.LOGIC_code)) {
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_CODE)) {
 				lightXmlObject.setElement(ElementType.CODE_SCHEME
 						.getElementName());
-			} else if (conTypeObj.equals(ConceptualType.LOGIC_questions)) {
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_QUESTION)) {
 				lightXmlObject.setElement(ElementType.QUESTION_SCHEME
 						.getElementName());
-			} else if (conTypeObj.equals(ConceptualType.LOGIC_instumentation)) {
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_INSTRUMENT)) {
 				lightXmlObject.setElement(ElementType.INSTRUMENT
 						.getElementName());
-			} else if (conTypeObj.equals(ConceptualType.LOGIC_variable)) {
+			} else if (conTypeObj.equals(ConceptualType.LOGIC_VARIABLE)) {
 				lightXmlObject.setElement(ElementType.VARIABLE_SCHEME
 						.getElementName());
 			}
