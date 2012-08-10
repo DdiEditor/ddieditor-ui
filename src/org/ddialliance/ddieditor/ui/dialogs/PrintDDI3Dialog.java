@@ -14,6 +14,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -24,6 +25,7 @@ import org.eclipse.ui.PlatformUI;
 public class PrintDDI3Dialog extends Dialog {
 	List<DDIResourceType> resources = new ArrayList<DDIResourceType>();
 	public DDIResourceType ddiResource;
+	public boolean numVarStatisticBoolean = false;
 
 	public PrintDDI3Dialog(Shell parentShell) {
 		super(parentShell);
@@ -35,7 +37,7 @@ public class PrintDDI3Dialog extends Dialog {
 		Editor editor = new Editor();
 		Group group = editor.createGroup(parent,
 				Translator.trans("PrintDDI3Action.properties"));
-		group.setLayoutData(new GridData(500, 50));
+		group.setLayoutData(new GridData(500, 70));
 		this.getShell().setText(
 				Translator.trans("PrintDDI3Action.menu.PrintDDI3"));
 
@@ -79,6 +81,21 @@ public class PrintDDI3Dialog extends Dialog {
 				}
 			});
 		}
+
+		// create statistics on numeric variables
+		Button numVarStatistic = editor.createCheckBox(group, "",
+				Translator.trans("PrintDDI3Action.numeric.statistics"));
+		numVarStatistic.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				numVarStatisticBoolean = ((Button) e.widget).getSelection();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// do nothing
+			}
+		});
 
 		return null;
 	}

@@ -20,15 +20,26 @@ echo 'Do you want to version bump: [yes|no]'
 read doversionbump
 if [ $doversionbump = 'yes' ]
 then
-versionbump lib-java
-versionbump util
-versionbump ddieditor
-versionbump ddieditor-ui
+
 versionbump ddadb
 versionbump jounal-study-info-export
-versionbump ddieditor-spss
+versionbump ddieditor-osiris-batch-convert
+versionbump ddieditor-osiris2ddi3
+
+versionbump ddi-3-xmlbeans
+versionbump ddieditor
+versionbump ddieditor-classification
+versionbump ddieditor-model
 versionbump ddieditor-line
+versionbump ddieditor-spss
+versionbump ddieditor-sample
 versionbump ddieditor-spss-stat
+versionbump ddieditor-spss-xmlbeans
+versionbump ddieditor-ui
+versionbump ddieditor-ui-headlessbuild
+versionbump ddieditor-xmlbeans
+versionbump lib-java
+versionbump util
 
 # ddieditor-ui product bundle
 vi OSGI-INF/l10n/bundle.properties

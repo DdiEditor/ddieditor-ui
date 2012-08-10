@@ -38,25 +38,25 @@ fi
 
 cd ..
 
-#svnmerge '' ddadb
-#svnmerge '' jounal-study-info-export
-#svnmerge '' ddieditor-osiris-batch-convert
-#svnmerge '' ddieditor-osiris2ddi3
+svnmerge '' ddadb
+svnmerge '' jounal-study-info-export
+svnmerge '' ddieditor-osiris-batch-convert
+svnmerge '' ddieditor-osiris2ddi3
 
-#svnmerge ddiftp ddi-3-xmlbeans
-#svnmerge ddiftp ddieditor
+svnmerge ddiftp ddi-3-xmlbeans
+svnmerge ddiftp ddieditor
 svnmerge ddiftp ddieditor-classification
-#svnmerge ddiftp ddieditor-model
-#svnmerge ddiftp ddieditor-line
-#svnmerge ddiftp ddieditor-spss
+svnmerge ddiftp ddieditor-model
+svnmerge ddiftp ddieditor-line
+svnmerge ddiftp ddieditor-spss
 svnmerge ddiftp ddieditor-sample
-#svnmerge ddiftp ddieditor-spss-stat
-#svnmerge ddiftp ddieditor-spss-xmlbeans
-#svnmerge ddiftp ddieditor-ui
-#svnmerge ddiftp ddieditor-ui-headlessbuild
-#svnmerge ddiftp ddieditor-xmlbeans
-#svnmerge ddiftp lib-java
-#svnmerge ddiftp util
+svnmerge ddiftp ddieditor-spss-stat
+svnmerge ddiftp ddieditor-spss-xmlbeans
+svnmerge ddiftp ddieditor-ui
+svnmerge ddiftp ddieditor-ui-headlessbuild
+svnmerge ddiftp ddieditor-xmlbeans
+svnmerge ddiftp lib-java
+svnmerge ddiftp util
 
 cd ddieditor-ui
 echo '--- Merge done! Now resolve confilicts and commit the changes ;- )  ---'

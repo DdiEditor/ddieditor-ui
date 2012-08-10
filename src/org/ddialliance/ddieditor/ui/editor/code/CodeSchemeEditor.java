@@ -115,14 +115,15 @@ public class CodeSchemeEditor extends Editor {
 		
 		// TODO check for classification
 		// XQuery on xmlbeans model
-		try {
-			String query = "for $x in doc($doc)/*//*[namespace-uri()='ddi:logicalproduct:3_1' and local-name()='Code'] return $x;";
-			XmlObject[] test = model.getDocument().execQuery(query, null);
-			System.out.println("break");
-		} catch (DDIFtpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// try {
+		// String query =
+		// "for $x in doc($doc)/*//*[namespace-uri()='ddi:logicalproduct:3_1' and local-name()='Code'] return $x;";
+		// XmlObject[] test = model.getDocument().execQuery(query, null);
+		// System.out.println("break");
+		// } catch (DDIFtpException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 		
 		// init items
 		List<CodeType> codes = modelImpl.getCodes();
@@ -270,7 +271,7 @@ public class CodeSchemeEditor extends Editor {
 		List<LightXmlObjectType> categorySchemeReferenceList = new ArrayList<LightXmlObjectType>();
 		try {
 			categorySchemeReferenceList = new CategorySchemeDao()
-					.getLightXmlObject("", "", "", "");
+					.getAllCategorySchemesLight("", "");
 		} catch (Exception e) {
 			showError(e, ID);
 		}
@@ -472,11 +473,10 @@ public class CodeSchemeEditor extends Editor {
 					return "";
 				}
 				try {
-					List<LightXmlObjectType> codeCatRelList = new CategoryDao()
-							.getLightXmlObject(codeCateRel.getId(), "", "", "");
+					List<LightXmlObjectType> codeCatRelList = new CategoryDao().getAllLightXmlObject(
+							codeCateRel.getId(), "");
 					if (!codeCatRelList.isEmpty()) {
-						xml = new CategoryDao().getLightXmlObject(
-								codeCateRel.getId(), "", "", "").get(0);
+						xml = codeCatRelList.get(0);
 					}
 				} catch (Exception e1) {
 					DDIFtpException e2 = new DDIFtpException(

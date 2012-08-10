@@ -8,9 +8,13 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.commons.io.FileUtils;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
-import org.ddialliance.ddieditor.model.resource.StorageType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dialogs.PrintDDI3Dialog;
 import org.ddialliance.ddieditor.ui.editor.Editor;
@@ -38,16 +42,10 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		}
 		if (printDDI3Dialog.ddiResource == null) {
 			System.out.println("Error");
-			MessageDialog
-			.openError(
-					PlatformUI
-							.getWorkbench()
-							.getDisplay()
-							.getActiveShell(),
-							Translator
-							.trans("PrintDDI3Action.tooltip.PrintDDI3"),
-							Translator
-							.trans("PrintDDI3Action.mess.ResourceNotSpecified"));
+			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
+					.getActiveShell(), Translator
+					.trans("PrintDDI3Action.tooltip.PrintDDI3"), Translator
+					.trans("PrintDDI3Action.mess.ResourceNotSpecified"));
 			return null;
 		}
 
@@ -71,35 +69,68 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 											@Override
 											public void run() {
 												// export the resource
-												File temp = null;
+												File xmlFile = null;
+												File htmlFile = null;
 												try {
-													temp = File
+													xmlFile = File
 															.createTempFile(
 																	"PrintDDI3",
 																	".xml");
-													temp.deleteOnExit();
+													htmlFile = File
+															.createTempFile(
+																	"PrintDDI3",
+																	".html");
+													xmlFile.deleteOnExit();
+													htmlFile.deleteOnExit();
 
-													List<DDIResourceType> ddiResources = PersistenceManager.getInstance().getResources();
+													List<DDIResourceType> ddiResources = PersistenceManager
+															.getInstance()
+															.getResources();
 													List<String> resources = new ArrayList<String>();
 													for (DDIResourceType ddiResource : ddiResources) {
-														resources.add(ddiResource.getOrgName());
+														resources
+																.add(ddiResource
+																		.getOrgName());
 													}
 													PersistenceManager
 															.getInstance()
 															.exportResoures(
 																	printDDI3Dialog.ddiResource
-																			.getOrgName(), resources,
-																	temp);
-													// TODO specify path to
-													// style sheet in XML
-													// document instead of
-													// copying it
+																			.getOrgName(),
+																	resources,
+																	xmlFile);
+													// check for resource
+													// packages
+
+													// if none do as all ways
+
+													// else merge resource
+													// packages in main target
+
+													// Transform xml to html
+													TransformerFactory tFactory = TransformerFactory
+															.newInstance();
+													Transformer transformer = tFactory
+															.newTransformer(new StreamSource(
+																	"resources/ddixslt/ddaddi3_1.xsl"));
+													transformer
+															.setParameter(
+																	"show-numeric-var-frequence",
+																	printDDI3Dialog.numVarStatisticBoolean ? 1
+																			: 0);
+													transformer.transform(
+															new StreamSource(
+																	xmlFile.getAbsolutePath()),
+															new StreamResult(
+																	htmlFile.getAbsolutePath()));
+
+													// Copy to temp
 													FileUtils
 															.copyDirectory(
 																	new File(
 																			"resources/ddixslt"),
 																	new File(
-																			temp.getParent()));
+																			htmlFile.getParent()));
 												} catch (Exception e) {
 													MessageDialog
 															.openError(
@@ -111,13 +142,15 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 																			.trans("PrintDDI3Action.mess.PrintDDI3Error"),
 																	e.getMessage());
 												}
-												
+
 												// active the external browser
 												// with the DDI document
-												// - start by using application associated with file type
-												if (!Program.launch(temp
+												// - start by using application
+												// associated with file type
+												if (!Program.launch(htmlFile
 														.getAbsolutePath())) {
-													// - failed: then use browser
+													// - failed: then use
+													// browser
 													try {
 														PlatformUI
 																.getWorkbench()
@@ -126,13 +159,14 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 																.openURL(
 																		new URL(
 																				"file://"
-																						+ temp.getAbsolutePath()));
+																						+ htmlFile
+																								.getAbsolutePath()));
 													} catch (PartInitException e) {
 														Editor.showError(e,
-																"Print");
+																"Browse error");
 													} catch (MalformedURLException e) {
 														Editor.showError(e,
-																"Print");
+																"Browse error");
 													}
 												}
 											}

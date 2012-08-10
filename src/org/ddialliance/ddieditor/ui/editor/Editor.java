@@ -173,12 +173,14 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			Translator.trans("ResponseTypeDetail.label.Date") };
 
 	private static String[] RESPONSE_TYPE_LABELS_QI_EXTENSION = {
-		Translator.trans("ResponseTypeDetail.label.Category"),
-		Translator.trans("ResponseTypeDetail.label.Geographic") };
+			Translator.trans("ResponseTypeDetail.label.Category"),
+			Translator.trans("ResponseTypeDetail.label.Geographic") };
 
 	static public String[] getResponseTypeLabels() {
-		
-		List<String> result = new java.util.ArrayList(RESPONSE_TYPE_LABELS.length+RESPONSE_TYPE_LABELS_QI_EXTENSION.length);
+
+		List<String> result = new java.util.ArrayList(
+				RESPONSE_TYPE_LABELS.length
+						+ RESPONSE_TYPE_LABELS_QI_EXTENSION.length);
 
 		result.addAll(Arrays.asList(RESPONSE_TYPE_LABELS));
 		if (model instanceof QuestionItem) {
@@ -188,10 +190,11 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	static public String getResponseTypeLabel(ResponseType rt) {
-		if (rt.ordinal() <= RESPONSE_TYPE_LABELS.length-1) {
+		if (rt.ordinal() <= RESPONSE_TYPE_LABELS.length - 1) {
 			return RESPONSE_TYPE_LABELS[rt.ordinal()];
 		}
-		return RESPONSE_TYPE_LABELS_QI_EXTENSION[rt.ordinal()-RESPONSE_TYPE_LABELS.length];
+		return RESPONSE_TYPE_LABELS_QI_EXTENSION[rt.ordinal()
+				- RESPONSE_TYPE_LABELS.length];
 	}
 
 	/**
@@ -219,10 +222,12 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				ResponseType.DATE));
 		if (model instanceof QuestionItem) {
 			responseDomainReferenceList.add(new ResponseTypeReference(
-					RESPONSE_TYPE_LABELS_QI_EXTENSION[ResponseType.CATEGORY.ordinal()-RESPONSE_TYPE_LABELS.length],
+					RESPONSE_TYPE_LABELS_QI_EXTENSION[ResponseType.CATEGORY
+							.ordinal() - RESPONSE_TYPE_LABELS.length],
 					ResponseType.CATEGORY));
 			responseDomainReferenceList.add(new ResponseTypeReference(
-					RESPONSE_TYPE_LABELS_QI_EXTENSION[ResponseType.GEOGRAPHIC.ordinal()-RESPONSE_TYPE_LABELS.length],
+					RESPONSE_TYPE_LABELS_QI_EXTENSION[ResponseType.GEOGRAPHIC
+							.ordinal() - RESPONSE_TYPE_LABELS.length],
 					ResponseType.GEOGRAPHIC));
 		}
 		return responseDomainReferenceList;
@@ -1734,14 +1739,14 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		responseTypeCombo = createCombo(parentGroup, getResponseTypeLabels());
 
 		// get Response Domain Reference
-		RepresentationType responseDomainRef = null;
+		RepresentationType representationType = null;
 		if (!getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
 			try {
 				if (model instanceof Variable) {
-					responseDomainRef = ((Variable) model)
+					representationType = ((Variable) model)
 							.getValueRepresentation();
 				} else if (model instanceof QuestionItem) {
-					responseDomainRef = ((QuestionItem) model)
+					representationType = ((QuestionItem) model)
 							.getResponseDomain();
 				}
 			} catch (Exception e1) {
@@ -1761,11 +1766,11 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		if (!getEditorInputImpl().getEditorMode().equals(EditorModeType.NEW)) {
 			for (Iterator iterator = responseDomainReferenceList.iterator(); iterator
 					.hasNext();) {
-				ResponseTypeReference responseDomainReference = (ResponseTypeReference) iterator
+				ResponseTypeReference responseTypeReference = (ResponseTypeReference) iterator
 						.next();
-				if (responseDomainReference.getResponseDomain() != null
-						&& responseDomainReference.getResponseDomain().equals(
-								getResponseType(responseDomainRef))) {
+				if (responseTypeReference.getResponseDomain() != null
+						&& responseTypeReference.getResponseDomain().equals(
+								getResponseType(representationType))) {
 					break;
 				}
 				index++;
@@ -1791,9 +1796,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 								"");
 					}
 					if (repType == null) {
-						String errMess = MessageFormat.format(
-								Translator
-										.trans("Editor.mess.ResponseTypeNotSupported"),
+						String errMess = MessageFormat.format(Translator
+								.trans("Editor.mess.ResponseTypeNotSupported"),
 								getResponseTypeLabel(rt)); //$NON-NLS-1$
 						ErrorDialog.openError(
 								getSite().getShell(),
@@ -1811,11 +1815,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						createResponseTypeDetail();
 						parentGroup.layout();
 					} catch (DDIFtpException e1) {
-						ErrorDialog.openError(
-								getSite().getShell(),
-								Translator.trans("ErrorTitle"),
-								null,
-								new Status(IStatus.ERROR, ID, 0, e1.getMessage(), null),
+						ErrorDialog.openError(getSite().getShell(), Translator
+								.trans("ErrorTitle"), null, new Status(
+								IStatus.ERROR, ID, 0, e1.getMessage(), null),
 								IStatus.ERROR);
 						responseTypeCombo.select(0);
 						disposeRepresentation();
@@ -1874,8 +1876,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					String cSVersion = codeSchemeRef.getVersionList().size() == 0 ? null
 							: codeSchemeRef.getVersionList().get(0)
 									.getStringValue();
-					codeSchemeRefList = CodeSchemeDao.getCodeSchemesLight(cSId,
-							cSVersion);
+					codeSchemeRefList = CodeSchemeDao.getAllCodeSchemesLight(
+							cSId, cSVersion);
 				} catch (Exception e) {
 					DialogUtil.errorDialog(getEditorSite(), ID, null,
 							e.getMessage(), e);
@@ -2168,9 +2170,14 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						try {
 							int select = ((Combo) e.getSource())
 									.getSelectionIndex();
-
-							((QuestionItem) model).executeChange(++select,
-									ModelIdentifingType.Type_K.class);
+							
+							if (model instanceof Variable) {
+								((Variable) model).executeChange(++select,
+										ModelIdentifingType.Type_K.class);
+							} else if (model instanceof QuestionItem) {
+								((QuestionItem) model).executeChange(++select,
+										ModelIdentifingType.Type_K.class);
+							}
 							editorStatus.setChanged();
 						} catch (Exception e1) {
 							showError(e1);
