@@ -6,7 +6,7 @@
 SVN_PATH=svn://192.168.99.101/dda
 LOCAL_PROJECT_PATH=/home/ddajvj/Documents/DDA/ddieditor-trunk/
 SVN_MERGE_TO=trunk
-SVN_BRANCH=branches/ddieditor/ackbar	
+SVN_BRANCH=branches/ddieditor/xxx
 SVN_DRY_RUN=--dry-run
 
 #
