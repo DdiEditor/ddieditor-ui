@@ -519,6 +519,7 @@
                </menu>
                <menu
                      icon="icons/export_wiz.gif"
+                     id="filemenu-exportmenu"
                      label="%menu.label.1"
                      mnemonic="%menu.mnemonic.1">
                   <command
@@ -527,13 +528,6 @@
                         id="ddi-export"
                         label="%command.label.5"
                         mnemonic="%command.mnemonic.4"
-                        style="push">
-                  </command>
-                  <command
-                        commandId="org.ddialliance.ddieditor.ui.command.ExportResourceList"
-                        icon="icons/usage.gif"
-                        label="%command.label.6"
-                        mnemonic="%command.mnemonic.5"
                         style="push">
                   </command>
                </menu>
@@ -588,11 +582,6 @@
                      visible="true">
                </separator>
                <command
-                     commandId="org.ddialliance.ddieditor.ui.command.ValidateDDI3"
-                     label="Validate"
-                     style="push">
-               </command>
-               <command
                      commandId="org.ddialliance.ddieditor.ui.command.PrintDDI3"
                      icon="icons/print_edit.gif"
                      label="%command.label.12"
@@ -610,6 +599,21 @@
                      mnemonic="%command.mnemonic.8"
                      style="push">
                </command>
+            </menu>
+            <menu
+                  id="toolsmenu"
+                  label="%menu.label.4"
+                  mnemonic="%menu.mnemonic.4">
+               <command
+                     commandId="org.ddialliance.ddieditor.ui.command.ValidateDDI3"
+                     label="%command.label.15"
+                     mnemonic="%command.mnemonic.15"
+                     style="push">
+               </command>
+               <separator
+                     name="ddieditor-ui.file.tools.separator1"
+                     visible="true">
+               </separator>
             </menu>
             <menu
                   id="window"

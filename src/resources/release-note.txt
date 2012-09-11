@@ -1,18 +1,20 @@
 -------------------------------------------------------------------------------
 DdiEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.5
-Release Data: 2012-08-07
+Product Version: 1.6
+Release Data: 2012-09-07
 
 -------------------------------------------------------------------------------
 What's New, User Interface
 -------------------------------------------------------------------------------
 Item ID:    Description: 
-- Creation of new Resource Packages
-- References to Category Schemes from Wiki-files.
-- DDIE-178 corrected. 
-- Statistics for numeric variable now (again) imported to the DDI document.
-- Variable Editor: Response type may now be changed.
+- Minor updates of menus and seperate tools menu added
+- Import questions bugfix
+- Updates on DDA print stylesheet
+- English DDI-L example of the various stages of dataset to DDI-L workflow
+- Create hirachical classification based on CSV file 
+- Export SPSS syntax file based on DDI-L
+- SPSS import change to CVS output data file
 
 -------------------------------------------------------------------------------  
 What's New, Application Infrastructure

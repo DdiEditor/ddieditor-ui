@@ -6,16 +6,7 @@ import java.io.FileWriter;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.xmlbeans.XmlObject;
-import org.ddialliance.ddi3.xml.xmlbeans.conceptualcomponent.ConceptualComponentType;
-import org.ddialliance.ddi3.xml.xmlbeans.datacollection.DataCollectionType;
 import org.ddialliance.ddi3.xml.xmlbeans.instance.DDIInstanceDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.BaseLogicalProductType;
-import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.LogicalProductDocument;
-import org.ddialliance.ddi3.xml.xmlbeans.logicalproduct.LogicalProductType;
-import org.ddialliance.ddi3.xml.xmlbeans.reusable.IdentifiedStructuredStringType;
-import org.ddialliance.ddi3.xml.xmlbeans.studyunit.StudyUnitType;
-import org.ddialliance.ddieditor.logic.identification.IdentificationManager;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
@@ -23,20 +14,17 @@ import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.persistenceaccess.filesystem.FilesystemManager;
 import org.ddialliance.ddieditor.ui.dialogs.NewDDI3FileDialog;
 import org.ddialliance.ddieditor.ui.editor.Editor;
-import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddieditor.ui.view.dynamicview.DynamicView;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
-import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IParameter;
 import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -189,5 +177,15 @@ public class CommandHelper {
 		// update info view
 		ViewManager.getInstance().addAllViewsToRefresh();
 		ViewManager.getInstance().refesh();
+	}
+
+	public static void openDdi3() throws ExecutionException {
+		IHandlerService handlerService = (IHandlerService) PlatformUI
+				.getWorkbench().getService(IHandlerService.class);
+		try {
+			handlerService.executeCommand(OpenDDI3File.class.getName(), null);
+		} catch (Exception e) {
+			throw new ExecutionException(e.getMessage(), e);
+		}
 	}
 }

@@ -4,9 +4,9 @@
 
 #svn path
 SVN_PATH=svn://192.168.99.101/dda
-LOCAL_PROJECT_PATH=/home/dak/workspace-trunk
+LOCAL_PROJECT_PATH=/home/ddajvj/Documents/DDA/ddieditor-trunk/
 SVN_MERGE_TO=trunk
-SVN_BRANCH=branches/ddieditor/anakin
+SVN_BRANCH=branches/ddieditor/ackbar	
 SVN_DRY_RUN=--dry-run
 
 #
@@ -49,7 +49,7 @@ svnmerge ddiftp ddieditor-classification
 svnmerge ddiftp ddieditor-model
 svnmerge ddiftp ddieditor-line
 svnmerge ddiftp ddieditor-spss
-svnmerge ddiftp ddieditor-sample
+#svnmerge ddiftp ddieditor-sample
 svnmerge ddiftp ddieditor-spss-stat
 svnmerge ddiftp ddieditor-spss-xmlbeans
 svnmerge ddiftp ddieditor-ui
