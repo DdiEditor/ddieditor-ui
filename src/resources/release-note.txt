@@ -1,53 +1,20 @@
 -------------------------------------------------------------------------------
 DdiEditor Release Notes:
 -------------------------------------------------------------------------------
-Product Version: 1.7.1
-Release Data: 2012-10-30
+Product Version: corranhorn
+Release Data: 2012-11-11
 
 -------------------------------------------------------------------------------
 What's New, User Interface
 -------------------------------------------------------------------------------
 Item ID:    Description:
-- Added detailed description on error dialogs
-- New element name on editor set id bugfix
-- Deletion of resource bugfix to remove the delete resource in list views
 
-- IfThenElse Editor - nullpointer exception bugfix
-- CategoryScheme Editor - nullpointer exception bugfix
-- Variable editor - name label bugfix
-- CodeScheme Editor fix to lookup rp categories, when selecting rp categories
-from combobox
-- Dynamic View - nullpointer exception bugfix
-
-- Print/ Stylesheet General UI updates
-- Stylesheet DDI documents may now be printed with or without Variable Universe
- references (print time parameter). The default value is without references.
-- Stylesheet Line wrapping of long conditions on || and &&
-- Stylesheet Added support for sequence in sequence list
-- Stylesheet Added variable link relations for sub universes
-- Stylesheet Added question/ variable search/ navigation bar
-from ddixlst support
-- Stylesheet Added suport for concepts
-
-- DdiEditor-Line plugin -general bugfix
-- ElseCondition bug fix!
-DDIE-189 Fix of wiki question import using defined DDI-L specified creation
- language
-- Import wiki wizard busy indicator fix
- 
-- JounalStudyInfoExport bugfixes on english title and english subjects
-- Create Genericode Controled Vocabularies from CSV files
 
 -------------------------------------------------------------------------------  
 What's New, Application Infrastructure
 -------------------------------------------------------------------------------
 Item ID:    Description:
-- XmlBeans upgraded to version 2.6.0
-- Editor fix of saving WRONG model by removing static link to imodel!
-- Editor refactored responcetype
-- Editor removed dublicate EditorInput also defined by EditorPart
-- Osiris-to-ddi-l-batch updates
-- Print function uses XSLT-2.0
+
 
 -------------------------------------------------------------------------------
 Uninstalling
