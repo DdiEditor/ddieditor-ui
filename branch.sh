@@ -35,7 +35,6 @@ svn mkdir $svnurl/$branchpath --parents -m 'Created new ddieditor branch'
 dobranch $brachname ddiftp
 dobranch $brachname ddadb
 dobranch $brachname ddieditor-osiris-batch-convert
-dobranch $brachname ddieditor-osiris2ddi3
 dobranch $brachname jounal-study-info-export
 
 else
