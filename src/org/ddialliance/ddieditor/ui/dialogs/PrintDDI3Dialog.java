@@ -13,7 +13,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -26,6 +25,8 @@ public class PrintDDI3Dialog extends Dialog {
 	List<DDIResourceType> resources = new ArrayList<DDIResourceType>();
 	public DDIResourceType ddiResource;
 	public boolean numVarStatisticBoolean = false;
+	public boolean universerefOnVariablesBoolean = false;
+	public boolean addNaviagtionBarBoolean = false;
 
 	public PrintDDI3Dialog(Shell parentShell) {
 		super(parentShell);
@@ -37,7 +38,6 @@ public class PrintDDI3Dialog extends Dialog {
 		Editor editor = new Editor();
 		Group group = editor.createGroup(parent,
 				Translator.trans("PrintDDI3Action.properties"));
-		group.setLayoutData(new GridData(500, 70));
 		this.getShell().setText(
 				Translator.trans("PrintDDI3Action.menu.PrintDDI3"));
 
@@ -89,6 +89,38 @@ public class PrintDDI3Dialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				numVarStatisticBoolean = ((Button) e.widget).getSelection();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// do nothing
+			}
+		});
+
+		// create universe ref on variables
+		Button universerefOnVariables = editor.createCheckBox(group, "",
+				Translator.trans("PrintDDI3Action.variable.univesereference"));
+		universerefOnVariables.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				universerefOnVariablesBoolean = ((Button) e.widget)
+						.getSelection();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// do nothing
+			}
+		});
+
+		// toggle toc or navigation bar
+		Button addNaviagtionBarButton = editor.createCheckBox(group, "",
+				Translator.trans("PrintDDI3Action.navigation.add"));
+		addNaviagtionBarButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addNaviagtionBarBoolean = ((Button) e.widget)
+						.getSelection();
 			}
 
 			@Override

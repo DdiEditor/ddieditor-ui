@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -18,6 +17,7 @@ import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dialogs.PrintDDI3Dialog;
 import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.util.PrintUtil;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -41,7 +41,6 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 			return null;
 		}
 		if (printDDI3Dialog.ddiResource == null) {
-			System.out.println("Error");
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay()
 					.getActiveShell(), Translator
 					.trans("PrintDDI3Action.tooltip.PrintDDI3"), Translator
@@ -99,30 +98,25 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 																			.getOrgName(),
 																	resources,
 																	xmlFile);
-													// check for resource
-													// packages
 
-													// if none do as all ways
+													// transformer
+													Transformer transformer = new PrintUtil()
+															.getTransformer(
+																	printDDI3Dialog.numVarStatisticBoolean,
+																	printDDI3Dialog.universerefOnVariablesBoolean,
+																	printDDI3Dialog.addNaviagtionBarBoolean);
 
-													// else merge resource
-													// packages in main target
-
-													// Transform xml to html
-													TransformerFactory tFactory = TransformerFactory
-															.newInstance();
-													Transformer transformer = tFactory
-															.newTransformer(new StreamSource(
-																	"resources/ddixslt/ddaddi3_1.xsl"));
+													// do transformation
 													transformer
-															.setParameter(
-																	"show-numeric-var-frequence",
-																	printDDI3Dialog.numVarStatisticBoolean ? 1
-																			: 0);
-													transformer.transform(
-															new StreamSource(
-																	xmlFile.getAbsolutePath()),
-															new StreamResult(
-																	htmlFile.getAbsolutePath()));
+															.transform(
+																	new StreamSource(
+																			xmlFile.toURI()
+																					.toURL()
+																					.toString()),
+																	new StreamResult(
+																			htmlFile.toURI()
+																					.toURL()
+																					.toString()));
 
 													// Copy to temp
 													FileUtils

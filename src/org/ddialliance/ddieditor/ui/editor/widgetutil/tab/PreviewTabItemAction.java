@@ -16,6 +16,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.ddialliance.ddieditor.model.DdiManager;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
+import org.ddialliance.ddieditor.ui.util.PrintUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -35,13 +36,10 @@ public class PreviewTabItemAction extends TabItemAction {
 		this.model = model;
 		this.browser = browser;
 
-		// prepare transformer:
-		TransformerFactory tFactory = TransformerFactory.newInstance();
+		// prepare transformer
 		try {
-			this.transformer = tFactory.newTransformer(new StreamSource(
-					"resources" + File.separator + "ddixslt" + File.separator
-							+ "ddaddi3_1.xsl"));
-		} catch (TransformerConfigurationException e1) {
+			this.transformer = new PrintUtil().getTransformer();
+		} catch (Exception e1) {
 			throw new DDIFtpException("XML to HTML Transformer error: "
 					+ e1.getMessage());
 		}
@@ -56,11 +54,6 @@ public class PreviewTabItemAction extends TabItemAction {
 				.substitutePrefixesFromElements(
 						model.getDocument().xmlText(
 								DdiManager.getInstance().getXmlOptions()));
-
-		// set display language:
-		transformer.setParameter("lang", LanguageUtil.getDisplayLanguage());
-		transformer.setParameter("fallback-lang", LanguageUtil.getOriginalLanguage());
-		transformer.setParameter("render-as-document", "true");
 
 		// transform xml to html:
 		// TODO Add missing link to cascading stylesheet (ddi.css) 

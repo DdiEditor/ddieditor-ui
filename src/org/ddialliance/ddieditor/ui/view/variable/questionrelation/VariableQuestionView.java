@@ -271,7 +271,7 @@ public class VariableQuestionView extends ViewPart implements IPropertyListener 
 
 	private void setConcepts(Variable vari, QuestionItem quei)
 			throws DDIFtpException {
-		if (quei.getConceptReferenceType() != null) {
+		if (!quei.getDocument().getQuestionItem().getConceptReferenceList().isEmpty()) {
 			vari.getDocument().getVariable()
 					.setConceptReference(quei.getConceptReferenceType());
 			new VariableDao().update(vari);

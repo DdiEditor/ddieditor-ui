@@ -52,6 +52,15 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// ddi
 		store.setDefault(DdiEditorConfig.DDI_AGENCY,
 				DdiEditorConfig.get(DdiEditorConfig.DDI_AGENCY));
+		store.setDefault(DdiEditorConfig.DDI_AGENCY_NAME,
+				DdiEditorConfig.get(DdiEditorConfig.DDI_AGENCY_NAME));
+		store.setDefault(DdiEditorConfig.DDI_AGENCY_DESCRIPTION,
+				DdiEditorConfig.get(DdiEditorConfig.DDI_AGENCY_DESCRIPTION));
+		store.setDefault(DdiEditorConfig.DDI_AGENCY_IDENTIFIER,
+				DdiEditorConfig.get(DdiEditorConfig.DDI_AGENCY_IDENTIFIER));
+		store.setDefault(DdiEditorConfig.DDI_AGENCY_HP,
+				DdiEditorConfig.get(DdiEditorConfig.DDI_AGENCY_HP));
+		
 		store.setDefault(DdiEditorConfig.DDI_LANGUAGE,
 				DdiEditorConfig.get(DdiEditorConfig.DDI_LANGUAGE));
 		store.setDefault(DdiEditorConfig.DDI_INSTRUMENT_PROGRAM_LANG,

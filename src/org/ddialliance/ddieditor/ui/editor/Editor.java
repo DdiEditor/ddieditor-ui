@@ -141,7 +141,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	private TabFolder tabFolder;
 	private TabItem labelDescriptionTabItem;
 	private Combo responseTypeCombo;
-	private List<ResponseTypeReference> responseDomainReferenceList;
 
 	public static String NEW_ITEM = "new_item";
 	public static String CONTROL_ID = "control_id";
@@ -150,9 +149,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public static String PREVIEW_TAB_ID = "preview";
 	public static String PROPERTY_TAB_ID = "property";
 
-	protected static IModel model;
+	protected IModel model;
 	protected IDao dao;
-	protected EditorInput editorInput;
 
 	protected Group labelDescriptionTabGroup; // May be used for expanding Label
 
@@ -162,6 +160,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			ItemSequenceTypeType.ROTATE.toString(),
 			ItemSequenceTypeType.OTHER.toString() };
 
+	private List<ResponseTypeReference> responseDomainReferenceList;
 	private Label representationLabel;
 	private Group representationGroup;
 	private Group parentGroup;
@@ -176,108 +175,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			Translator.trans("ResponseTypeDetail.label.Category"),
 			Translator.trans("ResponseTypeDetail.label.Geographic") };
 
-	static public String[] getResponseTypeLabels() {
-
-		List<String> result = new java.util.ArrayList(
-				RESPONSE_TYPE_LABELS.length
-						+ RESPONSE_TYPE_LABELS_QI_EXTENSION.length);
-
-		result.addAll(Arrays.asList(RESPONSE_TYPE_LABELS));
-		if (model instanceof QuestionItem) {
-			result.addAll(Arrays.asList(RESPONSE_TYPE_LABELS_QI_EXTENSION));
-		}
-		return result.toArray(new String[result.size()]);
-	}
-
-	static public String getResponseTypeLabel(ResponseType rt) {
-		if (rt.ordinal() <= RESPONSE_TYPE_LABELS.length - 1) {
-			return RESPONSE_TYPE_LABELS[rt.ordinal()];
-		}
-		return RESPONSE_TYPE_LABELS_QI_EXTENSION[rt.ordinal()
-				- RESPONSE_TYPE_LABELS.length];
-	}
-
-	/**
-	 * Return list of Response references
-	 * 
-	 * @return List<ResponseReference>
-	 */
-	static public List<ResponseTypeReference> getResponseReferenceList() {
-		List<ResponseTypeReference> responseDomainReferenceList = new ArrayList<ResponseTypeReference>();
-
-		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[ResponseType.UNDEFINED.ordinal()],
-				ResponseType.UNDEFINED));
-		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[ResponseType.CODE.ordinal()],
-				ResponseType.CODE));
-		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[ResponseType.TEXT.ordinal()],
-				ResponseType.TEXT));
-		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[ResponseType.NUMERIC.ordinal()],
-				ResponseType.NUMERIC));
-		responseDomainReferenceList.add(new ResponseTypeReference(
-				RESPONSE_TYPE_LABELS[ResponseType.DATE.ordinal()],
-				ResponseType.DATE));
-		if (model instanceof QuestionItem) {
-			responseDomainReferenceList.add(new ResponseTypeReference(
-					RESPONSE_TYPE_LABELS_QI_EXTENSION[ResponseType.CATEGORY
-							.ordinal() - RESPONSE_TYPE_LABELS.length],
-					ResponseType.CATEGORY));
-			responseDomainReferenceList.add(new ResponseTypeReference(
-					RESPONSE_TYPE_LABELS_QI_EXTENSION[ResponseType.GEOGRAPHIC
-							.ordinal() - RESPONSE_TYPE_LABELS.length],
-					ResponseType.GEOGRAPHIC));
-		}
-		return responseDomainReferenceList;
-	}
-
-	static public ResponseType getResponseType(
-			RepresentationType representationType) {
-
-		if (representationType == null) {
-			return ResponseType.UNDEFINED;
-		}
-		String responseType = representationType.getClass().getSimpleName();
-		ResponseType responseTypeEnum = null;
-		if (model instanceof QuestionItem) {
-			if (responseType.equals("RepresentationTypeImpl")) {
-				responseTypeEnum = ResponseType.UNDEFINED;
-			} else if (responseType.equals("CodeDomainTypeImpl")) {
-				responseTypeEnum = ResponseType.CODE;
-			} else if (responseType.equals("TextDomainTypeImpl")) {
-				responseTypeEnum = ResponseType.TEXT;
-			} else if (responseType.equals("NumericDomainTypeImpl")) {
-				responseTypeEnum = ResponseType.NUMERIC;
-			} else if (responseType.equals("DateDomainTypeImpl")) {
-				responseTypeEnum = ResponseType.DATE;
-			} else if (responseType.equals("CategoryDomainTypeImpl")) {
-				responseTypeEnum = ResponseType.CATEGORY;
-			} else if (responseType.equals("GeographicDomainTypeImpl")) {
-				responseTypeEnum = ResponseType.GEOGRAPHIC;
-			}
-		} else if (model instanceof Variable) {
-			if (responseType.equals("RepresentationTypeImpl")) {
-				responseTypeEnum = ResponseType.UNDEFINED;
-			} else if (responseType.equals("CodeRepresentationTypeImpl")) {
-				responseTypeEnum = ResponseType.CODE;
-			} else if (responseType.equals("TextRepresentationTypeImpl")) {
-				responseTypeEnum = ResponseType.TEXT;
-			} else if (responseType.equals("NumericRepresentationTypeImpl")) {
-				responseTypeEnum = ResponseType.NUMERIC;
-			} else if (responseType.equals("DateRepresentationTypeImpl")) {
-				responseTypeEnum = ResponseType.DATE;
-			}
-		}
-		return responseTypeEnum;
-	}
-
 	/**
 	 * Default constructor. Usage to gain access to create widget methods <br>
 	 * Note: Builds an empty editor input.
-	 * 
-	 * @wbp.parser.constructor
 	 */
 	public Editor() {
 	}
@@ -295,7 +195,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public Editor(String title, String description, String editorID) {
 		this.title = title;
 		this.description = description;
-		this.ID = editorID;
+		ID = editorID;
 	}
 
 	public IModel getModel() {
@@ -306,22 +206,24 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		setSite(site);
-		this.editorInput = (EditorInput) input;
+		setInput(input);
 
 		// working resource
 		try {
 			PersistenceManager.getInstance().setWorkingResource(
-					editorInput.getResourceId());
+					((EditorInput) getEditorInput()).getResourceId());
 		} catch (DDIFtpException e) {
 			throw new PartInitException(
 					Translator.trans("editor.init.error.create"), e);
 		}
 
 		// edit mode
-		if (editorInput.getEditorMode().equals(EditorModeType.NEW)) {
+		if (((EditorInput) getEditorInput()).getEditorMode().equals(
+				EditorModeType.NEW)) {
 			try {
-				model = dao.create("", "", editorInput.getParentId(),
-						editorInput.getParentVersion());
+				model = dao.create("", "",
+						((EditorInput) getEditorInput()).getParentId(),
+						((EditorInput) getEditorInput()).getParentVersion());
 				model.setDisplayLanguage(LanguageUtil.getDisplayLanguage());
 				model.setOriginalLanguage(LanguageUtil.getOriginalLanguage());
 			} catch (Exception e) {
@@ -335,17 +237,23 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				throw new PartInitException(
 						Translator.trans("editor.init.error.create"), e);
 			}
-		} else if (editorInput.getEditorMode().equals(EditorModeType.EDIT)
-				|| editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+		}
+		// view - edit mode
+		else if (((EditorInput) getEditorInput()).getEditorMode().equals(
+				EditorModeType.EDIT)
+				|| ((EditorInput) getEditorInput()).getEditorMode().equals(
+						EditorModeType.VIEW)) {
 			try {
-				if (editorInput.getElementType() == ElementType.QUESTION_ITEM) {
-					((QuestionItemDao) dao).setParentElementType(editorInput
-							.getParentElementType());
+				if (((EditorInput) getEditorInput()).getElementType() == ElementType.QUESTION_ITEM) {
+					((QuestionItemDao) dao)
+							.setParentElementType(((EditorInput) getEditorInput())
+									.getParentElementType());
 				}
 
-				model = dao.getModel(editorInput.getId(),
-						editorInput.getVersion(), editorInput.getParentId(),
-						editorInput.getParentVersion());
+				model = dao.getModel(((EditorInput) getEditorInput()).getId(),
+						((EditorInput) getEditorInput()).getVersion(),
+						((EditorInput) getEditorInput()).getParentId(),
+						((EditorInput) getEditorInput()).getParentVersion());
 				model.setDisplayLanguage(LanguageUtil.getDisplayLanguage());
 				model.setOriginalLanguage(LanguageUtil.getOriginalLanguage());
 			} catch (Exception e) {
@@ -360,23 +268,28 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		}
 
 		// update input
-		editorInput.setId(model.getId());
+		((EditorInput) getEditorInput()).setId(model.getId());
 		// check for change in getLightElements vs getElement in DDIManager
-		if (!(editorInput.getVersion() != null && model.getVersion() == null)) {
-			editorInput.setVersion(model.getVersion());
+		if (!(((EditorInput) getEditorInput()).getVersion() != null && model
+				.getVersion() == null)) {
+			((EditorInput) getEditorInput()).setVersion(model.getVersion());
 		}
-		editorInput.setParentId(model.getParentId());
-		editorInput.setParentVersion(model.getParentVersion());
-		setInput(editorInput);
+		((EditorInput) getEditorInput()).setParentId(model.getParentId());
+		((EditorInput) getEditorInput()).setParentVersion(model
+				.getParentVersion());
+		setInput(((EditorInput) getEditorInput()));
 
 		// part name
-		if (editorInput.getLabelList() == null
-				|| editorInput.getLabelList().isEmpty()) {
+		if (((EditorInput) getEditorInput()).getEditorMode().equals(
+				EditorModeType.NEW)
+				|| ((EditorInput) getEditorInput()).getLabelList() == null
+				|| ((EditorInput) getEditorInput()).getLabelList().isEmpty()) {
 			setPartName(model.getId());
 		} else {
 			try {
 				org.ddialliance.ddieditor.model.lightxmlobject.LabelType name = (org.ddialliance.ddieditor.model.lightxmlobject.LabelType) XmlBeansUtil
-						.getDefaultLangElement(editorInput.getLabelList());
+						.getDefaultLangElement(((EditorInput) getEditorInput())
+								.getLabelList());
 				if (name != null) {
 					setPartName(XmlBeansUtil.getTextOnMixedElement(name));
 				}
@@ -909,7 +822,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		labelText.setLayoutData(gd_labelText);
 		try {
 			labelText.setText(labelDescription.getDisplayLabel());
-			if (this.editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+			if (((EditorInput) getEditorInput()).getEditorMode().equals(
+					EditorModeType.VIEW)) {
 				labelText.setEnabled(false);
 			}
 		} catch (DDIFtpException e) {
@@ -953,7 +867,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 				| SWT.V_SCROLL | SWT.BORDER);
 		try {
 			simpleDescrStyledText.setText(labelDescription.getDisplayDescr());
-			if (this.editorInput.getEditorMode().equals(EditorModeType.VIEW)) {
+			if (((EditorInput) getEditorInput()).getEditorMode().equals(
+					EditorModeType.VIEW)) {
 				simpleDescrStyledText.setEnabled(false);
 			}
 		} catch (DDIFtpException e1) {
@@ -1283,11 +1198,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					}
 					updateParentWidget(translationDialog);
 				} else {
-					for (Iterator iterator = items.iterator(); iterator
-							.hasNext();) {
-						Object object2 = (Object) iterator.next();
-
-					}
 					// restore original items
 					for (Iterator iteratorItems = items.iterator(), iteratorCache = cache
 							.iterator(); iteratorCache.hasNext();) {
@@ -1642,10 +1552,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		e.doit = false;
 		// Get the character typed
 		myChar = e.character;
-		// log.debug("Verify char: '" + myChar + "'");
-
-		int i = myChar;
-		// log.debug("Verify char(hex): " + Integer.toHexString(i));
 
 		IActionBars bars = currentSite.getActionBars();
 
@@ -1723,7 +1629,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	public void createResponseType(Group group) throws DDIFtpException {
-
 		// only supported for Variables and Question Items
 		if (!(model instanceof Variable) && !(model instanceof QuestionItem)) {
 			throw new DDIFtpException("Unsupported class: "
@@ -1759,7 +1664,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			}
 		}
 
-		responseDomainReferenceList = getResponseReferenceList();
+		final List<ResponseTypeReference> responseDomainReferenceList = getResponseReferenceList();
 
 		// select relevant Response Type
 		int index = 0;
@@ -1805,7 +1710,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 								null,
 								new Status(IStatus.ERROR, ID, 0, errMess, null),
 								IStatus.ERROR);
-						responseTypeCombo.select(0);
+
 						disposeRepresentation();
 						return;
 					}
@@ -1831,7 +1736,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 	}
 
 	private void createResponseTypeDetail() throws DDIFtpException {
-
 		representationLabel = createLabel(parentGroup, "");
 		representationLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP,
 				false, false, 1, 1));
@@ -2170,7 +2074,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 						try {
 							int select = ((Combo) e.getSource())
 									.getSelectionIndex();
-							
+
 							if (model instanceof Variable) {
 								((Variable) model).executeChange(++select,
 										ModelIdentifingType.Type_K.class);
@@ -2202,10 +2106,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			}
 		}
 	}
-
-	/**
-	 * Dispose Representation
-	 */
+	
 	public void disposeRepresentation() {
 		log.debug("Dispose Response");
 		if (!representationGroup.isDisposed()) {
@@ -2238,8 +2139,105 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		codeValue.setText(codeValues.toString());
 	}
 
-	private void createMissingValue(Group representationGroup) {
+	public String[] getResponseTypeLabels() {
+		List<String> result = new java.util.ArrayList<String>(
+				RESPONSE_TYPE_LABELS.length
+						+ RESPONSE_TYPE_LABELS_QI_EXTENSION.length);
 
+		result.addAll(Arrays.asList(RESPONSE_TYPE_LABELS));
+		if (model instanceof QuestionItem) {
+			result.addAll(Arrays.asList(RESPONSE_TYPE_LABELS_QI_EXTENSION));
+		}
+		return result.toArray(new String[result.size()]);
+	}
+
+	public String getResponseTypeLabel(ResponseType rt) {
+		if (rt.ordinal() <= RESPONSE_TYPE_LABELS.length - 1) {
+			return RESPONSE_TYPE_LABELS[rt.ordinal()];
+		}
+		return RESPONSE_TYPE_LABELS_QI_EXTENSION[rt.ordinal()
+				- RESPONSE_TYPE_LABELS.length];
+	}
+
+	/**
+	 * Return list of Response references
+	 * 
+	 * @return List<ResponseReference>
+	 */
+	public List<ResponseTypeReference> getResponseReferenceList() {
+		if (responseDomainReferenceList != null) {
+			return responseDomainReferenceList;
+		}
+
+		responseDomainReferenceList = new ArrayList<ResponseTypeReference>();
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[ResponseType.UNDEFINED.ordinal()],
+				ResponseType.UNDEFINED));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[ResponseType.CODE.ordinal()],
+				ResponseType.CODE));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[ResponseType.TEXT.ordinal()],
+				ResponseType.TEXT));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[ResponseType.NUMERIC.ordinal()],
+				ResponseType.NUMERIC));
+		responseDomainReferenceList.add(new ResponseTypeReference(
+				RESPONSE_TYPE_LABELS[ResponseType.DATE.ordinal()],
+				ResponseType.DATE));
+		if (model instanceof QuestionItem) {
+			responseDomainReferenceList.add(new ResponseTypeReference(
+					RESPONSE_TYPE_LABELS_QI_EXTENSION[ResponseType.CATEGORY
+							.ordinal() - RESPONSE_TYPE_LABELS.length],
+					ResponseType.CATEGORY));
+			responseDomainReferenceList.add(new ResponseTypeReference(
+					RESPONSE_TYPE_LABELS_QI_EXTENSION[ResponseType.GEOGRAPHIC
+							.ordinal() - RESPONSE_TYPE_LABELS.length],
+					ResponseType.GEOGRAPHIC));
+		}
+		return responseDomainReferenceList;
+	}
+
+	public ResponseType getResponseType(RepresentationType representationType) {
+		if (representationType == null) {
+			return ResponseType.UNDEFINED;
+		}
+
+		ResponseType result = null;
+		String responseType = representationType.getClass().getSimpleName();
+		if (model instanceof QuestionItem) {
+			if (responseType.equals("RepresentationTypeImpl")) {
+				result = ResponseType.UNDEFINED;
+			} else if (responseType.equals("CodeDomainTypeImpl")) {
+				result = ResponseType.CODE;
+			} else if (responseType.equals("TextDomainTypeImpl")) {
+				result = ResponseType.TEXT;
+			} else if (responseType.equals("NumericDomainTypeImpl")) {
+				result = ResponseType.NUMERIC;
+			} else if (responseType.equals("DateDomainTypeImpl")) {
+				result = ResponseType.DATE;
+			} else if (responseType.equals("CategoryDomainTypeImpl")) {
+				result = ResponseType.CATEGORY;
+			} else if (responseType.equals("GeographicDomainTypeImpl")) {
+				result = ResponseType.GEOGRAPHIC;
+			}
+		} else if (model instanceof Variable) {
+			if (responseType.equals("RepresentationTypeImpl")) {
+				result = ResponseType.UNDEFINED;
+			} else if (responseType.equals("CodeRepresentationTypeImpl")) {
+				result = ResponseType.CODE;
+			} else if (responseType.equals("TextRepresentationTypeImpl")) {
+				result = ResponseType.TEXT;
+			} else if (responseType.equals("NumericRepresentationTypeImpl")) {
+				result = ResponseType.NUMERIC;
+			} else if (responseType.equals("DateRepresentationTypeImpl")) {
+				result = ResponseType.DATE;
+			}
+		}
+		return result;
+	}
+
+	private void createMissingValue(Group representationGroup) {
 		StringBuffer missingValues = new StringBuffer();
 		List list = null;
 		if (model instanceof Variable) {

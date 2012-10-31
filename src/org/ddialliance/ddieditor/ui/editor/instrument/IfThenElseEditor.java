@@ -231,14 +231,18 @@ public class IfThenElseEditor extends Editor {
 
 		// then ref
 		List<LightXmlObjectType> controlConstructRefList = new ArrayList<LightXmlObjectType>();
-		String ccId = modelImpl.getDocument().getIfThenElse()
-				.getThenConstructReference().getIDList().get(0)
-				.getStringValue();
-		String ccVersion = modelImpl.getDocument().getIfThenElse()
-				.getThenConstructReference().getVersionList().size() == 0 ? null
-				: modelImpl.getDocument().getIfThenElse()
-						.getThenConstructReference().getVersionList().get(0)
-						.getStringValue();
+		String ccId = null;
+		String ccVersion = null;
+		if (modelImpl.getThenReference() != null) {
+			ccId = modelImpl.getDocument().getIfThenElse()
+					.getThenConstructReference().getIDList().get(0)
+					.getStringValue();
+			ccVersion = modelImpl.getDocument().getIfThenElse()
+					.getThenConstructReference().getVersionList().size() == 0 ? null
+					: modelImpl.getDocument().getIfThenElse()
+							.getThenConstructReference().getVersionList()
+							.get(0).getStringValue();
+		}
 		try {
 			controlConstructRefList = DdiManager.getInstance()
 					.getControlConstructsLight(ccId, ccVersion, null, null);
@@ -246,11 +250,12 @@ public class IfThenElseEditor extends Editor {
 			showError(e);
 		}
 
-		CconRefSelectCombo  thenRefSelectCombo = createCconRefSelection(group,
+		CconRefSelectCombo thenRefSelectCombo = createCconRefSelection(group,
 				Translator.trans("IfThenElse.editor.thenref"),
 				Translator.trans("IfThenElse.editor.thenref"),
-				modelImpl.getThenReference(), controlConstructRefList, false, ElementType.CONTROL_CONSTRUCT_SCHEME);
-		
+				modelImpl.getThenReference(), controlConstructRefList, false,
+				ElementType.CONTROL_CONSTRUCT_SCHEME);
+
 		thenRefSelectCombo.addSelectionListener(Translator
 				.trans("IfThenElse.editor.thenref"),
 				new ReferenceSelectionAdapter(thenRefSelectCombo, modelImpl,
@@ -276,11 +281,12 @@ public class IfThenElseEditor extends Editor {
 		} else {
 			controlConstructRefList.clear();
 		}
-		
+
 		CconRefSelectCombo elseRefSelectCombo = createCconRefSelection(group,
 				Translator.trans("IfThenElse.editor.elseref"),
 				Translator.trans("IfThenElse.editor.elseref"),
-				modelImpl.getElseReference(), controlConstructRefList, false, ElementType.CONTROL_CONSTRUCT_SCHEME);
+				modelImpl.getElseReference(), controlConstructRefList, false,
+				ElementType.CONTROL_CONSTRUCT_SCHEME);
 
 		elseRefSelectCombo.addSelectionListener(Translator
 				.trans("IfThenElse.editor.elseref"),
@@ -335,10 +341,10 @@ public class IfThenElseEditor extends Editor {
 	}
 
 	public void updatequeiRefTable() throws DDIFtpException {
-		if (modelImpl.getIfQuestionReferences()==null) { // guard
+		if (modelImpl.getIfQuestionReferences() == null) { // guard
 			return;
 		}
-		
+
 		String[] queiRefIds = new String[modelImpl.getIfQuestionReferences()
 				.size()];
 		int count = 0;
@@ -552,7 +558,8 @@ public class IfThenElseEditor extends Editor {
 			selectCombo = editor.createRefSelection(group,
 					Translator.trans("IfThenElse.editor.ifquestionref"),
 					Translator.trans("IfThenElse.editor.ifquestionref"),
-					ReferenceType.Factory.newInstance(), refs, false, ElementType.CONTROL_CONSTRUCT_SCHEME);
+					ReferenceType.Factory.newInstance(), refs, false,
+					ElementType.CONTROL_CONSTRUCT_SCHEME);
 			selectCombo.addSelectionListener(
 					Translator.trans("IfThenElse.editor.ifquestionref"),
 					new MenuPopupSelectionAdapter(this));

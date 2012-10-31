@@ -1,21 +1,24 @@
 package org.ddialliance.ddieditor.ui.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
+import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 public class DialogUtil {
 	/**
@@ -60,8 +63,33 @@ public class DialogUtil {
 			title = Translator.trans("ErrorTitle");
 		}
 
-		ErrorDialog.openError(shell, title, null, new Status(IStatus.ERROR,
-				pluginId, 0, errorMessage, e));
+		// exception or real throwable
+		Throwable t = null;
+		if (e instanceof DDIFtpException
+				&& ((DDIFtpException) e).getRealThrowable() != null) {
+			t = ((DDIFtpException) e).getRealThrowable();
+		}
+		if (t == null) {
+			t = e;
+		}
+
+		// stack trace
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter printWriter = new PrintWriter(stringWriter);
+		t.printStackTrace(printWriter);
+		final String trace = stringWriter.toString();
+		List<Status> childStatuses = new ArrayList<Status>();
+		for (String line : trace.split(System.getProperty("line.separator"))) {
+			childStatuses.add(new Status(IStatus.ERROR, pluginId, line));
+		}
+
+		// multi status
+		MultiStatus multiStatus = new MultiStatus(Activator.PLUGIN_ID,
+				IStatus.ERROR, childStatuses.toArray(new Status[] {}),
+				t.getLocalizedMessage(), t);
+
+		// show error
+		ErrorDialog.openError(null, pluginId, errorMessage, multiStatus);
 	}
 
 	private static void checkException(Throwable e) {

@@ -7,6 +7,7 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlCursor.TokenType;
 import org.apache.xmlbeans.XmlObject;
 import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
+import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.maintainablelabel.MaintainableLightLabelQueryResult;
 import org.ddialliance.ddieditor.ui.view.variable.questionrelation.VariableQuestionRelation;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -22,16 +23,27 @@ public class XmlObjectComparer implements IElementComparer {
 		boolean result = false;
 		// xmlobject
 		if (a instanceof XmlObject && b instanceof XmlObject) {
+			// default
 			result = ((XmlObject) a).valueEquals((XmlObject) b);
-			// if (log.isDebugEnabled() && result) {
-			// log.debug(result + "\n" + a + "\n" + b);
-			// }
+
+			// light xml object
 			if (a instanceof LightXmlObjectType
 					&& b instanceof LightXmlObjectType) {
 				return result
 						&& ((LightXmlObjectType) a).getId().equals(
 								((LightXmlObjectType) b).getId());
 			}
+
+			// ddi resource type
+			if (a instanceof DDIResourceType && b instanceof DDIResourceType) {
+				return result
+						&& ((DDIResourceType) a).getOrgName().equals(
+								((DDIResourceType) b).getOrgName());
+			}
+
+			// if (log.isDebugEnabled() && result) {
+			// log.debug(result + "\n" + a + "\n" + b);
+			// }
 			return result;
 		}
 		// maintainable light label query result
@@ -119,7 +131,7 @@ public class XmlObjectComparer implements IElementComparer {
 			} else {
 				return element.hashCode();
 			}
-		} 
+		}
 		// guard
 		else {
 			return element.hashCode();

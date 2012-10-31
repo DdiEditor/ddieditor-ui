@@ -22,12 +22,18 @@ public class LabelDescriptionEditor extends Editor {
 	private String editorEntityName;
 	private ILabelDescription simpleElement;
 	private TableViewer tableViewer;
-	
+
 	public LabelDescriptionEditor(String headerEditorTitle,
 			String headerEditorDescr, String editorEntityName, String editorID) {
 		super(headerEditorTitle, headerEditorDescr, editorID);
 		this.editorEntityName = editorEntityName;
-		this.ID = editorID;
+		Editor.ID = editorID;
+	}
+
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
+		super.init(site, input);
+		this.simpleElement = (ILabelDescription) model;
 	}
 
 	/**
@@ -46,17 +52,11 @@ public class LabelDescriptionEditor extends Editor {
 		createPropertiesTab(getTabFolder());
 		createXmlTab(simpleElement);
 		createPreviewTab(simpleElement);
-		// Clean dirt from initialization
+
 		editorStatus.clearChanged();
 	}
 
 	public Viewer getViewer() {
 		return this.tableViewer;
-	}
-
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
-		super.init(site, input);
-		this.simpleElement = (ILabelDescription) model;
 	}
 }

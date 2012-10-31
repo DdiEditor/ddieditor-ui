@@ -223,20 +223,43 @@ public class VariableEditor extends Editor {
 				.trans("editor.label.description"));
 		Group descriptionGroup = createGroup(tabItem2,
 				Translator.trans("editor.label.description"));
-
+		
 		try {
 			// name
-			Text nameText = createTextInput(descriptionGroup,
+			final Text nameText = createTextInput(descriptionGroup,
 					Translator.trans("VariableEditor.label.name"),
 					modelImpl.getName() == null ? "" : modelImpl.getName()
 							.getStringValue(), false);
+			
+			// label
+			final Text txt = createLabelInput(descriptionGroup,
+					Translator.trans("editor.label.label"), modelImpl.getDocument()
+							.getVariable().getLabelList(), modelImpl.getDocument()
+							.getVariable().getId());
+			
 			nameText.addModifyListener(new TextStyledTextModyfiListener(model,
 					NameType.class, getEditorIdentification()));
 
-			Text txt = createLabelInput(descriptionGroup,
-					Translator.trans("editor.label.label"), modelImpl
-							.getDocument().getVariable().getLabelList(),
-					modelImpl.getDocument().getVariable().getId());
+			nameText.addModifyListener(new ModifyListener() {
+				@Override
+				public void modifyText(ModifyEvent e) {
+					Text text = (Text) e.getSource();
+					setEditorTabName(text.getText() + " " + txt.getText());
+				}
+			});
+
+			txt.addModifyListener(new ModifyListener() {
+				@Override
+				public void modifyText(ModifyEvent e) {
+					Text text = (Text) e.getSource();
+					setEditorTabName(nameText.getText() + " " + text.getText());
+				}
+			});
+
+			// reset editor tab
+			if (!nameText.getText().equals("")&&!txt.getText().equals("")) {
+				setEditorTabName(nameText.getText() + " " + txt.getText());				
+			}			
 
 			createTranslation(descriptionGroup,
 					Translator.trans("editor.button.translate"), modelImpl

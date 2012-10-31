@@ -65,9 +65,10 @@ along with Foobar.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <plugin id="ddadb"/>
       <plugin id="ddieditor"/>
       <plugin id="ddieditor-classification"/>
+      <plugin id="ddieditor-genericode"/>
       <plugin id="ddieditor-line"/>
       <plugin id="ddieditor-model"/>
-      <plugin id="ddieditor-osiris-batch-convert" fragment=""/>
+      <plugin id="ddieditor-osiris-batch-convert"/>
       <plugin id="ddieditor-osiris2ddi3" fragment=""/>
       <plugin id="ddieditor-spss"/>
       <plugin id="ddieditor-spss-stat"/>

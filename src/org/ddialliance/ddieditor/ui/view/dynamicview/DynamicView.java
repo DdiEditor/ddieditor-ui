@@ -253,11 +253,15 @@ public class DynamicView extends ViewPart {
 			// update universe
 			LightXmlObjectListDocument universeDoc = LightXmlObjectListDocument.Factory
 					.newInstance();
-			LightXmlObjectListType universeList = universeDoc
-					.addNewLightXmlObjectList();
-			universeList.setLightXmlObjectArray(LightXmlObjectUtil
-					.getXmlObjectsByCustomListType(lightXmlObjectListDoc,
-							"Universe").toArray(new LightXmlObjectType[] {}));
+
+			if (lightXmlObjectListDoc != null) {
+				LightXmlObjectListType universeList = universeDoc
+						.addNewLightXmlObjectList();
+				universeList.setLightXmlObjectArray(LightXmlObjectUtil
+						.getXmlObjectsByCustomListType(lightXmlObjectListDoc,
+								"Universe")
+						.toArray(new LightXmlObjectType[] {}));
+			}
 
 			updateTable(universeDoc, universeTable);
 		}
@@ -458,6 +462,11 @@ public class DynamicView extends ViewPart {
 
 	private void updateTable(LightXmlObjectListDocument list, Table table)
 			throws DDIFtpException {
+		if (list == null || list.getLightXmlObjectList() == null
+				|| list.getLightXmlObjectList().getLightXmlObjectList() == null) {
+			return;
+		}
+
 		String vari = "Variable";
 		// insert into table
 		for (LightXmlObjectType lightXmlObject : list.getLightXmlObjectList()
@@ -476,13 +485,15 @@ public class DynamicView extends ViewPart {
 				.newInstance();
 		LightXmlObjectListType lightXmlObjectList = lightXmlObjectDoc
 				.addNewLightXmlObjectList();
-		lightXmlObjectList.setLightXmlObjectArray(LightXmlObjectUtil
-				.getXmlObjectsByCustomListType(customLightXmlObjectDoc,
-						elementName).toArray(new LightXmlObjectType[] {}));
-		if (elementName.equals("Question")) {
-			for (LightXmlObjectType lightXmlObject : lightXmlObjectList
-					.getLightXmlObjectList()) {
-				lightXmlObject.setElement("QuestionItem");
+		if (lightXmlObjectList != null || customLightXmlObjectDoc != null) {
+			lightXmlObjectList.setLightXmlObjectArray(LightXmlObjectUtil
+					.getXmlObjectsByCustomListType(customLightXmlObjectDoc,
+							elementName).toArray(new LightXmlObjectType[] {}));
+			if (elementName.equals("Question")) {
+				for (LightXmlObjectType lightXmlObject : lightXmlObjectList
+						.getLightXmlObjectList()) {
+					lightXmlObject.setElement("QuestionItem");
+				}
 			}
 		}
 		updateTable(lightXmlObjectDoc, table);
@@ -496,8 +507,10 @@ public class DynamicView extends ViewPart {
 				modelImpl.getParentId(), modelImpl.getParentVersion());
 
 		// question item list
-		if (doc.getMultipleQuestionItem().getSubQuestions()
-				.getQuestionItemList().isEmpty()) { // guard
+		if (doc == null
+				|| doc.getMultipleQuestionItem().getSubQuestions() == null
+				|| doc.getMultipleQuestionItem().getSubQuestions()
+						.getQuestionItemList().isEmpty()) { // guard
 			return;
 		}
 
