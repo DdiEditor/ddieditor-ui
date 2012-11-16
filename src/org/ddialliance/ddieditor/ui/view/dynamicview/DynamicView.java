@@ -280,6 +280,7 @@ public class DynamicView extends ViewPart {
 							modelImpl.getVersion(), "UniverseReference"));
 
 			// update variables
+			// TODO fix error in query
 			lightXmlObjectListDoc = DdiManager.getInstance()
 					.getVariablesLightByUniverse(refRes);
 			updateTable(lightXmlObjectListDoc, variableTable);
