@@ -111,12 +111,14 @@
             <view
                   allowMultiple="true"
                   class="org.ddialliance.ddieditor.ui.view.dynamicview.DynamicView"
+                  icon="icons/refresh_nav.gif"
                   id="org.ddialliance.ddieditor.ui.view.dynamicview.DynamicView"
                   name="%view.name.9"
                   restorable="true">
             </view>
             <view
                   class="org.ddialliance.ddieditor.ui.view.validate.ValidateView"
+                  icon="icons/validate.gif"
                   id="org.ddialliance.ddieditor.ui.view.validate.ValidateView"
                   name="Validation"
                   restorable="true">
@@ -606,6 +608,7 @@
                   mnemonic="%menu.mnemonic.4">
                <command
                      commandId="org.ddialliance.ddieditor.ui.command.ValidateDDI3"
+                     icon="icons/validate.gif"
                      label="%command.label.15"
                      mnemonic="%command.mnemonic.15"
                      style="push">
@@ -620,10 +623,45 @@
                   label="%menu.label.2"
                   mnemonic="%menu.mnemonic.2">
                <command
+                     commandId="org.eclipse.ui.window.newWindow"
+                     label="New Window"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.eclipse.ui.window.savePerspective"
+                     label="Save Perspective"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.eclipse.ui.window.resetPerspective"
+                     label="Reset Perspective"
+                     style="push">
+               </command>
+               <separator
+                     name="separator-window-1"
+                     visible="true">
+               </separator>
+               <command
+                     commandId="org.eclipse.ui.perspectives.showPerspective"
+                     label="%command.label.16"
+                     mnemonic="%command.mnemonic.16"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.eclipse.ui.views.showView"
+                     label="Show View"
+                     mnemonic="command.mnemonic.17"
+                     style="push">
+               </command>
+               <separator
+                     name="separator-window-2"
+                     visible="true">
+               </separator>
+               <command
                      commandId="org.eclipse.ui.window.preferences"
                      icon="icons/properties.gif"
                      label="%command.label.10"
-                     mnemonic="%command.mnemonic.9"
+                     mnemonic="%command.mnemonic.10"
                      style="push">
                </command>
             </menu>
