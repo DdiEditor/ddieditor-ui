@@ -1,18 +1,13 @@
 package org.ddialliance.ddieditor.ui.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
+import org.ddialliance.ddieditor.util.DdiEditorConfig;
 
 public class PrintUtil {
 	boolean showNumVarStatistic = false;
@@ -39,7 +34,7 @@ public class PrintUtil {
 				.getResourceAsStream("resources/ddixslt/ddaddi3_1.xsl");
 		StreamSource source = new StreamSource(xslInput);
 		// "file://resources/ddixslt/ddaddi3_1.xsl");
-		
+
 		source.setSystemId(new File("resources/ddixslt/ddaddi3_1.xsl").toURI()
 				.toURL().toString());
 
@@ -65,8 +60,6 @@ public class PrintUtil {
 		transformer.setParameter("fallback-lang",
 				LanguageUtil.getOriginalLanguage());
 
-		// <!--xsl:param
-		// name="translations">i18n/messages_da.properties.xml</xsl:param-->
 		transformer.setParameter("translations", "i18n/messages_"
 				+ LanguageUtil.getDisplayLanguage() + ".properties.xml");
 
@@ -91,6 +84,13 @@ public class PrintUtil {
 
 		// show study-information
 		transformer.setParameter("show-study-information", 1);
+
+		// show guidance
+		transformer.setParameter("show-guidance", 1);
+		transformer.setParameter("guidancelink", DdiEditorConfig
+				.get(DdiEditorConfig.DDI_STYLE_SHEET_CODEBOOK_GUIDE_LINK));
+		transformer.setParameter("currationprocesslink", DdiEditorConfig
+				.get(DdiEditorConfig.DDI_STYLE_SHEET_CURATION_PROCESS_LINK));
 
 		// show study-information
 		transformer.setParameter("show-kind-of-data", 0);
@@ -117,7 +117,7 @@ public class PrintUtil {
 				: 0);
 
 		// show inline variable toc
-		transformer.setParameter("show-inline-toc", addNaviagtionBar ? 0 : 1);
+		transformer.setParameter("show-variable-list", addNaviagtionBar ? 0 : 1);
 
 		// path prefix to the
 		// css-files
