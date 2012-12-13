@@ -71,53 +71,53 @@ public class PrintUtil {
 		// include interactive js
 		// and jquery for navigation
 		// (external links to eXist)
-		transformer.setParameter("include-js", 1);
+		transformer.setParameter("include-js", "true");
 
 		// print anchors for eg
 		// QuestionItems
-		transformer.setParameter("print-anchor", 1);
+		transformer.setParameter("print-anchor", "true");
 
 		// show the title (and
 		// subtitle, creator, etc.)
 		// of the study
-		transformer.setParameter("show-study-title", 1);
+		transformer.setParameter("show-study-title", "true");
 
 		// show study-information
-		transformer.setParameter("show-study-information", 1);
+		transformer.setParameter("show-study-information", "true");
 
 		// show guidance
-		transformer.setParameter("show-guidance", 1);
+		transformer.setParameter("show-guidance", "true");
 		transformer.setParameter("guidancelink", DdiEditorConfig
 				.get(DdiEditorConfig.DDI_STYLE_SHEET_CODEBOOK_GUIDE_LINK));
 		transformer.setParameter("currationprocesslink", DdiEditorConfig
 				.get(DdiEditorConfig.DDI_STYLE_SHEET_CURATION_PROCESS_LINK));
 
 		// show study-information
-		transformer.setParameter("show-kind-of-data", 0);
+		transformer.setParameter("show-kind-of-data", "false");
 
 		// show citaion as part study-information
-		transformer.setParameter("show-citation", 0);
+		transformer.setParameter("show-citation", "false");
 
 		// show the abstract as part
 		// of study-information
-		transformer.setParameter("show-abstract", 0);
+		transformer.setParameter("show-abstract", "false");
 
 		// show the coverage as part
 		// of study-information
-		transformer.setParameter("show-coverage", 0);
+		transformer.setParameter("show-coverage", "false");
 
 		// show the questions as a
 		// separate flow from the
 		// variables
-		transformer.setParameter("show-questionnaires", 0);
+		transformer.setParameter("show-questionnaires", "false");
 
 		// show variable
 		// navigation-bar
-		transformer.setParameter("show-navigration-bar", addNaviagtionBar ? 1
-				: 0);
+		transformer.setParameter("show-navigration-bar", addNaviagtionBar ? "true"
+				: "false");
 
 		// show inline variable toc
-		transformer.setParameter("show-variable-list", addNaviagtionBar ? 0 : 1);
+		transformer.setParameter("show-variable-list", addNaviagtionBar ? "false" : "true");
 
 		// path prefix to the
 		// css-files
@@ -130,12 +130,12 @@ public class PrintUtil {
 
 		// show numeric freq
 		transformer.setParameter("show-numeric-var-frequence",
-				showNumVarStatistic ? 1 : 0);
+				showNumVarStatistic ? "true" : "false");
 
 		// print universe on
 		// variable
-		transformer.setParameter("show-universe", universerefOnVariables ? 1
-				: 0);
+		transformer.setParameter("show-universe", universerefOnVariables ? "true"
+				: "false");
 
 		return transformer;
 	}
