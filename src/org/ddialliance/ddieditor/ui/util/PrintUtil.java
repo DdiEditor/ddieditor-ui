@@ -113,8 +113,7 @@ public class PrintUtil {
 
 		// show variable
 		// navigation-bar
-		transformer.setParameter("show-navigration-bar", addNaviagtionBar ? "true"
-				: "false");
+		transformer.setParameter("show-navigration-bar", addNaviagtionBar ? "true" : "false");
 
 		// show inline variable toc
 		transformer.setParameter("show-variable-list", addNaviagtionBar ? "false" : "true");
