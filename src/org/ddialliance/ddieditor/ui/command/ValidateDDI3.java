@@ -60,12 +60,16 @@ public class ValidateDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		}
 		return null;
 	}
+	
+	public ValidateJob getNewValidateJob(String resourceId) {
+		return new ValidateJob(resourceId);
+	}
 
 	public class ValidateJob implements Runnable {
 		String resourceId = null;
 		File temp = null;
 
-		MarkerListDocument markerListDoc = null;
+		public MarkerListDocument markerListDoc = null;
 		DdiSchemaValidator ddiSchemaValidator = null;
 
 		public ValidateJob(String resourceId) {
