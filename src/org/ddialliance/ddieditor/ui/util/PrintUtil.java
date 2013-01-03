@@ -118,6 +118,9 @@ public class PrintUtil {
 		// show inline variable toc
 		transformer.setParameter("show-variable-list", addNaviagtionBar ? "false" : "true");
 
+		// show category statistics
+		transformer.setParameter("show-category-statistics", "true");
+		
 		// path prefix to the
 		// css-files
 		transformer.setParameter("theme-path", "theme/default");
