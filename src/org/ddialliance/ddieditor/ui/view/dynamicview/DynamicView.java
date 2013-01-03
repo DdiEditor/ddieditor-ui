@@ -572,6 +572,9 @@ public class DynamicView extends ViewPart {
 			if (catScheme != null) {
 				for (CategoryType cat : catScheme.getCategoryScheme()
 						.getCategoryList()) {
+					if (code.getCategoryReference()==null) { // guard
+						continue;
+					}
 					if (!code.getCategoryReference().getIDList().isEmpty()
 							&& cat.getId().equals(
 									XmlBeansUtil.getTextOnMixedElement(code
