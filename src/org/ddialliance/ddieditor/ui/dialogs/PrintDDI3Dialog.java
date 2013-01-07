@@ -7,16 +7,20 @@ import java.util.List;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.preference.PreferenceUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -27,6 +31,8 @@ public class PrintDDI3Dialog extends Dialog {
 	public boolean numVarStatisticBoolean = false;
 	public boolean universerefOnVariablesBoolean = false;
 	public boolean addNaviagtionBarBoolean = false;
+	public boolean savePrintAsZipBoolean = false;
+	public String savePrintAsZipPath = null;
 
 	public PrintDDI3Dialog(Shell parentShell) {
 		super(parentShell);
@@ -40,6 +46,36 @@ public class PrintDDI3Dialog extends Dialog {
 				Translator.trans("PrintDDI3Action.properties"));
 		this.getShell().setText(
 				Translator.trans("PrintDDI3Action.menu.PrintDDI3"));
+
+		// save as zip package
+		editor.createLabel(group,
+				Translator.trans("PrintDDI3Action.saveas.zip"));
+
+		savePrintAsZipPath = PreferenceUtil.getLastBrowsedPath()
+				.getAbsolutePath();
+		Button pathBrowse = editor.createButton(group,
+				Translator.trans("PrintDDI3Action.saveas.zipselect"));
+		pathBrowse.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
+				false, 1, 1));
+		pathBrowse.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DirectoryDialog dirChooser = new DirectoryDialog(PlatformUI
+						.getWorkbench().getDisplay().getActiveShell());
+				dirChooser.setText(Translator
+						.trans("ExportDDI3Action.filechooser.title"));
+				PreferenceUtil.setPathFilter(dirChooser);
+				savePrintAsZipPath = dirChooser.open();
+				if (savePrintAsZipPath != null) {
+					PreferenceUtil.setLastBrowsedPath(savePrintAsZipPath);
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// do nothing
+			}
+		});
 
 		// selectable resources
 		try {
@@ -119,8 +155,7 @@ public class PrintDDI3Dialog extends Dialog {
 		addNaviagtionBarButton.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				addNaviagtionBarBoolean = ((Button) e.widget)
-						.getSelection();
+				addNaviagtionBarBoolean = ((Button) e.widget).getSelection();
 			}
 
 			@Override

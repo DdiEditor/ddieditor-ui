@@ -1,6 +1,7 @@
 package org.ddialliance.ddieditor.ui.command;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,12 +13,21 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
+
 import org.apache.commons.io.FileUtils;
+import org.ddialliance.ddieditor.model.DdiManager;
+import org.ddialliance.ddieditor.model.lightxmlobject.LightXmlObjectType;
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dialogs.PrintDDI3Dialog;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.util.PrintUtil;
+import org.ddialliance.ddieditor.util.DdiEditorConfig;
+import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -30,6 +40,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
+	File xmlFile = null;
+	File htmlFile;
+	String name = "DDI-L-";
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
@@ -53,6 +67,7 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		try {
 			PlatformUI.getWorkbench().getProgressService()
 					.busyCursorWhile(new IRunnableWithProgress() {
+
 						@Override
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException,
@@ -64,33 +79,60 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 										1);
 
 								PlatformUI.getWorkbench().getDisplay()
-										.asyncExec(new Runnable() {
+										.syncExec(new Runnable() {
 											@Override
 											public void run() {
 												// export the resource
-												File xmlFile = null;
-												File htmlFile = null;
 												try {
-													xmlFile = File
-															.createTempFile(
-																	"PrintDDI3",
-																	".xml");
-													htmlFile = File
-															.createTempFile(
-																	"PrintDDI3",
-																	".html");
-													xmlFile.deleteOnExit();
-													htmlFile.deleteOnExit();
-
 													List<DDIResourceType> ddiResources = PersistenceManager
 															.getInstance()
 															.getResources();
 													List<String> resources = new ArrayList<String>();
+													String workingResorce = PersistenceManager
+															.getInstance()
+															.getWorkingResource();
+
 													for (DDIResourceType ddiResource : ddiResources) {
 														resources
 																.add(ddiResource
 																		.getOrgName());
+														PersistenceManager
+																.getInstance()
+																.setWorkingResource(
+																		ddiResource
+																				.getOrgName());
+														for (LightXmlObjectType lightXmlObject : DdiManager
+																.getInstance()
+																.getStudyUnitsLight(
+																		null,
+																		null,
+																		null,
+																		null)
+																.getLightXmlObjectList()
+																.getLightXmlObjectList()) {
+															name = DdiEditorConfig
+																	.get(DdiEditorConfig.DDI_AGENCY_IDENTIFIER)
+																	+ "-"
+																	+ lightXmlObject
+																			.getId();
+														}
 													}
+													PersistenceManager
+															.getInstance()
+															.setWorkingResource(
+																	workingResorce);
+
+													xmlFile = File
+															.createTempFile(
+																	name,
+																	".xml");
+													htmlFile = File
+															.createTempFile(
+																	name + "-",
+																	".html");
+													xmlFile.deleteOnExit();
+													htmlFile.deleteOnExit();
+
 													PersistenceManager
 															.getInstance()
 															.exportResoures(
@@ -170,6 +212,46 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 								throw new InvocationTargetException(e);
 							} finally {
 								monitor.done();
+							}
+
+							// save as zip file
+							if (printDDI3Dialog.savePrintAsZipPath != null) {
+
+								try {
+									// zip file
+									File zipFilePath = new File(
+											printDDI3Dialog.savePrintAsZipPath
+													+ File.separator + name
+													+ ".zip");
+									if (zipFilePath.exists()) {
+										zipFilePath.delete();
+									}
+									ZipFile zipFile = new ZipFile(zipFilePath);
+
+									ZipParameters parameters = new ZipParameters();
+									parameters
+											.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+									parameters
+											.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+
+									// html
+									parameters.setFileNameInZip(name + ".html");
+									zipFile.addFile(htmlFile, parameters);
+
+									// js
+									zipFile.addFolder(
+											new File(htmlFile.getParent()
+													+ File.separator + "js"),
+											parameters);
+
+									// theme
+									zipFile.addFolder(
+											new File(htmlFile.getParent()
+													+ File.separator + "theme"),
+											parameters);
+								} catch (ZipException e) {
+									new DDIFtpException("Zip error", e);
+								}
 							}
 						}
 					});
