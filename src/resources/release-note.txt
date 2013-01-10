@@ -17,6 +17,8 @@ Item ID:    Description:
     Added support for simple type string
  Stylesheet
  	Added links to codebook guide
+ Print DDI-L
+ 	Support for print to ZIP file
 
 -------------------------------------------------------------------------------  
 What's New, Application Infrastructure
