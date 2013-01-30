@@ -113,14 +113,20 @@ public class PrintUtil {
 
 		// show variable
 		// navigation-bar
-		transformer.setParameter("show-navigration-bar", addNaviagtionBar ? "true" : "false");
+		transformer.setParameter("show-navigration-bar",
+				addNaviagtionBar ? "true" : "false");
 
 		// show inline variable toc
-		transformer.setParameter("show-variable-list", addNaviagtionBar ? "false" : "true");
+		transformer.setParameter("show-variable-list",
+				addNaviagtionBar ? "false" : "true");
+
+		// show inline document toc
+		transformer.setParameter("show-toc", addNaviagtionBar ? "false"
+				: "true");
 
 		// show category statistics
 		transformer.setParameter("show-category-statistics", "true");
-		
+
 		// path prefix to the
 		// css-files
 		transformer.setParameter("theme-path", "theme/default");
@@ -136,8 +142,8 @@ public class PrintUtil {
 
 		// print universe on
 		// variable
-		transformer.setParameter("show-universe", universerefOnVariables ? "true"
-				: "false");
+		transformer.setParameter("show-universe",
+				universerefOnVariables ? "true" : "false");
 
 		return transformer;
 	}
