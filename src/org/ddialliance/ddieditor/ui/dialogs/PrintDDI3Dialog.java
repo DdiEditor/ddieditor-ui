@@ -51,8 +51,9 @@ public class PrintDDI3Dialog extends Dialog {
 		editor.createLabel(group,
 				Translator.trans("PrintDDI3Action.saveas.zip"));
 
-		savePrintAsZipPath = PreferenceUtil.getLastBrowsedPath()
-				.getAbsolutePath();
+		// comment out 20130204
+		// savePrintAsZipPath = PreferenceUtil.getLastBrowsedPath()
+		// .getAbsolutePath();
 		Button pathBrowse = editor.createButton(group,
 				Translator.trans("PrintDDI3Action.saveas.zipselect"));
 		pathBrowse.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
