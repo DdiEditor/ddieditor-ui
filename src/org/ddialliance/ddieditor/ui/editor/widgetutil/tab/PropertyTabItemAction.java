@@ -69,7 +69,7 @@ public class PropertyTabItemAction extends TabItemAction {
 					.getDocumentElementName();
 			urn = Urn2Util.getUrn(qName.getLocalPart(), model.getId(), model
 					.getVersion(), model.getParentId(), model
-					.getParentVersion());
+					.getParentVersion(), model.getAgency());
 			urnStr = urn.toUrnString();
 		} catch (DDIFtpException e) {
 			DialogUtil.errorDialog(shell, id, "URN error", e.getMessage(), e);
