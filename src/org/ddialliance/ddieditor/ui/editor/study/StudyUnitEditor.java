@@ -1,5 +1,8 @@
 package org.ddialliance.ddieditor.ui.editor.study;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,7 +28,6 @@ import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.LandingpageTabItemAction;
-import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.PreviewTabItemAction;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.TabFolderListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.table.TableColumnSort;
 import org.ddialliance.ddieditor.ui.model.Language;
@@ -54,6 +56,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -70,6 +73,7 @@ import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Study unit editor
@@ -132,16 +136,15 @@ public class StudyUnitEditor extends Editor {
 		TabItem tabItem = createTabItem("&Info");
 		Group group = createGroup(tabItem, Translator.trans("Info"));
 		Browser browser = createBrowser(group, Translator.trans("Info"));
-		
+
+		LandingpageTabItemAction action;
 		String LP_TAB_ID = "lp_tab_id";
-		
+
 		// update on tab item click
 		tabItem.setData(TAB_ID, LP_TAB_ID);
 		if (browser != null) {
-			LandingpageTabItemAction action;
 			try {
-				action = new LandingpageTabItemAction(LP_TAB_ID, model,
-						browser);
+				action = new LandingpageTabItemAction(LP_TAB_ID, model, browser);
 			} catch (DDIFtpException e) {
 				DialogUtil.errorDialog(group.getShell(), ID,
 						"Error on get display lable", e.getMessage(), e);
@@ -159,6 +162,10 @@ public class StudyUnitEditor extends Editor {
 					break;
 				}
 			}
+
+			Button openInBrowser = createButton(group, "Open in browser");
+			openInBrowser.addSelectionListener(new OpenBrowserListener(
+					action.htmlFile));
 		}
 
 		// prop tab
@@ -1123,6 +1130,37 @@ public class StudyUnitEditor extends Editor {
 			// guard
 			if (selections.length == 0) {
 				return;
+			}
+		}
+	}
+
+	class OpenBrowserListener implements SelectionListener {
+		File htmlFile = null;
+
+		public OpenBrowserListener(File htmlFile) {
+			this.htmlFile = htmlFile;
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			// do nothing
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent event) {
+			try {
+				PlatformUI
+						.getWorkbench()
+						.getBrowserSupport()
+						.getExternalBrowser()
+						.openURL(
+								new URL("file://" + htmlFile.getAbsolutePath()));
+			} catch (PartInitException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
