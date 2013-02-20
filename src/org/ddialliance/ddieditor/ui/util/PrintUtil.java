@@ -3,6 +3,7 @@ package org.ddialliance.ddieditor.ui.util;
 import java.io.File;
 import java.io.InputStream;
 
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
@@ -10,36 +11,49 @@ import javax.xml.transform.stream.StreamSource;
 import org.ddialliance.ddieditor.util.DdiEditorConfig;
 
 public class PrintUtil {
+	final String codebookXsltLocation = "resources/ddixslt/ddaddi3_1.xsl";
 	boolean showNumVarStatistic = false;
 	boolean universerefOnVariables = false;
 	boolean addNaviagtionBar = false;
 
-	public Transformer getTransformer(boolean showNumVarStatistic,
-			boolean universerefOnVariables, boolean addNaviagtionBar)
-			throws Exception {
-		this.showNumVarStatistic = showNumVarStatistic;
-		this.universerefOnVariables = universerefOnVariables;
-		this.addNaviagtionBar = addNaviagtionBar;
-		return getTransformer();
-	}
+	final String ddaMetaDataXsltLocation = "resources/landingpagexslt/DdiStudyUnit_To_DdaMetadata.xsl";
+	final String landingPageXsltLocation = "resources/landingpagexslt/lp-min.xsl";
 
-	public Transformer getTransformer() throws Exception {
+	private Transformer getTransformer(Source source) throws Exception {
 		Transformer transformer = null;
 		// protocol errors see:
 		// https://forums.oracle.com/forums/thread.jspa?messageID=9456878
 		System.setProperty("javax.xml.transform.TransformerFactory",
 				"net.sf.saxon.TransformerFactoryImpl");
 
-		InputStream xslInput = PrintUtil.this.getClass().getClassLoader()
-				.getResourceAsStream("resources/ddixslt/ddaddi3_1.xsl");
-		StreamSource source = new StreamSource(xslInput);
-		// "file://resources/ddixslt/ddaddi3_1.xsl");
-
-		source.setSystemId(new File("resources/ddixslt/ddaddi3_1.xsl").toURI()
-				.toURL().toString());
-
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		transformer = tFactory.newTransformer(source);
+
+		return transformer;
+	}
+
+	private StreamSource getXsltSource(String pathLocation) throws Exception {
+		InputStream xslInput = PrintUtil.this.getClass().getClassLoader()
+				.getResourceAsStream(pathLocation);
+
+		StreamSource source = new StreamSource(xslInput);
+		source.setSystemId(new File(pathLocation).toURI().toURL().toString());
+
+		return source;
+	}
+
+	public Transformer getCodebookTransformer(boolean showNumVarStatistic,
+			boolean universerefOnVariables, boolean addNaviagtionBar)
+			throws Exception {
+		this.showNumVarStatistic = showNumVarStatistic;
+		this.universerefOnVariables = universerefOnVariables;
+		this.addNaviagtionBar = addNaviagtionBar;
+		return getCodebookTransformer();
+	}
+
+	public Transformer getCodebookTransformer() throws Exception {
+		Source codeBookXslt = getXsltSource(codebookXsltLocation);
+		Transformer transformer = getTransformer(codeBookXslt);
 
 		// svn revision
 		// Date date = new Date(System.currentTimeMillis());
@@ -145,6 +159,18 @@ public class PrintUtil {
 		transformer.setParameter("show-universe",
 				universerefOnVariables ? "true" : "false");
 
+		return transformer;
+	}
+
+	public Transformer getDdaMetadataTransformer() throws Exception {
+		Source xslt = getXsltSource(ddaMetaDataXsltLocation);
+		Transformer transformer = getTransformer(xslt);
+		return transformer;
+	}
+
+	public Transformer getLandingpageTransformer() throws Exception {
+		Source xslt = getXsltSource(landingPageXsltLocation);
+		Transformer transformer = getTransformer(xslt);
 		return transformer;
 	}
 }
