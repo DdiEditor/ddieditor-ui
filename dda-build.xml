@@ -114,7 +114,6 @@
 	</target>
 	
 	<target name="import-landingpage" description="Import landingpage file from SCM">
-		<echo message="Usr: ${indexingplatform.svn.usr}, passwd: ${indexingplatform.svn.passwd}"/>
 		<svn username="${indexingplatform.svn.usr}" password="${indexingplatform.svn.passwd}">
 			<export force="true" srcurl="${indexingplatform.svn.basepath}/trunk/web/transform/landingpage" revision="HEAD" destpath="${build.classes.dir}/resources/landingpagexslt" />
 			<export force="true" srcurl="${indexingplatform.svn.basepath}/trunk/web/transform/metadata" revision="HEAD" destpath="${build.classes.dir}/resources/landingpagexslt" />
