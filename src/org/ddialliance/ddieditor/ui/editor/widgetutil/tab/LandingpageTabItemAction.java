@@ -1,16 +1,18 @@
 package org.ddialliance.ddieditor.ui.editor.widgetutil.tab;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import java.net.URL;
 
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.ddialliance.ddieditor.model.DdiManager;
+import org.apache.commons.io.FileUtils;
+import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.model.IModel;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.PrintUtil;
@@ -27,6 +29,8 @@ public class LandingpageTabItemAction extends TabItemAction {
 	IModel model;
 	Transformer ddaMetaDataTrasformer = null;
 	Transformer lpTransformer = null;
+	public File htmlFile = null;
+	File tmpXml = null;
 
 	public LandingpageTabItemAction(String id, IModel model, Browser browser)
 			throws DDIFtpException {
@@ -43,6 +47,9 @@ public class LandingpageTabItemAction extends TabItemAction {
 					LanguageUtil.getDisplayLanguage());
 			lpTransformer.setParameter("host", "http://localhost");
 			lpTransformer.setParameter("cvFolder", "../cv");
+
+			tmpXml = File.createTempFile("landingpage", ".xml");
+			htmlFile = File.createTempFile("landingpage", ".html");
 		} catch (Exception e) {
 			throw new DDIFtpException("XML to HTML Transformer error: "
 					+ e.getMessage());
@@ -51,37 +58,42 @@ public class LandingpageTabItemAction extends TabItemAction {
 
 	@Override
 	public Object action() throws DDIFtpException {
-		// get xml
-		String xml = DdiManager
-				.getInstance()
-				.getDdi3NamespaceHelper()
-				.substitutePrefixesFromElements(
-						model.getDocument().xmlText(
-								DdiManager.getInstance().getXmlOptions()));
+
+		PersistenceManager.getInstance().exportResoure(
+				PersistenceManager.getInstance().getWorkingResource(), tmpXml);
 
 		// transform xml to html
 		StreamResult ddaMetaDataStreamResult = null;
 		StreamResult streamResult = null;
 		try {
-			InputStream ddaMetaDataInputStream = new ByteArrayInputStream(
-					xml.getBytes("UTF-8"));
+
+			InputStream ddaMetaDataInputStream = new FileInputStream(tmpXml);
 			ddaMetaDataStreamResult = new StreamResult(new StringWriter());
 			ddaMetaDataTrasformer.transform(new StreamSource(
 					ddaMetaDataInputStream), ddaMetaDataStreamResult);
+
+			// log.debug(ddaMetaDataStreamResult.getWriter().toString());
 
 			InputStream inputStream = new ByteArrayInputStream(
 					ddaMetaDataStreamResult.getWriter().toString()
 							.getBytes("UTF-8"));
 			streamResult = new StreamResult(new StringWriter());
 			lpTransformer.transform(new StreamSource(inputStream),
-					streamResult);
-		} catch (TransformerException e1) {
-			throw new DDIFtpException("XML to HTML transformation error: ", e1);
-		} catch (UnsupportedEncodingException e) {
-			throw new DDIFtpException("XML to HTML Encoding error: ", e);
+					new StreamResult(htmlFile.toURI().toURL().toString()));
+			// lpTransformer
+			// .transform(new StreamSource(inputStream), streamResult);
+
+			FileUtils.copyFile(new File("resources/landingpagexslt/style.css"),
+					new File(htmlFile.getParent() + File.separator
+							+ "style.css"));
+			browser.setUrl(new URL("file://" + htmlFile.getAbsolutePath())
+					.toURI().toString());
+		} catch (Exception e) {
+			throw new DDIFtpException("XML to HTML transformation error: ", e);
 		}
 
-		browser.setText(streamResult.getWriter().toString());
+		log.debug(streamResult.getWriter().toString());
+
 		return null;
 	}
 }
