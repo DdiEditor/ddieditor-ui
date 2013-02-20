@@ -143,7 +143,7 @@ public class PrintDDI3 extends org.eclipse.core.commands.AbstractHandler {
 
 													// transformer
 													Transformer transformer = new PrintUtil()
-															.getTransformer(
+															.getCodebookTransformer(
 																	printDDI3Dialog.numVarStatisticBoolean,
 																	printDDI3Dialog.universerefOnVariablesBoolean,
 																	printDDI3Dialog.addNaviagtionBarBoolean);
