@@ -38,7 +38,7 @@ public class PreviewTabItemAction extends TabItemAction {
 
 		// prepare transformer
 		try {
-			this.transformer = new PrintUtil().getTransformer();
+			this.transformer = new PrintUtil().getCodebookTransformer();
 		} catch (Exception e1) {
 			throw new DDIFtpException("XML to HTML Transformer error: "
 					+ e1.getMessage());
