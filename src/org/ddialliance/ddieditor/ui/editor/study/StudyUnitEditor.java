@@ -24,11 +24,15 @@ import org.ddialliance.ddieditor.ui.editor.DateTimeWidget;
 import org.ddialliance.ddieditor.ui.editor.Editor;
 import org.ddialliance.ddieditor.ui.editor.EditorInput;
 import org.ddialliance.ddieditor.ui.editor.EditorInput.EditorModeType;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.LandingpageTabItemAction;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.PreviewTabItemAction;
+import org.ddialliance.ddieditor.ui.editor.widgetutil.tab.TabFolderListener;
 import org.ddialliance.ddieditor.ui.editor.widgetutil.table.TableColumnSort;
 import org.ddialliance.ddieditor.ui.model.Language;
 import org.ddialliance.ddieditor.ui.model.ModelAccessor;
 import org.ddialliance.ddieditor.ui.model.studyunit.StudyUnit;
 import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
+import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -41,6 +45,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -54,12 +59,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -117,6 +124,58 @@ public class StudyUnitEditor extends Editor {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		parent.setLayout(new GridLayout());
+		super.createPartControl(parent);
+
+		// landing page tab
+		TabFolder tabFolder = createTabFolder(parent);
+		TabItem tabItem = createTabItem("&Info");
+		Group group = createGroup(tabItem, Translator.trans("Info"));
+		Browser browser = createBrowser(group, Translator.trans("Info"));
+		
+		String LP_TAB_ID = "lp_tab_id";
+		
+		// update on tab item click
+		tabItem.setData(TAB_ID, LP_TAB_ID);
+		if (browser != null) {
+			LandingpageTabItemAction action;
+			try {
+				action = new LandingpageTabItemAction(LP_TAB_ID, model,
+						browser);
+			} catch (DDIFtpException e) {
+				DialogUtil.errorDialog(group.getShell(), ID,
+						"Error on get display lable", e.getMessage(), e);
+				return;
+			}
+			Listener[] list = getTabFolder().getListeners(SWT.Selection);
+			Object obj = null;
+			for (int i = 0; i < list.length; i++) {
+				if (list[i] instanceof TypedListener) {
+					obj = ((TypedListener) list[i]).getEventListener();
+					if (obj instanceof TabFolderListener) {
+						((TabFolderListener) obj).actionMap.put(LP_TAB_ID,
+								action);
+					}
+					break;
+				}
+			}
+		}
+
+		// prop tab
+		createPropertiesTab(tabFolder);
+
+		// xml tab
+		StyledText xmlText = createXmlTab(modelImpl);
+		xmlText.setEnabled(true);
+
+		// preview tab
+		createPreviewTab(modelImpl);
+
+		// Clean dirt from initialization
+		editorStatus.clearChanged();
+	}
+
+	public void createPartControl_bak(Composite parent) {
 		parent.setLayout(new GridLayout());
 		// TODO Get descriptions
 		super.createPartControl(parent);
@@ -673,8 +732,9 @@ public class StudyUnitEditor extends Editor {
 			GeographicCoverageType geographicCoverage = coverageDoc
 					.getCoverage().getSpatialCoverage();
 			if (!geographicCoverage.getDescriptionList().isEmpty()) {
-			description = XmlBeansUtil.getTextOnMixedElement(geographicCoverage
-					.getDescriptionArray(0));
+				description = XmlBeansUtil
+						.getTextOnMixedElement(geographicCoverage
+								.getDescriptionArray(0));
 			}
 		}
 		createTextAreaInput(grpSpatialCoverage, description, false);
@@ -765,7 +825,7 @@ public class StudyUnitEditor extends Editor {
 				// exception hack -to many null pointer checks
 			}
 		}
-		
+
 		if (!dateTime.equals("")) {
 			try {
 				// TODO Improve Date handling
