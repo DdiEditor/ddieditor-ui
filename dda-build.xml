@@ -7,6 +7,7 @@
 
 	<!-- properties -->
 	<property file="${basedir}/../lib-java/lib.properties" />
+	<property file="${basedir}/ddabuild.properties" />
 	<property environment="env" />
 
 	<!-- directories -->
@@ -72,7 +73,7 @@
 	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask" classpathref="svn.classpath">
 	</taskdef>
 
-	<target name="resource" description="Setup resources in the build dir">
+	<target name="resource" depends="import-landingpage" description="Setup resources in the build dir">
 		<mkdir dir="${build.classes.dir}/logs" />
 		<mkdir dir="${build.classes.dir}/resources" />
 		<mkdir dir="${build.classes.dir}/dbxml" />
@@ -110,6 +111,22 @@
 		<svn>
 			<export force="true" srcurl="http://ddixslt.googlecode.com/svn/trunk/ddi-html" revision="HEAD" destpath="${build.classes.dir}/resources/ddixslt" />
 		</svn>
+	</target>
+	
+	<target name="import-landingpage" description="Import landingpage file from SCM">
+		<echo message="Usr: ${indexingplatform.svn.usr}, passwd: ${indexingplatform.svn.passwd}"/>
+		<svn username="${indexingplatform.svn.usr}" password="${indexingplatform.svn.passwd}">
+			<export force="true" srcurl="${indexingplatform.svn.basepath}/trunk/web/transform/landingpage" revision="HEAD" destpath="${build.classes.dir}/resources/landingpagexslt" />
+			<export force="true" srcurl="${indexingplatform.svn.basepath}/trunk/web/transform/metadata" revision="HEAD" destpath="${build.classes.dir}/resources/landingpagexslt" />
+		</svn>
+		<!-- move cvs -->
+		<move todir="${build.classes.dir}/resources/cv" verbose="true">
+			<fileset dir="${build.classes.dir}/resources/landingpagexslt/cv">
+				 <include name="**/*"/>
+			</fileset>
+		</move>
+		<!-- clean up -->
+		<delete quiet="true" dir="${build.classes.dir}/resources/landingpagexslt/cv" />
 	</target>
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
