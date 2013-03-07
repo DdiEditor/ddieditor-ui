@@ -124,6 +124,9 @@ public class PrintUtil {
 		// separate flow from the
 		// variables
 		transformer.setParameter("show-questionnaires", "false");
+		
+		// show other material on study unit
+		transformer.setParameter("show-otherdocuments", "false");
 
 		// show variable
 		// navigation-bar
