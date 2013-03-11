@@ -22,6 +22,7 @@ Export-Package: org.ddialliance.ddieditor.ui.command,
  org.ddialliance.ddieditor.ui.util,
  org.ddialliance.ddieditor.ui.util.swtdesigner,
  org.ddialliance.ddieditor.ui.view,
+ org.ddialliance.ddieditor.ui.view.validate,
  org.ddialliance.ddieditor.ui.view.variable.questionrelation
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
