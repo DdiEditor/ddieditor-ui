@@ -94,6 +94,11 @@ public class ValidateView extends ViewPart {
 						ValidateDDI3.ValidateJob validateJob = validateDDI3.new ValidateJob(
 								selectedResource);
 						validateJob.run();
+						try {
+							validateJob.displayErrors();
+						} catch (PartInitException e1) {
+							e1.printStackTrace();
+						}
 					}
 
 					@Override

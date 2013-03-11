@@ -21,6 +21,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 public class ValidateDDI3 extends org.eclipse.core.commands.AbstractHandler {
@@ -46,13 +47,18 @@ public class ValidateDDI3 extends org.eclipse.core.commands.AbstractHandler {
 							monitor.beginTask(Translator.trans("validation"), 1);
 
 							// schema validate
-							PlatformUI
-									.getWorkbench()
-									.getDisplay()
-									.asyncExec(
-											new ValidateJob(dialog.ddiResource
-													.getOrgName()));
+							ValidateJob validateJob = new ValidateJob(
+									dialog.ddiResource.getOrgName());
+							PlatformUI.getWorkbench().getDisplay()
+									.asyncExec(validateJob);
 							monitor.worked(1);
+
+							// display errors
+							try {
+								validateJob.displayErrors();
+							} catch (PartInitException e) {
+								log.error(e);
+							}
 						}
 					});
 		} catch (Exception e) {
@@ -60,7 +66,7 @@ public class ValidateDDI3 extends org.eclipse.core.commands.AbstractHandler {
 		}
 		return null;
 	}
-	
+
 	public ValidateJob getNewValidateJob(String resourceId) {
 		return new ValidateJob(resourceId);
 	}
@@ -92,56 +98,57 @@ public class ValidateDDI3 extends org.eclipse.core.commands.AbstractHandler {
 				// schema validate
 				ddiSchemaValidator = new DdiSchemaValidator();
 				ddiSchemaValidator.validate(temp, resourceId, markerListDoc);
+			} catch (Exception e) {
+				Editor.showError(e, "");
+			}
+		}
 
-				// validate view
-				IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
-						.getWorkbenchWindows();
-				boolean found = false;
-				for (int i = 0; i < windows.length; i++) {
-					for (IViewReference iViewReference : windows[i]
-							.getActivePage().getViewReferences()) {
-						IViewPart viewPart = windows[i].getActivePage()
-								.findView(iViewReference.getId());
-						if (viewPart != null
-								&& viewPart.getClass() == ValidateView.class) {
-							try {
-								((ValidateView) viewPart)
-										.refresh(markerListDoc);
+		public void displayErrors() throws PartInitException {
+			// validate view
+			IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
+					.getWorkbenchWindows();
+			boolean found = false;
+			for (int i = 0; i < windows.length; i++) {
+				for (IViewReference iViewReference : windows[i].getActivePage()
+						.getViewReferences()) {
+					IViewPart viewPart = windows[i].getActivePage().findView(
+							iViewReference.getId());
+					if (viewPart != null
+							&& viewPart.getClass() == ValidateView.class) {
+						try {
+							((ValidateView) viewPart).refresh(markerListDoc);
 
-								// select right combo item
-								// String[] test = ((ValidateView)
-								// viewPart).combo.getItems();
-								
-								// combo.getItems() returns the 'possible empty
-								// list of strings' thanks SWT!
-								
-								// for (int j = 0; j < test.length; j++) {
-								// if (test[i].equals(resourceId)) {
-								// ((ValidateView) viewPart).combo.select(i);
-								// }
-								// }
-								
-								windows[i].getActivePage().activate(viewPart);
-							} catch (Exception e) {
-								Editor.showError(e, null);
-							}
-							found = true;
-							break;
+							// select right combo item
+							// String[] test = ((ValidateView)
+							// viewPart).combo.getItems();
+
+							// combo.getItems() returns the 'possible empty
+							// list of strings' thanks SWT!
+
+							// for (int j = 0; j < test.length; j++) {
+							// if (test[i].equals(resourceId)) {
+							// ((ValidateView) viewPart).combo.select(i);
+							// }
+							// }
+
+							windows[i].getActivePage().activate(viewPart);
+						} catch (Exception e) {
+							Editor.showError(e, null);
 						}
-					}
-					if (found) {
+						found = true;
 						break;
 					}
 				}
-				if (!found) {
-					// create view
-					IViewPart viewPart = PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow().getActivePage()
-							.showView(ValidateView.ID);
-					((ValidateView) viewPart).refresh(markerListDoc);
+				if (found) {
+					break;
 				}
-			} catch (Exception e) {
-				Editor.showError(e, "");
+			}
+			if (!found) {
+				// create view
+				IViewPart viewPart = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage()
+						.showView(ValidateView.ID);
+				((ValidateView) viewPart).refresh(markerListDoc);
 			}
 		}
 	}
