@@ -12,6 +12,7 @@ package org.ddialliance.ddieditor.ui.view;
 
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddiftp.util.Translator;
+import org.eclipse.jface.action.IStatusLineManager;
 
 public class InfoView extends View {
 	public static final String ID = "org.ddialliance.ddieditor.ui.view.InfoView";
