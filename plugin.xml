@@ -366,6 +366,11 @@
             <page class="org.ddialliance.ddieditor.ui.preference.page.DdiEditorUiPreferencePage"
                   id="org.ddialliance.ddieditor.ui.preference.page.DdiEditorUiPreferencePage"
                   name="%page.name.1"> </page>
+            <page
+                  class="org.ddialliance.ddieditor.ui.preference.page.DdiEditorSpssPreferencesPage"
+                  id="org.ddialliance.ddieditor.ui.preference.page.DdiEditorSpssPreferencesPage"
+                  name="%page.name.2">
+            </page>
       </extension>
       <extension point="org.eclipse.core.runtime.preferences">
             <initializer class="org.ddialliance.ddieditor.ui.preference.PreferenceInitializer"
