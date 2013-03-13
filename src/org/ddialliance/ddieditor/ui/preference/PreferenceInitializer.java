@@ -60,7 +60,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				DdiEditorConfig.get(DdiEditorConfig.DDI_AGENCY_IDENTIFIER));
 		store.setDefault(DdiEditorConfig.DDI_AGENCY_HP,
 				DdiEditorConfig.get(DdiEditorConfig.DDI_AGENCY_HP));
-		
+
 		store.setDefault(DdiEditorConfig.DDI_LANGUAGE,
 				DdiEditorConfig.get(DdiEditorConfig.DDI_LANGUAGE));
 		store.setDefault(DdiEditorConfig.DDI_INSTRUMENT_PROGRAM_LANG,
@@ -85,6 +85,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT,
 				uiProp.getProperty(PreferenceConstants.CONFIRM_DDIEDITOR_EXIT));
 
+		// spss constance
+		store.setDefault(DdiEditorConfig.SPSS_IMPORT_CHARSET,
+				DdiEditorConfig
+						.get(DdiEditorConfig.SPSS_IMPORT_CHARSET));
+		
 		// apply changes
 		Activator.getDefault().getPreferenceStore()
 				.addPropertyChangeListener(new IPropertyChangeListener() {
