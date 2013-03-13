@@ -175,9 +175,6 @@ public class StudyUnitEditor extends Editor {
 		StyledText xmlText = createXmlTab(modelImpl);
 		xmlText.setEnabled(true);
 
-		// preview tab
-		createPreviewTab(modelImpl);
-
 		// Clean dirt from initialization
 		editorStatus.clearChanged();
 	}
