@@ -87,9 +87,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 		// spss constance
 		store.setDefault(DdiEditorConfig.SPSS_IMPORT_CHARSET,
+				DdiEditorConfig.get(DdiEditorConfig.SPSS_IMPORT_CHARSET));
+		store.setDefault(DdiEditorConfig.SPSS_IMPORT_DECIMAL_SEPERATOR,
 				DdiEditorConfig
-						.get(DdiEditorConfig.SPSS_IMPORT_CHARSET));
-		
+						.get(DdiEditorConfig.SPSS_IMPORT_DECIMAL_SEPERATOR));
+
 		// apply changes
 		Activator.getDefault().getPreferenceStore()
 				.addPropertyChangeListener(new IPropertyChangeListener() {
