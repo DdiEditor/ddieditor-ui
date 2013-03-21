@@ -34,7 +34,7 @@ public class DdiEditorUiPreferencePage extends FieldEditorPreferencePage
 				PreferenceConstants.FONT_SIZE_TABLE_SIZE,
 				Translator.trans("pref.tablefontsize"),
 				PreferenceConstants.FONT_SIZE_LIST, getFieldEditorParent());
-		comboFieldEditor.load();
+		comboFontEditor.load();
 		addField(comboFontEditor);
 
 		// auto change perspective
