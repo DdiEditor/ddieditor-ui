@@ -8,6 +8,7 @@ Bundle-ClassPath: .,
 Bundle-Activator: org.ddialliance.ddieditor.ui.Activator
 Bundle-Vendor: Danish Data Archive
 Export-Package: org.ddialliance.ddieditor.ui.command,
+ org.ddialliance.ddieditor.ui.dialogs,
  org.ddialliance.ddieditor.ui.editor,
  org.ddialliance.ddieditor.ui.editor.category,
  org.ddialliance.ddieditor.ui.editor.code,
