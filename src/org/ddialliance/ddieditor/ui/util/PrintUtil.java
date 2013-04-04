@@ -2,10 +2,13 @@ package org.ddialliance.ddieditor.ui.util;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.ddialliance.ddieditor.util.DdiEditorConfig;
@@ -18,6 +21,10 @@ public class PrintUtil {
 
 	final String ddaMetaDataXsltLocation = "resources/landingpagexslt/DdiStudyUnit_To_DdaMetadata.xsl";
 	final String landingPageXsltLocation = "resources/landingpagexslt/lp-min.xsl";
+	final String ddilToMarcLocation = "resources/ddimarcxml/ddi_3_1-marcxml.xsl";
+	final String marcToEnglishHtmlLocation = "resources/ddimarcxml/MARC21slim2English.xsl";
+	final String marcToSpecHtmlLocation = "resources/ddimarcxml/MARC21slim2HTML.xsl";
+	final String marcToValidationXmlLocation = "resources/ddimarcxml/validate.xsl";
 
 	private Transformer getTransformer(Source source) throws Exception {
 		Transformer transformer = null;
@@ -40,6 +47,13 @@ public class PrintUtil {
 		source.setSystemId(new File(pathLocation).toURI().toURL().toString());
 
 		return source;
+	}
+
+	public static void doTranformation(Transformer transformer, File sourceFile, File outFile)
+			throws MalformedURLException, TransformerException {
+		transformer.transform(new StreamSource(sourceFile.toURI().toURL()
+				.toString()), new StreamResult(outFile.toURI().toURL()
+				.toString()));
 	}
 
 	public Transformer getCodebookTransformer(boolean showNumVarStatistic,
@@ -124,7 +138,7 @@ public class PrintUtil {
 		// separate flow from the
 		// variables
 		transformer.setParameter("show-questionnaires", "false");
-		
+
 		// show other material on study unit
 		transformer.setParameter("show-otherdocuments", "false");
 
@@ -173,6 +187,30 @@ public class PrintUtil {
 
 	public Transformer getLandingpageTransformer() throws Exception {
 		Source xslt = getXsltSource(landingPageXsltLocation);
+		Transformer transformer = getTransformer(xslt);
+		return transformer;
+	}
+
+	public Transformer getDdilToMarcTransformer() throws Exception {
+		Source xslt = getXsltSource(ddilToMarcLocation);
+		Transformer transformer = getTransformer(xslt);
+		return transformer;
+	}
+
+	public Transformer getMarcToEnglishHtmlTransformer() throws Exception {
+		Source xslt = getXsltSource(marcToEnglishHtmlLocation);
+		Transformer transformer = getTransformer(xslt);
+		return transformer;
+	}
+
+	public Transformer getMarcToSpecTransformer() throws Exception {
+		Source xslt = getXsltSource(marcToSpecHtmlLocation);
+		Transformer transformer = getTransformer(xslt);
+		return transformer;
+	}
+
+	public Transformer getMarcToValidationXmlTransformer() throws Exception {
+		Source xslt = getXsltSource(marcToValidationXmlLocation);
 		Transformer transformer = getTransformer(xslt);
 		return transformer;
 	}
