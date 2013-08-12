@@ -55,4 +55,9 @@ ant deploy-to-ddieditor-ui -f dda-build.xml
 echo '--- Resource ddieditor-genericode ---'
 cd ../ddieditor-genericode
 ant deploy-to-ddieditor-ui -f dda-build.xml
+
+echo '--- Resource ddieditor-marc ---'
+cd ../ddieditor-marc
+ant deploy-to-ddieditor-ui -f dda-build.xml
+
 echo '--- Done setup ---'
