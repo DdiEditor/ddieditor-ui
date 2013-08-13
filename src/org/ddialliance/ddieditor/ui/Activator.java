@@ -27,6 +27,9 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		// initialize pref store -minor hack
+		getPreferenceStore().getString("");
 	}
 
 	/*
