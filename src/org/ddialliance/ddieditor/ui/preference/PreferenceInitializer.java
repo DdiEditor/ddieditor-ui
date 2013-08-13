@@ -1,10 +1,14 @@
 package org.ddialliance.ddieditor.ui.preference;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
@@ -91,6 +95,59 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(DdiEditorConfig.SPSS_IMPORT_DECIMAL_SEPERATOR,
 				DdiEditorConfig
 						.get(DdiEditorConfig.SPSS_IMPORT_DECIMAL_SEPERATOR));
+
+		// bundle plugin version -not used
+		// String test = Platform.getProduct().getDefiningBundle().getVersion()
+		// .toString();
+
+		// app version number
+		URL url;
+		InputStream inputStream = null;
+		String firstUrl = "platform:/plugin/ddieditor-ui/resources/release-note.txt";
+		String secondUrl = "platform:/plugin/ddieditor-ui/bin/resources/release-note.txt";
+		try {
+			// get file production
+			url = new URL(firstUrl);
+			inputStream = url.openConnection().getInputStream();
+		} catch (IOException e) {
+			try {
+				// get file debug mode
+				url = new URL(secondUrl);
+				inputStream = url.openConnection().getInputStream();
+			} catch (Exception e2) {
+				new DDIFtpException(e2);
+			}
+		}
+
+		String appVersion = "na";
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					inputStream));
+			String inputLine;
+			String needle = "Product Version: ";
+			// read version line
+			while ((inputLine = in.readLine()) != null) {
+				int index = inputLine.indexOf(needle);
+				if (index >= 0) {
+					appVersion = inputLine.substring(needle.length(),
+							inputLine.length()).trim();
+					break;
+				}
+			}
+			in.close();
+		} catch (IOException e) {
+			new DDIFtpException(e);
+		}
+		store.setDefault(DdiEditorConfig.DDI_EDITOR_VERSION, appVersion);
+
+		// app version to config
+		DdiEditorConfig.set(DdiEditorConfig.DDI_EDITOR_VERSION, appVersion);
+		try {
+			DdiEditorConfig.save();
+		} catch (DDIFtpException e1) {
+			new DDIFtpException(e1);
+		}
+		DdiEditorConfig.reset();
 
 		// apply changes
 		Activator.getDefault().getPreferenceStore()
