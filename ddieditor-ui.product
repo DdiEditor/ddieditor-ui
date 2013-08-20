@@ -63,6 +63,7 @@ along with Foobar.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <plugin id="com.ibm.icu"/>
       <plugin id="ddadb"/>
       <plugin id="ddieditor"/>
+      <plugin id="ddieditor-classification"/>
       <plugin id="ddieditor-genericode"/>
       <plugin id="ddieditor-line"/>
       <plugin id="ddieditor-marc"/>
