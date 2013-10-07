@@ -45,4 +45,8 @@ public class PerspectiveUtil {
 		}
 		return rightFolder;
 	}
+
+	public static void setEditorAreaVisible(IPageLayout layout, boolean visible) {
+		layout.setEditorAreaVisible(visible);
+	}
 }
