@@ -26,7 +26,7 @@ public class PrintUtil {
 	final String marcToSpecHtmlLocation = "resources/ddimarcxml/MARC21slim2HTML.xsl";
 	final String marcToValidationXmlLocation = "resources/ddimarcxml/validate.xsl";
 
-	private Transformer getTransformer(Source source) throws Exception {
+	public Transformer getTransformer(Source source) throws Exception {
 		Transformer transformer = null;
 		// protocol errors see:
 		// https://forums.oracle.com/forums/thread.jspa?messageID=9456878
@@ -39,7 +39,7 @@ public class PrintUtil {
 		return transformer;
 	}
 
-	private StreamSource getXsltSource(String pathLocation) throws Exception {
+	public StreamSource getXsltSource(String pathLocation) throws Exception {
 		InputStream xslInput = PrintUtil.this.getClass().getClassLoader()
 				.getResourceAsStream(pathLocation);
 
