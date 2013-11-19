@@ -18,6 +18,7 @@ public class PrintUtil {
 	boolean showNumVarStatistic = false;
 	boolean universerefOnVariables = false;
 	boolean addNaviagtionBar = false;
+	boolean suppressGraphics = false;
 
 	final String ddaMetaDataXsltLocation = "resources/landingpagexslt/DdiStudyUnit_To_DdaMetadata.xsl";
 	final String landingPageXsltLocation = "resources/landingpagexslt/lp-min.xsl";
@@ -25,8 +26,9 @@ public class PrintUtil {
 	final String marcToEnglishHtmlLocation = "resources/ddimarcxml/MARC21slim2English.xsl";
 	final String marcToSpecHtmlLocation = "resources/ddimarcxml/MARC21slim2HTML.xsl";
 	final String marcToValidationXmlLocation = "resources/ddimarcxml/validate.xsl";
+	final String lineXsltLocation = "resources/linexslt/nbr-var-codes.xsl";
 
-	public Transformer getTransformer(Source source) throws Exception {
+	protected Transformer getTransformer(Source source) throws Exception {
 		Transformer transformer = null;
 		// protocol errors see:
 		// https://forums.oracle.com/forums/thread.jspa?messageID=9456878
@@ -39,7 +41,7 @@ public class PrintUtil {
 		return transformer;
 	}
 
-	public StreamSource getXsltSource(String pathLocation) throws Exception {
+	protected StreamSource getXsltSource(String pathLocation) throws Exception {
 		InputStream xslInput = PrintUtil.this.getClass().getClassLoader()
 				.getResourceAsStream(pathLocation);
 
@@ -57,11 +59,12 @@ public class PrintUtil {
 	}
 
 	public Transformer getCodebookTransformer(boolean showNumVarStatistic,
-			boolean universerefOnVariables, boolean addNaviagtionBar)
+			boolean universerefOnVariables, boolean addNaviagtionBar, boolean suppressGraphics)
 			throws Exception {
 		this.showNumVarStatistic = showNumVarStatistic;
 		this.universerefOnVariables = universerefOnVariables;
 		this.addNaviagtionBar = addNaviagtionBar;
+		this.suppressGraphics = suppressGraphics;
 		return getCodebookTransformer();
 	}
 
@@ -147,6 +150,10 @@ public class PrintUtil {
 		transformer.setParameter("show-navigration-bar",
 				addNaviagtionBar ? "true" : "false");
 
+		// suppress graphics for statistics
+		transformer.setParameter("include-js",
+				suppressGraphics ? "false" : "true");
+
 		// show inline variable toc
 		transformer.setParameter("show-variable-list",
 				addNaviagtionBar ? "false" : "true");
@@ -211,6 +218,12 @@ public class PrintUtil {
 
 	public Transformer getMarcToValidationXmlTransformer() throws Exception {
 		Source xslt = getXsltSource(marcToValidationXmlLocation);
+		Transformer transformer = getTransformer(xslt);
+		return transformer;
+	}
+
+	public Transformer getLineNbrVarCodesXmlTransformer() throws Exception {
+		Source xslt = getXsltSource(lineXsltLocation);
 		Transformer transformer = getTransformer(xslt);
 		return transformer;
 	}

@@ -31,6 +31,7 @@ public class PrintDDI3Dialog extends Dialog {
 	public boolean numVarStatisticBoolean = false;
 	public boolean universerefOnVariablesBoolean = false;
 	public boolean addNaviagtionBarBoolean = false;
+	public boolean suppressGraphicsBoolean = false;
 	public boolean savePrintAsZipBoolean = false;
 	public String savePrintAsZipPath = null;
 
@@ -157,6 +158,21 @@ public class PrintDDI3Dialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				addNaviagtionBarBoolean = ((Button) e.widget).getSelection();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// do nothing
+			}
+		});
+
+		// suppress JS for generation of graphics
+		Button suppressGraphicsButton = editor.createCheckBox(group, "",
+				Translator.trans("PrintDDI3Action.suppress.graphics"));
+		suppressGraphicsButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				suppressGraphicsBoolean = ((Button) e.widget).getSelection();
 			}
 
 			@Override
