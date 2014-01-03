@@ -50,6 +50,8 @@ public class LandingpageTabItemAction extends TabItemAction {
 
 			tmpXml = File.createTempFile("landingpage", ".xml");
 			htmlFile = File.createTempFile("landingpage", ".html");
+
+			transform();
 		} catch (Exception e) {
 			throw new DDIFtpException("XML to HTML Transformer error: "
 					+ e.getMessage());
@@ -58,7 +60,11 @@ public class LandingpageTabItemAction extends TabItemAction {
 
 	@Override
 	public Object action() throws DDIFtpException {
+		transform();
+		return null;
+	}
 
+	private void transform() throws DDIFtpException {
 		PersistenceManager.getInstance().exportResoure(
 				PersistenceManager.getInstance().getWorkingResource(), tmpXml);
 
@@ -92,8 +98,6 @@ public class LandingpageTabItemAction extends TabItemAction {
 			throw new DDIFtpException("XML to HTML transformation error: ", e);
 		}
 
-		log.debug(streamResult.getWriter().toString());
-
-		return null;
+		// log.debug(streamResult.getWriter().toString());
 	}
 }
