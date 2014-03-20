@@ -116,7 +116,7 @@
 
 	<target name="import-landingpage" description="Import landingpage file from SCM">
 		<mkdir dir="${tmp.importlandingpage.dir}" />
-		
+
 		<!-- git clone -->
 		<exec executable="git" newenvironment="false">
 			<arg value="clone" />
@@ -140,7 +140,7 @@
 			</fileset>
 		</move>
 
-		<!-- move cvs -->
+		<!-- move cv's -->
 		<move todir="${build.classes.dir}/resources/" file="${build.classes.dir}/resources/landingpagexslt/cv" verbose="false" />
 
 		<!-- clean up -->
