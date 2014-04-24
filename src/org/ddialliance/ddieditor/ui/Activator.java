@@ -1,5 +1,8 @@
 package org.ddialliance.ddieditor.ui;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -27,9 +30,14 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		
+
 		// initialize pref store -minor hack
 		getPreferenceStore().getString("");
+
+		Map<String, String> envs = System.getenv();
+		for (Entry<String, String> entry : envs.entrySet()) {
+			System.out.println(entry.getKey() + " - " + entry.getValue());
+		}
 	}
 
 	/*
@@ -41,7 +49,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		PersistenceManager.getInstance().close();
-		
+
 		plugin = null;
 		super.stop(context);
 	}

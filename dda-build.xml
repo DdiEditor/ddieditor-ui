@@ -8,6 +8,7 @@
 	<!-- properties -->
 	<property file="${basedir}/../lib-java/lib.properties" />
 	<property file="${basedir}/ddabuild.properties" />
+	<property file="${basedir}/OSGI-INF/l10n/bundle.properties" />
 	<property environment="env" />
 
 	<!-- directories -->
@@ -112,6 +113,20 @@
 		<svn>
 			<export force="true" srcurl="http://ddixslt.googlecode.com/svn/trunk/ddi-html" revision="HEAD" destpath="${build.classes.dir}/resources/ddixslt" />
 		</svn>
+
+		<!-- seed release note with build date -->
+		<tstamp>
+			<format property="current.time" pattern="yyyy-MM-dd" />
+		</tstamp>
+		<loadfile srcfile="${src.dir}/resources/release-note.txt" property="result-release-note">
+			<filterchain>
+				<filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
+					<param type="token" name="BUILD_DATE" value="${current.time}" />
+					<param type="token" name="PRODUCT_VERSION" value="${Bundle.version}" />
+				</filterreader>
+			</filterchain>
+		</loadfile>
+		<echo file="${build.classes.dir}/resources/release-note.txt">${result-release-note}</echo>
 	</target>
 
 	<target name="import-landingpage" description="Import landingpage file from SCM">
