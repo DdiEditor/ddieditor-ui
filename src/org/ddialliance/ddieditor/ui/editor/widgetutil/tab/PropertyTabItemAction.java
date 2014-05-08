@@ -13,7 +13,6 @@ import org.ddialliance.ddiftp.util.xml.Urn;
 import org.ddialliance.ddiftp.util.xml.XmlBeansUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -21,7 +20,6 @@ import org.eclipse.swt.widgets.Text;
 public class PropertyTabItemAction extends TabItemAction {
 	IModel model;
 	Shell shell;
-	Combo actionCombo;
 	StyledText urnText;
 	Text agencyText;
 	Text idText;
@@ -31,13 +29,12 @@ public class PropertyTabItemAction extends TabItemAction {
 	StyledText versionRationaleText;
 
 	public PropertyTabItemAction(String id, IModel model, Shell shell,
-			Combo actionCombo, StyledText urnText, Text agencyText,
-			Text idText, Text versionText, Text versionResponsibilityText,
-			Text versionDate, StyledText versionRationaleText) {
+			StyledText urnText, Text agencyText, Text idText, Text versionText,
+			Text versionResponsibilityText, Text versionDate,
+			StyledText versionRationaleText) {
 		super(id);
 		this.model = model;
 		this.shell = shell;
-		this.actionCombo = actionCombo;
 		this.urnText = urnText;
 		this.agencyText = agencyText;
 		this.idText = idText;
@@ -54,8 +51,8 @@ public class PropertyTabItemAction extends TabItemAction {
 			isMaintainable = DdiManager.getInstance().getDdi3NamespaceHelper()
 					.isMaintainable(model.getDocument());
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(shell, id, "Maintainable check error", e
-					.getMessage(), e);
+			DialogUtil.errorDialog(shell, id, "Maintainable check error",
+					e.getMessage(), e);
 		}
 
 		// action
@@ -67,9 +64,9 @@ public class PropertyTabItemAction extends TabItemAction {
 		try {
 			QName qName = model.getDocument().schemaType()
 					.getDocumentElementName();
-			urn = Urn2Util.getUrn(qName.getLocalPart(), model.getId(), model
-					.getVersion(), model.getParentId(), model
-					.getParentVersion(), model.getAgency());
+			urn = Urn2Util.getUrn(qName.getLocalPart(), model.getId(),
+					model.getVersion(), model.getParentId(),
+					model.getParentVersion(), model.getAgency());
 			urnStr = urn.toUrnString();
 		} catch (DDIFtpException e) {
 			DialogUtil.errorDialog(shell, id, "URN error", e.getMessage(), e);
@@ -91,8 +88,8 @@ public class PropertyTabItemAction extends TabItemAction {
 			isVersionable = DdiManager.getInstance().getDdi3NamespaceHelper()
 					.isVersionable(model.getDocument());
 		} catch (DDIFtpException e) {
-			DialogUtil.errorDialog(shell, id, "Versionable check error", e
-					.getMessage(), e);
+			DialogUtil.errorDialog(shell, id, "Versionable check error",
+					e.getMessage(), e);
 		}
 		if (isVersionable) {
 			// version

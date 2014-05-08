@@ -639,12 +639,6 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					"Maintainable check error", e.getMessage(), e);
 		}
 
-		// action
-		createLabel(group, Translator.trans("Editor.label.action.Action"));
-		Combo actionCombo = createCombo(group, new String[] { "", "Add",
-				"Update", "Delete" });
-		// TODO make action persist!
-
 		// urn
 		StyledText urnText = createTextAreaInput(group,
 				Translator.trans("Editor.label.urnLabel.URN"), "", null);
@@ -710,9 +704,8 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 		// update on tab item click
 		tabItem.setData(TAB_ID, PROPERTY_TAB_ID);
 		PropertyTabItemAction action = new PropertyTabItemAction(ID, model,
-				group.getShell(), actionCombo, urnText, agencyText, idText,
-				versionText, versionResponsibilityText, versionDate,
-				versionRationaleText);
+				group.getShell(), urnText, agencyText, idText, versionText,
+				versionResponsibilityText, versionDate, versionRationaleText);
 		Listener[] list = getTabFolder().getListeners(SWT.Selection);
 		Object obj = null;
 		for (int i = 0; i < list.length; i++) {
@@ -2106,7 +2099,7 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 			}
 		}
 	}
-	
+
 	public void disposeRepresentation() {
 		log.debug("Dispose Response");
 		if (!representationGroup.isDisposed()) {

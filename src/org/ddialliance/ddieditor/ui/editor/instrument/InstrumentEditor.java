@@ -149,7 +149,7 @@ public class InstrumentEditor extends Editor {
 		createXmlTab(modelImpl);
 
 		// preview tab
-		createPreviewTab(modelImpl);
+// TODO remove --		createPreviewTab(modelImpl);
 
 		editorStatus.clearChanged();
 	}

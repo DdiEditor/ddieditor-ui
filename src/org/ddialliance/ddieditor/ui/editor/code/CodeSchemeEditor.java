@@ -405,9 +405,6 @@ public class CodeSchemeEditor extends Editor {
 		// xml tab
 		createXmlTab(modelImpl);
 
-		// preview tab
-		createPreviewTab(modelImpl);
-
 		editorStatus.clearChanged();
 	}
 
@@ -666,7 +663,7 @@ public class CodeSchemeEditor extends Editor {
 					} else {
 						cats = new CategoryDao().getLightXmlObject("", "",
 								defaultCatsId, "");
-						
+
 						// look in loaded resources
 						if (cats.isEmpty()) {
 							ReferenceResolution refRes = new ReferenceResolution(

@@ -83,9 +83,6 @@ public class SequencePropertiesDialog extends Dialog {
 		// xml tab
 		editor.createXmlTab(modelImpl);
 
-		// preview tab
-		editor.createPreviewTab(modelImpl);
-
 		return null;
 	}
 

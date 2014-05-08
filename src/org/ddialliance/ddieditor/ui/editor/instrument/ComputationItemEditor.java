@@ -35,8 +35,10 @@ public class ComputationItemEditor extends Editor {
 
 	public ComputationItemEditor() {
 		super(
-				Translator.trans("ComputationItemEditor.label.ComputationItemEditorLabel.ComputationItemEditor"),
-				Translator.trans("ComputationItemEditor.label.useTheEditorLabel.Description"),
+				Translator
+						.trans("ComputationItemEditor.label.ComputationItemEditorLabel.ComputationItemEditor"),
+				Translator
+						.trans("ComputationItemEditor.label.useTheEditorLabel.Description"),
 				ID);
 		this.dao = new ComputationItemDao();
 	}
@@ -55,7 +57,8 @@ public class ComputationItemEditor extends Editor {
 		createTabFolder(getComposite_1());
 
 		// main tab
-		TabItem tabItem = createTabItem(Translator.trans("ComputationItem.editor.tabdisplaytext"));
+		TabItem tabItem = createTabItem(Translator
+				.trans("ComputationItem.editor.tabdisplaytext"));
 		Group group = createGroup(tabItem,
 				Translator.trans("ComputationItem.editor.groupdisplaytext"));
 
@@ -76,7 +79,8 @@ public class ComputationItemEditor extends Editor {
 
 		Text programmingLanguageTxt = createTextInput(
 				group,
-				Translator.trans("ComputationItem.editor.computationprogramlang"),
+				Translator
+						.trans("ComputationItem.editor.computationprogramlang"),
 				programmingLanguage, false);
 		programmingLanguageTxt
 				.addModifyListener(new TextStyledTextModyfiListener(modelImpl,
@@ -96,8 +100,10 @@ public class ComputationItemEditor extends Editor {
 
 		ReferenceSelectionCombo thenRefSelectCombo = createRefSelection(
 				group,
-				Translator.trans("ComputationItem.editor.computationvariableref"),
-				Translator.trans("ComputationItem.editor.computationvariableref"),
+				Translator
+						.trans("ComputationItem.editor.computationvariableref"),
+				Translator
+						.trans("ComputationItem.editor.computationvariableref"),
 				modelImpl.getAssignedVariableReference(), variableRefList,
 				false, ElementType.VARIABLE);
 		thenRefSelectCombo.addSelectionListener(Translator
@@ -143,9 +149,6 @@ public class ComputationItemEditor extends Editor {
 
 		// xml tab
 		createXmlTab(modelImpl);
-
-		// preview tab
-		createPreviewTab(modelImpl);
 
 		editorStatus.clearChanged();
 	}

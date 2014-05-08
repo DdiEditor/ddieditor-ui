@@ -219,9 +219,6 @@ public class MultipleQuestionItemEditor extends Editor {
 		// ddi xml tab
 		createXmlTab(modelImpl);
 
-		// preview tab
-		createPreviewTab(modelImpl);
-
 		// Clean dirt from initialization
 		editorStatus.clearChanged();
 	}
