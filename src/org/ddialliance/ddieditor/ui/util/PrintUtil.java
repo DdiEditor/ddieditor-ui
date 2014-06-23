@@ -1,20 +1,31 @@
 package org.ddialliance.ddieditor.ui.util;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 
+import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import org.apache.fop.apps.Fop;
+import org.apache.fop.apps.FopFactory;
+import org.apache.fop.apps.MimeConstants;
 
 import org.ddialliance.ddieditor.util.DdiEditorConfig;
 
 public class PrintUtil {
 	final String codebookXsltLocation = "resources/ddixslt/ddaddi3_1.xsl";
+	final String ddiLToDdiDLocation = "resources/ddixslt-lc/ddi3_1_to_ddi1_2_2.xsl";
+	final String ddiCToFoLocation = "resources/ddixslt-cpdf/dditofo_complete.xsl";
 	boolean showNumVarStatistic = false;
 	boolean universerefOnVariables = false;
 	boolean addNaviagtionBar = false;
@@ -39,7 +50,7 @@ public class PrintUtil {
 		transformer = tFactory.newTransformer(source);
 
 		return transformer;
-	}
+	}	
 
 	protected StreamSource getXsltSource(String pathLocation) throws Exception {
 		InputStream xslInput = PrintUtil.this.getClass().getClassLoader()
@@ -182,6 +193,34 @@ public class PrintUtil {
 		// variable
 		transformer.setParameter("show-universe",
 				universerefOnVariables ? "true" : "false");
+
+		return transformer;
+	}
+	
+	public Transformer getDdiLToDdiDdiCTransformer() throws Exception {
+		Source ddiLToDdiDLocationXslt = getXsltSource(ddiLToDdiDLocation);
+		Transformer transformer = getTransformer(ddiLToDdiDLocationXslt);
+		
+		// setup transformer
+		 transformer.setParameter("multilang", "false");
+		 // TODO -- set missing transformer params
+//	     transformer.setParameter("lang", lang);
+	     transformer.setParameter("identification-prefix", "DDA");
+	     transformer.setParameter("distributionuri", "http://localhost/catalogue/");
+//	     transformer.setParameter("translations", "i18n/messages_"
+//	                + lang + ".properties.xml");
+//	     transformer.setParameter("createVarGoup", this.isCreateVariableGroups ? "true" : "false");
+//	     transformer.setParameter("createDefaultSystemMissing", this.isAddSystemMissing ? "true" : "false");
+	        
+		return transformer;
+	}
+
+	public Transformer getDdiCToFoTransformer() throws Exception {
+		Source ddiLToDdiDLocationXslt = getXsltSource(ddiCToFoLocation);
+		Transformer transformer = getTransformer(ddiLToDdiDLocationXslt);
+
+		// setup transformer
+		// TODO -- set missing transformer params
 
 		return transformer;
 	}
