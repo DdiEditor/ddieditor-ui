@@ -38,6 +38,11 @@ cd ../jounal-study-info-export
 ant  deploy-to-ddieditor-ui -f dda-build.xml
 echo '--- Done setup ---'
 
+echo '--- Resource ddieditor-print-ddic ---'
+cd ../ddieditor-print-ddic
+ant resource -f dda-build.xml
+ant deploy-to-ddieditor-ui -f dda-build.xml
+
 echo '--- Resource ddieditor-osiris-batch-convert ---'
 cd ../ddieditor-osiris-batch-convert
 ant  deploy-to-ddieditor-ui -f dda-build.xml
@@ -45,6 +50,16 @@ echo '--- Done setup ---'
 
 echo '--- Resource ddi-html ---'
 cd ../ddi-html
+ant deploy-to-ddieditor-ui -f dda-build.xml
+echo '--- Done setup ---'
+
+echo '--- Resource ddi-ddi-1.2.2 ---'
+cd ../ddi-fo
+ant deploy-to-ddieditor-ui -f dda-build.xml
+echo '--- Done setup ---'
+
+echo '--- Resource ddi-fo ---'
+cd ../ddi-fo
 ant deploy-to-ddieditor-ui -f dda-build.xml
 echo '--- Done setup ---'
 
