@@ -112,8 +112,8 @@
 		<!-- checkout stylesheet -->
 		<svn>
 			<export force="true" srcurl="http://ddixslt.googlecode.com/svn/trunk/ddi-html/ddi3_1" revision="HEAD" destpath="${build.classes.dir}/resources/ddixslt" />
-			<export force="true" srcurl="http://ddixslt.googlecode.com/svn/trunk/ddi-1.2.2/ddi3_1" revision="HEAD" destpath="${build.classes.dir}/resources/ddixslt" />
-			<export force="true" srcurl="http://ddixslt.googlecode.com/svn/trunk/ddi-fo" revision="HEAD" destpath="${build.classes.dir}/resources/ddixslt" />
+			<export force="true" srcurl="http://ddixslt.googlecode.com/svn/trunk/ddi-1.2.2/ddi3_1" revision="HEAD" destpath="${build.classes.dir}/resources/ddixslt-lc" />
+			<export force="true" srcurl="http://ddixslt.googlecode.com/svn/trunk/ddi-fo" revision="HEAD" destpath="${build.classes.dir}/resources/ddixslt-cpdf" />
 		</svn>
 
 		<!-- seed release note with build date -->
