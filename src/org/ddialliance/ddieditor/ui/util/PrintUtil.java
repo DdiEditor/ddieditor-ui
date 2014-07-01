@@ -195,11 +195,11 @@ public class PrintUtil {
 		// setup transformer
 		 transformer.setParameter("multilang", "false");
 		 // TODO -- set missing transformer params
-//	     transformer.setParameter("lang", lang);
+	     transformer.setParameter("lang", LanguageUtil.getDisplayLanguage());
 	     transformer.setParameter("identification-prefix", "DDA");
 	     transformer.setParameter("distributionuri", "http://localhost/catalogue/");
-//	     transformer.setParameter("translations", "i18n/messages_"
-//	                + lang + ".properties.xml");
+	     transformer.setParameter("translations", "i18n/messages_"
+	                + LanguageUtil.getDisplayLanguage() + ".properties.xml");
 //	     transformer.setParameter("createVarGoup", this.isCreateVariableGroups ? "true" : "false");
 //	     transformer.setParameter("createDefaultSystemMissing", this.isAddSystemMissing ? "true" : "false");
 	        
