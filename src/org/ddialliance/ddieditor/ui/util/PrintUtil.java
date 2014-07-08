@@ -202,6 +202,9 @@ public class PrintUtil {
 	                + LanguageUtil.getDisplayLanguage() + ".properties.xml");
 //	     transformer.setParameter("createVarGoup", this.isCreateVariableGroups ? "true" : "false");
 //	     transformer.setParameter("createDefaultSystemMissing", this.isAddSystemMissing ? "true" : "false");
+	     transformer.setParameter("createVarGoup", "false");
+	     transformer.setParameter("createDefaultSystemMissing", "false");
+	     transformer.setParameter("prefixVarLableWithVarname", "false");
 	        
 		return transformer;
 	}
