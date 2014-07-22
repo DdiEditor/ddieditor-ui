@@ -75,6 +75,7 @@ along with Foobar.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <plugin id="ddieditor-ui"/>
       <plugin id="javax.servlet"/>
       <plugin id="jounal-study-info-export"/>
+      <plugin id="ddieditor-print-ddic"/>
       <plugin id="lib-java"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.core.commands"/>
