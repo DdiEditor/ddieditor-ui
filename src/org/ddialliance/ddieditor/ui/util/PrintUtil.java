@@ -187,37 +187,6 @@ public class PrintUtil {
 
 		return transformer;
 	}
-	
-	public Transformer getDdiLToDdiDdiCTransformer() throws Exception {
-		Source ddiLToDdiDLocationXslt = getXsltSource(ddiLToDdiDLocation);
-		Transformer transformer = getTransformer(ddiLToDdiDLocationXslt);
-		
-		// setup transformer
-		 transformer.setParameter("multilang", "false");
-		 // TODO -- set missing transformer params
-	     transformer.setParameter("lang", LanguageUtil.getDisplayLanguage());
-	     transformer.setParameter("identification-prefix", "DDA");
-	     transformer.setParameter("distributionuri", "http://localhost/catalogue/");
-	     transformer.setParameter("translations", "i18n/messages_"
-	                + LanguageUtil.getDisplayLanguage() + ".properties.xml");
-//	     transformer.setParameter("createVarGoup", this.isCreateVariableGroups ? "true" : "false");
-//	     transformer.setParameter("createDefaultSystemMissing", this.isAddSystemMissing ? "true" : "false");
-	     transformer.setParameter("createVarGoup", "false");
-	     transformer.setParameter("createDefaultSystemMissing", "false");
-	     transformer.setParameter("prefixVarLableWithVarname", "false");
-	        
-		return transformer;
-	}
-
-	public Transformer getDdiCToFoTransformer() throws Exception {
-		Source ddiLToDdiDLocationXslt = getXsltSource(ddiCToFoLocation);
-		Transformer transformer = getTransformer(ddiLToDdiDLocationXslt);
-
-		// setup transformer
-		// TODO -- set missing transformer params
-
-		return transformer;
-	}
 
 	public Transformer getDdaMetadataTransformer() throws Exception {
 		Source xslt = getXsltSource(ddaMetaDataXsltLocation);
