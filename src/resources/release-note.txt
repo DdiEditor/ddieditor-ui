@@ -2,15 +2,22 @@
 DdiEditor Release Notes:
 -------------------------------------------------------------------------------
 Product Version: @PRODUCT_VERSION@
-Release Date: 2013-11-29
+Release Date: 2014-07-31
 Build Date: @BUILD_DATE@
 
 -------------------------------------------------------------------------------
 What's New, User Interface
 -------------------------------------------------------------------------------
 Item ID:    Description:
- - Import SPSS option to create measure and categories
- - Import SPSS statistiscs option to import one to many OXML files
+ - Import SPSS option to create measure and categories.
+ - Import SPSS statistiscs option to import one to many OXML files.
+ - Import Correct Encoding Error import option.
+ - Problem Import SPSS File view.
+ - Character Set Validation import option.
+ - Problem Import SPSS Statistics view.
+ - Create Instrumention option.
+ - Reload Question File button
+ - Problem Import Questions view.
  
 -------------------------------------------------------------------------------  
 What's New, Application Infrastructure
