@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -v
 
 #
 # version bump
@@ -10,7 +10,22 @@ projectpath=$1
 echo $projectpath
 fullpath=../$projectpath/META-INF/MANIFEST.MF
 vi $fullpath
-svn ci $fullpath  -m 'Version bump'
+git commit $fullpath  -m 'Version bump'
+return;
+}
+
+#
+# gittagging
+#
+# function gittagging()
+gittagging()
+{
+projectpath=$1
+version=$2
+memo='Dev release taging: '$version
+echo $projectpath
+cd ../$projectpath
+git tag -a $version -m '$memo'
 return;
 }
 
@@ -20,69 +35,66 @@ echo 'Do you want to version bump: [yes|no]'
 read doversionbump
 if [ $doversionbump = 'yes' ]
 then
-
 versionbump ddadb
-versionbump jounal-study-info-export
-versionbump ddieditor-osiris-batch-convert
-versionbump ddieditor-osiris2ddi3
-
-versionbump ddi-3-xmlbeans
 versionbump ddieditor
+versionbump ddieditor-bek1007
 versionbump ddieditor-classification
-versionbump ddieditor-model
+versionbump ddieditor-genericode
 versionbump ddieditor-line
+versionbump ddieditor-model
+versionbump ddieditor-osiris-batch-convert
+versionbump ddieditor-print-ddic
 versionbump ddieditor-spss
-versionbump ddieditor-sample
 versionbump ddieditor-spss-stat
-versionbump ddieditor-spss-xmlbeans
 versionbump ddieditor-ui
-versionbump ddieditor-ui-headlessbuild
-versionbump ddieditor-xmlbeans
+versionbump jounal-study-info-export
 versionbump lib-java
 versionbump util
 
 # ddieditor-ui product bundle
 vi OSGI-INF/l10n/bundle.properties
-svn ci OSGI-INF/l10n/bundle.properties -m 'Version bump'
+git commit OSGI-INF/l10n/bundle.properties -m 'Version bump'
 else
 echo 'No version bumping taking place'
 fi
 
 #
-# tag build in svn
+# tag build in git
 #
-echo '--- Tag build in SVN ---'
-echo 'Do you want to tag in SVN: [yes|no]'
-read svntag
-if [ $svntag = 'yes' ]
+echo '--- Tag build in Git ---'
+echo 'Do you want to tag in Git: [yes|no]'
+read gittag
+if [ $gittag = 'yes' ]
 then
-echo 'Submit version no. for SVN tag:'
+echo 'Submit version no. for Git tag:'
 read version
 
-echo 'Name of branch for SVN tag:'
-read name
-
-svnurl=svn://192.168.99.101
-memo='Dev release taging: $version'
-svn mkdir $svnurl/dda/tags/ddiftp/release-$version -m '$memo'
-
-# dbdda
-svn copy $svnurl/dda/branches/ddieditor/$name/ddadb $svnurl/dda/tags/ddiftp/release-$version/ddadb -m '$memo' 
-
-# jounal-study-info-export
-svn copy $svnurl/dda/branches/ddieditor/$name/jounal-study-info-export $svnurl/dda/tags/ddiftp/release-$version/jounal-study-info-export -m '$memo'
-
-# ddieditor-osiris-batch-convert
-svn copy $svnurl/dda/branches/ddieditor/$name/ddieditor-osiris-batch-convert $svnurl/dda/tags/ddiftp/release-$version/ddieditor-osiris-batch-convert -m '$memo'
-
-# ddieditor-osiris2ddi3
-svn copy $svnurl/dda/branches/ddieditor/$name/ddieditor-osiris2ddi3 $svnurl/dda/tags/ddiftp/release-$version/ddieditor-osiris2ddi3 -m '$memo'
-
-# ddiftp
-svn copy $svnurl/dda/branches/ddieditor/$name/ddiftp $svnurl/dda/tags/ddiftp/release-$version/ -m '$memo'
-
+gittagging bek1007-xmlbeans $version
+gittagging ddadb $version
+gittagging ddi-3-xmlbeans $version
+gittagging ddieditor $version
+gittagging ddieditor-bek1007 $version
+gittagging ddieditor-classification $version
+gittagging ddieditor-distribution $version
+gittagging ddieditor-genericode $version
+gittagging ddieditor-line $version
+gittagging ddieditor-model $version
+gittagging ddieditor-osiris-batch-convert $version
+gittagging ddieditor-print-ddic $version
+gittagging ddieditor-project $version
+gittagging ddieditor-sample $version
+gittagging ddieditor-spss $version
+gittagging ddieditor-spss-stat $version
+gittagging ddieditor-spss-xmlbeans $version
+gittagging ddieditor-ui $version
+gittagging ddieditor-ui-headlessbuild $version
+gittagging ddieditor-xmlbeans $version
+gittagging genericode-xmlbeans $version
+gittagging jounal-study-info-export $version
+gittagging lib-java $version
+gittagging util $version
 else
-echo 'No SVN tagging taking place'
+echo 'No Git tagging taking place'
 fi
 
 #
