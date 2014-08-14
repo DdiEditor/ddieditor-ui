@@ -1,4 +1,4 @@
-#!/bin/sh -v
+#!/bin/sh
 
 #
 # version bump
@@ -28,6 +28,20 @@ cd ../$projectpath
 git tag -a $version -m '$memo'
 return;
 }
+
+#
+# gitpush
+#
+# function gitpush()
+gitpush()
+{
+projectpath=$1
+echo $projectpath
+cd ../$projectpath
+git push
+return;
+}
+
 
 echo '--- Increment bundle versions [Bundle-Version: ] in MANIFEST.MF files ---'
 echo '--- And commit version bump in SVN ---'
@@ -93,6 +107,42 @@ gittagging genericode-xmlbeans $version
 gittagging jounal-study-info-export $version
 gittagging lib-java $version
 gittagging util $version
+else
+echo 'No Git tagging taking place'
+fi
+
+#
+# git push to upstream
+#
+echo '--- Push to remove Git repository ---'
+echo 'Do you want to push to upstream in Git: [yes|no]'
+read gitpush
+if [ $gitpush = 'yes' ]
+then
+gitpush bek1007-xmlbeans
+gitpush ddadb
+gitpush ddi-3-xmlbeans
+gitpush ddieditor
+gitpush ddieditor-bek1007
+gitpush ddieditor-classification
+gitpush ddieditor-distribution
+gitpush ddieditor-genericode
+gitpush ddieditor-line
+gitpush ddieditor-model
+gitpush ddieditor-osiris-batch-convert
+gitpush ddieditor-print-ddic
+gitpush ddieditor-project
+gitpush ddieditor-sample
+gitpush ddieditor-spss
+gitpush ddieditor-spss-stat
+gitpush ddieditor-spss-xmlbeans
+gitpush ddieditor-ui
+gitpush ddieditor-ui-headlessbuild
+gitpush ddieditor-xmlbeans
+gitpush genericode-xmlbeans
+gitpush jounal-study-info-export
+gitpush lib-java
+gitpush util
 else
 echo 'No Git tagging taking place'
 fi
