@@ -118,8 +118,24 @@
 			<arg value="--depth" />
 			<arg value="1" />
 			<arg value="-v" />
+			<arg value="--no-checkout" />
 			<arg value="https://github.com/MetadataTransform/ddi-xslt.git" />
 			<arg value="${tmp.ddi-xslt.dir}" />
+		</exec>
+		<exec executable="git" newenvironment="false" dir="${tmp.ddi-xslt.dir}">
+			<arg value="checkout"/>
+			<arg value="master"/>
+			<arg value="ddi-html/ddi3_1"/>
+		</exec>
+		<exec executable="git" newenvironment="false" dir="${tmp.ddi-xslt.dir}">
+			<arg value="checkout" />
+			<arg value="master"/>
+			<arg value="ddi-1.2.2/ddi3_1" />
+		</exec>
+		<exec executable="git" newenvironment="false" dir="${tmp.ddi-xslt.dir}">
+			<arg value="checkout" />
+			<arg value="master"/>
+			<arg value="ddi-fo" />
 		</exec>
 
 		<!-- move from tmp to resources -->
