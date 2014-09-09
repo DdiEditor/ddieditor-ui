@@ -20,6 +20,7 @@
 	<property name="build.dir.jdoc" value="${build.classes.dir}/javadoc" />
 	<property name="junit.results.dir" value="${build.classes.dir}/junit-reports" />
 	<property name="tmp.importlandingpage.dir" value="${build.classes.dir}/import-landingpage" />
+	<property name="tmp.ddi-xslt.dir" value="${build.classes.dir}/ddi-xslt" />
 
 	<!-- javac arguments -->
 	<property name="javac.debug" value="on" />
@@ -110,11 +111,36 @@
 		</copy>
 
 		<!-- checkout stylesheet -->
-		<svn>
-			<export force="true" srcurl="http://ddixslt.googlecode.com/svn/trunk/ddi-html/ddi3_1" revision="HEAD" destpath="${build.classes.dir}/resources/ddixslt" />
-			<export force="true" srcurl="http://ddixslt.googlecode.com/svn/trunk/ddi-1.2.2/ddi3_1" revision="HEAD" destpath="${build.classes.dir}/resources/ddixslt-lc" />
-			<export force="true" srcurl="http://ddixslt.googlecode.com/svn/trunk/ddi-fo" revision="HEAD" destpath="${build.classes.dir}/resources/ddixslt-cpdf" />
-		</svn>
+		
+		<!-- git clone info tmp -->
+		<exec executable="git" newenvironment="false">
+			<arg value="clone" />
+			<arg value="--depth" />
+			<arg value="1" />
+			<arg value="-v" />
+			<arg value="https://github.com/MetadataTransform/ddi-xslt.git" />
+			<arg value="${tmp.ddi-xslt.dir}" />
+		</exec>
+
+		<!-- move from tmp to resources -->
+		<move todir="${build.classes.dir}/resources/ddixslt" verbose="false">
+			<fileset dir="${tmp.ddi-xslt.dir}/ddi-html/ddi3_1">
+				<include name="**/*" />
+			</fileset>
+		</move>
+		<move todir="${build.classes.dir}/resources/ddixslt-lc" verbose="false">
+			<fileset dir="${tmp.ddi-xslt.dir}/ddi-1.2.2/ddi3_1">
+				<include name="**/*" />
+			</fileset>
+		</move>
+		<move todir="${build.classes.dir}/resources/ddixslt-cpdf" verbose="false">
+			<fileset dir="${tmp.ddi-xslt.dir}/ddi-fo">
+				<include name="**/*" />
+			</fileset>
+		</move>
+		
+		<!-- clean up -->
+		<delete dir="${tmp.ddi-xslt.dir}" />
 
 		<!-- seed release note with build date -->
 		<tstamp>
