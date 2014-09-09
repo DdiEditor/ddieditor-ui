@@ -112,7 +112,7 @@
 
 		<!-- checkout stylesheet -->
 		
-		<!-- git clone info tmp -->
+		<!-- git clone into tmp -->
 		<exec executable="git" newenvironment="false">
 			<arg value="clone" />
 			<arg value="--depth" />
