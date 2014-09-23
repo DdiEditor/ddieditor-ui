@@ -1436,7 +1436,9 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					&& !System.getProperty("os.version").equals(
 							"3.13.0-34-generic")
 					&& !System.getProperty("os.version").equals(
-							"3.13.0-35-generic")) {
+							"3.13.0-35-generic")
+					&& !System.getProperty("os.version").equals(
+							"3.13.0-36-generic")) {
 				browser = new Browser(group, SWT.EMBEDDED | SWT.BORDER);
 			} else {
 				log.fatal(
