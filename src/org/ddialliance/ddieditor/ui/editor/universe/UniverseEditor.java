@@ -11,6 +11,7 @@ import org.ddialliance.ddieditor.ui.editor.LabelDescriptionEditor;
 import org.ddialliance.ddieditor.ui.model.ElementType;
 import org.ddialliance.ddieditor.ui.model.universe.Universe;
 import org.ddialliance.ddieditor.ui.perspective.UniversePerspective;
+import org.ddialliance.ddieditor.util.DdiEditorConfig;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
 import org.ddialliance.ddiftp.util.log.LogFactory;
@@ -48,23 +49,25 @@ public class UniverseEditor extends LabelDescriptionEditor {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		super.init(site, input);
-		// TODO Only make Universe check if it is a DDA installation
-		// Check if Universe derives from Journal DB
-		EditorInput editorInput = (EditorInput) input;
-		if (editorInput.getParentElementType().equals(
-				ElementType.UNIVERSE_SCHEME)) {
-			// TODO check if this Univer is references by Study Unit
-			try {
-				List<String> ids = ((Universe) model).getStudyUnitReference();
-				for (String id : ids) {
-					if (id.equals(editorInput.getId())) {
-						// if so - update not allowed in DDI Editor - disable
-						// update
-						editorInput.setEditorMode(EditorModeType.VIEW);
+		if (DdiEditorConfig.get(DdiEditorConfig.DDI_AGENCY).equals("dk.dda")) {
+			// Check if Universe derives from Journal DB i.e. Universe is ref.
+			// by Study Unit
+			EditorInput editorInput = (EditorInput) input;
+			if (editorInput.getParentElementType().equals(
+					ElementType.UNIVERSE_SCHEME)) {
+				try {
+					List<String> ids = ((Universe) model)
+							.getStudyUnitReference();
+					for (String id : ids) {
+						if (id.equals(editorInput.getId())) {
+							// if so - update not allowed in DDI Editor -
+							// disable update
+							editorInput.setEditorMode(EditorModeType.VIEW);
+						}
 					}
+				} catch (Exception e) {
+					new PartInitException(e.getMessage());
 				}
-			} catch (Exception e) {
-				new PartInitException(e.getMessage());
 			}
 		}
 	}
