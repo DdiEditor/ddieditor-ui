@@ -1438,11 +1438,14 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					&& !System.getProperty("os.version").equals(
 							"3.13.0-35-generic")
 					&& !System.getProperty("os.version").equals(
-							"3.13.0-36-generic")) {
+							"3.13.0-36-generic")
+					&& !System.getProperty("os.version").equals(
+							"3.13.0-37-generic")) {
 				browser = new Browser(group, SWT.EMBEDDED | SWT.BORDER);
 			} else {
-				log.fatal(
-						"ubuntu-11.4 and ubuntu-14.04 bug, org.eclipse.swt.browser.UseWebKitGTK",
+				log.fatal("ubuntu-11.4 and ubuntu-14.04 bug (os.version: "
+						+ System.getProperty("os.version")
+						+ "), org.eclipse.swt.browser.UseWebKitGTK",
 						new Throwable());
 			}
 		} catch (Exception e) {
