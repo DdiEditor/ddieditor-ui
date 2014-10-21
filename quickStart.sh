@@ -79,4 +79,8 @@ echo '--- Resource ddieditor-bek1007 ---'
 cd ../ddieditor-bek1007
 ant deploy-to-ddieditor-ui -f dda-build.xml
 
+echo '--- Resource util ---'
+cd ../util
+ant deploy-to-ddieditor-ui -f dda-build.xml
+
 echo '--- Done setup ---'
