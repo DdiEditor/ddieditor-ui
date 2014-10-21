@@ -96,12 +96,6 @@
 			</fileset>
 		</copy>
 
-		<copy todir="${build.classes.dir}/resources" overwrite="yes" verbose="true">
-			<fileset dir="../util/source/resources">
-				<include name="util-message.properties" />
-			</fileset>
-		</copy>
-
 		<mkdir dir="${build.classes.dir}/resources/ddi" />
 		<copy todir="${build.classes.dir}/resources/ddi" overwrite="yes">
 			<fileset dir="${basedir}/../ddi-3-xmlbeans/build/ddi/${ddi.dir.name}">
