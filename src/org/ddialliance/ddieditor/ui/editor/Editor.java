@@ -1440,8 +1440,15 @@ public class Editor extends EditorPart implements IAutoChangePerspective {
 					&& !osVersion.equals("3.13.0-36-generic")
 					&& !osVersion.equals("3.13.0-37-generic")
 					&& !osVersion.equals("3.13.0-38-generic")
-					&& !osVersion.equals("3.13.0-39-generic")) {
-				browser = new Browser(group, SWT.EMBEDDED | SWT.BORDER);
+					&& !osVersion.equals("3.13.0-39-generic")
+					) {
+				try {
+					browser = new Browser(group, SWT.EMBEDDED | SWT.BORDER);
+				}
+				finally {
+					log.fatal("Fatal error from WebKitGTK ignored!");
+					return null;
+				}
 			} else {
 				log.fatal("ubuntu-11.4 and ubuntu-14.04 bug (os.version: "
 						+ System.getProperty("os.version")
