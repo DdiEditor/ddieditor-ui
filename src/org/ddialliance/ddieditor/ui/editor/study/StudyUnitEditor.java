@@ -37,6 +37,7 @@ import org.ddialliance.ddieditor.ui.perspective.InfoPerspective;
 import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.swtdesigner.SWTResourceManager;
+import org.ddialliance.ddieditor.util.DdiEditorConfig;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -121,9 +122,12 @@ public class StudyUnitEditor extends Editor {
 		this.modelImpl = (StudyUnit) model;
 
 		// TODO Only disable editing if it is a DDA installation
-		// Disable editing of Study unit - update should be done in Stud Jour.
-		EditorInput editorInput = (EditorInput) input;
-		editorInput.setEditorMode(EditorModeType.VIEW);
+		if (DdiEditorConfig.get(DdiEditorConfig.DDI_AGENCY).equals("dk.dda")) {
+			// Disable editing of Study unit - update should be done in Stud
+			// Jour.
+			EditorInput editorInput = (EditorInput) input;
+			editorInput.setEditorMode(EditorModeType.VIEW);
+		}
 	}
 
 	@Override
