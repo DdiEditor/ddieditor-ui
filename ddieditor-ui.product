@@ -14,6 +14,7 @@
    </configIni>
 
    <launcherArgs>
+      <programArgs>-Dorg.eclipse.swt.browser.DefaultType=mozilla</programArgs>
       <vmArgs>-Dddiftp.config=org.ddialliance.ddiftp.util.DdiEditorConfig -Ddda.config=dk.dda.util.properties.DefaultConfig -Ddda.test=true -Dhibernate.osgi=true</vmArgs>
       <vmArgsLin>-Xms40m -Xmx1024m -Djava.library.path=/opt/dbxml-2.5.16/install/lib</vmArgsLin>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
@@ -34,7 +35,6 @@
             winMediumHigh="/ddieditor-ui/icons/dda_logo_32.bmp"/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
@@ -70,12 +70,12 @@ along with Foobar.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <plugin id="ddieditor-marc"/>
       <plugin id="ddieditor-model"/>
       <plugin id="ddieditor-osiris-batch-convert"/>
+      <plugin id="ddieditor-print-ddic"/>
       <plugin id="ddieditor-spss"/>
       <plugin id="ddieditor-spss-stat"/>
       <plugin id="ddieditor-ui"/>
       <plugin id="javax.servlet"/>
       <plugin id="jounal-study-info-export"/>
-      <plugin id="ddieditor-print-ddic"/>
       <plugin id="lib-java"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.core.commands"/>
