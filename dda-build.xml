@@ -242,7 +242,7 @@
 	</target>
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-	<!-- misc										 -->
+	<!-- misc.										 -->
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<target name="javadoc" description="Compile javadoc">
 		<mkdir dir="${build.dir.jdoc}" />

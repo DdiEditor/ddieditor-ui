@@ -16,14 +16,14 @@
 <stringAttribute key="featureDefaultLocation" value="workspace"/>
 <stringAttribute key="featurePluginResolution" value="workspace"/>
 <booleanAttribute key="includeOptional" value="true"/>
-<stringAttribute key="location" value="${workspace_loc:ddieditor-ui/test}"/>
+<stringAttribute key="location" value="${workspace_loc:ddieditor-ui/bin}"/>
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
 <mapEntry key="DDIEDITOR_HOME" value="/home/dak/workspace-anakin/ddieditor-ui/bin"/>
 <mapEntry key="LD_LIBRARY_PATH" value="/usr/lib/jvm/java-6-sun-1.6.0.22/jre/lib/amd64/server:/usr/lib/jvm/java-6-sun-1.6.0.22/jre/lib/amd64:/usr/lib/jvm/java-6-sun-1.6.0.22/jre/../lib/amd64:/usr/lib64/xulrunner-addons:/opt/dbxml-2.5.16/install/lib"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -console -importQuestions NameOfWikeFile"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.requiredJavaVersion=1.5 -XX:MaxPermSize=512m -Xms40m -Xmx2048m -Dddiftp.config=org.ddialliance.ddiftp.util.DdiEditorConfig -Ddda.config=dk.dda.util.properties.DefaultConfig -Ddda.test=true -Dhibernate.osgi=true -Dorg.eclipse.swt.browser.UseWebKitGTK=True -Dsun.awt.disablegrab=true -Djava.library.path=/home/ddadak/tools/dbxml-2.5.16/install/lib -Ddda.test.dev=true"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.requiredJavaVersion=1.5 -XX:MaxPermSize=512m -Xms40m -Xmx2048m -Dddiftp.config=org.ddialliance.ddiftp.util.DdiEditorConfig -Ddda.config=dk.dda.util.properties.DefaultConfig -Ddda.test=true -Dhibernate.osgi=true -Dorg.eclipse.swt.browser.UseWebKitGTK=True -Dsun.awt.disablegrab=true -Djava.library.path=/home/ddadak/tools/dbxml-2.5.16/install/lib -Ddda.test.dev=true -Dorg.eclipse.swt.browser.DefaultType=mozilla"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:ddieditor-ui/bin}"/>
 <booleanAttribute key="pde.generated.config" value="false"/>
 <stringAttribute key="pde.version" value="3.3"/>
