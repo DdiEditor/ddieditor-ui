@@ -371,6 +371,11 @@
                   id="org.ddialliance.ddieditor.ui.preference.page.DdiEditorSpssPreferencesPage"
                   name="%page.name.2">
             </page>
+            <page
+                  class="org.ddialliance.ddieditor.ui.preference.page.DdaConversion"
+                  id="org.ddialliance.ddieditor.ui.preference.page.DdaConversion"
+                  name="DDA Conversion">
+            </page>
       </extension>
       <extension point="org.eclipse.core.runtime.preferences">
             <initializer class="org.ddialliance.ddieditor.ui.preference.PreferenceInitializer"

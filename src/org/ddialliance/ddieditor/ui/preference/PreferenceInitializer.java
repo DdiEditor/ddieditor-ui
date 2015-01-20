@@ -96,6 +96,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				DdiEditorConfig
 						.get(DdiEditorConfig.SPSS_IMPORT_DECIMAL_SEPERATOR));
 
+		// dda conversion
+		store.setDefault(DdiEditorConfig.DDA_CONVERSION_STUDYINFO_DIR,
+				DdiEditorConfig.get(DdiEditorConfig.DDA_CONVERSION_STUDYINFO_DIR));
+
 		// bundle plugin version -not used
 		// String test = Platform.getProduct().getDefiningBundle().getVersion()
 		// .toString();
