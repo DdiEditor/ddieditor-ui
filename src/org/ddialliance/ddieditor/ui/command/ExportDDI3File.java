@@ -5,7 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
+import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.dialogs.ExportDDI3Dialog;
+import org.ddialliance.ddieditor.ui.model.userid.UserIdType;
 import org.ddialliance.ddiftp.util.DDIFtpException;
 import org.ddialliance.ddiftp.util.Translator;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -58,7 +60,13 @@ public class ExportDDI3File extends org.eclipse.core.commands.AbstractHandler {
 																	new File(
 																			exportDDI3Dialog.path
 																					+ File.separator
-																					+ exportDDI3Dialog.fileName));
+																					+ exportDDI3Dialog.fileName),"");
+//																	Activator
+//																			.getDefault()
+//																			.getPreferenceStore()
+//																			.getString(
+//																					UserIdType.DDI_EDITOR_VERSION
+//																							.getType()));
 												} catch (DDIFtpException e) {
 													MessageDialog
 															.openError(

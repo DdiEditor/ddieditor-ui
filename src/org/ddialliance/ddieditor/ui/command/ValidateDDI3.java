@@ -8,6 +8,7 @@ import org.ddialliance.ddieditor.model.marker.MarkerListDocument;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.dialogs.ValidateDialog;
 import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.model.userid.UserIdType;
 import org.ddialliance.ddieditor.ui.view.validate.ValidateView;
 import org.ddialliance.ddiftp.util.Translator;
 import org.ddialliance.ddiftp.util.log.Log;
@@ -89,7 +90,15 @@ public class ValidateDDI3 extends org.eclipse.core.commands.AbstractHandler {
 				temp = File.createTempFile("ddischemavalidate-", ".xml");
 				temp.deleteOnExit();
 				PersistenceManager.getInstance()
-						.exportResoure(resourceId, temp);
+						.exportResoure(
+								resourceId,
+								temp,
+								org.ddialliance.ddieditor.ui.Activator
+										.getDefault()
+										.getPreferenceStore()
+										.getString(
+												UserIdType.DDI_EDITOR_VERSION
+														.getType()));
 
 				// marker list
 				markerListDoc = MarkerListDocument.Factory.newInstance();

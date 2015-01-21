@@ -14,6 +14,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.io.FileUtils;
 import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.model.IModel;
+import org.ddialliance.ddieditor.ui.model.userid.UserIdType;
 import org.ddialliance.ddieditor.ui.util.LanguageUtil;
 import org.ddialliance.ddieditor.ui.util.PrintUtil;
 import org.ddialliance.ddiftp.util.DDIFtpException;
@@ -66,7 +67,11 @@ public class LandingpageTabItemAction extends TabItemAction {
 
 	private void transform() throws DDIFtpException {
 		PersistenceManager.getInstance().exportResoure(
-				PersistenceManager.getInstance().getWorkingResource(), tmpXml);
+				PersistenceManager.getInstance().getWorkingResource(),
+				tmpXml,
+				org.ddialliance.ddieditor.ui.Activator.getDefault()
+						.getPreferenceStore()
+						.getString(UserIdType.DDI_EDITOR_VERSION.getType()));
 
 		// transform xml to html
 		StreamResult ddaMetaDataStreamResult = null;

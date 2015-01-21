@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.ddialliance.ddieditor.model.resource.DDIResourceType;
 import org.ddialliance.ddieditor.model.resource.StorageType;
@@ -141,6 +143,12 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 			in.close();
 		} catch (IOException e) {
 			new DDIFtpException(e);
+		}
+		
+		Pattern p = Pattern.compile("@PRODUCT_VERSION@");
+		Matcher m = p.matcher(appVersion);
+		if (m.matches()) {
+			appVersion = "999.999.999";
 		}
 		store.setDefault(DdiEditorConfig.DDI_EDITOR_VERSION, appVersion);
 
