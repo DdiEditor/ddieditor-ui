@@ -137,7 +137,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		Matcher m = p.matcher(appVersion);
 		// TODO HACK!!!
 		if (m.matches()) {
-			appVersion = "1.10.2";
+			// appVersion = "1.10.2";
+			log.error("Product Version has not been assigned correctly in Release Note");
 		}
 		store.setDefault(DdiEditorConfig.DDI_EDITOR_VERSION, appVersion);
 
