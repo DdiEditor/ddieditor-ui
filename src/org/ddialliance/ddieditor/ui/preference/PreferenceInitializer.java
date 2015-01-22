@@ -102,27 +102,15 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(DdiEditorConfig.DDA_CONVERSION_STUDYINFO_DIR,
 				DdiEditorConfig.get(DdiEditorConfig.DDA_CONVERSION_STUDYINFO_DIR));
 
-		// bundle plugin version -not used
-		// String test = Platform.getProduct().getDefiningBundle().getVersion()
-		// .toString();
-
 		// app version number
-		URL url;
 		InputStream inputStream = null;
-		String firstUrl = "platform:/plugin/ddieditor-ui/resources/release-note.txt";
-		String secondUrl = "platform:/plugin/ddieditor-ui/bin/resources/release-note.txt";
+		String releaseNoteFile = "resources/release-note.txt";
+		
+		log.debug("Release note file: " + new File(releaseNoteFile).getAbsolutePath());
 		try {
-			// get file production
-			url = new URL(firstUrl);
-			inputStream = url.openConnection().getInputStream();
+			inputStream = new FileInputStream(new File(releaseNoteFile));
 		} catch (IOException e) {
-			try {
-				// get file debug mode
-				url = new URL(secondUrl);
-				inputStream = url.openConnection().getInputStream();
-			} catch (Exception e2) {
-				new DDIFtpException(e2);
-			}
+			log.error(e);
 		}
 
 		String appVersion = "na";
@@ -147,8 +135,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		Pattern p = Pattern.compile("@PRODUCT_VERSION@");
 		Matcher m = p.matcher(appVersion);
+		// TODO HACK!!!
 		if (m.matches()) {
-			appVersion = "999.999.999";
+			appVersion = "1.10.2";
 		}
 		store.setDefault(DdiEditorConfig.DDI_EDITOR_VERSION, appVersion);
 
