@@ -49,18 +49,21 @@ ant  deploy-to-ddieditor-ui -f dda-build.xml
 echo '--- Done setup ---'
 
 echo '--- Resource ddi-html ---'
-cd ../ddi-html
+cd ../ddi-xslt/ddi-html/ddi3_1
 ant deploy-to-ddieditor-ui -f dda-build.xml
+cd ../../../ddieditor-ui
 echo '--- Done setup ---'
 
 echo '--- Resource ddi-ddi-1.2.2 ---'
-cd ../ddi-fo
+cd ../ddi-xslt/ddi-1.2.2/ddi3_1
 ant deploy-to-ddieditor-ui -f dda-build.xml
+cd ../../../ddieditor-ui
 echo '--- Done setup ---'
 
 echo '--- Resource ddi-fo ---'
-cd ../ddi-fo
+cd ../ddi-xslt/ddi-fo
 ant deploy-to-ddieditor-ui -f dda-build.xml
+../../ddieditor-ui
 echo '--- Done setup ---'
 
 echo '--- Resource ddieditor-classification ---'
