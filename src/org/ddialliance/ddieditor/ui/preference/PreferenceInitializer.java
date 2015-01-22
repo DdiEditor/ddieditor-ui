@@ -20,6 +20,7 @@ import org.ddialliance.ddieditor.persistenceaccess.PersistenceManager;
 import org.ddialliance.ddieditor.ui.Activator;
 import org.ddialliance.ddieditor.ui.command.CommandHelper;
 import org.ddialliance.ddieditor.ui.editor.Editor;
+import org.ddialliance.ddieditor.ui.util.DialogUtil;
 import org.ddialliance.ddieditor.ui.view.ViewManager;
 import org.ddialliance.ddieditor.util.DdiEditorConfig;
 import org.ddialliance.ddieditor.util.DdiEditorRefUtil;
@@ -31,6 +32,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Initialise default preference values and handle advanced changes
@@ -135,9 +137,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		Pattern p = Pattern.compile("@PRODUCT_VERSION@");
 		Matcher m = p.matcher(appVersion);
-		// TODO HACK!!!
 		if (m.matches()) {
-			// appVersion = "1.10.2";
 			log.error("Product Version has not been assigned correctly in Release Note");
 		}
 		store.setDefault(DdiEditorConfig.DDI_EDITOR_VERSION, appVersion);
