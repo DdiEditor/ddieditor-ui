@@ -167,6 +167,9 @@ public class PrintUtil {
 		// show category statistics
 		transformer.setParameter("show-category-statistics", "true");
 
+		// show instrumentation
+		transformer.setParameter("show-instrumentation", "false");
+
 		// path prefix to the
 		// css-files
 		transformer.setParameter("theme-path", "theme/default");
